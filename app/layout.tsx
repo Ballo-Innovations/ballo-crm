@@ -1,19 +1,21 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Ubuntu, Ubuntu_Mono } from "next/font/google";
 
 import { AppProviders } from "@/providers/app-providers";
 import { siteConfig } from "@/config/site";
 
 import "./globals.css";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
+const ubuntu = Ubuntu({
+  variable: "--font-sans",
   subsets: ["latin"],
+  weight: ["300", "400", "500", "700"],
 });
 
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
+const ubuntuMono = Ubuntu_Mono({
+  variable: "--font-mono",
   subsets: ["latin"],
+  weight: ["400", "700"],
 });
 
 export const metadata: Metadata = {
@@ -33,7 +35,7 @@ export default function RootLayout({
     <html
       lang="en"
       suppressHydrationWarning
-      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
+      className={`${ubuntu.variable} ${ubuntuMono.variable} h-full antialiased`}
     >
       <body className="flex min-h-full flex-col">
         <AppProviders>{children}</AppProviders>

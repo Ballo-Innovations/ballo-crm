@@ -1,17 +1,18 @@
-# Sprint 2 — Core CRM Domain Expansion & First AI/BalloAds Integration
+# Sprint 2 - Core CRM Domain Expansion & First AI/BalloAds Integration
 
 **Sprint goal:** expand Sprint 1's single proven entity (Accounts) into the full core CRM domain
-— Contacts, Opportunities (with a pipeline/Kanban view), and Contracts — and stand up the first
-real integrations with BalloAds and Brutus AI, per [roadmap.md](../roadmap.md) Phase 2. This
-sprint also starts closing the testing gap flagged in [risks.md](../risks.md) R1, since building
-three more CRUD entities and two external integrations without any regression safety net is the
-point at which that debt becomes expensive to keep deferring.
+
+- Contacts, Opportunities (with a pipeline/Kanban view), and Contracts - and stand up the first
+  real integrations with BalloAds and Brutus AI, per [roadmap.md](../roadmap.md) Phase 2. This
+  sprint also starts closing the testing gap flagged in [risks.md](../risks.md) R1, since building
+  three more CRUD entities and two external integrations without any regression safety net is the
+  point at which that debt becomes expensive to keep deferring.
 
 **Team and numbering:** tasks continue the per-developer tracks and numbering from
-[sprint-1.md](./sprint-1.md) — `INFRA-*` (Developer 1) continues at `INFRA-005`, `SHELL-*`
+[sprint-1.md](./sprint-1.md) - `INFRA-*` (Developer 1) continues at `INFRA-005`, `SHELL-*`
 (Developer 2) continues at `SHELL-005`, `CRM-*` (Developer 3) continues at `CRM-005`. Two new
 areas are introduced per [task-template.md](./task-template.md)'s AREA list: `AI-*` (Brutus AI /
-commercial intelligence) and `COMM-*` (automated communications via BalloAds) — both owned by the
+commercial intelligence) and `COMM-*` (automated communications via BalloAds) - both owned by the
 developers already carrying the corresponding risk-register items ([risks.md](../risks.md) R2,
 R5, R6): Developer 1 builds the low-level external API clients in `lib/`, the same role they
 played building `lib/firebase/`; Developer 3 (Core CRM Domain owner) builds the feature-level
@@ -30,11 +31,11 @@ project-wide Definition of Done from [sprint-1.md](./sprint-1.md) applies throug
 - **Priority**: P0
 - **Owner**: Developer 3
 - **Title**: Implement Contacts schema, repository, service, and Server Actions
-- **Objective**: Extend the Accounts pattern from Sprint 1 to a second entity — a Contact belongs
+- **Objective**: Extend the Accounts pattern from Sprint 1 to a second entity - a Contact belongs
   to exactly one Account and carries its own lifecycle/communication-relevant fields (email,
   phone, role/title, opt-out-relevant channel preferences read back from BalloAds in `COMM-002`).
 - **Business Value**: Contacts are the second-most-referenced entity in the product mission
-  (CIMS) and the target of most BalloAds delivery/opt-out reads — nothing in `COMM-002` or later
+  (CIMS) and the target of most BalloAds delivery/opt-out reads - nothing in `COMM-002` or later
   Opportunity work can reference a contact without this landing first.
 - **Dependencies**: `CRM-001` (Account shape, for the `accountId` foreign key).
 - **Target Files**:
@@ -45,7 +46,7 @@ project-wide Definition of Done from [sprint-1.md](./sprint-1.md) applies throug
   - `features/contacts/actions/create-contact.ts`
   - `features/contacts/actions/list-contacts.ts`
 - **Technical Instructions**: Mirror `CRM-001`/`CRM-002`'s layering exactly. `contactSchema`
-  fields: `id`, `orgId`, `accountId` (required — a Contact always belongs to an Account),
+  fields: `id`, `orgId`, `accountId` (required - a Contact always belongs to an Account),
   `firstName`, `lastName`, `email`, `phone` (optional), `title` (optional), `createdBy`,
   `createdAt`, `updatedAt`. `contacts-repository.ts` adds `listContactsByAccount(orgId,
 accountId)` alongside the standard `create`/`getById`/`list`. The service layer validates the
@@ -89,10 +90,10 @@ accountId)` alongside the standard `create`/`getById`/`list`. The service layer 
   - `features/contacts/components/create-contact-form.tsx`
   - `features/contacts/hooks/use-contacts.ts`
 - **Technical Instructions**: Reuse `components/shared/data-table.tsx` and the dialog/form pattern
-  from `CRM-004` verbatim — this task should be materially faster than `CRM-004` because the
+  from `CRM-004` verbatim - this task should be materially faster than `CRM-004` because the
   primitives already exist. Add an `accountId` filter/column showing the linked Account's name
   (a small denormalized `accountName` field written at Contact-create time, or a join read via
-  `getAccountById` — prefer the denormalized field to avoid N+1 reads per
+  `getAccountById` - prefer the denormalized field to avoid N+1 reads per
   [risks.md](../risks.md) R9).
 - **Acceptance Criteria**: `/contacts` lists all org contacts with their linked account name
   visible; creating a contact from the dialog updates the list without a manual refresh; creating
@@ -113,7 +114,7 @@ accountId)` alongside the standard `create`/`getById`/`list`. The service layer 
 - **Priority**: P0
 - **Owner**: Developer 3
 - **Title**: Implement Opportunities schema, repository, and service with BANT-style qualification fields
-- **Objective**: Model the sales pipeline entity — an Opportunity belongs to an Account, has a
+- **Objective**: Model the sales pipeline entity - an Opportunity belongs to an Account, has a
   `stage`, an amount, a close date, and a structured qualification block (Budget, Authority,
   Need, Timeline) that Sprint 2's `AI-002` will later help score.
 - **Business Value**: Opportunities are the core of Sales Pipelines and Opportunity Qualification
@@ -130,11 +131,11 @@ accountId)` alongside the standard `create`/`getById`/`list`. The service layer 
 - **Technical Instructions**: `opportunitySchema` fields: `id`, `orgId`, `accountId`, `name`,
   `stage` (enum: `prospecting`, `qualification`, `proposal`, `negotiation`, `closed_won`,
   `closed_lost`), `amount`, `expectedCloseDate`, `qualification` (nested object: `budget`,
-  `authority`, `need`, `timeline` — each a short free-text or enum field, structured enough for
+  `authority`, `need`, `timeline` - each a short free-text or enum field, structured enough for
   `AI-002` to score later), `ownerId`, `createdBy`, `createdAt`, `updatedAt`. Add
   `update-opportunity-stage.ts` as a separate, narrower action (not a general update) because
   stage transitions are the operation the Kanban board (`CRM-008`) drives most frequently and the
-  operation `COMM-002`/Sprint 3's `COMM-003` will eventually hook a BalloAds trigger onto — keep
+  operation `COMM-002`/Sprint 3's `COMM-003` will eventually hook a BalloAds trigger onto - keep
   it isolated so that hook has one clear call site.
 - **Acceptance Criteria**: All CRUD functions org- and account-scoped, typed from
   `opportunitySchema`; `update-opportunity-stage` validates the new stage is a legal enum value
@@ -156,11 +157,11 @@ accountId)` alongside the standard `create`/`getById`/`list`. The service layer 
 - **Priority**: P0
 - **Owner**: Developer 3
 - **Title**: Build the Opportunities pipeline board and list view toggle
-- **Objective**: Give reps the primary way to work a pipeline — a Kanban-style board with one
+- **Objective**: Give reps the primary way to work a pipeline - a Kanban-style board with one
   column per `stage`, drag-or-click to advance stage, plus a `SHELL-004`-table list view for
   power users who prefer a dense table.
 - **Business Value**: The pipeline board is the single highest-visibility screen for a B2B CRM
-  demo — it's the screen most likely to be shown first to judges after the Accounts list.
+  demo - it's the screen most likely to be shown first to judges after the Accounts list.
 - **Dependencies**: `CRM-007`.
 - **Target Files**:
   - `app/(dashboard)/opportunities/page.tsx`
@@ -171,7 +172,7 @@ accountId)` alongside the standard `create`/`getById`/`list`. The service layer 
   - `features/opportunities/hooks/use-opportunities.ts`
 - **Technical Instructions**: For hackathon time constraints, implement stage advancement via a
   simple "move to next/previous stage" action on the card's dropdown menu rather than a full
-  drag-and-drop library integration — full drag-and-drop is an acceptable Sprint 3+ polish item,
+  drag-and-drop library integration - full drag-and-drop is an acceptable Sprint 3+ polish item,
   not a Sprint 2 requirement. `pipeline-board.tsx` groups the `use-opportunities.ts` query result
   by `stage` client-side (no separate per-stage query). Add a view-toggle (board/list) persisted
   in `store/slices/ui-slice.ts` (extend it with an `opportunitiesView` field) so the choice
@@ -198,8 +199,8 @@ accountId)` alongside the standard `create`/`getById`/`list`. The service layer 
 - **Priority**: P1
 - **Owner**: Developer 3
 - **Title**: Implement Contracts schema, repository, and service
-- **Objective**: Model Contracts as records tied to a `closed_won` Opportunity — value, term
-  dates, renewal date, and status — completing the third core CRM entity.
+- **Objective**: Model Contracts as records tied to a `closed_won` Opportunity - value, term
+  dates, renewal date, and status - completing the third core CRM entity.
 - **Business Value**: Contracts close the loop from pipeline to revenue in the product mission and
   are a prerequisite for any renewal/upsell signal (`AI-003`, Sprint 3).
 - **Dependencies**: `CRM-007` (an Opportunity must exist and typically be `closed_won` before a
@@ -210,12 +211,12 @@ accountId)` alongside the standard `create`/`getById`/`list`. The service layer 
   - `services/contracts-service.ts`
   - `features/contracts/actions/create-contract.ts`
 - **Technical Instructions**: `contractSchema` fields: `id`, `orgId`, `accountId`,
-  `opportunityId` (optional — a contract can in principle be created without a prior tracked
+  `opportunityId` (optional - a contract can in principle be created without a prior tracked
   opportunity, e.g. backfilled data), `value`, `startDate`, `endDate`, `renewalDate` (optional),
   `status` (enum: `draft`, `active`, `expired`, `renewed`, `terminated`), `createdBy`,
   `createdAt`, `updatedAt`. The service layer warns (returns a non-blocking warning field in the
   result, not an error) if `opportunityId` is supplied but that opportunity's `stage` isn't
-  `closed_won` — a soft data-quality nudge, not a hard validation failure, since backfilled or
+  `closed_won` - a soft data-quality nudge, not a hard validation failure, since backfilled or
   edge-case contracts are legitimate.
 - **Acceptance Criteria**: Contract creation succeeds with or without an `opportunityId`; the
   soft warning appears when the linked opportunity isn't `closed_won`; all fields typed from
@@ -263,7 +264,7 @@ alert.tsx` (not a blocking error) if the user proceeds with a non-`closed_won` o
 ### SHELL-005: Notifications menu
 
 - **Task ID**: `SHELL-005`
-- **Epic**: Design System — App Shell
+- **Epic**: Design System - App Shell
 - **Priority**: P1
 - **Owner**: Developer 2
 - **Title**: Build the topbar notifications menu backed by the `notifications` collection
@@ -308,7 +309,7 @@ type, id }`, matching the pattern already used for `activities`), `read` (boolea
 - **Title**: Build the `lib/balloads/` client and wire BalloAds environment variables
 - **Objective**: Create the single, server-only module allowed to call BalloAds'
   `/v1/developer-portal/*` API and hold `BALLOADS_API_BASE_URL`/`BALLOADS_DEVELOPER_API_KEY`, per
-  [integrations.md](../integrations.md) — this does not yet call BalloAds for anything
+  [integrations.md](../integrations.md) - this does not yet call BalloAds for anything
   meaningful; it establishes the adapter boundary `COMM-002` builds on.
 - **Business Value**: Isolates the entire BalloAds integration behind one module so the
   not-yet-confirmed API contract ([risks.md](../risks.md) R2) can change without touching every
@@ -324,7 +325,7 @@ type, id }`, matching the pattern already used for `activities`), `read` (boolea
   - `.env.example` (add the two new keys with placeholder values and a comment)
 - **Technical Instructions**: Mark `client.ts` with the `server-only` package. `types.ts` holds
   Zod schemas for every request/payload BalloAds is expected to accept, per
-  [integrations.md](../integrations.md) — mark each as `// TBC against live BalloAds OpenAPI
+  [integrations.md](../integrations.md) - mark each as `// TBC against live BalloAds OpenAPI
 spec` in a comment, since no spec has been supplied yet. Read the per-organization key from
   `organizations/{orgId}/integrations/balloAds` via the Admin SDK first, falling back to the
   `BALLOADS_DEVELOPER_API_KEY` env var only if no per-org key is configured (per
@@ -362,7 +363,7 @@ spec` in a comment, since no spec has been supplied yet. Read the per-organizati
   read-only "BalloAds Health Score" field on the Account shown when the API exposes it.
 - **Business Value**: This is the sprint's proof that BalloCRM's non-negotiable integration
   boundary (call out to BalloAds, never reimplement) works in a real UI, not just in the client
-  module — and it's a concrete, demoable AI-adjacent enrichment (Health Score) for judges.
+  module - and it's a concrete, demoable AI-adjacent enrichment (Health Score) for judges.
 - **Dependencies**: `COMM-001`, `CRM-001` (Account).
 - **Target Files**:
   - `features/accounts/actions/trigger-balloads-onboarding.ts`
@@ -373,10 +374,10 @@ spec` in a comment, since no spec has been supplied yet. Read the per-organizati
 - **Technical Instructions**: `trigger-balloads-onboarding.ts` calls
   `services/accounts-service.ts`'s new `triggerOnboarding(orgId, accountId)`, which calls
   `lib/balloads/client.ts` and then writes an `activities` document
-  (`{ relatedTo: { type: "account", id }, type: "balloads_journey_triggered", ... }`) — never a
+  (`{ relatedTo: { type: "account", id }, type: "balloads_journey_triggered", ... }`) - never a
   second delivery attempt inside BalloCRM. `sync-health-score.ts` reads the score via
   `lib/balloads/client.ts` and writes it to the Account's `healthScore` field, clearly labeled in
-  the UI as BalloAds-supplied per [integrations.md](../integrations.md) — BalloCRM never computes
+  the UI as BalloAds-supplied per [integrations.md](../integrations.md) - BalloCRM never computes
   its own version. If the API doesn't expose the field (mock mode returns `null`), the badge is
   simply omitted, not approximated.
 - **Acceptance Criteria**: Clicking "Trigger onboarding" results in a call to `lib/balloads/`
@@ -405,7 +406,7 @@ spec` in a comment, since no spec has been supplied yet. Read the per-organizati
   [integrations.md](../integrations.md), so any feature (starting with `AI-002`) can create and
   advance an AI Job without re-deriving the pattern.
 - **Business Value**: This is the reusable substrate every future Brutus AI feature (opportunity
-  qualification now, next-best-action/summarization/cross-sell later) is built on — getting the
+  qualification now, next-best-action/summarization/cross-sell later) is built on - getting the
   async job contract right once here avoids three divergent implementations later.
 - **Dependencies**: `INFRA-001` (env schema pattern to extend).
 - **Target Files**:
@@ -420,7 +421,7 @@ spec` in a comment, since no spec has been supplied yet. Read the per-organizati
   exposes `createJob`, `getJobById`, `updateJobStatus` scoped to `organizations/{orgId}/aiJobs`.
   `ai-jobs-service.ts` exposes a generic `runAiJob(orgId, type, relatedTo, requestedBy, handler)`
   helper that creates the `queued` job, flips it to `running`, invokes `handler` (the
-  feature-specific Brutus call), and writes `completed`/`failed` with the result or error — so
+  feature-specific Brutus call), and writes `completed`/`failed` with the result or error - so
   `AI-002` (and future AI features) only supply the `handler`, not the job bookkeeping. Per
   [integrations.md](../integrations.md), the exact background-invocation mechanism (fire-and-
   forget continuation vs. a lightweight Route Handler trigger) is a decision to record in
@@ -448,10 +449,10 @@ spec` in a comment, since no spec has been supplied yet. Read the per-organizati
 - **Priority**: P1
 - **Owner**: Developer 3
 - **Title**: Implement "Qualify with Brutus AI" on the Opportunity detail view
-- **Objective**: Ship the first real Brutus AI feature — a rep clicks "Qualify with Brutus AI" on
+- **Objective**: Ship the first real Brutus AI feature - a rep clicks "Qualify with Brutus AI" on
   an Opportunity, a `opportunity_qualification` AI Job runs via `AI-001`'s scaffold, and the UI
   polls/subscribes to show a score and rationale once complete.
-- **Business Value**: This is the sprint's headline AI Commercial Intelligence demo moment —
+- **Business Value**: This is the sprint's headline AI Commercial Intelligence demo moment -
   turning the qualification fields from `CRM-007` into an AI-assisted score is a core product
   mission item.
 - **Dependencies**: `AI-001`, `CRM-007`.
@@ -468,7 +469,7 @@ spec` in a comment, since no spec has been supplied yet. Read the per-organizati
   TanStack Query hook polling `getJobById` at a short interval while `status` is
   `queued`/`running`, stopping once terminal (per the pattern in
   [integrations.md](../integrations.md)). `qualification-result-card.tsx` renders the score,
-  rationale, and a "failed — retry" state if the job errors — never an infinite spinner, per
+  rationale, and a "failed - retry" state if the job errors - never an infinite spinner, per
   [risks.md](../risks.md) R5.
 - **Acceptance Criteria**: Clicking "Qualify with Brutus AI" creates a job, the button shows a
   pending state, and the result card renders the score/rationale on completion without a manual
@@ -492,12 +493,12 @@ spec` in a comment, since no spec has been supplied yet. Read the per-organizati
 - **Owner**: Developer 1
 - **Title**: Adopt Vitest and add first unit tests for repositories/services
 - **Objective**: Close the testing gap flagged in [risks.md](../risks.md) R1 before Sprint 2's
-  three new entities and two integrations ship without any regression safety net — install
+  three new entities and two integrations ship without any regression safety net - install
   Vitest, wire it to run against the Firestore emulator for repository tests, and write the first
   real tests for `accounts-service.ts` and `contacts-service.ts`'s business-rule logic.
 - **Business Value**: Three developers (and AI agents) shipping in parallel across a layered
   architecture is exactly the situation where an untested `services/` regression silently breaks
-  another feature's assumptions — this is the highest-leverage point to close the gap, per
+  another feature's assumptions - this is the highest-leverage point to close the gap, per
   [risks.md](../risks.md) R1's mitigation plan.
 - **Dependencies**: none (can start any time in the sprint; ideally early so `CRM-005`/`CRM-007`
   can add tests as they're built rather than retrofitting them).
@@ -533,14 +534,14 @@ spec` in a comment, since no spec has been supplied yet. Read the per-organizati
 ## Cross-track dependencies
 
 - **`COMM-001`/`AI-001` (external clients) block `COMM-002`/`AI-002` (feature integrations) but
-  not each other** — Developer 1 can build both client foundations in parallel since they touch
+  not each other** - Developer 1 can build both client foundations in parallel since they touch
   disjoint files (`lib/balloads/` vs. `lib/brutus/`), and Developer 3 can start `COMM-002`/`AI-002`
   against each client's mock mode as soon as the corresponding `types.ts` shape is settled, without
   waiting for a live sandbox key.
 - **`CRM-008`'s pipeline board reuses `SHELL-004`'s `data-table.tsx`** for its list-view toggle;
-  no new shared-component work is needed since Sprint 1 already shipped it — this sprint is where
+  no new shared-component work is needed since Sprint 1 already shipped it - this sprint is where
   that Sprint 1 investment starts paying off across three new entities.
-- **`INFRA-005` should land early in the sprint**, not at the end — `CRM-005` through `CRM-010`
+- **`INFRA-005` should land early in the sprint**, not at the end - `CRM-005` through `CRM-010`
   benefit most from writing tests alongside the new services rather than retrofitting them once
   the sprint is nearly over.
 - See [sprint-1.md](./sprint-1.md) for the foundational Accounts pattern every task above

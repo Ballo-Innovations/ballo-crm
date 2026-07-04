@@ -5,7 +5,7 @@
 > [../sprint-plan.md](../sprint-plan.md) for the sprint cadence and goals, and
 > [./sprint-1.md](./sprint-1.md) for the exact Sprint 1 task breakdown per developer. Tasks below
 > that are already pulled into Sprint 1 are listed here for epic-level completeness but owned in
-> detail by [./sprint-1.md](./sprint-1.md) and the relevant `./developer-<n>.md` file — do not
+> detail by [./sprint-1.md](./sprint-1.md) and the relevant `./developer-<n>.md` file - do not
 > duplicate-edit them here once they're in flight; update status in [./completed.md](./completed.md)
 > or [./blocked.md](./blocked.md) instead.
 
@@ -132,13 +132,13 @@ judging/demo impact for the hackathon; "Effort" is calibrated to hackathon-compr
 
 | Quadrant                                                | Item                                                     | Why it lands here                                                                                                         |
 | ------------------------------------------------------- | -------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------- |
-| **High impact / Low effort — do next**                  | Surface BalloAds `HealthScore` (CRM-006)                 | Existing external field, just needs a UI badge — cheap, visibly "AI-ish" for judges                                       |
-| **High impact / Low effort — do next**                  | Contacts CRUD (CRM-010/011)                              | Directly extends the Sprint 1 Accounts pattern, low novelty risk                                                          |
-| **High impact / Low effort — do next**                  | Vertical taxonomy field (VSI-001)                        | One schema field unlocks segmentation demos later for near-zero cost                                                      |
-| **High impact / High effort — plan carefully**          | Opportunity pipeline + kanban (CRM-020/021)              | Core "CRM" narrative for judges, but a full pipeline UI is a multi-day slice                                              |
-| **High impact / High effort — plan carefully**          | AI qualification scoring + next-best-action (AI-003/004) | The headline differentiator ("AI Commercial Intelligence") but depends on AI-001/002 landing first                        |
-| **High impact / High effort — plan carefully**          | Automated communications trigger (COMM-003)              | Strong demo moment ("CRM stage change fires a real BalloAds message") but needs the API client + credential storage first |
-| **Medium impact / Low effort — fill-in**                | Contract CRUD (CRM-030/031)                              | Expected CRM feature, straightforward CRUD, not a differentiator                                                          |
-| **Medium impact / Medium effort — fill-in**             | Analytics dashboard (ANLY-001/002)                       | Good visual payoff with Recharts already installed, but needs aggregation plumbing first                                  |
-| **Low impact / High effort — avoid until core is done** | Natural-language pipeline Q&A (ANLY-003)                 | Impressive but high-risk/high-effort; only attempt if AI-001-005 and analytics are already solid                          |
-| **Low impact / High effort — avoid until core is done** | Full ABM campaign performance loop (ABM-002/003/004)     | Depends on BalloAds integration _and_ a campaign data model — defer past Sprint 3 unless time allows                      |
+| **High impact / Low effort - do next**                  | Surface BalloAds `HealthScore` (CRM-006)                 | Existing external field, just needs a UI badge - cheap, visibly "AI-ish" for judges                                       |
+| **High impact / Low effort - do next**                  | Contacts CRUD (CRM-010/011)                              | Directly extends the Sprint 1 Accounts pattern, low novelty risk                                                          |
+| **High impact / Low effort - do next**                  | Vertical taxonomy field (VSI-001)                        | One schema field unlocks segmentation demos later for near-zero cost                                                      |
+| **High impact / High effort - plan carefully**          | Opportunity pipeline + kanban (CRM-020/021)              | Core "CRM" narrative for judges, but a full pipeline UI is a multi-day slice                                              |
+| **High impact / High effort - plan carefully**          | AI qualification scoring + next-best-action (AI-003/004) | The headline differentiator ("AI Commercial Intelligence") but depends on AI-001/002 landing first                        |
+| **High impact / High effort - plan carefully**          | Automated communications trigger (COMM-003)              | Strong demo moment ("CRM stage change fires a real BalloAds message") but needs the API client + credential storage first |
+| **Medium impact / Low effort - fill-in**                | Contract CRUD (CRM-030/031)                              | Expected CRM feature, straightforward CRUD, not a differentiator                                                          |
+| **Medium impact / Medium effort - fill-in**             | Analytics dashboard (ANLY-001/002)                       | Good visual payoff with Recharts already installed, but needs aggregation plumbing first                                  |
+| **Low impact / High effort - avoid until core is done** | Natural-language pipeline Q&A (ANLY-003)                 | Impressive but high-risk/high-effort; only attempt if AI-001-005 and analytics are already solid                          |
+| **Low impact / High effort - avoid until core is done** | Full ABM campaign performance loop (ABM-002/003/004)     | Depends on BalloAds integration _and_ a campaign data model - defer past Sprint 3 unless time allows                      |

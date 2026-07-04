@@ -1,10 +1,10 @@
-# Phase 4 — ABM, Vertical Sales Indexing & analytics data
+# Phase 4 - ABM, Vertical Sales Indexing & analytics data
 
 Phase 4 is Developer 3's data/domain contribution to the "advanced analytics & ABM" phase
 ([../../roadmap.md](../../roadmap.md#phase-4--advanced-analytics--abm)). It formalizes **Vertical
 Sales Indexing** as a first-class segmentation dimension on the Account model, builds the
 **Account-Based Marketing** campaign data model and its BalloAds trigger path, and stands up the
-**analytics aggregation service** that computes and writes `analyticsCache` — the read-model that
+**analytics aggregation service** that computes and writes `analyticsCache` - the read-model that
 Developer 2's dashboards (ANLY-002/ANLY-004) render. It also delivers CSV bulk import for Accounts.
 
 Two architectural boundaries carry over from earlier phases:
@@ -13,11 +13,11 @@ Two architectural boundaries carry over from earlier phases:
   repositories and enforce referential integrity; `actions/` are thin Server Action entry points;
   types are `z.infer<...>` from `schemas/` ([../../decisions.md](../../decisions.md), [../../architecture.md](../../architecture.md)).
 - **BalloAds only via `lib/balloads/`.** ABM campaign sends and performance reads go through the
-  COMM-001 client server-side and are logged as activities — BalloCRM never reimplements messaging
+  COMM-001 client server-side and are logged as activities - BalloCRM never reimplements messaging
   ([ADR-007](../../decisions.md), [../../integrations.md](../../integrations.md)).
 
 `analyticsCache`, like `aiJobs` and `auditLogs`, is **server-write-only** in
-[../../firestore-rules.md](../../firestore-rules.md) — ANLY-001 must write it via the Admin SDK from a
+[../../firestore-rules.md](../../firestore-rules.md) - ANLY-001 must write it via the Admin SDK from a
 Server Action / Route Handler, never the client. Fields follow [../task-template.md](../task-template.md);
 the project-wide Definition of Done referenced below lives in
 [../../sprint-plan.md](../../sprint-plan.md#definition-of-done). See
@@ -39,15 +39,15 @@ the project-wide Definition of Done referenced below lives in
 - **Business Value**: A single schema field (High impact / Low effort in the
   [backlog priority matrix](../backlog.md#priority-matrix-impact-vs-effort)) unlocks all later
   vertical segmentation, benchmarking, and ABM targeting demos for near-zero cost.
-- **Dependencies**: `CRM-001` (Account schema/repository). **Soft**: none — this extends an existing schema.
+- **Dependencies**: `CRM-001` (Account schema/repository). **Soft**: none - this extends an existing schema.
 - **Target Files**:
   - `schemas/account-schema.ts` (add/confirm the `vertical` `z.enum`; export the enum for reuse)
   - `features/accounts/components/account-form.tsx` (a `Select`/combobox bound to the enum)
-  - `firestore.indexes.json` — **flag to Developer 1 (INFRA-010)**: the `vertical ASC, healthScore DESC`
+  - `firestore.indexes.json` - **flag to Developer 1 (INFRA-010)**: the `vertical ASC, healthScore DESC`
     composite index per [../../database-schema.md](../../database-schema.md)/[../../indexes.md](../../indexes.md)
-    (do not edit rules/indexes yourself — raise it)
+    (do not edit rules/indexes yourself - raise it)
 - **Technical Instructions**:
-  1. Define the `vertical` enum once in `schemas/account-schema.ts`; infer the TS type — never
+  1. Define the `vertical` enum once in `schemas/account-schema.ts`; infer the TS type - never
      hand-maintain a parallel string-union. Reuse the enum in VSI-002/VSI-003, ABM-002, and Developer
      2's VSI-004 filter bar rather than re-declaring values.
   2. Make it a required (or defaulted `other`) field on create/edit; back-fill existing docs as `other`.
@@ -62,7 +62,7 @@ the project-wide Definition of Done referenced below lives in
   - [ ] Acceptance criteria above all met
   - [ ] [../../database-schema.md](../../database-schema.md) reflects the enum values; index need raised
         to Developer 1 if missing
-  - [ ] Project-wide DoD met — see [../../sprint-plan.md](../../sprint-plan.md#definition-of-done)
+  - [ ] Project-wide DoD met - see [../../sprint-plan.md](../../sprint-plan.md#definition-of-done)
   - [ ] PR opened and reviewed per [../../../CONTRIBUTING.md](../../../CONTRIBUTING.md)
   - [ ] [../../progress.md](../../progress.md) and [../../changelog.md](../../changelog.md) updated
 - **Estimated Complexity**: S
@@ -85,14 +85,14 @@ the project-wide Definition of Done referenced below lives in
 - **Objective**: Provide a `services/`-level segmentation API and the query wiring so Accounts and
   Opportunities lists can be filtered by one or more verticals, using the `vertical ASC, healthScore
 DESC` composite index for the ranked-by-health case.
-- **Business Value**: Lets RevOps and leadership slice the book of business by industry — the core
+- **Business Value**: Lets RevOps and leadership slice the book of business by industry - the core
   vertical-indexing narrative from [../../vision.md](../../vision.md) (Diego/Priya personas).
 - **Dependencies**: `VSI-001` (the `vertical` field), `CRM-002`/`CRM-003` (accounts list),
   `CRM-020`/`CRM-021` (opportunities); Developer 2's `VSI-004` supplies the shared filter UI.
   **Soft**: build the service + query against the existing list pages first; wire the shared filter bar
   when VSI-004 lands.
 - **Target Files**:
-  - `services/segmentation.ts` (new — vertical filter composition over accounts/opportunities repos)
+  - `services/segmentation.ts` (new - vertical filter composition over accounts/opportunities repos)
   - `repositories/accounts.ts`, `repositories/opportunities.ts` (add vertical-filtered query methods)
   - `features/accounts/` and `features/opportunities/` list components (accept a `vertical` filter param)
 - **Technical Instructions**:
@@ -101,7 +101,7 @@ DESC` composite index for the ranked-by-health case.
      repository only.
   2. `services/segmentation.ts` composes those methods and returns typed results; the list pages read
      the current filter from URL params (set by VSI-004) and pass it through the Server Action.
-  3. Respect org scoping and role reads from the session (INFRA-003) — never query across orgs.
+  3. Respect org scoping and role reads from the session (INFRA-003) - never query across orgs.
 - **Acceptance Criteria**:
   - Selecting one or more verticals filters the accounts and opportunities lists to matching records.
   - The accounts vertical view is orderable by health score (uses the composite index, no client sort
@@ -110,7 +110,7 @@ DESC` composite index for the ranked-by-health case.
 - **Definition of Done**:
   - [ ] Acceptance criteria above all met
   - [ ] [../../indexes.md](../../indexes.md) cross-checked (index used, not a full-collection scan)
-  - [ ] Project-wide DoD met — see [../../sprint-plan.md](../../sprint-plan.md#definition-of-done)
+  - [ ] Project-wide DoD met - see [../../sprint-plan.md](../../sprint-plan.md#definition-of-done)
   - [ ] PR opened and reviewed per [../../../CONTRIBUTING.md](../../../CONTRIBUTING.md)
   - [ ] [../../progress.md](../../progress.md) and [../../changelog.md](../../changelog.md) updated
 - **Estimated Complexity**: M
@@ -134,15 +134,15 @@ DESC` composite index for the ranked-by-health case.
 - **Objective**: Produce comparative per-vertical metrics (avg health score, open pipeline value, win
   rate, deal count) as part of the analytics aggregation so leadership can benchmark and forecast per
   industry rather than only in aggregate; the results are written into `analyticsCache` via ANLY-001.
-- **Business Value**: Turns vertical indexing from a filter into insight — "which verticals are
-  healthy vs. at risk" — a strong analytics story for the VP-of-Sales persona.
+- **Business Value**: Turns vertical indexing from a filter into insight - "which verticals are
+  healthy vs. at risk" - a strong analytics story for the VP-of-Sales persona.
 - **Dependencies**: `VSI-001`/`VSI-002` (vertical dimension + segmentation), `ANLY-001` (the
   aggregation service + `analyticsCache` writer this plugs into), `CRM-023` (velocity/win-rate
   computation to reuse). Developer 2's `ANLY-004` renders these. **Soft**: can compute standalone and
   fold into ANLY-001's cache write once it lands.
 - **Target Files**:
-  - `services/analytics/vertical-benchmarks.ts` (new — per-vertical rollup functions)
-  - `services/analytics/aggregate.ts` (extend — include vertical breakdown in the cache payload; shared
+  - `services/analytics/vertical-benchmarks.ts` (new - per-vertical rollup functions)
+  - `services/analytics/aggregate.ts` (extend - include vertical breakdown in the cache payload; shared
     with ANLY-001)
 - **Technical Instructions**:
   1. Group opportunities/accounts by `vertical` and compute avg `healthScore`, total open `amount`,
@@ -151,7 +151,7 @@ DESC` composite index for the ranked-by-health case.
   2. Emit a `verticalBreakdown` block into the ANLY-001 `analyticsCache` document shape (see
      [../../database-schema.md](../../database-schema.md) `analyticsCache`); do not create a new
      collection.
-  3. All writes go through ANLY-001's server-only cache writer (Admin SDK) — `analyticsCache` is
+  3. All writes go through ANLY-001's server-only cache writer (Admin SDK) - `analyticsCache` is
      `allow write: if false` for clients.
 - **Acceptance Criteria**:
   - The aggregation output contains a per-vertical breakdown (health, open value, win rate, count).
@@ -161,7 +161,7 @@ DESC` composite index for the ranked-by-health case.
   - [ ] Acceptance criteria above all met
   - [ ] [../../database-schema.md](../../database-schema.md) `analyticsCache` shape updated with the
         `verticalBreakdown` block
-  - [ ] Project-wide DoD met — see [../../sprint-plan.md](../../sprint-plan.md#definition-of-done)
+  - [ ] Project-wide DoD met - see [../../sprint-plan.md](../../sprint-plan.md#definition-of-done)
   - [ ] PR opened and reviewed per [../../../CONTRIBUTING.md](../../../CONTRIBUTING.md)
   - [ ] [../../progress.md](../../progress.md) and [../../changelog.md](../../changelog.md) updated
 - **Estimated Complexity**: M
@@ -181,17 +181,17 @@ DESC` composite index for the ranked-by-health case.
 - **Priority**: P2
 - **Owner**: Developer 3
 - **Title**: Define the `Campaign` Zod schema and Firestore repository (`organizations/{orgId}/campaigns`)
-- **Objective**: Create the ABM campaign data model — `campaignId`, `name`, `status`, `targetVertical`,
-  `targetAccountIds[]`, `balloAdsJourneyRef`, `startDate`/`endDate`, `ownerId`, timestamps — and its
+- **Objective**: Create the ABM campaign data model - `campaignId`, `name`, `status`, `targetVertical`,
+  `targetAccountIds[]`, `balloAdsJourneyRef`, `startDate`/`endDate`, `ownerId`, timestamps - and its
   repository, matching [../../database-schema.md](../../database-schema.md) exactly.
 - **Business Value**: The foundation of Account-Based Marketing in BalloCRM; without the campaign
   record there is nothing to target accounts with or trigger a BalloAds journey from.
-- **Dependencies**: `CRM-001` (repository pattern reference), `INFRA-010` (rules for `campaigns` —
+- **Dependencies**: `CRM-001` (repository pattern reference), `INFRA-010` (rules for `campaigns` -
   write requires `owner`/`admin`/`manager`). **Soft**: can build schema + repository against local
   rules-agnostic reads first.
 - **Target Files**:
-  - `schemas/campaign-schema.ts` (new — Zod shape; `status` and `targetVertical` reuse existing enums)
-  - `repositories/campaigns.ts` (new — CRUD under `organizations/{orgId}/campaigns`)
+  - `schemas/campaign-schema.ts` (new - Zod shape; `status` and `targetVertical` reuse existing enums)
+  - `repositories/campaigns.ts` (new - CRUD under `organizations/{orgId}/campaigns`)
   - `features/campaigns/` (folder scaffold)
 - **Technical Instructions**:
   1. Model every field per [../../database-schema.md](../../database-schema.md); `targetVertical` reuses
@@ -203,11 +203,11 @@ DESC` composite index for the ranked-by-health case.
 - **Acceptance Criteria**:
   - A campaign can be created/read/updated/listed through the repository, org-scoped, matching the schema.
   - The active/upcoming list query orders by `status`, then `startDate DESC` using the index.
-  - `balloAdsJourneyRef` and `targetAccountIds` persist as plain strings/array — no `DocumentReference`.
+  - `balloAdsJourneyRef` and `targetAccountIds` persist as plain strings/array - no `DocumentReference`.
 - **Definition of Done**:
   - [ ] Acceptance criteria above all met
   - [ ] [../../database-schema.md](../../database-schema.md) reconciled; index need raised to Developer 1
-  - [ ] Project-wide DoD met — see [../../sprint-plan.md](../../sprint-plan.md#definition-of-done)
+  - [ ] Project-wide DoD met - see [../../sprint-plan.md](../../sprint-plan.md#definition-of-done)
   - [ ] PR opened and reviewed per [../../../CONTRIBUTING.md](../../../CONTRIBUTING.md)
   - [ ] [../../progress.md](../../progress.md) and [../../changelog.md](../../changelog.md) updated
 - **Estimated Complexity**: M
@@ -230,20 +230,20 @@ DESC` composite index for the ranked-by-health case.
 - **Objective**: Let a manager assemble a campaign's target audience by filtering accounts (by
   vertical, tier, health band, owner) via the VSI-002 segmentation service and persisting the resulting
   account IDs onto the campaign's `targetAccountIds[]`.
-- **Business Value**: This is where ABM becomes actionable — choosing _which_ accounts a coordinated
+- **Business Value**: This is where ABM becomes actionable - choosing _which_ accounts a coordinated
   outreach targets, the step between "we have a campaign" and "we can trigger it."
 - **Dependencies**: `ABM-001` (campaign record), `VSI-002` (segmentation service), Developer 2's
   `VSI-004` (filter UI) and `SHELL-013` (selectable data table). **Soft**: build the service + a plain
   multi-select list first; adopt the shared filter/table UI when they land.
 - **Target Files**:
-  - `services/campaigns.ts` (new — validate `targetAccountIds` exist, dedupe, attach to campaign)
+  - `services/campaigns.ts` (new - validate `targetAccountIds` exist, dedupe, attach to campaign)
   - `actions/campaigns.ts` (Server Action: `setCampaignTargets`)
   - `features/campaigns/components/target-builder.tsx` (filter + select + save)
 - **Technical Instructions**:
   1. Reuse VSI-002 to fetch the filtered candidate accounts; the builder selects a subset and calls the
      Server Action to persist `targetAccountIds`.
   2. `services/campaigns.ts` performs referential-integrity checks (each account exists, is in the org)
-     before writing — per the "no FK enforcement in Firestore" note in
+     before writing - per the "no FK enforcement in Firestore" note in
      [../../database-schema.md](../../database-schema.md).
   3. Log a `note_added`/campaign-updated activity so the targeting change is auditable (CRM-008 service).
 - **Acceptance Criteria**:
@@ -253,7 +253,7 @@ DESC` composite index for the ranked-by-health case.
 - **Definition of Done**:
   - [ ] Acceptance criteria above all met
   - [ ] [../../database-schema.md](../../database-schema.md) integrity rules honored
-  - [ ] Project-wide DoD met — see [../../sprint-plan.md](../../sprint-plan.md#definition-of-done)
+  - [ ] Project-wide DoD met - see [../../sprint-plan.md](../../sprint-plan.md#definition-of-done)
   - [ ] PR opened and reviewed per [../../../CONTRIBUTING.md](../../../CONTRIBUTING.md)
   - [ ] [../../progress.md](../../progress.md) and [../../changelog.md](../../changelog.md) updated
 - **Estimated Complexity**: M
@@ -274,15 +274,15 @@ DESC` composite index for the ranked-by-health case.
 - **Title**: Trigger a BalloAds journey/campaign for a CRM campaign's targets and log it as an activity
 - **Objective**: From a CRM campaign, call the BalloAds developer-portal API (via the COMM-001 client)
   to launch the referenced journey (`balloAdsJourneyRef`) against the resolved contacts of
-  `targetAccountIds`, and record the send as a `balloads_campaign_triggered` activity — BalloCRM never
+  `targetAccountIds`, and record the send as a `balloads_campaign_triggered` activity - BalloCRM never
   sends messages itself.
-- **Business Value**: The headline ABM demo moment — "a CRM campaign fires a real BalloAds outreach" —
+- **Business Value**: The headline ABM demo moment - "a CRM campaign fires a real BalloAds outreach" -
   proving the native-integration value proposition from [../../vision.md](../../vision.md).
 - **Dependencies**: `ABM-001`/`ABM-002` (campaign + targets), `COMM-001` (BalloAds client, Dev 1),
   `COMM-002` (credential storage, Dev 1), `CRM-008` (activity logging). **Soft**: until COMM-001 lands,
   develop against a typed mock of the client matching [../../integrations.md](../../integrations.md).
 - **Target Files**:
-  - `services/campaigns.ts` (extend — resolve targets → contacts, invoke client, log activity)
+  - `services/campaigns.ts` (extend - resolve targets → contacts, invoke client, log activity)
   - `actions/campaigns.ts` (Server Action: `triggerCampaign`)
   - `features/campaigns/components/campaign-detail.tsx` (trigger button + result state)
 - **Technical Instructions**:
@@ -291,7 +291,7 @@ DESC` composite index for the ranked-by-health case.
      server-only via `lib/balloads/` per [ADR-007](../../decisions.md).
   2. On success, write a `balloads_campaign_triggered` activity (`relatedTo: { type: "campaign", id }`)
      via CRM-008; on failure, surface the error and do not write a success activity.
-  3. Never store a parallel message ledger in BalloCRM — the activity is the record; delivery status is
+  3. Never store a parallel message ledger in BalloCRM - the activity is the record; delivery status is
      read back separately (COMM-004 / ABM-004).
 - **Acceptance Criteria**:
   - Triggering a campaign calls the BalloAds client with the journey ref and resolved recipients,
@@ -301,7 +301,7 @@ DESC` composite index for the ranked-by-health case.
 - **Definition of Done**:
   - [ ] Acceptance criteria above all met
   - [ ] [../../integrations.md](../../integrations.md) trigger contract honored
-  - [ ] Project-wide DoD met — see [../../sprint-plan.md](../../sprint-plan.md#definition-of-done)
+  - [ ] Project-wide DoD met - see [../../sprint-plan.md](../../sprint-plan.md#definition-of-done)
   - [ ] PR opened and reviewed per [../../../CONTRIBUTING.md](../../../CONTRIBUTING.md)
   - [ ] [../../progress.md](../../progress.md) and [../../changelog.md](../../changelog.md) updated
 - **Estimated Complexity**: L
@@ -323,7 +323,7 @@ DESC` composite index for the ranked-by-health case.
 - **Owner**: Developer 3
 - **Title**: Read campaign performance (opens/clicks/delivery) back from BalloAds for a campaign
 - **Objective**: Fetch the performance metrics for a triggered campaign from the BalloAds developer-
-  portal API (via COMM-001) and expose them to the campaign detail view — read-only, sourced from
+  portal API (via COMM-001) and expose them to the campaign detail view - read-only, sourced from
   BalloAds, never computed or stored as an authoritative BalloCRM metric.
 - **Business Value**: Closes the ABM loop (trigger → outcome) so a manager can see whether an outreach
   worked, completing the "coordinated outreach through BalloAds" capability.
@@ -331,7 +331,7 @@ DESC` composite index for the ranked-by-health case.
   render richer charts; a basic read-back surface is in scope here. **Soft**: mock the metrics response
   until COMM-001 lands.
 - **Target Files**:
-  - `services/campaigns.ts` (extend — fetch + normalize BalloAds performance)
+  - `services/campaigns.ts` (extend - fetch + normalize BalloAds performance)
   - `actions/campaigns.ts` (Server Action / cached read: `getCampaignPerformance`)
   - `features/campaigns/components/campaign-performance.tsx`
 - **Technical Instructions**:
@@ -349,7 +349,7 @@ DESC` composite index for the ranked-by-health case.
 - **Definition of Done**:
   - [ ] Acceptance criteria above all met
   - [ ] [../../integrations.md](../../integrations.md) read-back contract honored
-  - [ ] Project-wide DoD met — see [../../sprint-plan.md](../../sprint-plan.md#definition-of-done)
+  - [ ] Project-wide DoD met - see [../../sprint-plan.md](../../sprint-plan.md#definition-of-done)
   - [ ] PR opened and reviewed per [../../../CONTRIBUTING.md](../../../CONTRIBUTING.md)
   - [ ] [../../progress.md](../../progress.md) and [../../changelog.md](../../changelog.md) updated
 - **Estimated Complexity**: M
@@ -368,9 +368,9 @@ DESC` composite index for the ranked-by-health case.
 - **Priority**: P2
 - **Owner**: Developer 3
 - **Title**: Build the analytics aggregation service that computes and writes `analyticsCache`
-- **Objective**: Stand up the service that computes org-level commercial aggregates — pipeline velocity
+- **Objective**: Stand up the service that computes org-level commercial aggregates - pipeline velocity
   (avg days in stage), forecast/total open value, win rate, account-health distribution, and the
-  VSI-003 vertical breakdown — and writes them into `organizations/{orgId}/analyticsCache/{cacheKey}`
+  VSI-003 vertical breakdown - and writes them into `organizations/{orgId}/analyticsCache/{cacheKey}`
   with `computedAt`/`expiresAt`, so dashboards read a cheap precomputed model instead of recomputing on
   every load.
 - **Business Value**: The data engine behind every dashboard (Developer 2's ANLY-002/ANLY-004) and the
@@ -378,19 +378,19 @@ DESC` composite index for the ranked-by-health case.
   show.
 - **Dependencies**: `CRM-020`/`CRM-021` (opportunities + stages), `CRM-023` (velocity/win-rate helpers),
   `CRM-030` (contracts for renewal/forecast), `VSI-003` (vertical breakdown), `INFRA-010` (rules:
-  `analyticsCache` is `write: if false` for clients — server-only). Developer 2's ANLY-002/004 consume
+  `analyticsCache` is `write: if false` for clients - server-only). Developer 2's ANLY-002/004 consume
   the output. **Soft**: compute from whatever entities exist and expand as more land.
 - **Target Files**:
-  - `services/analytics/aggregate.ts` (new — the aggregation computations)
-  - `repositories/analytics-cache.ts` (new — Admin-SDK write/read of `analyticsCache`)
+  - `services/analytics/aggregate.ts` (new - the aggregation computations)
+  - `repositories/analytics-cache.ts` (new - Admin-SDK write/read of `analyticsCache`)
   - `actions/analytics.ts` or `app/api/analytics/recompute/route.ts` (server-only trigger to recompute)
 - **Technical Instructions**:
   1. Compute the aggregates from `opportunities`, `accounts`, `contracts`, and `activities`; reuse
      CRM-023 and VSI-003 helpers rather than duplicating stage/win-rate math.
   2. Write results to `analyticsCache` **only via the Admin SDK** from a Server Action / Route Handler
-     — the collection is `allow write: if false` for clients ([../../firestore-rules.md](../../firestore-rules.md)).
-     Set `cacheKey`, `computedAt`, `expiresAt`, and a typed `data` payload per
-     [../../database-schema.md](../../database-schema.md).
+     - the collection is `allow write: if false` for clients ([../../firestore-rules.md](../../firestore-rules.md)).
+       Set `cacheKey`, `computedAt`, `expiresAt`, and a typed `data` payload per
+       [../../database-schema.md](../../database-schema.md).
   3. Make recompute idempotent and safe to run on demand (and later on a schedule); reads check
      `expiresAt` and fall back to recompute when stale.
   4. Keep the cache document shape typed by a Zod schema shared with Developer 2's dashboard reads.
@@ -404,7 +404,7 @@ DESC` composite index for the ranked-by-health case.
   - [ ] Acceptance criteria above all met
   - [ ] [../../database-schema.md](../../database-schema.md) `analyticsCache` shape reconciled;
         [../../firestore-rules.md](../../firestore-rules.md) server-only write confirmed with Developer 1
-  - [ ] Project-wide DoD met — see [../../sprint-plan.md](../../sprint-plan.md#definition-of-done)
+  - [ ] Project-wide DoD met - see [../../sprint-plan.md](../../sprint-plan.md#definition-of-done)
   - [ ] PR opened and reviewed per [../../../CONTRIBUTING.md](../../../CONTRIBUTING.md)
   - [ ] [../../progress.md](../../progress.md) and [../../changelog.md](../../changelog.md) updated
 - **Estimated Complexity**: L
@@ -422,7 +422,7 @@ DESC` composite index for the ranked-by-health case.
 ### CRM-060: Account bulk import (CSV)
 
 - **Task ID**: `CRM-060` (reconciles to [../backlog.md](../backlog.md) **CRM-007**, "Account bulk
-  import (CSV)" — re-minted to avoid colliding with the Phase-1 CRM numbering; see
+  import (CSV)" - re-minted to avoid colliding with the Phase-1 CRM numbering; see
   [README.md](./README.md#id-reconciliation-note))
 - **Epic**: Accounts
 - **Priority**: P3
@@ -430,15 +430,15 @@ DESC` composite index for the ranked-by-health case.
 - **Title**: Import accounts in bulk from a CSV file with validation and an error report
 - **Objective**: Let an admin/manager upload a CSV of accounts, validate each row against the Account
   Zod schema, create the valid rows through the existing accounts service, and return a per-row result
-  report (created / skipped-duplicate / rejected-with-reason) — no partial silent failures.
+  report (created / skipped-duplicate / rejected-with-reason) - no partial silent failures.
 - **Business Value**: Removes the biggest onboarding friction for a new org (getting the existing book
   of accounts into BalloCRM) and makes a demo with realistic data volume fast to set up.
 - **Dependencies**: `CRM-001` (schema), `CRM-002` (create service with duplicate check), `VSI-001`
   (vertical enum for validation). Developer 2's `SHELL-010`/`SHELL-011` provide the upload/result UI.
   **Soft**: build the parse+validate+create service first with a plain file input.
 - **Target Files**:
-  - `services/account-import.ts` (new — parse, per-row validate, dedupe, create, collect results)
-  - `actions/accounts.ts` (extend — `importAccounts` Server Action taking parsed rows)
+  - `services/account-import.ts` (new - parse, per-row validate, dedupe, create, collect results)
+  - `actions/accounts.ts` (extend - `importAccounts` Server Action taking parsed rows)
   - `features/accounts/components/import-dialog.tsx` (upload + mapping + result report)
 - **Technical Instructions**:
   1. Parse CSV to rows, map columns to Account fields, and validate each row with the Account Zod
@@ -457,7 +457,7 @@ DESC` composite index for the ranked-by-health case.
   - [ ] Acceptance criteria above all met
   - [ ] [../../database-schema.md](../../database-schema.md) / [../../routes.md](../../routes.md)
         cross-checked (any import route documented)
-  - [ ] Project-wide DoD met — see [../../sprint-plan.md](../../sprint-plan.md#definition-of-done)
+  - [ ] Project-wide DoD met - see [../../sprint-plan.md](../../sprint-plan.md#definition-of-done)
   - [ ] PR opened and reviewed per [../../../CONTRIBUTING.md](../../../CONTRIBUTING.md)
   - [ ] [../../progress.md](../../progress.md) and [../../changelog.md](../../changelog.md) updated
 - **Estimated Complexity**: M

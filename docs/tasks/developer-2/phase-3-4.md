@@ -1,8 +1,8 @@
-# Phase 3–4 — Analytics & AI presentation
+# Phase 3–4 - Analytics & AI presentation
 
 Phase 3–4 is Developer 2's contribution to the "differentiators" sprint: the presentation layer for
 Brutus AI commercial intelligence and the analytics dashboards. Everything here is UI over data
-another track produces — AI panels read `organizations/{orgId}/aiJobs` output (jobs authored by
+another track produces - AI panels read `organizations/{orgId}/aiJobs` output (jobs authored by
 Developer 1/3: AI-003/004/005), analytics reads `organizations/{orgId}/analyticsCache` (ANLY-001,
 Developer 3), and the vertical filter bar drives Accounts/Opportunities/Analytics queries. **None
 of these tasks may serialize on the producer landing.** Each one specifies a typed mock/stub matching
@@ -25,12 +25,12 @@ tooltips. Also load the **dataviz** skill before writing any chart code. Fields 
 - **Priority**: P2
 - **Owner**: Developer 2
 - **Title**: AI insight panel component (renders `aiJobs` output: score, next-best-action, summary) with polling/loading/failed states
-- **Objective**: Build a reusable panel that renders a completed Brutus AI job's `output` — score,
-  next-best-action, rationale/summary — and handles the full async lifecycle
+- **Objective**: Build a reusable panel that renders a completed Brutus AI job's `output` - score,
+  next-best-action, rationale/summary - and handles the full async lifecycle
   (`queued`/`running`/`completed`/`failed`) by polling/subscribing to an `aiJobs` document, so
   Account/Opportunity detail pages can show AI insight without their own lifecycle logic.
 - **Business Value**: This is where the headline "AI Commercial Intelligence" story becomes visible
-  to judges — a clean panel showing a qualification score and a recommended next action is the
+  to judges - a clean panel showing a qualification score and a recommended next action is the
   differentiator the whole pitch rests on.
 - **Dependencies**: The `aiJobs` document shape + state machine (`AI-001`, Developer 1/3) and the
   jobs that produce output (`AI-003` qualification, `AI-004` next-best-action, `AI-005`
@@ -39,10 +39,10 @@ tooltips. Also load the **dataviz** skill before writing any chart code. Fields 
   once AI-001 lands. Pairs with `AI-011` (the trigger).
 - **Target Files**:
   - `components/shared/ai/ai-insight-panel.tsx` (new)
-  - `components/shared/ai/ai-insight-skeleton.tsx` (new — or reuse `card-skeleton` from SHELL-011)
-  - `features/ai/hooks/use-ai-job.ts` (new — TanStack Query poll / `onSnapshot` on one job;
+  - `components/shared/ai/ai-insight-skeleton.tsx` (new - or reuse `card-skeleton` from SHELL-011)
+  - `features/ai/hooks/use-ai-job.ts` (new - TanStack Query poll / `onSnapshot` on one job;
     coordinate the `features/ai/` folder)
-  - `schemas/ai-job-schema.ts` (if not already owned by Dev 1/3 — the Zod shape for an aiJob;
+  - `schemas/ai-job-schema.ts` (if not already owned by Dev 1/3 - the Zod shape for an aiJob;
     confirm ownership first)
 - **Technical Instructions**:
   1. Model the `aiJobs` shape as a Zod schema per [../../database-schema.md](../../database-schema.md):
@@ -51,7 +51,7 @@ tooltips. Also load the **dataviz** skill before writing any chart code. Fields 
 nextBestAction?, rationale?, summary? }`), `error`, `requestedBy`, timestamps.
   2. `use-ai-job.ts` reads a single job by `jobId`: poll via TanStack Query on a short interval
      while `status` is `queued`/`running`, stop on terminal state; or subscribe with `onSnapshot`
-     for real-time — either way read **only** from `aiJobs` (no separate result collection), per the
+     for real-time - either way read **only** from `aiJobs` (no separate result collection), per the
      async AI Job pattern in [../../integrations.md](../../integrations.md). `aiJobs` is client-
      readable (rule allows org members to read), so a client subscription is acceptable.
   3. Render by status: `queued`/`running` → a `progress`/spinner + "Brutus is analyzing…" with the
@@ -61,7 +61,7 @@ nextBestAction?, rationale?, summary? }`), `error`, `requestedBy`, timestamps.
   4. Use `card.tsx` for the panel; label it clearly as AI/Brutus-sourced. Score badges must carry a
      text label (not color-only), per Accessibility. Keep the panel generic over job `type` so it
      serves Account (summary/next-best-action) and Opportunity (qualification score) alike.
-  5. Never call Brutus AI or a repository directly from the component — it only reads the job doc.
+  5. Never call Brutus AI or a repository directly from the component - it only reads the job doc.
 - **Acceptance Criteria**:
   - Given a mock/real job in `queued`/`running`, the panel shows a loading/progress state that
     polls or subscribes until terminal.
@@ -95,7 +95,7 @@ nextBestAction?, rationale?, summary? }`), `error`, `requestedBy`, timestamps.
 - **Priority**: P2
 - **Owner**: Developer 2
 - **Title**: AI job trigger button + progress UX (invokes a Server Action, shows queued/running/completed)
-- **Objective**: Build the trigger control that kicks off a Brutus AI job — a button that calls the
+- **Objective**: Build the trigger control that kicks off a Brutus AI job - a button that calls the
   relevant Server Action (e.g. `requestQualificationScore`), receives a `jobId`, and reflects
   progress (queued → running → completed/failed) by handing off to the AI-010 panel, with correct
   disabled/in-flight states so a user can't double-fire.
@@ -108,11 +108,11 @@ nextBestAction?, rationale?, summary? }`), `error`, `requestedBy`, timestamps.
   states; swap to the real action + hook when they land.
 - **Target Files**:
   - `components/shared/ai/ai-trigger-button.tsx` (new)
-  - `features/ai/hooks/use-trigger-ai-job.ts` (new — wraps the action call + result handling)
+  - `features/ai/hooks/use-trigger-ai-job.ts` (new - wraps the action call + result handling)
   - Consumes `use-ai-job.ts` + `AiInsightPanel` from AI-010
 - **Technical Instructions**:
   1. `AiTriggerButton` accepts an injected async `onTrigger()` that returns the shared Server Action
-     result (`{ ok: true, data: { jobId } } | { ok: false, error }`) — the real one is a feature
+     result (`{ ok: true, data: { jobId } } | { ok: false, error }`) - the real one is a feature
      Server Action (e.g. `features/opportunities/actions/qualify-opportunity.ts`) that writes a
      `queued` aiJob and returns the `jobId` immediately (the rep is not blocked on the AI call), per
      the async pattern in [../../integrations.md](../../integrations.md).
@@ -154,8 +154,8 @@ nextBestAction?, rationale?, summary? }`), `error`, `requestedBy`, timestamps.
 - **Priority**: P2
 - **Owner**: Developer 2
 - **Title**: Pipeline/forecast analytics dashboard (Recharts) on `/analytics`
-- **Objective**: Build the `/analytics` page's pipeline and forecast visualizations — pipeline value
-  over time (line/area), opportunities by stage (bar), win-rate trend, and forecast totals — as
+- **Objective**: Build the `/analytics` page's pipeline and forecast visualizations - pipeline value
+  over time (line/area), opportunities by stage (bar), win-rate trend, and forecast totals - as
   Recharts charts wired to read-only analytics data, with date-range/segment filters and proper
   loading states.
 - **Business Value**: A polished analytics dashboard is a high-visual-payoff judging moment
@@ -171,34 +171,34 @@ nextBestAction?, rationale?, summary? }`), `error`, `requestedBy`, timestamps.
   - `app/(dashboard)/analytics/page.tsx` (new)
   - `features/analytics/components/pipeline-value-chart.tsx`, `stage-distribution-chart.tsx`,
     `win-rate-chart.tsx`, `forecast-summary.tsx` (new)
-  - `features/analytics/hooks/use-analytics.ts` (new — TanStack Query over the read actions)
-  - `components/shared/chart-tooltip.tsx` (new — popover-styled custom Recharts tooltip, reusable
+  - `features/analytics/hooks/use-analytics.ts` (new - TanStack Query over the read actions)
+  - `components/shared/chart-tooltip.tsx` (new - popover-styled custom Recharts tooltip, reusable
     across all Phase 3–4 charts)
 - **Technical Instructions**:
   1. **Load the `dataviz` skill before writing chart code.** Follow the Charts conventions in
      [../../ui-design-system.md](../../ui-design-system.md): line/area for trend, bar for
      categorical (opportunities by stage), color exclusively via `var(--color-chart-1..5)` (one
      token per series, in order) and `--color-primary`/`--color-destructive` for semantic series
-     (won vs lost) — never hardcoded hex. Wrap each chart in `ResponsiveContainer` inside a
+     (won vs lost) - never hardcoded hex. Wrap each chart in `ResponsiveContainer` inside a
      `Card`/`CardContent` with a same-height `ChartSkeleton` (SHELL-011) loading state.
   2. Build a reusable `chart-tooltip.tsx` styled to match `popover.tsx` (bg-popover, text-popover-
      foreground, rounded, ring) and use it via Recharts' `Tooltip content=` on every chart, per the
-     tooltip rule — not the default Recharts box.
+     tooltip rule - not the default Recharts box.
   3. `use-analytics.ts` reads via TanStack Query over the ANLY-001 read actions
      (`getPipelineVelocity`, `getForecast`) backed by `analyticsCache`; the page is a Server
      Component with interactive chart leaves as small client components. Never read a repository or
-     recompute aggregates client-side — the point of `analyticsCache` is precomputed reads.
+     recompute aggregates client-side - the point of `analyticsCache` is precomputed reads.
   4. Add date-range and segment `select.tsx` filters (and the shared `VSI-004` vertical filter bar
      when available) in a toolbar; changing them re-queries. A `forecast-summary.tsx` renders
      forecast totals as `KpiCard`s (SHELL-003).
   5. Respect the `/analytics` permissions in [../../routes.md](../../routes.md) (owner/admin/manager/
-     viewer; `rep` may be scoped) — the page renders behind the auth gate; scope-by-role is data-
+     viewer; `rep` may be scoped) - the page renders behind the auth gate; scope-by-role is data-
      side (Developer 3), but don't hardcode assumptions that break for a scoped `rep`.
 - **Acceptance Criteria**:
   - `/analytics` renders inside the shell with a pipeline-value trend chart, a by-stage bar chart, a
     win-rate trend, and forecast KPI tiles.
   - All chart colors resolve from `--color-chart-*`/semantic tokens and adapt correctly between
-    light and dark mode (verify by toggling theme — no hardcoded hex).
+    light and dark mode (verify by toggling theme - no hardcoded hex).
   - Each chart shows a same-height skeleton while loading (no layout shift) and a popover-styled
     custom tooltip on hover.
   - Date-range/segment filters re-query and update the charts.
@@ -230,29 +230,29 @@ nextBestAction?, rationale?, summary? }`), `error`, `requestedBy`, timestamps.
 - **Priority**: P3
 - **Owner**: Developer 2
 - **Title**: Natural-language pipeline Q&A panel UI (calls the Brutus NL job)
-- **Objective**: Build the "ask a question about your pipeline" panel on `/analytics` — a query
+- **Objective**: Build the "ask a question about your pipeline" panel on `/analytics` - a query
   input that kicks off a Brutus AI natural-language analytics job (an `aiJobs` entry) and renders
   the completed answer (text plus any returned chart/table data), reusing the AI-010/AI-011 async
   job lifecycle.
 - **Business Value**: Natural-language querying is a "wow" moment for judges ("how many deals will
-  close this quarter?" answered in plain English), showcasing Brutus AI beyond scoring — a strong
+  close this quarter?" answered in plain English), showcasing Brutus AI beyond scoring - a strong
   differentiator if the core is already solid.
 - **Dependencies**: `AI-010` (job-lifecycle panel), `AI-011` (trigger pattern), `ANLY-002`
   (`/analytics` page context). The NL analytics job type in `aiJobs` (Brutus, Developer 1/3).
   **Soft**: build against a stubbed action returning a `jobId` and a mock completed NL job whose
   `output` includes an answer string (+ optional structured data); swap to the real action/hook
-  later. This is P3 — attempt only if AI-001-005 and analytics are solid (per the backlog priority
+  later. This is P3 - attempt only if AI-001-005 and analytics are solid (per the backlog priority
   matrix).
 - **Target Files**:
   - `features/analytics/components/nl-query-panel.tsx` (new)
-  - `features/analytics/hooks/use-nl-query.ts` (new — wraps trigger + `use-ai-job`)
+  - `features/analytics/hooks/use-nl-query.ts` (new - wraps trigger + `use-ai-job`)
   - Consumes `AiInsightPanel`/`use-ai-job` (AI-010), the SHELL-012 toast helper, and the shared
     `chart-tooltip`/chart components from ANLY-002 if the answer includes chart data
 - **Technical Instructions**:
   1. Build the query box with `input-group.tsx` (or `command.tsx`) per the `/analytics` component
      list in [../../routes.md](../../routes.md): a text input + submit, with example prompt chips.
   2. On submit, call the NL-analytics Server Action (stub → real) which writes an `aiJobs` doc of
-     the NL-query type and returns a `jobId`; then drive the lifecycle with `use-ai-job` (AI-010) —
+     the NL-query type and returns a `jobId`; then drive the lifecycle with `use-ai-job` (AI-010) -
      queued/running → answer. Reuse AI-011's trigger/disabled semantics so a query can't double-fire.
   3. Render the completed `output` answer as body text; if the job returns structured data
      (series/rows), render it with the ANLY-002 chart components or a `DataTable` (SHELL-005/013).
@@ -291,14 +291,14 @@ nextBestAction?, rationale?, summary? }`), `error`, `requestedBy`, timestamps.
 - **Priority**: P2
 - **Owner**: Developer 2
 - **Title**: Account health distribution + vertical breakdown charts + KPI tiles wired to `analyticsCache`
-- **Objective**: Build the account-health and vertical-segmentation analytics — a health-score
+- **Objective**: Build the account-health and vertical-segmentation analytics - a health-score
   distribution chart (bands: healthy/watch/at-risk), an accounts-by-vertical breakdown (bar), and
-  supporting KPI tiles — wired to the `analyticsCache` read model, complementing the pipeline/
+  supporting KPI tiles - wired to the `analyticsCache` read model, complementing the pipeline/
   forecast charts from ANLY-002.
 - **Business Value**: Health and vertical breakdowns turn the BalloAds health-score enrichment and
   the vertical-sales-indexing story into a visible dashboard, directly supporting two of the
   product's named differentiators for judges.
-- **Dependencies**: `ANLY-002` (charts/tooltip infra, `/analytics` page), `ANLY-001` (Developer 3 —
+- **Dependencies**: `ANLY-002` (charts/tooltip infra, `/analytics` page), `ANLY-001` (Developer 3 -
   `analyticsCache` producer, e.g. health/vertical breakdown cache keys), `VSI-004` (vertical filter
   bar, soft). **Soft**: build against mock cache data matching the `analyticsCache` shape in
   [../../database-schema.md](../../database-schema.md) (e.g. a `health_distribution` and
@@ -306,17 +306,17 @@ nextBestAction?, rationale?, summary? }`), `error`, `requestedBy`, timestamps.
 - **Target Files**:
   - `features/analytics/components/health-distribution-chart.tsx` (new)
   - `features/analytics/components/vertical-breakdown-chart.tsx` (new)
-  - `features/analytics/components/health-kpi-tiles.tsx` (new — reuses `KpiCard`)
+  - `features/analytics/components/health-kpi-tiles.tsx` (new - reuses `KpiCard`)
   - `app/(dashboard)/analytics/page.tsx` (compose these into the analytics page from ANLY-002)
   - `features/analytics/hooks/use-analytics.ts` (extend with health/vertical queries)
 - **Technical Instructions**:
   1. **Health distribution**: a bar (or stacked) chart of account counts by health band. Map bands
      to semantic status per the Colors guidance in [../../ui-design-system.md](../../ui-design-system.md)
-     — healthy/watch/at-risk should reuse existing `Badge`/token semantics (`default`/`secondary`/
-     `destructive`) rather than inventing green/amber/red hex; on the chart, use `--color-primary`/
-     `--color-chart-*`/`--color-destructive` tokens, never hardcoded hex. Band thresholds should
-     reference `ACCOUNT_HEALTH_THRESHOLDS` (constants, per [../../folder-structure.md](../../folder-structure.md))
-     if that constant exists — don't re-hardcode thresholds inline.
+     - healthy/watch/at-risk should reuse existing `Badge`/token semantics (`default`/`secondary`/
+       `destructive`) rather than inventing green/amber/red hex; on the chart, use `--color-primary`/
+       `--color-chart-*`/`--color-destructive` tokens, never hardcoded hex. Band thresholds should
+       reference `ACCOUNT_HEALTH_THRESHOLDS` (constants, per [../../folder-structure.md](../../folder-structure.md))
+       if that constant exists - don't re-hardcode thresholds inline.
   2. **Vertical breakdown**: a bar chart of accounts (or open pipeline value) by `vertical`, using
      `var(--color-chart-1..5)` per series/category. This ties to the vertical-sales-indexing index
      (`vertical ASC, healthScore DESC`) noted in [../../database-schema.md](../../database-schema.md).
@@ -324,7 +324,7 @@ nextBestAction?, rationale?, summary? }`), `error`, `requestedBy`, timestamps.
      average health score) wired to `analyticsCache`.
   4. All charts follow ANLY-002 conventions (ResponsiveContainer + Card, same-height skeleton,
      popover-styled `chart-tooltip`). Load the `dataviz` skill first. Reads go through the
-     `analyticsCache`-backed actions (extend `use-analytics.ts`) — never recompute from raw
+     `analyticsCache`-backed actions (extend `use-analytics.ts`) - never recompute from raw
      `accounts` client-side.
   5. Respect the shared vertical filter (VSI-004) when present so these charts filter consistently
      with the rest of `/analytics`.
@@ -345,7 +345,7 @@ nextBestAction?, rationale?, summary? }`), `error`, `requestedBy`, timestamps.
 - **Estimated Complexity**: M
 - **Estimated Hours**: 5-7
 - **Documentation References**: Read [../../ui-design-system.md](../../ui-design-system.md) (Charts,
-  Colors — health bands), [../../database-schema.md](../../database-schema.md) (`analyticsCache`,
+  Colors - health bands), [../../database-schema.md](../../database-schema.md) (`analyticsCache`,
   `accounts` health/vertical), [../../folder-structure.md](../../folder-structure.md) (`constants/`),
   and the `dataviz` skill before starting.
 - **Testing Notes**: No test framework yet (`INFRA-012`). Manual: load `/analytics` with mock
@@ -362,38 +362,38 @@ nextBestAction?, rationale?, summary? }`), `error`, `requestedBy`, timestamps.
 - **Priority**: P2
 - **Owner**: Developer 2
 - **Title**: Vertical segmentation filter controls (shared filter bar used by accounts/opportunities/analytics)
-- **Objective**: Build a reusable vertical/segment filter bar — a control (multi-select on
+- **Objective**: Build a reusable vertical/segment filter bar - a control (multi-select on
   `vertical`, plus tier/segment) that emits a typed filter state consumed identically by the
-  Accounts list, Opportunities views, and the Analytics dashboards — so segmentation behaves
+  Accounts list, Opportunities views, and the Analytics dashboards - so segmentation behaves
   consistently everywhere.
 - **Business Value**: One filter bar shared across three surfaces makes "slice the whole CRM by
-  industry vertical" a coherent, repeatable interaction — the concrete UI behind the Vertical Sales
+  industry vertical" a coherent, repeatable interaction - the concrete UI behind the Vertical Sales
   Indexing differentiator.
 - **Dependencies**: `SHELL-010` (multi-select/combobox field) and `SHELL-013` (faceted filter
   pattern) are the building blocks. The `vertical` taxonomy field lives on the Account schema
-  (`VSI-001`, Developer 3) — **soft**: build against the vertical enum values referenced in
+  (`VSI-001`, Developer 3) - **soft**: build against the vertical enum values referenced in
   [../../database-schema.md](../../database-schema.md) (e.g. `logistics`, `manufacturing`, …) or a
   mock list; bind to the real Zod enum once VSI-001 lands. Consumed by Accounts (Dev 3), `VSI-002`,
   and ANLY-002/004.
 - **Target Files**:
-  - `components/shared/filters/vertical-filter-bar.tsx` (new — the shared bar)
-  - `hooks/use-entity-filters.ts` (new — typed filter state + URL-param sync)
+  - `components/shared/filters/vertical-filter-bar.tsx` (new - the shared bar)
+  - `hooks/use-entity-filters.ts` (new - typed filter state + URL-param sync)
   - `schemas/` or `constants/` reference for the `vertical` enum (import VSI-001's enum when
     available; don't duplicate the source of truth)
 - **Technical Instructions**:
   1. Build `VerticalFilterBar` as a toolbar (above a table/dashboard) using the SHELL-013 faceted-
      filter pattern (`popover.tsx`+`command.tsx` multi-select) for `vertical`, plus `select.tsx` for
-     tier/segment where relevant, with active-filter chips and a reset — consistent with the
+     tier/segment where relevant, with active-filter chips and a reset - consistent with the
      Tables "filters live in a toolbar above the table" rule in
      [../../ui-design-system.md](../../ui-design-system.md).
   2. Emit a typed filter object (e.g. `{ verticals: string[], tier?: string }`) via an
      `onChange`/controlled prop so each consumer passes it into its own query (Accounts →
-     `listAccounts`, Analytics → the cache read). The bar itself does **no** data fetching — it only
+     `listAccounts`, Analytics → the cache read). The bar itself does **no** data fetching - it only
      produces filter state (keeps it feature-agnostic and reusable).
   3. Sync filter state to URL search params via `use-entity-filters.ts` so a filtered view is
      shareable/bookmarkable and survives refresh; keep it framework-light (Next.js
      `useSearchParams`/`useRouter`).
-  4. The `vertical` options must come from VSI-001's Zod enum once it exists — import it rather than
+  4. The `vertical` options must come from VSI-001's Zod enum once it exists - import it rather than
      hardcoding a second list that could drift (per the single-source-of-truth rule in
      [../../naming-conventions.md](../../naming-conventions.md)). Until then, a clearly-marked mock
      list is acceptable.

@@ -25,7 +25,7 @@ export type ServerEnv = z.infer<typeof serverEnvSchema>;
 
 /**
  * Validates and returns environment variables that are safe to reach the browser.
- * Import this from Client Components / providers — never `serverEnv` from client code.
+ * Import this from Client Components / providers - never `serverEnv` from client code.
  */
 export function getClientEnv(): ClientEnv {
   return clientEnvSchema.parse({
@@ -40,7 +40,7 @@ export function getClientEnv(): ClientEnv {
 }
 
 /**
- * Validates and returns the full environment, including secrets. Server-only —
+ * Validates and returns the full environment, including secrets. Server-only -
  * importing this file from a Client Component is a bug, not a config error.
  */
 export function getServerEnv(): ServerEnv {

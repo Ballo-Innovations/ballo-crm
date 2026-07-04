@@ -1,4 +1,4 @@
-# Developer 1 — Phase 2: Platform Services & Security
+# Developer 1 - Phase 2: Platform Services & Security
 
 With the Phase 1 foundation live (real Firebase project, working sign-in + session verification,
 finalized core rules), Phase 2 turns that foundation into a shared platform the whole team builds
@@ -23,9 +23,9 @@ against the project-wide Definition of Done there. Field order follows
 - **Priority**: P1
 - **Owner**: Developer 1
 - **Title**: Role-based access control helpers (`requireRole`, permission matrix) in `lib/auth/`
-- **Objective**: Provide a single, typed authorization layer in `lib/auth/` — a permission matrix
+- **Objective**: Provide a single, typed authorization layer in `lib/auth/` - a permission matrix
   keyed by role (`owner`/`admin`/`manager`/`rep`/`viewer`) plus `requireRole(session, roles)` /
-  `can(session, action)` helpers — so `services/` and Server Actions enforce the same authorization
+  `can(session, action)` helpers - so `services/` and Server Actions enforce the same authorization
   the Firestore rules mirror, without re-implementing role checks per feature.
 - **Business Value**: The rules are defense-in-depth; the primary authorization layer is the
   `services/` layer (per [../../firestore-rules.md](../../firestore-rules.md)). This gives every
@@ -34,12 +34,12 @@ against the project-wide Definition of Done there. Field order follows
 - **Dependencies**: INFRA-003 (the verified `Session` type these helpers act on), INFRA-004 (the
   role/permission shape they encode).
 - **Target Files**:
-  - `lib/auth/rbac.ts` (new — permission matrix + `requireRole` / `can`)
+  - `lib/auth/rbac.ts` (new - permission matrix + `requireRole` / `can`)
   - `lib/auth/index.ts` (extend barrel export)
-  - `schemas/role.ts` or `lib/auth/roles.ts` (new — `RoleSchema = z.enum([...])`, inferred `Role` type)
+  - `schemas/role.ts` or `lib/auth/roles.ts` (new - `RoleSchema = z.enum([...])`, inferred `Role` type)
 - **Technical Instructions**:
   1. Define `RoleSchema = z.enum(["owner","admin","manager","rep","viewer"])` and
-     `type Role = z.infer<typeof RoleSchema>` — the single source of truth for the role strings,
+     `type Role = z.infer<typeof RoleSchema>` - the single source of truth for the role strings,
      reused by rules-adjacent code and the `users/{uid}` schema.
   2. Encode a permission matrix mapping a business action (e.g. `"contract:write"`,
      `"account:write"`, `"settings:write"`, `"auditLog:read"`) to the allowed role set, matching
@@ -72,7 +72,7 @@ against the project-wide Definition of Done there. Field order follows
   [../../coding-standards.md](../../coding-standards.md) before starting; must update
   [../../firestore-rules.md](../../firestore-rules.md).
 - **Testing Notes**: INFRA-012 introduces the test framework; if it has landed, add unit tests for
-  the matrix (per-role allow/deny per action) — `services/`-layer logic is the highest-priority
+  the matrix (per-role allow/deny per action) - `services/`-layer logic is the highest-priority
   test surface per [../../coding-standards.md](../../coding-standards.md). Until then, manual: call
   `can`/`requireRole` from a throwaway Server Action with a seeded user of each role and confirm the
   allow/deny outcomes.
@@ -85,7 +85,7 @@ against the project-wide Definition of Done there. Field order follows
 - **Epic**: Infrastructure & Auth
 - **Priority**: P1
 - **Owner**: Developer 1
-- **Title**: Organization + user invite flow (invite teammate, accept invite, assign role) — Server Actions + rules
+- **Title**: Organization + user invite flow (invite teammate, accept invite, assign role) - Server Actions + rules
 - **Objective**: Let an `owner`/`admin` invite a teammate into their organization, have the invitee
   accept and get a `users/{uid}` document with the assigned role and matching `orgId`, all via
   Admin-SDK Server Actions (since `users` `create` and `role`/`orgId` changes are client-locked by
@@ -94,23 +94,23 @@ against the project-wide Definition of Done there. Field order follows
   usable CRM. This is what makes "a team using one org" real, and demonstrates the role model to
   judges (an admin inviting a rep who then sees only what a rep can).
 - **Dependencies**: INFRA-005 (a first org/owner to invite from), INFRA-007 (`requireRole` to gate
-  who can invite), INFRA-011 (audit-log the role assignment — soft; can log later). Soft:
+  who can invite), INFRA-011 (audit-log the role assignment - soft; can log later). Soft:
   invite-acceptance UI is a Developer 2/shell surface but the actions are ownable independently.
 - **Target Files**:
-  - `actions/invites.ts` (new — `inviteTeammate`, `acceptInvite`, `assignRole` Server Actions)
-  - `services/invites.ts` (new — business logic: create invite, resolve on accept, set role)
-  - `repositories/invites.ts` (new — Firestore reads/writes for invite records)
-  - `schemas/invite.ts` (new — `InviteSchema`, `AssignRoleSchema`)
-  - `firestore.rules` (add rules for the invite storage location — see instruction 1)
-  - `firestore.indexes.json` (add an index if invites are listed/filtered — see instruction 4)
+  - `actions/invites.ts` (new - `inviteTeammate`, `acceptInvite`, `assignRole` Server Actions)
+  - `services/invites.ts` (new - business logic: create invite, resolve on accept, set role)
+  - `repositories/invites.ts` (new - Firestore reads/writes for invite records)
+  - `schemas/invite.ts` (new - `InviteSchema`, `AssignRoleSchema`)
+  - `firestore.rules` (add rules for the invite storage location - see instruction 1)
+  - `firestore.indexes.json` (add an index if invites are listed/filtered - see instruction 4)
 - **Technical Instructions**:
   1. Store invites as a per-org record (e.g. `organizations/{orgId}/settings/{settingId}` is for
-     config — instead use a dedicated invite doc; if a new subcollection is introduced, add it to
+     config - instead use a dedicated invite doc; if a new subcollection is introduced, add it to
      [../../database-schema.md](../../database-schema.md) and `firestore.rules` in the same change,
      read = org member, `create`/`update`/`delete` server-only via Admin SDK).
   2. `inviteTeammate` (gated by `requireRole(session, ["owner","admin"])`) records an invite with
      the invitee email + intended role + `orgId`. Sending the invite email/notification goes
-     through BalloAds per [../../integrations.md](../../integrations.md) if a message is sent — never
+     through BalloAds per [../../integrations.md](../../integrations.md) if a message is sent - never
      a BalloCRM-built mailer.
   3. `acceptInvite` verifies the invite, creates (or links) the Firebase Auth user, and writes
      `users/{uid}` with the assigned `role` and `orgId` via the Admin SDK (this is the only path
@@ -165,9 +165,9 @@ against the project-wide Definition of Done there. Field order follows
   relevant providers/templates). Soft: the reset/verify UI pages are a Developer 2/shell surface;
   the action-code handling and Server Actions are ownable here.
 - **Target Files**:
-  - `actions/auth.ts` (extend — `requestPasswordReset`, `confirmPasswordReset`,
+  - `actions/auth.ts` (extend - `requestPasswordReset`, `confirmPasswordReset`,
     `sendEmailVerification` Server Actions)
-  - `app/(auth)/reset-password/` and `app/(auth)/verify-email/` route handlers/pages (new — or
+  - `app/(auth)/reset-password/` and `app/(auth)/verify-email/` route handlers/pages (new - or
     coordinate the UI with Developer 2; action-code resolution logic stays in Developer 1's scope)
   - `config/env.ts` / `.env.example` (only if a new redirect/base-URL key is needed; `NEXT_PUBLIC_APP_URL`
     already exists for building absolute action links)
@@ -178,7 +178,7 @@ against the project-wide Definition of Done there. Field order follows
   2. Configure the Firebase console action-code settings / email templates to point back at the
      app's `reset-password` / `verify-email` routes. If BalloAds is used to deliver any custom
      messaging, route it through the BalloAds client per
-     [../../integrations.md](../../integrations.md) — do not build a mailer.
+     [../../integrations.md](../../integrations.md) - do not build a mailer.
   3. Handle the returned `oobCode` on the reset/verify routes (verify code, apply new password /
      mark verified) and redirect to `/login` with a success state.
   4. Wrap Server Actions in the typed result envelope; expected failures (expired/invalid code)
@@ -216,15 +216,15 @@ against the project-wide Definition of Done there. Field order follows
 - **Owner**: Developer 1
 - **Title**: Firestore security rules + composite indexes for all business subcollections
 - **Objective**: Ensure `firestore.rules` and `firestore.indexes.json` fully and correctly cover
-  every business subcollection the product will use — `accounts`, `contacts`, `opportunities`,
+  every business subcollection the product will use - `accounts`, `contacts`, `opportunities`,
   `tasks`, `contracts`, `campaigns`, `activities`, `notifications`, `auditLogs`, `aiJobs`,
-  `templates`, `analyticsCache`, `settings`, `integrations` — beyond the Sprint 1 core confirmed in
+  `templates`, `analyticsCache`, `settings`, `integrations` - beyond the Sprint 1 core confirmed in
   INFRA-004, so every downstream feature has a matching, pre-deployed rule and index.
 - **Business Value**: Developers 2 and 3 shouldn't hit a runtime "missing index" error or an
   authorization gap mid-feature. Landing the complete rule + index set up front removes a recurring
   mid-sprint blocker and keeps the security model coherent as features arrive.
 - **Dependencies**: INFRA-004 (extends the confirmed core rules). Soft: exact query patterns for
-  later features (opportunities pipeline, campaigns list) come from Developer 3's CRM tasks — index
+  later features (opportunities pipeline, campaigns list) come from Developer 3's CRM tasks - index
   shapes are already specified in [../../indexes.md](../../indexes.md), so this can proceed against
   that catalog.
 - **Target Files**:
@@ -232,7 +232,7 @@ against the project-wide Definition of Done there. Field order follows
   - `firestore.indexes.json` (every composite index in the catalog)
 - **Technical Instructions**:
   1. Reconcile `firestore.rules` against the full permissions matrix in
-     [../../firestore-rules.md](../../firestore-rules.md) — confirm `campaigns` (owner/admin/manager
+     [../../firestore-rules.md](../../firestore-rules.md) - confirm `campaigns` (owner/admin/manager
      write), `templates` (owner/admin/manager write), `settings` (owner/admin write),
      `analyticsCache` (write `false`), and `integrations` (`read, write: if false`) are all present
      and correct, not just the Sprint 1 core.
@@ -242,7 +242,7 @@ against the project-wide Definition of Done there. Field order follows
      `ownerId,expectedCloseDate`); `activities` (`relatedTo.type,relatedTo.id,occurredAt`); `tasks`
      (`assigneeId,dueDate`; `status,dueDate`); `contracts` (`status,renewalDate`); `campaigns`
      (`status,startDate`); `notifications` (`targetUserId,read,createdAt`); `auditLogs`
-     (`actorId,createdAt`); `aiJobs` (`status,createdAt`) — each with the exact field order and
+     (`actorId,createdAt`); `aiJobs` (`status,createdAt`) - each with the exact field order and
      ASC/DESC directions.
   3. Confirm all indexes are `queryScope: "COLLECTION"` (no `COLLECTION_GROUP`), consistent with the
      multi-tenant model.
@@ -293,17 +293,17 @@ against the project-wide Definition of Done there. Field order follows
   (verified session to source `actorId`). Consumed by INFRA-008 (role changes) and COMM-002
   (credential rotation).
 - **Target Files**:
-  - `services/audit-log.ts` (new — `writeAuditLog(...)` composing the repository)
-  - `repositories/audit-logs.ts` (new — the only place that writes the `auditLogs` collection, via
+  - `services/audit-log.ts` (new - `writeAuditLog(...)` composing the repository)
+  - `repositories/audit-logs.ts` (new - the only place that writes the `auditLogs` collection, via
     `firestoreAdmin`)
-  - `schemas/audit-log.ts` (new — `AuditLogSchema`)
+  - `schemas/audit-log.ts` (new - `AuditLogSchema`)
 - **Technical Instructions**:
   1. Define `AuditLogSchema` matching the exact shape in
      [../../database-schema.md](../../database-schema.md): `logId`, `actorId`, `action` (e.g.
      `"role_changed"`, `"contract_deleted"`, `"integration_credential_rotated"`), `targetType`,
      `targetId`, `before`, `after`, `createdAt` (server timestamp).
   2. `writeAuditLog` runs server-only via the Admin SDK (`firestoreAdmin`), takes the verified
-     session's `uid` as `actorId` and the `orgId` from the session — never client input.
+     session's `uid` as `actorId` and the `orgId` from the session - never client input.
   3. Keep it append-only: the repository only ever creates; there is no update/delete path
      (matching `allow update, delete: if false` intent and the rules' `write: if false`).
   4. Expose a small, typed API other services call (e.g. `services/invites.ts` on `assignRole`,
@@ -341,9 +341,9 @@ against the project-wide Definition of Done there. Field order follows
 - **Priority**: P1
 - **Owner**: Developer 1
 - **Title**: Testing framework setup (Vitest unit + Playwright E2E) + wire a test step into CI
-- **Objective**: Install and configure the project's first automated test framework — Vitest for
+- **Objective**: Install and configure the project's first automated test framework - Vitest for
   unit tests (`services/`, `schemas/`, `lib/auth/`) and Playwright for a smoke E2E (sign-in →
-  dashboard) — add `test` scripts to `package.json`, and add a test step to the INFRA-006 CI
+  dashboard) - add `test` scripts to `package.json`, and add a test step to the INFRA-006 CI
   workflow, closing the R1 "no test framework" gap in [../../risks.md](../../risks.md).
 - **Business Value**: Until this lands, the only quality gate is lint/typecheck/build and manual
   clicking. A minimal automated suite catches regressions in the highest-value logic (auth, RBAC,
@@ -356,9 +356,9 @@ against the project-wide Definition of Done there. Field order follows
   - `vitest.config.ts` (new)
   - `playwright.config.ts` (new)
   - `.github/workflows/ci.yml` (add a test step after typecheck/build)
-  - `lib/auth/*.test.ts`, `services/*.test.ts` (new — first colocated unit tests, per the
+  - `lib/auth/*.test.ts`, `services/*.test.ts` (new - first colocated unit tests, per the
     colocation convention in [../../coding-standards.md](../../coding-standards.md))
-  - `e2e/` (new — first Playwright smoke spec)
+  - `e2e/` (new - first Playwright smoke spec)
 - **Technical Instructions**:
   1. Install Vitest (with the React/TS transform the project needs) and Playwright as dev
      dependencies; add `test` (Vitest run), `test:watch`, and `test:e2e` (Playwright) scripts.
@@ -366,7 +366,7 @@ against the project-wide Definition of Done there. Field order follows
      `services/` + `schemas/` + `lib/auth/` per [../../coding-standards.md](../../coding-standards.md);
      write at least one real unit test (e.g. the INFRA-007 permission matrix) to prove the harness.
   3. Add a Playwright smoke test for the critical path (visit `/login`, sign in with a seeded user,
-     land on the dashboard) — can run against the Firebase emulator to avoid touching a real
+     land on the dashboard) - can run against the Firebase emulator to avoid touching a real
      project.
   4. Add `- npm run test` (and optionally the E2E step) to `.github/workflows/ci.yml` after build;
      ensure it runs in CI without real secrets (use the emulator / dummy env).
@@ -390,7 +390,7 @@ against the project-wide Definition of Done there. Field order follows
   (Testing), [../../tech-stack.md](../../tech-stack.md), [../../risks.md](../../risks.md), and
   [../../deployment.md](../../deployment.md) (CI) before starting; must update all four plus
   [../../decisions.md](../../decisions.md).
-- **Testing Notes**: This task **is** the testing framework — verification is self-referential: the
+- **Testing Notes**: This task **is** the testing framework - verification is self-referential: the
   suite must actually run locally (`npm run test`, `npm run test:e2e`) and in CI. From here on,
   other tasks' Testing Notes may reference this harness instead of manual-only steps.
 
@@ -409,27 +409,27 @@ against the project-wide Definition of Done there. Field order follows
   [../../coding-standards.md](../../coding-standards.md) and the result-shape contract in
   [../../api.md](../../api.md).
 - **Business Value**: Consistent error handling is what keeps a fast-moving, three-developer
-  codebase debuggable — expected failures surface as toasts/inline errors, unexpected ones hit the
+  codebase debuggable - expected failures surface as toasts/inline errors, unexpected ones hit the
   `error.tsx` boundary, and structured logs make a demo-time bug traceable. Everyone else builds on
   this contract.
 - **Dependencies**: none hard (the pattern is referenced by INFRA-002 onward). Soft: ideally lands
   early so all Phase 2/3 actions adopt it; realistically formalized here once the pattern has a few
   users.
 - **Target Files**:
-  - `lib/errors/index.ts` (new — `Result<T>` type, `ok()`/`err()` constructors, typed error codes)
-  - `lib/errors/logger.ts` (new — structured server logger honoring a `LOG_LEVEL` env)
-  - `config/env.ts` / `.env.example` (add `LOG_LEVEL` to `serverEnvSchema` — currently documented in
+  - `lib/errors/index.ts` (new - `Result<T>` type, `ok()`/`err()` constructors, typed error codes)
+  - `lib/errors/logger.ts` (new - structured server logger honoring a `LOG_LEVEL` env)
+  - `config/env.ts` / `.env.example` (add `LOG_LEVEL` to `serverEnvSchema` - currently documented in
     [../../environment.md](../../environment.md) but not yet in the schema)
   - `types/` (only if a shared ambient type is needed; otherwise `n/a`)
 - **Technical Instructions**:
   1. Define the canonical `Result<T>` (`type Result<T> = { ok: true; data: T } | { ok: false; error: AppError }`)
      and helper constructors, matching the shape already described in [../../api.md](../../api.md);
      type error codes as a Zod enum / string-literal union (no `any`).
-  2. Distinguish expected errors (validation, not-found, business-rule, permission — returned as
+  2. Distinguish expected errors (validation, not-found, business-rule, permission - returned as
      `{ ok:false }`) from unexpected ones (throw, let `error.tsx` catch), per
      [../../coding-standards.md](../../coding-standards.md) error-handling rules.
   3. Add a structured logger that emits leveled JSON logs and reads `LOG_LEVEL` (add it to
-     `serverEnvSchema` in `config/env.ts` + keep `.env.example` in sync — the var is already
+     `serverEnvSchema` in `config/env.ts` + keep `.env.example` in sync - the var is already
      documented in [../../environment.md](../../environment.md)). Never log secrets or full
      credential values.
   4. Refactor existing auth actions (INFRA-002/009) to import the shared `Result`/constructors

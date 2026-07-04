@@ -47,7 +47,7 @@ service cloud.firestore {
 
     match /users/{uid} {
       allow read: if isSignedIn() && (request.auth.uid == uid || isOrgMember(resource.data.orgId));
-      // Profile fields only — role/orgId changes must go through a Server Action so membership
+      // Profile fields only - role/orgId changes must go through a Server Action so membership
       // can't be self-escalated from the client.
       allow update: if isSignedIn() && request.auth.uid == uid
         && request.resource.data.orgId == resource.data.orgId
@@ -131,7 +131,7 @@ service cloud.firestore {
       }
 
       match /integrations/{provider} {
-        // Contains encrypted developer API keys — server-only, never exposed to the client SDK.
+        // Contains encrypted developer API keys - server-only, never exposed to the client SDK.
         allow read, write: if false;
       }
     }

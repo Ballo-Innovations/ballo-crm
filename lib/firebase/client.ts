@@ -6,7 +6,7 @@ import { getClientEnv } from "@/config/env";
 
 /**
  * Browser-side Firebase SDK. Do not import from Server Components, Server
- * Actions, or Route Handlers — use `lib/firebase/admin.ts` there instead.
+ * Actions, or Route Handlers - use `lib/firebase/admin.ts` there instead.
  */
 function createFirebaseClientApp(): FirebaseApp {
   const env = getClientEnv();

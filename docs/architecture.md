@@ -3,22 +3,22 @@
 This document describes how BalloCRM is put together: the system-level picture, the internal
 layering every feature must follow, how internal vs external API surfaces are split, how
 authentication and multi-tenancy work, and how the three external dependencies (Firestore,
-BalloAds, Brutus AI) are consumed. It is the map other docs assume you already have — for exact
+BalloAds, Brutus AI) are consumed. It is the map other docs assume you already have - for exact
 schemas, rules, endpoints, and deploy steps, follow the links out to
 [database-schema.md](./database-schema.md), [firestore-rules.md](./firestore-rules.md),
 [api.md](./api.md), [integrations.md](./integrations.md), and [deployment.md](./deployment.md).
 
 > Status note: this document describes both what is built and what is planned. Anything not
-> marked "implemented" should be read as the target design, not current behavior — see
+> marked "implemented" should be read as the target design, not current behavior - see
 > [progress.md](./progress.md) for the live state and [roadmap.md](./roadmap.md) for sequencing.
 
 ## 1. System Architecture
 
 BalloCRM is the hub. It owns its own data (Firestore) and its own identity (Firebase Auth), and it
-reaches out to two external systems as a client — BalloAds for messaging/commercial data, and
+reaches out to two external systems as a client - BalloAds for messaging/commercial data, and
 Brutus AI for intelligence. Neither BalloAds nor Brutus ever calls into BalloCRM directly except
 through a small, explicit webhook surface (delivery-status callbacks). BalloCRM never embeds,
-forks, or reimplements BalloAds' own auth, sending, or automation engine — it consumes BalloAds as
+forks, or reimplements BalloAds' own auth, sending, or automation engine - it consumes BalloAds as
 a service via per-organization developer API credentials.
 
 ```mermaid
@@ -27,7 +27,7 @@ flowchart LR
         UI["Next.js App Router UI\n(Server + Client Components)"]
     end
 
-    subgraph Vercel["Vercel — BalloCRM (Next.js 15)"]
+    subgraph Vercel["Vercel - BalloCRM (Next.js 15)"]
         RSC["Server Components"]
         SA["Server Actions"]
         RH["Route Handlers\n(webhooks only)"]
@@ -59,7 +59,7 @@ flowchart LR
 Key points:
 
 - **BalloCRM is always the caller** toward BalloAds and Brutus AI. The one exception is BalloAds
-  calling back into BalloCRM's own webhook Route Handler to report delivery status — even then,
+  calling back into BalloCRM's own webhook Route Handler to report delivery status - even then,
   BalloCRM initiated the original send and is just receiving an async result, not being driven by
   BalloAds.
 - **Firebase is BalloCRM's own infrastructure**, not shared with BalloAds. BalloAds has its own,
@@ -70,7 +70,7 @@ Key points:
 ## 2. Component Architecture
 
 Inside the Next.js app, every feature follows the same one-directional layering, from UI down to
-the database. Each layer only talks to the layer directly below it — UI code never imports
+the database. Each layer only talks to the layer directly below it - UI code never imports
 Firestore directly, and repositories never contain business logic.
 
 ```
@@ -95,10 +95,10 @@ Firestore
   feature's data it goes through `services/`, not by importing the other feature's internals
   directly.
 - **`actions/`** at the repo root (and per-feature `actions.ts` files inside a feature folder) hold
-  Server Actions — the only thing UI code calls to trigger a mutation or a server-side read tied
+  Server Actions - the only thing UI code calls to trigger a mutation or a server-side read tied
   to user interaction. Actions validate input with a Zod schema from `schemas/`, call a service,
   and return a typed result. They contain no Firestore calls and no business rules of their own.
-- **`services/`** contains business logic — the rules about _what should happen_ (e.g. "creating
+- **`services/`** contains business logic - the rules about _what should happen_ (e.g. "creating
   an opportunity with stage `closed_won` should log an activity and trigger a BalloAds journey").
   Services compose one or more repositories and are the only place that talks to BalloAds/Brutus
   AI clients in `lib/`.
@@ -107,7 +107,7 @@ Firestore
   to import the Firestore SDK. Keeping this boundary strict means swapping persistence details,
   writing focused tests, or auditing every raw query later is a one-folder search.
 
-**Server Components vs Client Components — the decision rule.** Default to a Server Component.
+**Server Components vs Client Components - the decision rule.** Default to a Server Component.
 Reach for a Client Component (`"use client"`) only when the code needs one of: local React state or
 effects, a browser-only API, an event handler that can't be expressed as a form action, or a
 third-party library that assumes a browser. Data fetching, layout, and anything that can render
@@ -122,7 +122,7 @@ BalloCRM exposes two different kinds of internal HTTP surface, and they are not 
 | Surface                                    | Used for                                                                                                           | Called by                                             |
 | ------------------------------------------ | ------------------------------------------------------------------------------------------------------------------ | ----------------------------------------------------- |
 | **Server Actions**                         | Everything UI-initiated: form submits, inline edits, list mutations, anything a signed-in CRM user does in the app | The app's own Server/Client Components, directly      |
-| **Route Handlers** (`app/api/**/route.ts`) | Webhooks and callbacks — anything a _third party_ calls into, e.g. a BalloAds delivery-status callback             | An external system (BalloAds), never the CRM's own UI |
+| **Route Handlers** (`app/api/**/route.ts`) | Webhooks and callbacks - anything a _third party_ calls into, e.g. a BalloAds delivery-status callback             | An external system (BalloAds), never the CRM's own UI |
 
 The rule of thumb: if the caller is "a browser tab with a signed-in BalloCRM user in it," use a
 Server Action. If the caller is "some other system on the internet telling BalloCRM something
@@ -133,15 +133,15 @@ exist specifically because webhooks need a stable, unauthenticated-by-cookie URL
 service can `POST` to directly.
 
 The concrete, current list of Route Handlers and the Server Actions catalog per feature live in
-[api.md](./api.md) — this document only defines which bucket a given piece of functionality
+[api.md](./api.md) - this document only defines which bucket a given piece of functionality
 belongs in.
 
 ## 4. Authentication
 
-BalloCRM uses **Firebase Authentication** for its own users (CRM staff — sales reps, managers,
+BalloCRM uses **Firebase Authentication** for its own users (CRM staff - sales reps, managers,
 admins), completely separate from BalloAds' own auth system.
 
-Planned session flow (see [progress.md](./progress.md) for current build status — as of this
+Planned session flow (see [progress.md](./progress.md) for current build status - as of this
 writing, the `/login` route and the sign-in flow itself do not exist yet):
 
 1. User signs in via Firebase Auth on the client (`lib/firebase/client.ts`).
@@ -152,18 +152,18 @@ writing, the `/login` route and the sign-in flow itself do not exist yet):
 
 **What `middleware.ts` does today, precisely:** it checks whether a `__session` cookie is _present_
 on non-public paths and redirects to `/login` if it is absent. **It does not verify the token.**
-This is deliberate, not an oversight — Next.js Middleware runs on the Edge runtime, which cannot
+This is deliberate, not an oversight - Next.js Middleware runs on the Edge runtime, which cannot
 run the Firebase Admin SDK, so a cryptographic/session check can't happen there. Treat the
 middleware purely as a cheap, coarse gate that keeps signed-out browsing away from protected
-routes; it is not a security boundary on its own. **Real verification of the session — confirming
-the cookie is a valid, unexpired Firebase session and resolving it to a `uid` — must happen inside
+routes; it is not a security boundary on its own. **Real verification of the session - confirming
+the cookie is a valid, unexpired Firebase session and resolving it to a `uid` - must happen inside
 the Server Component or Server Action behind the gate**, using the Admin SDK. Any code that treats
 the middleware's redirect as proof of a verified identity is a bug.
 
 **Multi-tenant org model.** Every BalloCRM user is a member of exactly one organization:
 
-- `users/{uid}` — a top-level document holding at minimum `orgId` and `role`.
-- `organizations/{orgId}/...` — every piece of CRM data (accounts, contacts, opportunities, etc.)
+- `users/{uid}` - a top-level document holding at minimum `orgId` and `role`.
+- `organizations/{orgId}/...` - every piece of CRM data (accounts, contacts, opportunities, etc.)
   lives in subcollections scoped under the user's `orgId`.
 - Access control is role-gated: `owner`, `admin`, `manager`, `rep`, `viewer`, enforced both in
   Firestore Security Rules and, for anything more nuanced than "can read/write this collection,"
@@ -179,7 +179,7 @@ enforced rules themselves are in [firestore-rules.md](./firestore-rules.md).
 
 At a glance, the data model has two top-level shapes: a small set of global collections for
 identity, and a large set of collections nested under each organization. This section only lists
-collection names for orientation — full document shapes, field types, and indexing live in
+collection names for orientation - full document shapes, field types, and indexing live in
 [database-schema.md](./database-schema.md), and the enforced access rules live in
 [firestore-rules.md](./firestore-rules.md).
 
@@ -196,20 +196,20 @@ is written (full rationale in [decisions.md](./decisions.md)):
   (backed by a composite index), so the same event is never written twice for "audit log" and
   "timeline" purposes.
 - `organizations/{orgId}/integrations/{provider}` (e.g. `balloAds`) holds encrypted third-party
-  credentials and is **not readable or writable by any client SDK** — Security Rules deny all
+  credentials and is **not readable or writable by any client SDK** - Security Rules deny all
   direct access; every read/write goes through the Admin SDK from server-side code only.
 
 ## 6. BalloAds Integration
 
 BalloCRM never talks to BalloAds from the browser. All calls to BalloAds' Developer Portal API
-(`/v1/developer-portal/*`) happen from server-side code — a `services/` function calling a BalloAds
-client in `lib/` — using a per-organization developer API key read (decrypted) from
+(`/v1/developer-portal/*`) happen from server-side code - a `services/` function calling a BalloAds
+client in `lib/` - using a per-organization developer API key read (decrypted) from
 `organizations/{orgId}/integrations/balloAds` via the Admin SDK. This is not a stylistic
 preference: the developer API key is a long-lived credential scoped to an entire organization's
 BalloAds account, and it must never reach a browser where it could leak via devtools, an extension,
 or a logging mistake. BalloAds is treated strictly as a service BalloCRM consumes for messaging
 delivery, opt-out/delivery status, and enrichment data such as an externally computed account
-health score — BalloCRM does not reimplement any BalloAds sending or automation logic itself. Full
+health score - BalloCRM does not reimplement any BalloAds sending or automation logic itself. Full
 endpoint list, payload shapes, and what is confirmed vs. still "to be verified against the live
 API" are documented in [integrations.md](./integrations.md).
 
@@ -228,7 +228,7 @@ are documented in [integrations.md](./integrations.md).
 ## 8. Deployment Architecture
 
 BalloCRM deploys as a standard Next.js app on **Vercel**, backed by **Firebase** (Auth + Firestore)
-as its only stateful backend — there is no separate application database or server to operate.
+as its only stateful backend - there is no separate application database or server to operate.
 
 ```
 local dev  --push-->  preview deployment (per PR)  --merge to main-->  production

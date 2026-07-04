@@ -3,7 +3,7 @@
 This log captures the significant technical decisions behind BalloCRM, in the lightweight ADR
 format: **Context** (what forced the decision), **Decision** (what we chose), **Consequences /
 Tradeoffs** (what we accept in exchange). New ADRs are appended chronologically; we do not edit
-history — if a decision is reversed, a new ADR supersedes the old one and links back to it.
+history - if a decision is reversed, a new ADR supersedes the old one and links back to it.
 
 Related: [architecture.md](./architecture.md), [tech-stack.md](./tech-stack.md),
 [risks.md](./risks.md), [glossary.md](./glossary.md).
@@ -36,7 +36,7 @@ endpoint by contract.
 - Server Actions give us progressive enhancement and built-in CSRF protections from Next.js,
   removing a whole class of hand-written API route + fetch wiring.
 - Tradeoff: Server Actions are less visible in network tooling than REST calls, which can make
-  debugging and API-contract documentation slightly less obvious to newcomers — mitigated by
+  debugging and API-contract documentation slightly less obvious to newcomers - mitigated by
   documenting every action's inputs/outputs in [api.md](./api.md).
 - Tradeoff: teams more familiar with a traditional REST/SPA split have a small ramp-up cost;
   mitigated by [coding-standards.md](./coding-standards.md) and [folder-structure.md](./folder-structure.md)
@@ -44,7 +44,7 @@ endpoint by contract.
 
 ---
 
-## ADR-002: Strict feature-based layering — UI → actions/ → services/ → repositories/ → Firestore
+## ADR-002: Strict feature-based layering - UI → actions/ → services/ → repositories/ → Firestore
 
 **Date:** 2026 (Sprint 0/1)
 
@@ -67,7 +67,7 @@ review-blocking rule, not a suggestion.
 - Business rules (e.g., "creating an opportunity must also write an activity") live in one place
   (`services/`) instead of being scattered across components.
 - Tradeoff: adds a small amount of ceremony (an extra file per operation) for what would otherwise
-  be a one-line Firestore call — accepted deliberately because the repo is written to be
+  be a one-line Firestore call - accepted deliberately because the repo is written to be
   navigable by both humans and AI agents working in parallel, where explicit small files beat
   compact god-files.
 - Enforcement is currently by code review convention only (see ADR-006 on no CI yet); a future
@@ -88,7 +88,7 @@ on CRM features.
 **Decision:** Use Firebase Authentication for CRM user identity and Firebase Firestore as the
 primary datastore, with a multi-tenant document model (`users/{uid}` holding `orgId`/`role`, and
 `organizations/{orgId}/...` subcollections per entity). This is deliberately **separate** from
-BalloAds' own authentication — BalloCRM users are CRM users, not BalloAds accounts; BalloCRM calls
+BalloAds' own authentication - BalloCRM users are CRM users, not BalloAds accounts; BalloCRM calls
 BalloAds only via server-held developer API keys (see ADR-007).
 
 **Consequences / Tradeoffs:**
@@ -98,7 +98,7 @@ BalloAds only via server-held developer API keys (see ADR-007).
   and first-class integration with Vercel/Next.js and the Admin SDK for server-side trust.
 - Tradeoff: Firestore's document model and lack of native joins push relational-style queries
   (e.g. "opportunities by industry vertical across accounts") toward denormalization,
-  composite indexes ([indexes.md](./indexes.md)), or client-side composition — more design
+  composite indexes ([indexes.md](./indexes.md)), or client-side composition - more design
   discipline required than a relational schema would need.
 - Tradeoff: complex authorization (multi-tenant org isolation, per-role access) must be encoded
   entirely in [firestore-rules.md](./firestore-rules.md) rather than SQL row-level security or an
@@ -120,7 +120,7 @@ etc.) to cache server data, which then requires hand-rolled invalidation, loadin
 refetch logic that a dedicated server-cache library already solves well.
 
 **Decision:** Redux Toolkit is scoped **exclusively** to client-only UI state that has no server
-representation — currently `sidebarCollapsed` and `commandMenuOpen` in `store/slices/ui-slice.ts`.
+representation - currently `sidebarCollapsed` and `commandMenuOpen` in `store/slices/ui-slice.ts`.
 All server data (accounts, opportunities, contracts, AI job status, anything that lives in
 Firestore) is fetched, cached, and invalidated through TanStack Query. We explicitly do **not**
 use Redux for server data caching, and no feature should introduce a Redux slice that mirrors a
@@ -151,7 +151,7 @@ Stack Overflow answers, and third-party extensions.
 
 **Decision:** `components.json` is configured with style `radix-nova`, base color `neutral`, and
 icon library `lucide`. We chose the Radix-based style over `base-nova` for ecosystem stability
-and familiarity — Radix primitives are widely used, well-documented, and any hackathon
+and familiarity - Radix primitives are widely used, well-documented, and any hackathon
 contributor (or AI agent) is far more likely to have accurate training data and community
 references for Radix-based patterns than for the newer Base UI primitives.
 
@@ -167,7 +167,7 @@ references for Radix-based patterns than for the newer Base UI primitives.
 
 ---
 
-## ADR-006: No separate `timeline` collection — Customer Journey is a query over `activities`
+## ADR-006: No separate `timeline` collection - Customer Journey is a query over `activities`
 
 **Date:** 2026 (Sprint 0)
 
@@ -187,10 +187,10 @@ planned.
 - Eliminates dual-write inconsistency risk entirely: it is structurally impossible for the
   timeline and the audit log to disagree, because they are the same underlying data read two
   ways.
-- Simpler mental model and less Firestore write volume/cost — one write per event, not two.
+- Simpler mental model and less Firestore write volume/cost - one write per event, not two.
 - Tradeoff: the `activities` document shape must be generic enough to serve both an audit
-  record and a rendered timeline entry (e.g., carrying enough denormalized display data —
-  actor name, a human-readable summary — to avoid N+1 lookups when rendering the feed). This
+  record and a rendered timeline entry (e.g., carrying enough denormalized display data -
+  actor name, a human-readable summary - to avoid N+1 lookups when rendering the feed). This
   constraint is documented in [database-schema.md](./database-schema.md).
 - Tradeoff: if audit and timeline needs diverge significantly in the future (e.g., timeline needs
   aggressive pagination/filtering that conflicts with audit retention requirements), this
@@ -210,7 +210,7 @@ authentication system for messaging.
 **Decision:** BalloCRM talks to BalloAds **only** through its documented `/v1/developer-portal/*`
 REST API surface, using per-organization developer API keys stored encrypted at
 `organizations/{orgId}/integrations/balloAds` in Firestore. All calls happen server-side (Server
-Actions or Route Handlers for inbound webhooks) — the developer API key is never sent to or
+Actions or Route Handlers for inbound webhooks) - the developer API key is never sent to or
 readable by the browser. When a CRM workflow needs to trigger messaging (e.g., "send onboarding
 sequence" on an opportunity stage change), it calls the relevant BalloAds endpoint and logs the
 call as a CRM `Activity`; it does not implement its own send loop. Read-only data BalloAds can
@@ -226,7 +226,7 @@ field, not something BalloCRM computes or owns.
 - API keys never reaching the client eliminates an entire class of credential-leak risk (see
   [risks.md](./risks.md) for the specific mitigation around accidental client-bundle imports).
 - Tradeoff: BalloCRM is fully dependent on BalloAds' API availability and rate limits for any
-  messaging-triggering feature and for enrichment data (health score, opt-outs) — tracked as an
+  messaging-triggering feature and for enrichment data (health score, opt-outs) - tracked as an
   external-dependency risk in [risks.md](./risks.md). Exact endpoint paths/payloads are marked
   "to be confirmed" in [integrations.md](./integrations.md) until the OpenAPI spec is supplied.
 
@@ -258,7 +258,7 @@ interactive UI need, such as a chat-style assistant panel.
 - Gives the product a natural place to show progress ("Brutus is analyzing this account...") and
   a natural audit trail of AI usage per org.
 - Tradeoff: adds latency-to-first-result compared to a hypothetical synchronous call, and
-  requires the UI to handle a pending/loading state per job rather than a simple await — accepted
+  requires the UI to handle a pending/loading state per job rather than a simple await - accepted
   because it is more robust for a live demo and for production AI provider variability (see
   [risks.md](./risks.md) on Brutus availability/rate limits).
 
@@ -268,7 +268,7 @@ interactive UI need, such as a chat-style assistant panel.
 
 **Date:** 2026 (Sprint 0)
 
-**Context:** Data crosses several trust boundaries in this app — form input, Server Action
+**Context:** Data crosses several trust boundaries in this app - form input, Server Action
 payloads, Firestore documents, and external API responses (BalloAds, Brutus). Hand-maintaining
 separate TypeScript interfaces and runtime validators for the same shape is a common source of
 drift bugs (the type says a field is required; the runtime check forgot to enforce it).
@@ -310,7 +310,7 @@ rather than manual annotation or casting.
 - Makes the codebase substantially easier for an AI agent to reason about correctly, since types
   encode real constraints rather than acting as documentation that can silently go stale.
 - Tradeoff: occasionally slower to write code against a genuinely dynamic or third-party
-  untyped shape (e.g., a BalloAds API response before its contract is confirmed) — the
+  untyped shape (e.g., a BalloAds API response before its contract is confirmed) - the
   convention is to model the _expected_ shape as a Zod schema and validate/parse at the
   boundary rather than reaching for `any` as an escape hatch.
 

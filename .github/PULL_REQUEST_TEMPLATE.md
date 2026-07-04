@@ -10,7 +10,7 @@ Closes: <!-- Task ID, e.g. INFRA-003 -->
 
 ## Documentation
 
-- [ ] Relevant `docs/*.md` updated (or N/A — explain why below)
+- [ ] Relevant `docs/*.md` updated (or N/A - explain why below)
 - [ ] `docs/progress.md` updated
 - [ ] `docs/changelog.md` entry added
 

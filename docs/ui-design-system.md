@@ -1,7 +1,7 @@
 # UI Design System
 
 BalloCRM's visual and interaction language, targeting enterprise SaaS density and clarity in the
-spirit of Salesforce, HubSpot, Linear, Stripe Dashboard, Vercel Dashboard, Notion, and Retool —
+spirit of Salesforce, HubSpot, Linear, Stripe Dashboard, Vercel Dashboard, Notion, and Retool -
 minimal chrome, information-dense tables and forms for power users, not a consumer-app
 whitespace-heavy layout. This document is binding: new UI should reuse the tokens and components
 described here before introducing new ones.
@@ -13,7 +13,7 @@ See also: [routes.md](./routes.md) for which components each page uses,
 ## Component inventory (installed today)
 
 `components.json` uses shadcn style **`radix-nova`** (Radix UI primitives), base color
-**`neutral`**, icon library **`lucide`**. The following are installed in `components/ui/` — this
+**`neutral`**, icon library **`lucide`**. The following are installed in `components/ui/` - this
 is the current, real inventory; do not reference a shadcn component that isn't in this list:
 
 ```
@@ -29,48 +29,48 @@ tabs             textarea         tooltip
 
 To add another component: `npx shadcn@latest add <name>` (it will respect the `radix-nova`
 style/`neutral` base color already configured in `components.json`). Do not hand-roll a component
-that shadcn already offers — add it instead, so it inherits the token system below for free.
+that shadcn already offers - add it instead, so it inherits the token system below for free.
 
 ## Typography
 
 Font is **Geist** (sans) and **Geist Mono**, loaded via `next/font` in `app/layout.tsx` and
 exposed as the Tailwind v4 theme vars `--font-sans` / `--font-mono` in `app/globals.css`. There is
-also a `--font-heading` var, currently aliased to `--font-sans` — kept distinct on purpose so a
+also a `--font-heading` var, currently aliased to `--font-sans` - kept distinct on purpose so a
 future display face can be swapped in for headings without touching body text.
 
 | Role    | Tailwind classes                                              | Use                                                                        |
 | ------- | ------------------------------------------------------------- | -------------------------------------------------------------------------- |
-| Display | `text-3xl font-semibold tracking-tight`                       | Page-level hero text (rare — mostly reserved for empty states, `/login`)   |
+| Display | `text-3xl font-semibold tracking-tight`                       | Page-level hero text (rare - mostly reserved for empty states, `/login`)   |
 | H1      | `text-2xl font-semibold tracking-tight`                       | Page title (e.g. "Accounts", account name on detail page)                  |
 | H2      | `text-xl font-semibold`                                       | Section heading within a page (card group headers, tab section titles)     |
 | H3      | `text-base font-medium`                                       | Card title (`CardTitle` default is `text-base font-medium` already)        |
 | H4      | `text-sm font-medium`                                         | Sub-section label, field-group legend                                      |
-| Body    | `text-sm`                                                     | Default body copy, table cells, form values — the CRM's dominant text size |
+| Body    | `text-sm`                                                     | Default body copy, table cells, form values - the CRM's dominant text size |
 | Small   | `text-xs text-muted-foreground`                               | Metadata, timestamps, helper text, table secondary lines                   |
 | Caption | `text-[0.7rem] uppercase tracking-wide text-muted-foreground` | Table column group labels, section eyebrows                                |
 
 Default line-height is Tailwind's built-in leading for each size (`leading-snug` for headings,
 default for body). Power-user density means most product surfaces use **Body (`text-sm`)** as the
-base, not `text-base` — reserve larger sizes for page/section titles only.
+base, not `text-base` - reserve larger sizes for page/section titles only.
 
 ## Spacing & grid
 
 - **Base unit:** Tailwind's default 4px scale (`--spacing: 0.25rem`). Prefer multiples of `2`
-  (`gap-2`, `p-2`) for dense controls and `4` (`gap-4`, `p-4`) for card/section spacing — avoid
+  (`gap-2`, `p-2`) for dense controls and `4` (`gap-4`, `p-4`) for card/section spacing - avoid
   odd values.
 - **Page container:** `max-w-screen-2xl mx-auto` for list/table pages so wide data tables have
   room; detail pages that are form/card-heavy can constrain to `max-w-5xl`.
 - **Page padding:** `px-4 py-6 md:px-6` for the main content area inside the (future) app shell.
 - **Card spacing:** governed by `card.tsx`'s own `--card-spacing` var (`--spacing(4)` default,
-  `--spacing(3)` for `size="sm"`) — don't override with ad hoc padding classes on `CardContent`;
+  `--spacing(3)` for `size="sm"`) - don't override with ad hoc padding classes on `CardContent`;
   use the `size` prop.
 - **Vertical rhythm between sections on a page:** `space-y-6`. Between form fields inside a
-  `FieldGroup`: handled by `field.tsx`'s built-in `gap-5` — don't add extra margin.
+  `FieldGroup`: handled by `field.tsx`'s built-in `gap-5` - don't add extra margin.
 
 ## Cards
 
 Use `card.tsx` (`Card`, `CardHeader`, `CardTitle`, `CardDescription`, `CardAction`, `CardContent`,
-`CardFooter`) for every entity-summary surface — account cards, KPI tiles, kanban opportunity
+`CardFooter`) for every entity-summary surface - account cards, KPI tiles, kanban opportunity
 cards.
 
 **Standard entity summary card anatomy** (e.g. an account card used on `/accounts` in a future
@@ -118,15 +118,15 @@ Conventions:
 
 - **Sticky header:** wrap the table in a container with a fixed max-height and apply
   `sticky top-0 bg-background` to `TableHeader` (or its `TableRow`) so column headers stay visible
-  while scrolling a long list — critical for the density this product targets.
-- **Row density:** default row height uses `text-sm` cells with `py-2` — do not use the
+  while scrolling a long list - critical for the density this product targets.
+- **Row density:** default row height uses `text-sm` cells with `py-2` - do not use the
   whitespace-heavy default HTML table padding. A "comfortable/compact" density toggle is a
   reasonable future enhancement but not required for Sprint 1.
 - **Empty states:** never render a bare empty `<TableBody>`. Render a single `TableRow` spanning
   all columns (`colSpan`) containing a centered `text-sm text-muted-foreground` message plus a
-  primary `Button` (e.g. "No accounts yet — Create your first account").
+  primary `Button` (e.g. "No accounts yet - Create your first account").
 - **Pagination:** use `pagination.tsx` below the table, server-driven (the Server Action accepts
-  a cursor/page param, not client-side slicing of a full dataset) — Firestore-backed lists must
+  a cursor/page param, not client-side slicing of a full dataset) - Firestore-backed lists must
   paginate at the query level per [database-schema.md](./database-schema.md) and
   [indexes.md](./indexes.md).
 - **Row interaction:** entire row is clickable to the detail route (`onClick` + `cursor-pointer`
@@ -141,7 +141,7 @@ size="icon"`).
 ## Forms
 
 Stack: **React Hook Form** + **Zod** (`@hookform/resolvers/zod`) + shadcn's `field.tsx` primitives.
-This shadcn version does **not** ship a legacy `Form`/`FormField` context wrapper — instead, forms
+This shadcn version does **not** ship a legacy `Form`/`FormField` context wrapper - instead, forms
 compose `FieldSet`, `FieldGroup`, `Field`, `FieldLabel`, `FieldContent`, `FieldDescription`, and
 `FieldError` directly, wiring them to RHF's `register` (uncontrolled inputs) or `Controller`
 (shadcn `Select`/`Checkbox`/`Switch`/`Calendar`, which aren't native `<input>` elements and need
@@ -220,7 +220,7 @@ Action and surface `{ ok: false, error }` results as a `sonner` toast plus (if f
   and don't reintroduce the same token for a semantically different series on the same chart.
 - **Status/semantic colors on charts** (e.g. a "won" vs. "lost" bar) should use `--color-primary`
   / `--color-destructive` rather than the neutral chart-N sequence, since those carry meaning
-  beyond series order — see "Colors" below.
+  beyond series order - see "Colors" below.
 - Wrap every chart in a fixed-height container (`ResponsiveContainer` from Recharts) inside a
   `Card`/`CardContent`, with a `Skeleton` of the same height as the loading state so layout
   doesn't shift.
@@ -230,11 +230,11 @@ Action and surface `{ ok: false, error }` results as a `sonner` toast plus (if f
 
 ## Dialogs vs. sheets
 
-- **`dialog.tsx`** — centered modal for short, focused, in-page interactions that don't need much
+- **`dialog.tsx`** - centered modal for short, focused, in-page interactions that don't need much
   vertical space: confirmations, quick-create forms with ≤5 fields, single-record edits
   (e.g. "Rename campaign"). Use `alert-dialog.tsx` specifically for destructive confirmations
   (delete account, remove member, revoke key) since it forces an explicit acknowledge action.
-- **`sheet.tsx`** — slide-over panel (from the right by default) for anything longer-form or that
+- **`sheet.tsx`** - slide-over panel (from the right by default) for anything longer-form or that
   benefits from more vertical room without navigating away from list context: full entity
   edit forms (edit account, edit contract), and detail "peek" panels launched from a table row
   without a full page navigation.
@@ -243,16 +243,16 @@ Action and surface `{ ok: false, error }` results as a `sonner` toast plus (if f
 
 ## Buttons
 
-`button.tsx` defines the variants/sizes below — use them semantically, don't reach for
+`button.tsx` defines the variants/sizes below - use them semantically, don't reach for
 `className` overrides for color:
 
 | Variant       | When to use                                                                                                                                   |
 | ------------- | --------------------------------------------------------------------------------------------------------------------------------------------- |
-| `default`     | Primary action per view/section — "Create account," "Save," "Send." At most one visually dominant `default` button per section.               |
-| `outline`     | Secondary actions alongside a `default` action — "Cancel," "Filters," toolbar toggles.                                                        |
-| `secondary`   | Tertiary/neutral actions with slightly more visual weight than `ghost` — e.g. "Export," non-primary toolbar actions.                          |
+| `default`     | Primary action per view/section - "Create account," "Save," "Send." At most one visually dominant `default` button per section.               |
+| `outline`     | Secondary actions alongside a `default` action - "Cancel," "Filters," toolbar toggles.                                                        |
+| `secondary`   | Tertiary/neutral actions with slightly more visual weight than `ghost` - e.g. "Export," non-primary toolbar actions.                          |
 | `ghost`       | Low-emphasis actions, especially icon-only buttons in tables/toolbars, or actions inside a `Card`/`TableRow` that shouldn't compete visually. |
-| `destructive` | Delete/remove/revoke actions — pair with `alert-dialog.tsx` confirmation.                                                                     |
+| `destructive` | Delete/remove/revoke actions - pair with `alert-dialog.tsx` confirmation.                                                                     |
 | `link`        | Inline text-styled actions inside body copy or table cells (e.g. "View details" inline in a sentence).                                        |
 
 Sizes: `default` and `lg` for standalone page actions, `sm`/`xs` for compact toolbars and in-table
@@ -266,20 +266,20 @@ Tokens come from Tailwind v4 CSS variables generated by shadcn from the **`neutr
 `--color-*` Tailwind utilities): `background`, `foreground`, `card`, `popover`, `primary`,
 `secondary`, `muted`, `accent`, `destructive`, `border`, `input`, `ring`, plus `chart-1..5` and a
 `sidebar-*` group reserved for the future app shell. **Never hardcode a hex/oklch value in
-component code** — always reference the Tailwind utility (`bg-primary`, `text-muted-foreground`,
+component code** - always reference the Tailwind utility (`bg-primary`, `text-muted-foreground`,
 `border-border`) so theming and dark mode stay centralized.
 
 The neutral base means BalloCRM currently has **no built-in colored semantic tokens** (no
-"success green" or "warning amber" in `globals.css`) — `destructive` is the only pre-defined
+"success green" or "warning amber" in `globals.css`) - `destructive` is the only pre-defined
 semantic color. Health-score and pipeline-stage status color needs to be layered on **as tokens**,
 not inline hex, before Sprint 1 UI work ships. Recommended approach (record the final choice in
 [decisions.md](./decisions.md) once made): add semantic status variants using existing neutral
-tokens plus `destructive`/`chart-*` combinations rather than introducing new raw colors — e.g.
+tokens plus `destructive`/`chart-*` combinations rather than introducing new raw colors - e.g.
 map health-score bands to existing `Badge` variants (`default` = healthy, `secondary` = watch,
 `destructive` = at-risk) rather than inventing green/amber/red hexes, so status always resolves
 correctly against both light and dark backgrounds. If a genuinely new semantic hue is required
 (e.g. a distinct "won" green), add it as a new CSS variable in `app/globals.css` under both `:root`
-and `.dark`, exposed via `@theme inline`, exactly like the existing tokens — never as a Tailwind
+and `.dark`, exposed via `@theme inline`, exactly like the existing tokens - never as a Tailwind
 arbitrary value (`bg-[#22c55e]`) in component code.
 
 ## Dark mode
@@ -287,11 +287,11 @@ arbitrary value (`bg-[#22c55e]`) in component code.
 Wired via `next-themes` in `providers/app-providers.tsx` (`ThemeProvider`, class-based strategy,
 `defaultTheme="system"`). `app/globals.css` defines a full `.dark` override block for every token
 above, and `@custom-variant dark (&:is(.dark *))` makes Tailwind's `dark:` variant work against
-that class. Component code should almost never need an explicit `dark:` class — using the
+that class. Component code should almost never need an explicit `dark:` class - using the
 semantic tokens (`bg-card`, `text-foreground`, etc.) instead of raw Tailwind grays gets dark mode
 for free. Reach for `dark:` overrides only for effects that are genuinely asymmetric between
 themes (several shadcn components already do this, e.g. `button.tsx`'s `dark:bg-input/30` on the
-`outline` variant) — don't reintroduce it for ordinary color needs.
+`outline` variant) - don't reintroduce it for ordinary color needs.
 
 ## Responsive rules
 
@@ -305,7 +305,7 @@ size="icon"`) in the topbar. The Redux `ui-slice`'s `sidebarCollapsed` state gov
 - **`md` and above:** persistent left sidebar, collapsible to an icon-only rail (`sidebarCollapsed`
   from `store/slices/ui-slice.ts`).
 - **Tables on narrow viewports:** prefer horizontal scroll inside a bounded container
-  (`overflow-x-auto`) over collapsing columns into cards — this product is desktop-first for
+  (`overflow-x-auto`) over collapsing columns into cards - this product is desktop-first for
   power users; mobile is "usable," not the primary optimization target.
 - **Dialogs/sheets:** `dialog.tsx` content should cap at a reasonable `max-w-*` and never exceed
   the viewport width on small screens (shadcn's default already handles this); `sheet.tsx` panels
@@ -315,23 +315,23 @@ size="icon"`) in the topbar. The Redux `ui-slice`'s `sidebarCollapsed` state gov
 
 - **Focus states:** already baked into shadcn components via `focus-visible:border-ring
 focus-visible:ring-3 focus-visible:ring-ring/50` (see `button.tsx`, `badge.tsx`, `input.tsx`,
-  etc.) — do not strip or override these when customizing a component.
+  etc.) - do not strip or override these when customizing a component.
 - **Color contrast:** the `neutral` base palette's text tokens (`foreground`,
   `muted-foreground` at `oklch(0.556 0 0)` on white / `oklch(0.708 0 0)` on dark) meet AA for body
   text at `text-sm`+; when introducing a new semantic status token (see Colors), check contrast
   against both `background` and `card` in light and dark mode before shipping it, especially for
   small `Badge`/caption text.
-- **Keyboard navigation:** tables must support full keyboard traversal — row actions exposed via
+- **Keyboard navigation:** tables must support full keyboard traversal - row actions exposed via
   `dropdown-menu.tsx` (already keyboard-operable via Radix), no click-only affordances (e.g. a
   hover-only "delete" icon with no keyboard path is not acceptable). `command.tsx` (cmdk) powers
   the command menu (`commandMenuOpen` in `ui-slice`) and must remain reachable via a documented
   keyboard shortcut once the shell ships.
 - **Icon-only buttons:** every `Button` using an `icon`/`icon-sm`/`icon-xs` size with no visible
   text must have `aria-label` (e.g. `<Button size="icon" variant="ghost" aria-label="Delete
-contact"><Trash2 /></Button>`) — never rely on a `title` attribute alone for accessible naming.
+contact"><Trash2 /></Button>`) - never rely on a `title` attribute alone for accessible naming.
 - **Form errors:** `field.tsx`'s `FieldError` already renders `role="alert"`; always pair it with
   `aria-invalid` on the input and `data-invalid` on the wrapping `Field` (see Forms above) so
   assistive tech and the destructive styling agree.
-- **Status-only-by-color:** health-score/stage badges must never convey status by color alone —
+- **Status-only-by-color:** health-score/stage badges must never convey status by color alone -
   always pair the `Badge` with a text label (e.g. "Health 82," "At risk," "Closed Won"), never a
   bare colored dot.

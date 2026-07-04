@@ -16,7 +16,7 @@ Rules:
 
 - A feature folder never imports from another feature folder directly. Shared logic goes in
   `lib/`, `services/`, or top-level `components/`.
-- UI never talks to Firestore directly — it calls an action in `actions/`, which calls a
+- UI never talks to Firestore directly - it calls an action in `actions/`, which calls a
   `services/` function, which calls a `repositories/` function.
 - Keep files small. If a feature's `components/` folder exceeds ~10 files, split by sub-domain
   (e.g. `accounts/components/list/`, `accounts/components/detail/`).

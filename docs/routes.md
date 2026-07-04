@@ -1,6 +1,6 @@
 # Routes
 
-This document is the canonical map of every route in the BalloCRM App Router tree — what exists
+This document is the canonical map of every route in the BalloCRM App Router tree - what exists
 today, what's planned, who can see it, and what it's built from. It must stay in sync with
 `config/site.ts` (`primaryNav`) and `middleware.ts`. If you add, rename, or remove a route, update
 this file in the same change.
@@ -14,11 +14,11 @@ column, [api.md](./api.md) for Server Action naming/return conventions, and
 
 Every path except the public set (`/`, `/login`, and Next internals/static assets) is gated by
 `middleware.ts`: it checks for a `__session` cookie and redirects to `/login` if it's absent. This
-is a presence check only — Edge middleware cannot run the Firebase Admin SDK, so it **cannot**
+is a presence check only - Edge middleware cannot run the Firebase Admin SDK, so it **cannot**
 verify the session cookie's signature or expiry. Real verification (decode + check `orgId`/`role`
 claims via the Admin SDK) must happen inside the Server Component or Server Action behind the
 gate, on every request that touches Firestore. Treat the middleware gate as a UX redirect, not a
-security boundary — authorization is enforced twice: once loosely at the edge, once for real at
+security boundary - authorization is enforced twice: once loosely at the edge, once for real at
 the data layer (Server Component/Action + Firestore Rules).
 
 Role names (`owner`, `admin`, `manager`, `rep`, `viewer`) come from `firestore.rules` /
@@ -30,26 +30,26 @@ mutation permissions are usually a subset and are called out per-route.
 | Path                  | Purpose                                                       | Permissions                        | Status                    |
 | --------------------- | ------------------------------------------------------------- | ---------------------------------- | ------------------------- |
 | `/`                   | Marketing/foundation landing page                             | Public                             | **Live**                  |
-| `/login`              | Firebase Auth sign-in, issues `__session` cookie              | Public                             | Planned — Sprint 1, Dev 1 |
-| `/dashboard`          | Org-wide KPI + pipeline overview (home after login)           | owner, admin, manager, rep, viewer | Planned — Sprint 1, Dev 2 |
-| `/accounts`           | Account list (table)                                          | owner, admin, manager, rep, viewer | Planned — Sprint 1, Dev 3 |
-| `/accounts/[id]`      | Account detail (health, timeline, contacts, opps)             | owner, admin, manager, rep, viewer | Planned — Sprint 1, Dev 3 |
-| `/contacts`           | Contact list (table)                                          | owner, admin, manager, rep, viewer | Planned — Sprint 2        |
-| `/contacts/[id]`      | Contact detail (profile, activities, opt-out status)          | owner, admin, manager, rep, viewer | Planned — Sprint 2        |
-| `/opportunities`      | Pipeline view (kanban by stage)                               | owner, admin, manager, rep, viewer | Planned — Sprint 2        |
-| `/opportunities/[id]` | Opportunity detail (qualification score, stage history)       | owner, admin, manager, rep, viewer | Planned — Sprint 2        |
-| `/contracts`          | Contract list (table)                                         | owner, admin, manager, rep, viewer | Planned — Sprint 2/3      |
-| `/contracts/[id]`     | Contract detail (terms, renewal, linked account)              | owner, admin, manager, rep, viewer | Planned — Sprint 2/3      |
-| `/campaigns`          | ABM campaign list + BalloAds trigger status                   | owner, admin, manager, rep, viewer | Planned — Sprint 3        |
-| `/analytics`          | Commercial analytics (pipeline velocity, forecasting, NL Q&A) | owner, admin, manager, viewer      | Planned — Sprint 3        |
-| `/settings`           | Org settings, roles, BalloAds/Brutus integration keys         | owner, admin (view: manager)       | Planned — Sprint 1/3      |
+| `/login`              | Firebase Auth sign-in, issues `__session` cookie              | Public                             | Planned - Sprint 1, Dev 1 |
+| `/dashboard`          | Org-wide KPI + pipeline overview (home after login)           | owner, admin, manager, rep, viewer | Planned - Sprint 1, Dev 2 |
+| `/accounts`           | Account list (table)                                          | owner, admin, manager, rep, viewer | Planned - Sprint 1, Dev 3 |
+| `/accounts/[id]`      | Account detail (health, timeline, contacts, opps)             | owner, admin, manager, rep, viewer | Planned - Sprint 1, Dev 3 |
+| `/contacts`           | Contact list (table)                                          | owner, admin, manager, rep, viewer | Planned - Sprint 2        |
+| `/contacts/[id]`      | Contact detail (profile, activities, opt-out status)          | owner, admin, manager, rep, viewer | Planned - Sprint 2        |
+| `/opportunities`      | Pipeline view (kanban by stage)                               | owner, admin, manager, rep, viewer | Planned - Sprint 2        |
+| `/opportunities/[id]` | Opportunity detail (qualification score, stage history)       | owner, admin, manager, rep, viewer | Planned - Sprint 2        |
+| `/contracts`          | Contract list (table)                                         | owner, admin, manager, rep, viewer | Planned - Sprint 2/3      |
+| `/contracts/[id]`     | Contract detail (terms, renewal, linked account)              | owner, admin, manager, rep, viewer | Planned - Sprint 2/3      |
+| `/campaigns`          | ABM campaign list + BalloAds trigger status                   | owner, admin, manager, rep, viewer | Planned - Sprint 3        |
+| `/analytics`          | Commercial analytics (pipeline velocity, forecasting, NL Q&A) | owner, admin, manager, viewer      | Planned - Sprint 3        |
+| `/settings`           | Org settings, roles, BalloAds/Brutus integration keys         | owner, admin (view: manager)       | Planned - Sprint 1/3      |
 
 Every planned row below `/login` is behind the `middleware.ts` gate described above. `/` and
 `/login` are the only public paths.
 
 ---
 
-## `/` — Foundation landing page
+## `/` - Foundation landing page
 
 - **Status:** Live (`app/page.tsx`).
 - **Purpose:** Placeholder marketing/entry page shipped by `create-next-app` scaffolding, pointing
@@ -60,9 +60,9 @@ Every planned row below `/login` is behind the `middleware.ts` gate described ab
   (`AppProviders` → theme, toaster).
 - **Actions:** None.
 - **Expected future enhancements:** Replace with a real marketing/splash page or redirect straight
-  to `/login` once auth exists — decide in [decisions.md](./decisions.md) before Sprint 2.
+  to `/login` once auth exists - decide in [decisions.md](./decisions.md) before Sprint 2.
 
-## `/login` — Sign in
+## `/login` - Sign in
 
 - **Status:** Planned, Sprint 1, Developer 1.
 - **Purpose:** Firebase Authentication sign-in (email/password and/or SSO, TBD), exchanges the
@@ -78,28 +78,28 @@ Every planned row below `/login` is behind the `middleware.ts` gate described ab
 - **Expected future enhancements:** Password reset flow, "remember this org" for multi-org users,
   audit-log entry on login (`organizations/{orgId}/auditLogs`).
 
-## `/dashboard` — Overview
+## `/dashboard` - Overview
 
 - **Status:** Planned, Sprint 1, Developer 2 (shell) / Developer 3 (data).
 - **Purpose:** Landing page after login. At-a-glance KPIs (open pipeline value, accounts at risk
   by health score, contracts up for renewal, recent activity) and a pipeline summary.
 - **Permissions:** owner, admin, manager, rep, viewer (all authenticated org members; content may
-  be scoped to "my accounts" for `rep`, org-wide for others — decide per-widget).
+  be scoped to "my accounts" for `rep`, org-wide for others - decide per-widget).
 - **Key components:** `card.tsx` for KPI tiles (see "Cards" in
   [ui-design-system.md](./ui-design-system.md)), Recharts line/bar/area charts for pipeline trend
   and stage distribution, `table.tsx` for a "recent activity" or "at-risk accounts" mini-list,
   `skeleton.tsx` for loading states, `tabs.tsx` if the dashboard splits "My work" / "Team" views.
-- **Actions:** Read-only — no Server Actions mutate data here. Data is fetched via TanStack Query
+- **Actions:** Read-only - no Server Actions mutate data here. Data is fetched via TanStack Query
   hooks in `features/dashboard/hooks/` calling read-only Server Actions (e.g.
   `getDashboardSummary`) that aggregate across `accounts`, `opportunities`, and `contracts`
   repositories, optionally cached in `organizations/{orgId}/analyticsCache`.
 - **Expected future enhancements:** Brutus AI "next best action" panel, customizable widget
   layout, per-user saved views.
 
-## `/accounts` — Account list
+## `/accounts` - Account list
 
 - **Status:** Planned, Sprint 1, Developer 3.
-- **Purpose:** Primary CRM entity list — every organization/company the CRM tracks, with health
+- **Purpose:** Primary CRM entity list - every organization/company the CRM tracks, with health
   score, vertical, and owner columns; the Sprint 1 proof-of-concept for full-stack Create/Read.
 - **Permissions:** Read: owner, admin, manager, rep, viewer. Create/Edit/Delete: owner, admin,
   manager, rep (matches `firestore.rules` write rule on `accounts`).
@@ -114,10 +114,10 @@ Every planned row below `/login` is behind the `middleware.ts` gate described ab
 - **Expected future enhancements:** Bulk import/export, saved filter views, inline health-score
   refresh from BalloAds, vertical-based segmentation view (Vertical Sales Indexing).
 
-## `/accounts/[id]` — Account detail
+## `/accounts/[id]` - Account detail
 
 - **Status:** Planned, Sprint 1, Developer 3 (baseline) / later sprints (enrichment).
-- **Purpose:** 360° view of a single account — profile, BalloAds-supplied health score with
+- **Purpose:** 360° view of a single account - profile, BalloAds-supplied health score with
   breakdown, associated contacts, open opportunities, contracts, and activity timeline.
 - **Permissions:** Read: owner, admin, manager, rep, viewer. Edit: owner, admin, manager, rep.
 - **Key components:** `card.tsx` for the account summary card (name, vertical badge, health-score
@@ -128,15 +128,15 @@ Every planned row below `/login` is behind the `middleware.ts` gate described ab
 - **Actions:** `getAccount`, `updateAccount` in `features/accounts/actions/`. The timeline tab
   reads `organizations/{orgId}/activities` filtered by `relatedTo.type == "account"` and
   `relatedTo.id == accountId` (see [database-schema.md](./database-schema.md) and
-  [decisions.md](./decisions.md) — there is no separate `timeline` collection by design).
+  [decisions.md](./decisions.md) - there is no separate `timeline` collection by design).
 - **Expected future enhancements:** Brutus AI account summarization card, cross-sell/upsell signal
   panel, "trigger BalloAds journey" action logged as an Activity, opt-out/delivery status pulled
   from the BalloAds developer API.
 
-## `/contacts` — Contact list
+## `/contacts` - Contact list
 
 - **Status:** Planned, Sprint 2.
-- **Purpose:** People associated with accounts — the CIMS (Customer Information Management)
+- **Purpose:** People associated with accounts - the CIMS (Customer Information Management)
   surface.
 - **Permissions:** Read: owner, admin, manager, rep, viewer. Write: owner, admin, manager, rep.
 - **Key components:** `table.tsx` with account-name column (linking to `/accounts/[id]`),
@@ -146,7 +146,7 @@ Every planned row below `/login` is behind the `middleware.ts` gate described ab
 - **Expected future enhancements:** Dedupe suggestions, CSV import, "primary contact" flag surfaced
   on the parent account card.
 
-## `/contacts/[id]` — Contact detail
+## `/contacts/[id]` - Contact detail
 
 - **Status:** Planned, Sprint 2.
 - **Purpose:** Single-contact profile, role/title, linked account, activity/communication history,
@@ -159,7 +159,7 @@ Every planned row below `/login` is behind the `middleware.ts` gate described ab
 - **Expected future enhancements:** Inline "send via BalloAds" trigger (calls the developer API,
   logs an Activity, never sends directly from BalloCRM).
 
-## `/opportunities` — Pipeline (kanban)
+## `/opportunities` - Pipeline (kanban)
 
 - **Status:** Planned, Sprint 2.
 - **Purpose:** Sales pipeline as a stage-based kanban board (and a table-view toggle), the core
@@ -172,15 +172,15 @@ Every planned row below `/login` is behind the `middleware.ts` gate described ab
   `select.tsx` for stage/owner filters.
 - **Actions:** `listOpportunities`, `moveOpportunityStage`, `createOpportunity` in
   `features/opportunities/actions/`. Stage changes may trigger a BalloAds journey call (e.g.
-  onboarding sequence on "Closed Won") — logged as an Activity per the integration contract in
+  onboarding sequence on "Closed Won") - logged as an Activity per the integration contract in
   [integrations.md](./integrations.md).
 - **Expected future enhancements:** Brutus AI qualification scoring (BANT/MEDDIC fields), drag-
   reorder within a stage, forecast rollups feeding `/analytics`.
 
-## `/opportunities/[id]` — Opportunity detail
+## `/opportunities/[id]` - Opportunity detail
 
 - **Status:** Planned, Sprint 2.
-- **Purpose:** Deal detail — value, stage history, qualification fields, linked account/contacts,
+- **Purpose:** Deal detail - value, stage history, qualification fields, linked account/contacts,
   AI next-best-action.
 - **Permissions:** Read: owner, admin, manager, rep, viewer. Edit: owner, admin, manager, rep.
 - **Key components:** `card.tsx` summary, `progress.tsx` for qualification completeness,
@@ -192,10 +192,10 @@ Every planned row below `/login` is behind the `middleware.ts` gate described ab
 - **Expected future enhancements:** Full Brutus AI qualification panel, "ask Brutus" inline
   next-best-action card.
 
-## `/contracts` — Contract list
+## `/contracts` - Contract list
 
 - **Status:** Planned, Sprint 2/3.
-- **Purpose:** Contract lifecycle tracking — active/expiring/renewed contracts per account.
+- **Purpose:** Contract lifecycle tracking - active/expiring/renewed contracts per account.
 - **Permissions:** Read: owner, admin, manager, rep, viewer. Write: owner, admin, manager, rep.
 - **Key components:** `table.tsx` with renewal-date column and expiry `badge.tsx` (e.g. `outline`
   for healthy, `destructive` for expiring soon), `select.tsx`/`input.tsx` filter toolbar,
@@ -204,7 +204,7 @@ Every planned row below `/login` is behind the `middleware.ts` gate described ab
 - **Expected future enhancements:** Renewal reminder automation (via BalloAds trigger), e-signature
   integration hook point.
 
-## `/contracts/[id]` — Contract detail
+## `/contracts/[id]` - Contract detail
 
 - **Status:** Planned, Sprint 2/3.
 - **Purpose:** Contract terms, value, renewal date, linked account, document reference, activity
@@ -215,28 +215,28 @@ Every planned row below `/login` is behind the `middleware.ts` gate described ab
 - **Actions:** `getContract`, `updateContract` in `features/contracts/actions/`.
 - **Expected future enhancements:** Renewal-stage-to-opportunity conversion flow.
 
-## `/campaigns` — ABM campaigns
+## `/campaigns` - ABM campaigns
 
 - **Status:** Planned, Sprint 3.
 - **Purpose:** Account-Based Marketing campaign definitions and their BalloAds trigger/send status
-  (read-only status, not send infrastructure — see brief §3 non-goals).
+  (read-only status, not send infrastructure - see brief §3 non-goals).
 - **Permissions:** Read: owner, admin, manager, rep, viewer. Write: owner, admin, manager.
 - **Key components:** `table.tsx` for campaign list, `badge.tsx` for BalloAds send status,
   `dialog.tsx` for "New campaign" (target account list + BalloAds template reference),
   `tabs.tsx` for campaign detail if expanded inline rather than a sub-route.
 - **Actions:** `listCampaigns`, `createCampaign`, `triggerBalloAdsCampaign` in
-  `features/campaigns/actions/` — the trigger action is a server-side call to
+  `features/campaigns/actions/` - the trigger action is a server-side call to
   `/v1/developer-portal/*` per [integrations.md](./integrations.md), logged as an Activity.
 - **Expected future enhancements:** Campaign performance rollups on `/analytics`, target-list
   builder driven by Vertical Sales Indexing filters.
 
-## `/analytics` — Commercial analytics
+## `/analytics` - Commercial analytics
 
 - **Status:** Planned, Sprint 3.
 - **Purpose:** Pipeline velocity, win/loss trends, forecasting, and a natural-language "ask a
   question about your pipeline" panel backed by Brutus AI.
 - **Permissions:** owner, admin, manager, viewer (read-only for all; `rep` may be scoped to
-  "my pipeline" only — decide per widget).
+  "my pipeline" only - decide per widget).
 - **Key components:** Recharts line/bar/area charts (see chart conventions in
   [ui-design-system.md](./ui-design-system.md)), `card.tsx` KPI tiles, `select.tsx` for date-range
   and segment filters, `command.tsx`/`input-group.tsx` for the NL query box, `skeleton.tsx` for
@@ -247,7 +247,7 @@ Every planned row below `/login` is behind the `middleware.ts` gate described ab
 - **Expected future enhancements:** Saved/shared dashboards, export to CSV/PDF, scheduled email
   digests (triggered via BalloAds, not built in BalloCRM).
 
-## `/settings` — Org settings
+## `/settings` - Org settings
 
 - **Status:** Planned, Sprint 1 (skeleton) / Sprint 3 (integrations config).
 - **Purpose:** Organization profile, member/role management, and integration credentials
@@ -255,7 +255,7 @@ Every planned row below `/login` is behind the `middleware.ts` gate described ab
   `organizations/{orgId}/integrations/{provider}`.
 - **Permissions:** Full read/write: owner, admin. Read-only view of non-secret settings: manager.
   Not visible to rep/viewer. Integration credential fields themselves are never read back to any
-  client — `firestore.rules` sets `allow read, write: if false` on `integrations/*`; all access is
+  client - `firestore.rules` sets `allow read, write: if false` on `integrations/*`; all access is
   server-side via the Admin SDK (see [firestore-rules.md](./firestore-rules.md)).
 - **Key components:** `tabs.tsx` (General / Members / Integrations), `table.tsx` for member list
   with `select.tsx` role dropdown, `field.tsx` primitives for the integration-key forms,

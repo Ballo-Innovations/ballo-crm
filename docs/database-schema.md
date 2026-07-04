@@ -4,7 +4,7 @@ BalloCRM persists all application data in **Cloud Firestore**, using a multi-ten
 top-level `users` collection, one top-level `organizations` collection, and every CRM business
 object nested under `organizations/{orgId}/...` as a subcollection. This document is the
 canonical description of that schema. If code and this file ever disagree, fix whichever one is
-wrong — do not let them drift (see [decisions.md](./decisions.md)).
+wrong - do not let them drift (see [decisions.md](./decisions.md)).
 
 Related docs: [firestore-rules.md](./firestore-rules.md) (who can read/write what),
 [indexes.md](./indexes.md) (composite indexes referenced below), [architecture.md](./architecture.md)
@@ -40,7 +40,7 @@ organizations/{orgId}/integrations/{provider}
 
 ## `users/{uid}`
 
-**Purpose:** One document per Firebase Auth user. Holds CRM identity, org membership, and role —
+**Purpose:** One document per Firebase Auth user. Holds CRM identity, org membership, and role -
 the two fields every security rule and every server-side authorization check reads first.
 
 ```json
@@ -58,7 +58,7 @@ the two fields every security rule and every server-side authorization check rea
 
 - **Relationships:** `orgId` → `organizations/{orgId}`. Referenced by nearly every other
   collection via `ownerId`, `actorId`, `assigneeId`, `targetUserId`.
-- **Indexes:** none defined — `users` is always read by document ID (`uid`), never queried.
+- **Indexes:** none defined - `users` is always read by document ID (`uid`), never queried.
 - **Security note:** `role` and `orgId` are write-locked on the client (rule requires
   `request.resource.data.role == resource.data.role` and same for `orgId`); changing either
   requires a Server Action using the Admin SDK, preventing client-side self-escalation. See
@@ -79,13 +79,13 @@ the two fields every security rule and every server-side authorization check rea
 ```
 
 - **Relationships:** parent of every subcollection listed below.
-- **Indexes:** none — read/updated by ID only.
+- **Indexes:** none - read/updated by ID only.
 - **Security note:** `create`/`delete` are `false` client-side (org provisioning is a controlled
   server-side operation); `update` requires `owner` or `admin` role.
 
 ## `organizations/{orgId}/accounts/{accountId}`
 
-**Purpose:** An enterprise account (company) — the core CIMS entity. Owns contacts,
+**Purpose:** An enterprise account (company) - the core CIMS entity. Owns contacts,
 opportunities, and contracts.
 
 ```json
@@ -108,7 +108,7 @@ opportunities, and contracts.
 - **Relationships:** `ownerId` → `users/{uid}`. Referenced by `contacts.accountId`,
   `opportunities.accountId`, `contracts.accountId`, `activities.relatedTo.id` (when
   `relatedTo.type == "account"`).
-- **Indexes:** `vertical ASC, healthScore DESC` (vertical sales indexing — segment accounts by
+- **Indexes:** `vertical ASC, healthScore DESC` (vertical sales indexing - segment accounts by
   industry, ranked by health); `ownerId ASC, updatedAt DESC` (a rep's account list, most
   recently touched first). See [indexes.md](./indexes.md).
 - **Security note:** `healthScore` is treated as an externally-supplied enrichment field written
@@ -117,7 +117,7 @@ opportunities, and contracts.
 
 ## `organizations/{orgId}/contacts/{contactId}`
 
-**Purpose:** A person at an account — the CRM's individual-level CIMS record.
+**Purpose:** A person at an account - the CRM's individual-level CIMS record.
 
 ```json
 {
@@ -139,7 +139,7 @@ opportunities, and contracts.
 - **Relationships:** `accountId` → `accounts`, `ownerId` → `users`.
 - **Indexes:** none dedicated yet; contact lists are typically fetched by `accountId` via a
   simple equality query (no composite index required). Add one if a sorted/filtered contact list
-  view is built later — see the "adding a new index" guide in [indexes.md](./indexes.md).
+  view is built later - see the "adding a new index" guide in [indexes.md](./indexes.md).
 - **Security note:** write requires `owner`/`admin`/`manager`/`rep` (same tier as accounts).
 
 ## `organizations/{orgId}/opportunities/{opportunityId}`
@@ -152,7 +152,7 @@ opportunities, and contracts.
   "opportunityId": "opp_1a92",
   "accountId": "acct_7c31",
   "ownerId": "u_8f21a",
-  "name": "Kestrel — Fleet Telematics Renewal",
+  "name": "Kestrel - Fleet Telematics Renewal",
   "stage": "negotiation",
   "amount": 42000,
   "currency": "KES",
@@ -224,9 +224,9 @@ expectedCloseDate ASC` (a rep's deals sorted by close date).
 
 - **Relationships:** `accountId` → `accounts`, `opportunityId` → `opportunities` (the deal that
   produced it), `ownerId` → `users`.
-- **Indexes:** `status ASC, renewalDate ASC` (contracts up for renewal, soonest first — the
+- **Indexes:** `status ASC, renewalDate ASC` (contracts up for renewal, soonest first - the
   primary renewal-risk view).
-- **Security note:** write requires `owner`/`admin`/`manager` only — reps can read but not edit
+- **Security note:** write requires `owner`/`admin`/`manager` only - reps can read but not edit
   contract terms, a stricter tier than accounts/opportunities.
 
 ## `organizations/{orgId}/campaigns/{campaignId}`
@@ -238,7 +238,7 @@ targeting/config here; actual message sends happen in BalloAds, triggered via th
 ```json
 {
   "campaignId": "camp_33aa",
-  "name": "Logistics Vertical — Q3 Renewal Push",
+  "name": "Logistics Vertical - Q3 Renewal Push",
   "status": "running",
   "targetVertical": "logistics",
   "targetAccountIds": ["acct_7c31", "acct_9b02"],
@@ -254,7 +254,7 @@ targeting/config here; actual message sends happen in BalloAds, triggered via th
 - **Relationships:** `targetAccountIds[]` → `accounts`; `balloAdsJourneyRef` is an opaque
   external identifier for a BalloAds journey/trigger, not a Firestore reference.
 - **Indexes:** `status ASC, startDate DESC` (active/upcoming campaigns list, newest first).
-- **Security note:** write requires `owner`/`admin`/`manager` (same tier as contracts —
+- **Security note:** write requires `owner`/`admin`/`manager` (same tier as contracts -
   campaigns commit budget and customer-facing messaging).
 
 ## `organizations/{orgId}/activities/{activityId}`
@@ -279,14 +279,14 @@ timeline, opportunity history). See "No `timeline` collection" below.
 
 Other `type` values include `note_added`, `email_logged`, `call_logged`, `contract_signed`,
 `balloads_campaign_triggered`, `ai_insight_generated`. `payload` is a loosely-typed, `type`-specific
-bag validated by a discriminated Zod union in `schemas/` — not a fixed shape across all activities.
+bag validated by a discriminated Zod union in `schemas/` - not a fixed shape across all activities.
 
 - **Relationships:** `relatedTo.id` polymorphically references any entity (`account`, `contact`,
   `opportunity`, `contract`, `campaign`); `actorId` → `users`.
-- **Indexes:** `relatedTo.type ASC, relatedTo.id ASC, occurredAt DESC` — this single composite
+- **Indexes:** `relatedTo.type ASC, relatedTo.id ASC, occurredAt DESC` - this single composite
   index is what makes "show me the timeline for this account" a fast, cheap query.
 - **Security note:** `create` requires `owner`/`admin`/`manager`/`rep`; `update` and `delete` are
-  `false` unconditionally — activities are immutable once written, by design.
+  `false` unconditionally - activities are immutable once written, by design.
 
 ### No separate `timeline` collection (deliberate)
 
@@ -294,7 +294,7 @@ BalloCRM does **not** maintain a dedicated `timeline` collection. "Customer Jour
 is implemented as a query over `activities` filtered by `relatedTo.type` + `relatedTo.id` and
 sorted by `occurredAt`, backed by the composite index above. Duplicating the same event into a
 second `timeline` collection would mean every write path has to remember to write twice, and the
-two collections would inevitably drift. This is a recorded architectural decision — see
+two collections would inevitably drift. This is a recorded architectural decision - see
 [decisions.md](./decisions.md) for the full rationale and the conditions under which it would be
 revisited (see "Future migration strategy" below).
 
@@ -321,7 +321,7 @@ revisited (see "Future migration strategy" below).
   feed).
 - **Security note:** a user may only read their own notifications (`resource.data.targetUserId
 == request.auth.uid`), and may only update the `read`/`readAt` keys on their own notification
-  (enforced via `diff().affectedKeys().hasOnly([...])`) — the "self-serve read receipt" pattern.
+  (enforced via `diff().affectedKeys().hasOnly([...])`) - the "self-serve read receipt" pattern.
   `create`/`delete` are server-only. See [firestore-rules.md](./firestore-rules.md).
 
 ## `organizations/{orgId}/auditLogs/{logId}`
@@ -345,7 +345,7 @@ integration credential rotation) distinct from the business-facing `activities` 
 - **Relationships:** `actorId`, `targetId` → typically `users`, but can reference any entity type
   depending on `action`.
 - **Indexes:** `actorId ASC, createdAt DESC` (who-did-what audit view per actor).
-- **Security note:** written only by trusted server code via the Admin SDK — `allow write: if
+- **Security note:** written only by trusted server code via the Admin SDK - `allow write: if
 false` unconditionally in rules. Client SDK cannot write audit logs even with the right role,
   which is the point: audit trails must not be forgeable by the actor being audited. Read is
   restricted to `owner`/`admin`.
@@ -378,7 +378,7 @@ Server Actions per [architecture.md](./architecture.md) and [integrations.md](./
 - **Relationships:** `input`/`output` reference other entities by ID depending on `type` (e.g.
   `opportunityId`, `accountId`); `requestedBy` → `users`.
 - **Indexes:** `status ASC, createdAt DESC` (an org's AI job queue/history view, newest first).
-- **Security note:** `allow write: if false` — jobs are created, transitioned, and completed
+- **Security note:** `allow write: if false` - jobs are created, transitioned, and completed
   exclusively by server-side Server Actions/Route Handlers via the Admin SDK, since a client
   writing `status: "completed"` directly would let a user fabricate AI output. Read is open to
   all org members so UI can poll/subscribe for job completion.
@@ -391,7 +391,7 @@ referenced when triggering a BalloAds send).
 ```json
 {
   "templateId": "tmpl_0091",
-  "name": "Renewal Reminder — 30 Days",
+  "name": "Renewal Reminder - 30 Days",
   "kind": "campaign_message",
   "body": "Hi {{contact.firstName}}, your contract with us renews on {{contract.renewalDate}}...",
   "createdBy": "u_2f00",
@@ -402,7 +402,7 @@ referenced when triggering a BalloAds send).
 
 - **Relationships:** `createdBy` → `users`; referenced by `campaigns` and by BalloAds trigger
   payloads (not a hard Firestore reference).
-- **Indexes:** none yet — templates are listed by `kind` via simple equality, or fetched in full
+- **Indexes:** none yet - templates are listed by `kind` via simple equality, or fetched in full
   (org-scale template counts are small).
 - **Security note:** write requires `owner`/`admin`/`manager`.
 
@@ -424,10 +424,10 @@ every page load.
 }
 ```
 
-- **Relationships:** none by ID — this is a derived/denormalized read model, intentionally
+- **Relationships:** none by ID - this is a derived/denormalized read model, intentionally
   decoupled from source documents.
-- **Indexes:** none — always fetched by known `cacheKey`.
-- **Security note:** `allow write: if false` — populated only by a scheduled server job/Server
+- **Indexes:** none - always fetched by known `cacheKey`.
+- **Security note:** `allow write: if false` - populated only by a scheduled server job/Server
   Action, never by client writes, so a stale or malicious client can never poison dashboard data
   other org members see.
 
@@ -454,12 +454,12 @@ feature flags) that admins can tune without a deploy.
 ```
 
 - **Relationships:** `updatedBy` → `users`.
-- **Indexes:** none — fetched by known `settingId` (typically read in full at org load time).
+- **Indexes:** none - fetched by known `settingId` (typically read in full at org load time).
 - **Security note:** write requires `owner`/`admin` only.
 
 ## `organizations/{orgId}/integrations/{provider}`
 
-**Purpose:** Encrypted third-party credentials — one document per provider (`balloAds`,
+**Purpose:** Encrypted third-party credentials - one document per provider (`balloAds`,
 `brutusAi`). `provider` is the document ID (e.g. `organizations/{orgId}/integrations/balloAds`).
 
 ```json
@@ -474,8 +474,8 @@ feature flags) that admins can tune without a deploy.
 ```
 
 - **Relationships:** `connectedBy` → `users`.
-- **Indexes:** none — fetched by known `provider` document ID only.
-- **Security note:** `allow read, write: if false` unconditionally — this collection is **never**
+- **Indexes:** none - fetched by known `provider` document ID only.
+- **Security note:** `allow read, write: if false` unconditionally - this collection is **never**
   touched by the client SDK in either direction. All access is server-side via the Admin SDK
   (which bypasses Firestore Security Rules entirely), so a raw API key never has a code path that
   could serve it to a browser. See [integrations.md](./integrations.md) and
@@ -486,7 +486,7 @@ feature flags) that admins can tune without a deploy.
 ## Naming conventions
 
 - **Collections:** always plural, `camelCase` when multi-word (`analyticsCache`, `auditLogs`,
-  `aiJobs`) — no snake_case, no hyphens.
+  `aiJobs`) - no snake_case, no hyphens.
 - **Fields:** always `camelCase` (`healthScore`, `expectedCloseDate`), matching the TypeScript
   types inferred from the corresponding Zod schema in `schemas/`.
 - **Document ID fields:** every document stores its own ID redundantly as a field matching the
@@ -494,19 +494,19 @@ feature flags) that admins can tune without a deploy.
   in some collections (e.g. `accounts` documents include `accountId` for convenience in
   denormalized reads); a reference to _another_ document is always `<singularEntity>Id`
   (`accountId`, `ownerId`, `assigneeId`, `actorId`, `targetUserId`, `authorityContactId`).
-  Never store a `DocumentReference` object — always a plain string ID, so documents remain
+  Never store a `DocumentReference` object - always a plain string ID, so documents remain
   trivially serializable to/from Zod schemas and JSON API payloads.
 - **Timestamps:** every document has `createdAt`; every mutable document has `updatedAt`.
   Immutable/append-only documents (`activities`, `auditLogs`) use a single meaningful instant
   field instead (`occurredAt`, `createdAt`) since there's nothing to "update." Stored as
-  Firestore `Timestamp`, serialized to ISO-8601 strings at the API boundary — never Unix epoch
+  Firestore `Timestamp`, serialized to ISO-8601 strings at the API boundary - never Unix epoch
   numbers, never client-generated `Date.now()` for `createdAt` (always server timestamp).
 - **Polymorphic references:** any field that can point at more than one collection is a
-  `{ type: string, id: string }` object named `relatedTo`, never a bare string — this keeps
+  `{ type: string, id: string }` object named `relatedTo`, never a bare string - this keeps
   the target collection explicit and queryable (see the `activities` composite index).
 - **Enums as strings:** `stage`, `status`, `role`, `tier`, `vertical` are lowercase
   `snake_case`-free plain strings (`"negotiation"`, `"closed_won"`) validated against a Zod
-  `z.enum([...])` — never numeric codes, so raw Firestore data stays human-readable in the
+  `z.enum([...])` - never numeric codes, so raw Firestore data stays human-readable in the
   console during the hackathon.
 
 ## Future migration strategy
@@ -525,7 +525,7 @@ indexes. That said, two realistic pressure points would force a change later:
    UI at BigQuery instead of `analyticsCache`. Firestore stays authoritative for transactional
    writes.
 2. **Collection-group query limits.** All current indexes are scoped `COLLECTION`, not
-   `COLLECTION_GROUP` — queries never need to span all orgs' `opportunities` at once, which keeps
+   `COLLECTION_GROUP` - queries never need to span all orgs' `opportunities` at once, which keeps
    the current model simple and avoids Firestore's collection-group index costs. If a future
    requirement needs cross-org queries (e.g. a super-admin console reporting across every
    tenant), that would require switching relevant indexes to `COLLECTION_GROUP` scope and

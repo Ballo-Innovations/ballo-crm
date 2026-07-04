@@ -16,13 +16,13 @@ expectedCloseDate`), or
 - combine an equality filter on one field with a range/inequality or sort on a **different**
   field,
 
-Firestore requires a **composite index** — a pre-built, sorted structure over the exact
+Firestore requires a **composite index** - a pre-built, sorted structure over the exact
 combination of fields and sort orders the query uses, in the exact order the query needs. Without
 it, the query fails at runtime with an error containing a console link to auto-create the missing
 index. This is a deliberate Firestore design trade-off: it forces every expensive query to have a
 pre-computed index rather than letting an unindexed query silently degrade performance at scale.
 
-All indexes below are `queryScope: "COLLECTION"` — none of them are `COLLECTION_GROUP`, meaning
+All indexes below are `queryScope: "COLLECTION"` - none of them are `COLLECTION_GROUP`, meaning
 every query they support runs against a single organization's subcollection (e.g. one org's
 `opportunities`), never across all orgs at once. That's consistent with the multi-tenant model:
 BalloCRM has no cross-org query pattern yet, so no collection-group index is needed today (see
@@ -34,7 +34,7 @@ the migration note in [database-schema.md](./database-schema.md)).
 
 | Fields (order)                     | Query it supports                                                                                                       | Why composite is required                                                                  |
 | ---------------------------------- | ----------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------ |
-| `vertical` ASC, `healthScore` DESC | List accounts in a given industry vertical, ranked by health score, highest first — the "Vertical Sales Indexing" view. | Equality filter on `vertical` combined with a sort on a _different_ field (`healthScore`). |
+| `vertical` ASC, `healthScore` DESC | List accounts in a given industry vertical, ranked by health score, highest first - the "Vertical Sales Indexing" view. | Equality filter on `vertical` combined with a sort on a _different_ field (`healthScore`). |
 | `ownerId` ASC, `updatedAt` DESC    | A rep's own account list ("my accounts"), most recently updated first.                                                  | Equality filter on `ownerId` combined with a sort on `updatedAt`.                          |
 
 ### `opportunities`
@@ -43,13 +43,13 @@ the migration note in [database-schema.md](./database-schema.md)).
 | -------------------------------------- | ----------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------- |
 | `stage` ASC, `expectedCloseDate` ASC   | Pipeline board / forecast view: opportunities grouped by stage, ordered by expected close date within each stage. | Equality filter on `stage` + sort on `expectedCloseDate`.   |
 | `accountId` ASC, `stage` ASC           | An account's detail page: all deals for this account, grouped by stage.                                           | Equality filter on `accountId` + sort/filter on `stage`.    |
-| `ownerId` ASC, `expectedCloseDate` ASC | A rep's own deal list sorted by close date — "what's closing soon that's mine."                                   | Equality filter on `ownerId` + sort on `expectedCloseDate`. |
+| `ownerId` ASC, `expectedCloseDate` ASC | A rep's own deal list sorted by close date - "what's closing soon that's mine."                                   | Equality filter on `ownerId` + sort on `expectedCloseDate`. |
 
 ### `activities`
 
 | Fields (order)                                              | Query it supports                                                                                                                                                                                                                                             | Why composite is required                                                                                                                                                     |
 | ----------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `relatedTo.type` ASC, `relatedTo.id` ASC, `occurredAt` DESC | The timeline for any single entity: "show all activity for opportunity `opp_1a92`," newest first. This is the query that lets `activities` double as the timeline UI with no separate `timeline` collection (see [database-schema.md](./database-schema.md)). | Two equality filters (`relatedTo.type`, `relatedTo.id`) plus a sort on a third field (`occurredAt`) — three fields involved, well past what a single-field index can satisfy. |
+| `relatedTo.type` ASC, `relatedTo.id` ASC, `occurredAt` DESC | The timeline for any single entity: "show all activity for opportunity `opp_1a92`," newest first. This is the query that lets `activities` double as the timeline UI with no separate `timeline` collection (see [database-schema.md](./database-schema.md)). | Two equality filters (`relatedTo.type`, `relatedTo.id`) plus a sort on a third field (`occurredAt`) - three fields involved, well past what a single-field index can satisfy. |
 
 ### `tasks`
 
@@ -86,7 +86,7 @@ the migration note in [database-schema.md](./database-schema.md)).
 
 | Fields (order)                 | Query it supports                                                                                                  | Why composite is required                          |
 | ------------------------------ | ------------------------------------------------------------------------------------------------------------------ | -------------------------------------------------- |
-| `status` ASC, `createdAt` DESC | The org's AI job queue/history — e.g. "show all currently running jobs," newest first, or a full job history feed. | Equality filter on `status` + sort on `createdAt`. |
+| `status` ASC, `createdAt` DESC | The org's AI job queue/history - e.g. "show all currently running jobs," newest first, or a full job history feed. | Equality filter on `status` + sort on `createdAt`. |
 
 ## Collections with no composite index (and why)
 
@@ -94,9 +94,9 @@ the migration note in [database-schema.md](./database-schema.md)).
 `integrations` have no entries in `firestore.indexes.json` today. Each is either always fetched
 by a known document ID (`settings/{settingId}`, `analyticsCache/{cacheKey}`,
 `integrations/{provider}`, `users/{uid}`), or currently only queried with a single equality
-filter with no additional sort (`contacts` by `accountId`, `templates` by `kind`) — both cases
+filter with no additional sort (`contacts` by `accountId`, `templates` by `kind`) - both cases
 Firestore's automatic single-field indexing already covers. If a future feature needs, say, "list
-contacts for an account sorted by `lastName`," that would need a new composite index — see below.
+contacts for an account sorted by `lastName`," that would need a new composite index - see below.
 
 ## Adding a new index
 
@@ -108,17 +108,17 @@ When a new query pattern needs a composite index, there are two equivalent ways 
    - Deploy it: `firebase deploy --only firestore:indexes`.
    - Commit the updated `firestore.indexes.json` in the same change as the code that introduces
      the query, per the documentation-driven-development rule in
-     [PROJECT_BRIEF.md](./_context/PROJECT_BRIEF.md) — and update this file's catalog table above
+     [PROJECT_BRIEF.md](./_context/PROJECT_BRIEF.md) - and update this file's catalog table above
      in the same commit.
 2. **Auto-suggested (fast path during local development):** run the new query against the
    Firestore emulator or a dev project without the index. Firestore's error message includes a
-   direct console link that pre-fills the exact composite index definition needed — click it,
+   direct console link that pre-fills the exact composite index definition needed - click it,
    confirm creation, then **reverse-engineer that same definition back into
    `firestore.indexes.json`** before merging, so the index is captured in version control and
    deploys automatically to every environment (staging, prod) rather than existing only as a
    manually-clicked artifact in one Firebase project.
 
-Either path, the index must land in `firestore.indexes.json` before the PR merges — an index that
+Either path, the index must land in `firestore.indexes.json` before the PR merges - an index that
 only exists because someone clicked a console link will silently be missing in the next
 environment that runs `firebase deploy`.
 
@@ -129,13 +129,13 @@ structure) and slows down writes slightly (each write updates every matching ind
 to add a new composite index for every new filter/sort combination a UI wants, but:
 
 - Prefer designing list views around the query patterns already indexed above before requesting a
-  new one — e.g. a "my accounts, filtered by vertical" view might be satisfiable by fetching with
+  new one - e.g. a "my accounts, filtered by vertical" view might be satisfiable by fetching with
   the existing `ownerId, updatedAt` index and filtering `vertical` client-side if the result set
   is small, rather than adding a three-field `ownerId, vertical, updatedAt` index.
 - Each additional field in a composite index also creates the "index the reverse-sort order too"
-  question — Firestore does not automatically give you both `ASC` and `DESC` for free; adding a
+  question - Firestore does not automatically give you both `ASC` and `DESC` for free; adding a
   new sort direction on an already-indexed field pair means a second, near-duplicate index entry.
 - Review `firestore.indexes.json` during sprint planning ([sprint-plan.md](./sprint-plan.md)) as
-  the CRM domain grows — an index nobody's queries use anymore should be deleted (via the same
+  the CRM domain grows - an index nobody's queries use anymore should be deleted (via the same
   `firebase deploy --only firestore:indexes` path, removing the entry), not left to accumulate
   indefinitely.

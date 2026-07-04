@@ -17,6 +17,6 @@ assignees: ""
 ## Documentation impact
 
 <!-- Which docs/*.md files need to change alongside this feature? This project is
-documentation-driven — a feature isn't done until its doc is updated. -->
+documentation-driven - a feature isn't done until its doc is updated. -->
 
 ## Scope / non-goals

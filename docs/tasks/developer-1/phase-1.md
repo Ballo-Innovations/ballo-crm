@@ -1,7 +1,7 @@
-# Developer 1 — Phase 1: Foundation
+# Developer 1 - Phase 1: Foundation
 
-Phase 1 is the root of the whole project's critical path. Nothing else in BalloCRM — the app
-shell (Developer 2), Accounts CRUD (Developer 3), AI jobs, analytics — can run against a real
+Phase 1 is the root of the whole project's critical path. Nothing else in BalloCRM - the app
+shell (Developer 2), Accounts CRUD (Developer 3), AI jobs, analytics - can run against a real
 backend or a real user until the tasks below land. This phase stands up the actual Firebase
 project behind the already-scaffolded `lib/firebase/client.ts` / `lib/firebase/admin.ts`, wires
 Firebase Auth sign-in and the `__session` cookie, adds server-side session verification, finalizes
@@ -28,15 +28,15 @@ of Done in the same file. The template for every field below is
   already-scaffolded `lib/firebase/client.ts` and `lib/firebase/admin.ts`, and populate real
   credentials through `config/env.ts` so every later task (auth, Firestore reads/writes) has a
   working backend to target instead of placeholder env values.
-- **Business Value**: Nothing else in the app — login, Accounts CRUD, AI jobs — can run against
+- **Business Value**: Nothing else in the app - login, Accounts CRUD, AI jobs - can run against
   real data until this lands. It is the single hardest blocker for the Sprint 1 demo.
-- **Dependencies**: none (this is the root of the critical path — see
+- **Dependencies**: none (this is the root of the critical path - see
   [../../sprint-plan.md](../../sprint-plan.md)).
 - **Target Files**:
   - `.env.local` (untracked, created locally from `.env.example`)
   - `.env.example` (add any newly-required key names, no real values)
   - `config/env.ts` (extend the Zod schema only if a new required key is introduced)
-  - `firebase.json`, `firestore.rules`, `firestore.indexes.json` (deploy target project ID only —
+  - `firebase.json`, `firestore.rules`, `firestore.indexes.json` (deploy target project ID only -
     do not change rule logic in this task)
 - **Technical Instructions**:
   1. Create the Firebase project (or confirm the hackathon-provided one) with Authentication
@@ -44,7 +44,7 @@ of Done in the same file. The template for every field below is
      region) enabled.
   2. Generate a Web App config for the client SDK and a Service Account key for the Admin SDK;
      populate `.env.local` per the keys already read by `config/env.ts` (`getClientEnv()` /
-     `getServerEnv()`) — the six `NEXT_PUBLIC_FIREBASE_*` values plus `FIREBASE_ADMIN_PROJECT_ID`
+     `getServerEnv()`) - the six `NEXT_PUBLIC_FIREBASE_*` values plus `FIREBASE_ADMIN_PROJECT_ID`
      / `FIREBASE_ADMIN_CLIENT_EMAIL` / `FIREBASE_ADMIN_PRIVATE_KEY` (keep the `\n` escapes literal
      as `lib/firebase/admin.ts` expects). Do not invent new env var names without updating
      `.env.example` and the Zod schema together.
@@ -90,7 +90,7 @@ of Done in the same file. The template for every field below is
 - **Title**: Implement Firebase Auth sign-in Server Actions and `__session` cookie issuance
 - **Objective**: Provide the server-side sign-in / sign-out surface that turns a Firebase ID token
   (obtained client-side) into an HTTP-only `__session` cookie the rest of the app can trust, and
-  clears it on sign-out — the mechanism `middleware.ts` already assumes exists (it checks for the
+  clears it on sign-out - the mechanism `middleware.ts` already assumes exists (it checks for the
   `__session` cookie's presence).
 - **Business Value**: This is what makes "logging in" actually do something. Developer 2's
   `/login` page has nothing to call and the dashboard gate does nothing useful until these actions
@@ -99,11 +99,11 @@ of Done in the same file. The template for every field below is
   Soft/coordination: Developer 2's `/login` page UI (SHELL track) consumes these actions, but can
   be built in parallel against the action signatures before they are fully polished.
 - **Target Files**:
-  - `actions/auth.ts` (new — `signIn` / `signOut` Server Actions, `"use server"`)
-  - `app/api/auth/session/route.ts` (new — Route Handler to mint/clear the `__session` cookie from
+  - `actions/auth.ts` (new - `signIn` / `signOut` Server Actions, `"use server"`)
+  - `app/api/auth/session/route.ts` (new - Route Handler to mint/clear the `__session` cookie from
     a posted ID token; this path is already whitelisted as public in `middleware.ts`)
   - `lib/firebase/admin.ts` (reuse `authAdmin`; no change expected beyond import)
-  - `config/site.ts` (only if a post-login redirect path constant needs to live there — otherwise
+  - `config/site.ts` (only if a post-login redirect path constant needs to live there - otherwise
     `n/a`)
 - **Technical Instructions**:
   1. Client-side sign-in happens with the Firebase client SDK (`firebaseAuth` from
@@ -116,10 +116,10 @@ of Done in the same file. The template for every field below is
   3. Expose thin `signIn` / `signOut` Server Actions in `actions/auth.ts` per the layering in
      [../../architecture.md](../../architecture.md) and the result-shape rule in
      [../../coding-standards.md](../../coding-standards.md): validate input with a Zod schema, call
-     into the auth flow, and return `{ ok: true, data }` / `{ ok: false, error }` — never throw for
+     into the auth flow, and return `{ ok: true, data }` / `{ ok: false, error }` - never throw for
      an expected failure (bad credentials). `signOut` clears the `__session` cookie (set empty /
      expired) and, where relevant, calls `authAdmin.revokeRefreshTokens(uid)`.
-  4. Do NOT add token verification to `middleware.ts` — that is INFRA-003 and cannot run on the
+  4. Do NOT add token verification to `middleware.ts` - that is INFRA-003 and cannot run on the
      Edge runtime. Middleware stays a presence-only gate.
 - **Acceptance Criteria**:
   - Signing in with a valid Firebase user sets an HTTP-only `__session` cookie (verifiable in
@@ -158,15 +158,15 @@ of Done in the same file. The template for every field below is
   calls to verify the `__session` cookie is a valid, unexpired Firebase session and resolve it to
   `{ uid, orgId, role }` (by reading `users/{uid}`), since `middleware.ts` only checks cookie
   presence, not validity.
-- **Business Value**: Without this there is no real authentication — the middleware redirect is not
+- **Business Value**: Without this there is no real authentication - the middleware redirect is not
   a security boundary. Every screen that shows one org's data (Accounts, dashboard) depends on
   resolving the caller to a verified `uid`/`orgId`, so Developer 3 can stop stubbing the session.
 - **Dependencies**: INFRA-002 (a `__session` cookie must exist to verify). Soft: the `users/{uid}`
-  document shape from [../../database-schema.md](../../database-schema.md) — the bootstrap script
+  document shape from [../../database-schema.md](../../database-schema.md) - the bootstrap script
   (INFRA-005) creates a real one, but this helper can be built against a manually-seeded user doc.
 - **Target Files**:
-  - `lib/auth/session.ts` (new — `getSession()` / `requireSession()` reading + verifying the cookie)
-  - `lib/auth/index.ts` (new — barrel export)
+  - `lib/auth/session.ts` (new - `getSession()` / `requireSession()` reading + verifying the cookie)
+  - `lib/auth/index.ts` (new - barrel export)
   - `lib/firebase/admin.ts` (reuse `authAdmin`, `firestoreAdmin`)
 - **Technical Instructions**:
   1. In `lib/auth/session.ts`, read the `__session` cookie via `next/headers` `cookies()`, and
@@ -174,11 +174,11 @@ of Done in the same file. The template for every field below is
      revocation). Return `null` when absent/invalid.
   2. On a valid session, look up `users/{uid}` via `firestoreAdmin` to attach `orgId` and `role`,
      returning a typed `Session = { uid, orgId, role, email }`. Type the return via a Zod schema /
-     `z.infer` per [../../coding-standards.md](../../coding-standards.md) — no `any`.
+     `z.infer` per [../../coding-standards.md](../../coding-standards.md) - no `any`.
   3. Provide `requireSession()` that returns the session or triggers a redirect to `/login` (via
      `next/navigation` `redirect`) for use at the top of protected Server Components / layouts.
   4. Every `orgId` used by downstream repositories/services must come from this verified session,
-     never from client-supplied input — state this in the helper's doc comment (the "why").
+     never from client-supplied input - state this in the helper's doc comment (the "why").
   5. Guard the module so it is only ever imported server-side (it transitively imports the
      `server-only`-guarded Admin SDK, which already enforces this).
 - **Acceptance Criteria**:
@@ -203,7 +203,7 @@ of Done in the same file. The template for every field below is
   [../../architecture.md](../../architecture.md).
 - **Testing Notes**: No automated framework until INFRA-012. Manual: sign in, load a temporary
   protected page that prints `requireSession()`; confirm the correct `uid`/`orgId`/`role`. Edit the
-  cookie value in devtools and reload — confirm the redirect. Verify with a signed-out browser.
+  cookie value in devtools and reload - confirm the redirect. Verify with a signed-out browser.
 
 ---
 
@@ -227,8 +227,8 @@ of Done in the same file. The template for every field below is
   confirmed against [../../decisions.md](../../decisions.md) before writing rule logic (per the
   Definition of Ready in [../../sprint-plan.md](../../sprint-plan.md)).
 - **Target Files**:
-  - `firestore.rules` (the org/role model — already scaffolded; this task confirms/finishes it)
-  - `firebase.json` (only if the rules file reference needs adjusting — otherwise `n/a`)
+  - `firestore.rules` (the org/role model - already scaffolded; this task confirms/finishes it)
+  - `firebase.json` (only if the rules file reference needs adjusting - otherwise `n/a`)
 - **Technical Instructions**:
   1. Verify the helper functions (`isSignedIn`, `userDoc`, `isOrgMember(orgId)`,
      `hasRole(orgId, roles)`, `isOwnerOrAdmin(orgId)`) match
@@ -278,25 +278,25 @@ of Done in the same file. The template for every field below is
 
 ---
 
-### INFRA-005: Bootstrap script — create first organization + owner user for local/demo use
+### INFRA-005: Bootstrap script - create first organization + owner user for local/demo use
 
 - **Task ID**: `INFRA-005`
 - **Epic**: Infrastructure & Auth
 - **Priority**: P1
 - **Owner**: Developer 1
-- **Title**: Bootstrap script — create first organization + owner user for local/demo use
+- **Title**: Bootstrap script - create first organization + owner user for local/demo use
 - **Objective**: Provide a repeatable Admin-SDK script that creates the first
   `organizations/{orgId}` document and a matching `users/{uid}` owner (in both Firebase Auth and
   Firestore), since org/user `create` is `false` in the rules and there is otherwise no way to get
   a first account to log in with.
-- **Business Value**: Turns an empty Firebase project into a demoable one — without it, nobody can
+- **Business Value**: Turns an empty Firebase project into a demoable one - without it, nobody can
   sign in and no org-scoped data can be created. It is what makes the Sprint 1 demo reproducible on
   a fresh project.
 - **Dependencies**: INFRA-002 (auth flow to sign in as the created user), INFRA-004 (the rules that
   make org/user creation server-only, which is why a script is needed).
 - **Target Files**:
-  - `scripts/bootstrap-org.ts` (new — Admin SDK script)
-  - `package.json` (add a `bootstrap` script entry, e.g. `"bootstrap": "..."` — coordinate so it
+  - `scripts/bootstrap-org.ts` (new - Admin SDK script)
+  - `package.json` (add a `bootstrap` script entry, e.g. `"bootstrap": "..."` - coordinate so it
     doesn't collide with existing scripts)
   - `.env.local` (reads the same `FIREBASE_ADMIN_*` creds; no new keys)
 - **Technical Instructions**:
@@ -344,12 +344,12 @@ of Done in the same file. The template for every field below is
 - **Title**: GitHub Actions CI workflow (lint, typecheck, build)
 - **Objective**: Add the first CI workflow that runs `npm ci`, `npm run lint`, `npm run typecheck`,
   and `npm run build` on every PR against `main`, giving a required status check before Vercel's
-  Preview build is trusted — closing the "no CI" gap tracked in [../../risks.md](../../risks.md)
+  Preview build is trusted - closing the "no CI" gap tracked in [../../risks.md](../../risks.md)
   (R1).
 - **Business Value**: Prevents a broken PR from silently shipping a broken Preview/Production
   deployment (Vercel deploys regardless of lint/typecheck today). Cheap insurance for a
   three-developer parallel build.
-- **Dependencies**: none (works against the existing scripts). Explicitly a stretch goal — pick up
+- **Dependencies**: none (works against the existing scripts). Explicitly a stretch goal - pick up
   only after INFRA-001–INFRA-004 are demo-ready per [../developer-1.md](../developer-1.md).
 - **Target Files**:
   - `.github/workflows/ci.yml` (new)
@@ -357,7 +357,7 @@ of Done in the same file. The template for every field below is
   1. Create `.github/workflows/ci.yml` triggered on `pull_request` targeting `main`.
   2. Single job on `ubuntu-latest`: checkout, set up Node (match the version the project builds
      with), `npm ci`, then run in order `npm run lint`, `npm run typecheck`, `npm run build`.
-  3. Keep it deliberately minimal — do NOT add a test step yet; no test framework exists until
+  3. Keep it deliberately minimal - do NOT add a test step yet; no test framework exists until
      INFRA-012 (that task wires the test step in). Do not require secrets for `build` if it can
      compile without live env (or provide dummy/CI-scoped env vars sufficient for `next build`).
   4. Make it a required status check on `main` (branch protection) so a red run blocks merge.

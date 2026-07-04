@@ -1,16 +1,16 @@
-# BalloCRM — Project Brief (Internal Context Doc)
+# BalloCRM - Project Brief (Internal Context Doc)
 
 > This file is the canonical brief for anyone (human or AI agent) writing documentation, code,
 > or tasks for BalloCRM. If a generated document contradicts this brief, this brief wins.
-> Do not delete this file — it is the seed context for all `/docs` content.
+> Do not delete this file - it is the seed context for all `/docs` content.
 
 ## 1. Identity
 
 - **Name:** BalloCRM
 - **Tagline:** Commercial Operations & B2B CRM Intelligence Platform
 - **Event:** 2026 iHub Innovation Hackathon
-- **Challenge:** Challenge 2 — Commercial Operations Automation & B2B CRM Intelligence Platform
-- **Parent company asset:** BalloAds — an existing, production C#/.NET messaging platform with SMS,
+- **Challenge:** Challenge 2 - Commercial Operations Automation & B2B CRM Intelligence Platform
+- **Parent company asset:** BalloAds - an existing, production C#/.NET messaging platform with SMS,
   WhatsApp, Email, developer APIs, and its own authentication. BalloCRM is a **new, separate**
   Next.js application. It does not fork, embed, or reimplement BalloAds.
 
@@ -23,7 +23,7 @@ account teams. In scope:
 - Enterprise Accounts
 - Sales Pipelines
 - Contracts
-- Customer Journey (lifecycle stages, not BalloAds' messaging "Journeys" feature — see §5 note)
+- Customer Journey (lifecycle stages, not BalloAds' messaging "Journeys" feature - see §5 note)
 - Account-Based Marketing (ABM)
 - Vertical Sales Indexing (segmenting accounts/opportunities by industry vertical)
 - Opportunity Qualification (structured scoring, e.g., BANT/MEDDIC-style fields)
@@ -35,13 +35,13 @@ account teams. In scope:
 ## 3. Explicit Non-Goals
 
 - Do **not** build SMS/WhatsApp/Email sending, delivery, or template rendering infrastructure.
-- Do **not** build a second authentication system for messaging — BalloAds auth stays inside
+- Do **not** build a second authentication system for messaging - BalloAds auth stays inside
   BalloAds. BalloCRM has its own Firebase Auth for CRM users, and calls BalloAds as a service
   using developer API credentials scoped per organization.
 - Do **not** duplicate BalloAds' journey/automation engine. If a CRM workflow needs to send a
   message, it calls BalloAds APIs; it does not implement its own SMS/WhatsApp delivery loop.
 
-## 4. Tech Stack (authoritative — do not substitute)
+## 4. Tech Stack (authoritative - do not substitute)
 
 | Layer                      | Choice                                                                         |
 | -------------------------- | ------------------------------------------------------------------------------ |
@@ -65,15 +65,15 @@ account teams. In scope:
 BalloCRM integrates with BalloAds **exclusively** through `/v1/developer-portal/*` REST
 endpoints, using per-organization developer API keys stored encrypted in Firestore
 (`organizations/{orgId}/integrations/balloAds`). All calls are server-side (Route Handlers /
-Server Actions) — the developer API key must never reach the browser.
+Server Actions) - the developer API key must never reach the browser.
 
 Known real-world BalloAds CRM-adjacent backend concepts (from BalloAds internal engineering
-notes — useful for realistic modeling of what data the API can plausibly expose; BalloCRM does
+notes - useful for realistic modeling of what data the API can plausibly expose; BalloCRM does
 not reimplement any of this, it only _consumes_ the outputs where an API surface exists):
 
 - **Health Score**: BalloAds computes a per-company `HealthScore` (0-100, default 50) from a
-  weighted model — activity recency (40), credit runway (20), payment reliability (20), campaign
-  cadence (10), sender verification/platform readiness (10) — with a `HealthScoreBreakdownJson`
+  weighted model - activity recency (40), credit runway (20), payment reliability (20), campaign
+  cadence (10), sender verification/platform readiness (10) - with a `HealthScoreBreakdownJson`
   for auditability. BalloCRM's Accounts feature should treat an externally-supplied health score
   as an optional enrichment field surfaced from BalloAds, not something BalloCRM calculates
   itself.
@@ -90,11 +90,11 @@ not reimplement any of this, it only _consumes_ the outputs where an API surface
   in the Contact/Account timeline, not maintain its own opt-out ledger.
 
 Treat all of the above as **illustrative of realistic BalloAds capabilities**, not as a
-guaranteed live API contract — `docs/integrations.md` should mark exact endpoint paths/payloads
+guaranteed live API contract - `docs/integrations.md` should mark exact endpoint paths/payloads
 as "to be confirmed against the live BalloAds developer-portal API reference" wherever the
 hackathon has not yet supplied the OpenAPI spec.
 
-## 6. AI Layer — Brutus AI
+## 6. AI Layer - Brutus AI
 
 Brutus AI is BalloCRM's AI provider for: opportunity qualification scoring, next-best-action
 recommendations, account/contact summarization, cross-sell/upsell signal detection, and
@@ -136,24 +136,24 @@ spacing consistent via the design system in `docs/ui-design-system.md`.
 
 Documentation is the source of truth. Every feature is documented in `/docs` before or alongside
 implementation. Every completed task updates `docs/progress.md`, `docs/changelog.md`, and the
-relevant sprint file in `docs/tasks/`. Do not let code and docs diverge — if you change a
+relevant sprint file in `docs/tasks/`. Do not let code and docs diverge - if you change a
 Firestore schema, contract, or route, update the corresponding doc in the same change.
 
 ## 10. Team Shape (Sprint 1)
 
 Three developers working in parallel, minimal blocking:
 
-- **Developer 1 — Infrastructure & Auth**: repo tooling, Firebase project setup, Firebase Auth,
+- **Developer 1 - Infrastructure & Auth**: repo tooling, Firebase project setup, Firebase Auth,
   environment/config, CI basics.
-- **Developer 2 — Shell, Design System & Navigation**: app shell, layout, nav, shadcn/ui
+- **Developer 2 - Shell, Design System & Navigation**: app shell, layout, nav, shadcn/ui
   component library setup, dashboard shell, reusable components.
-- **Developer 3 — Core CRM Domain**: Accounts, Opportunities, Contracts data model + first CRUD
+- **Developer 3 - Core CRM Domain**: Accounts, Opportunities, Contracts data model + first CRUD
   screens.
 
-Sprint 1 goal: a deployable skeleton — auth works, shell renders, one CRM entity (Accounts) has
-working Create/Read against Firestore — proving the full stack end to end.
+Sprint 1 goal: a deployable skeleton - auth works, shell renders, one CRM entity (Accounts) has
+working Create/Read against Firestore - proving the full stack end to end.
 
-## 11. Actual Scaffolded State (ground truth — describe this, don't invent alternatives)
+## 11. Actual Scaffolded State (ground truth - describe this, don't invent alternatives)
 
 This section is authoritative for anything a doc needs to say about what already exists. If a
 doc contradicts this section, fix the doc.
@@ -179,15 +179,15 @@ features/
 ```
 
 Every top-level folder above (except `app/`, `public/`, `.github/`, `.vscode/`, `.husky/`,
-`docs/`) contains a `README.md` explaining its convention — treat those as authoritative for
+`docs/`) contains a `README.md` explaining its convention - treat those as authoritative for
 `docs/folder-structure.md` and `docs/coding-standards.md`, don't re-derive the rules from
 scratch.
 
 `AGENTS.md`/`CLAUDE.md` at the repo root are auto-generated by `create-next-app` and contain only
-a Next.js-version warning for AI agents reading stale training data — they are not BalloCRM's
+a Next.js-version warning for AI agents reading stale training data - they are not BalloCRM's
 coding standards doc (that's `docs/coding-standards.md`).
 
-### Installed dependencies (package.json, already installed — do not re-suggest installing these)
+### Installed dependencies (package.json, already installed - do not re-suggest installing these)
 
 Runtime: `next@15.5.20`, `react@19.2.4`, `react-dom@19.2.4`, `firebase@^12` (client SDK),
 `firebase-admin@^14` (server SDK), `server-only`, `@reduxjs/toolkit`, `react-redux`,
@@ -202,11 +202,11 @@ Dev tooling: `typescript`, `tailwindcss@^4` + `@tailwindcss/postcss`, `eslint@^9
 
 ### shadcn/ui
 
-`components.json` uses style **`radix-nova`** (Radix UI primitives — not the newer experimental
-`@base-ui/react`-based `base-nova` style — chosen for stability and ecosystem familiarity),
+`components.json` uses style **`radix-nova`** (Radix UI primitives - not the newer experimental
+`@base-ui/react`-based `base-nova` style - chosen for stability and ecosystem familiarity),
 base color `neutral`, icon library `lucide`. Installed components in `components/ui/`: `alert`,
 `alert-dialog`, `avatar`, `badge`, `breadcrumb`, `button`, `calendar`, `card`, `checkbox`,
-`command`, `dialog`, `dropdown-menu`, `field` (the current shadcn form-building primitive —
+`command`, `dialog`, `dropdown-menu`, `field` (the current shadcn form-building primitive -
 `FieldSet`/`FieldGroup`/`FieldLabel`/etc., used with `react-hook-form` directly; there is no
 separate legacy `Form`/`FormField` wrapper component in this shadcn version), `input`,
 `input-group`, `label`, `navigation-menu`, `pagination`, `popover`, `progress`, `scroll-area`,
@@ -215,43 +215,43 @@ separate legacy `Form`/`FormField` wrapper component in this shadcn version), `i
 
 ### App/config wiring already in place
 
-- `app/layout.tsx` — root layout, Geist fonts, wraps `{children}` in `<AppProviders>`, metadata
+- `app/layout.tsx` - root layout, Geist fonts, wraps `{children}` in `<AppProviders>`, metadata
   from `config/site.ts`.
-- `app/page.tsx` — foundation landing placeholder (not a real dashboard) pointing at `/docs`.
-- `providers/app-providers.tsx` — composition root: Redux `Provider` (store built per-render via
+- `app/page.tsx` - foundation landing placeholder (not a real dashboard) pointing at `/docs`.
+- `providers/app-providers.tsx` - composition root: Redux `Provider` (store built per-render via
   `makeStore()`, not a module singleton), `QueryClientProvider`, `next-themes` `ThemeProvider`
   (class-based, system default), `sonner` `Toaster`, React Query Devtools in development only.
-- `store/store.ts` + `store/hooks.ts` + `store/slices/ui-slice.ts` — Redux Toolkit wired for
+- `store/store.ts` + `store/hooks.ts` + `store/slices/ui-slice.ts` - Redux Toolkit wired for
   client UI state only (currently: `sidebarCollapsed`, `commandMenuOpen`).
-- `lib/firebase/client.ts` — browser Firebase app/auth/firestore, reads `config/env.ts`
+- `lib/firebase/client.ts` - browser Firebase app/auth/firestore, reads `config/env.ts`
   `getClientEnv()`.
-- `lib/firebase/admin.ts` — Admin SDK app/auth/firestore, guarded by `server-only`, reads
+- `lib/firebase/admin.ts` - Admin SDK app/auth/firestore, guarded by `server-only`, reads
   `config/env.ts` `getServerEnv()`.
-- `config/env.ts` — Zod-validated client and server env schemas.
-- `config/site.ts` — `siteConfig` (name/tagline/description) and `primaryNav` (Dashboard,
-  Accounts, Contacts, Opportunities, Contracts, Campaigns, Analytics, Settings) — nav items exist
+- `config/env.ts` - Zod-validated client and server env schemas.
+- `config/site.ts` - `siteConfig` (name/tagline/description) and `primaryNav` (Dashboard,
+  Accounts, Contacts, Opportunities, Contracts, Campaigns, Analytics, Settings) - nav items exist
   as config only, the shell/sidebar UI that renders them has not been built yet (Sprint 1,
   Developer 2).
-- `middleware.ts` — checks for a `__session` cookie on non-public paths and redirects to
-  `/login` if absent; does **not** verify the token (Edge runtime can't run the Admin SDK) —
+- `middleware.ts` - checks for a `__session` cookie on non-public paths and redirects to
+  `/login` if absent; does **not** verify the token (Edge runtime can't run the Admin SDK) -
   real verification must happen in the Server Component/Action behind the gate. `/login` route
   itself does not exist yet (Sprint 1, Developer 1 task).
-- `firestore.rules` / `firestore.indexes.json` / `firebase.json` — multi-tenant model:
+- `firestore.rules` / `firestore.indexes.json` / `firebase.json` - multi-tenant model:
   `users/{uid}` (top-level, holds `orgId` + `role`) and `organizations/{orgId}/...` subcollections
   for `accounts`, `contacts`, `opportunities`, `tasks`, `contracts`, `campaigns`, `activities`,
   `notifications`, `auditLogs`, `aiJobs`, `templates`, `analyticsCache`, `settings`,
-  `integrations` (BalloAds/Brutus credentials, server-only — `allow read, write: if false` in
+  `integrations` (BalloAds/Brutus credentials, server-only - `allow read, write: if false` in
   rules, all access via Admin SDK). Roles used in rules: `owner`, `admin`, `manager`, `rep`,
-  `viewer`. Note: there is **no separate `timeline` collection** — "Customer Journey"/timeline
+  `viewer`. Note: there is **no separate `timeline` collection** - "Customer Journey"/timeline
   views are a query over `activities` filtered by `relatedTo.type` + `relatedTo.id` (composite
   index already defined), to avoid dual-writing the same event twice. Document this as a
   deliberate decision in `docs/decisions.md`, and make `docs/database-schema.md` describe
   `activities` as serving both the audit trail and the timeline UI.
 - No test framework is installed yet (no Jest/Vitest/Playwright). Do not document test commands
   that don't exist; `docs/coding-standards.md` should note testing conventions to adopt but the
-  root `package.json` has no `test` script yet — this is a gap to flag in `docs/risks.md` /
+  root `package.json` has no `test` script yet - this is a gap to flag in `docs/risks.md` /
   `docs/roadmap.md`, not something to silently invent.
-- No CI (GitHub Actions) is configured yet — also a gap for `docs/risks.md`/`docs/roadmap.md`.
+- No CI (GitHub Actions) is configured yet - also a gap for `docs/risks.md`/`docs/roadmap.md`.
 
 ### What is explicitly NOT built yet (don't describe these as done anywhere)
 
@@ -262,6 +262,6 @@ separate legacy `Form`/`FormField` wrapper component in this shadcn version), `i
 - No BalloAds or Brutus AI client code in `lib/` yet (folders don't exist yet beyond `client.ts`/
   `admin.ts`/`README.md`).
 
-All of the above are Sprint 1 (or later) tasks — see `docs/tasks/sprint-1.md` and the
+All of the above are Sprint 1 (or later) tasks - see `docs/tasks/sprint-1.md` and the
 per-developer files. Documentation should describe them as the _plan_, using future tense or an
 explicit "Status: not yet implemented" marker, never as already-working functionality.

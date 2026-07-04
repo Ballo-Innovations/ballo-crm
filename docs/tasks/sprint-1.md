@@ -1,19 +1,19 @@
-# Sprint 1 — Foundation Skeleton
+# Sprint 1 - Foundation Skeleton
 
-**Sprint goal:** a deployable skeleton that proves the full stack end to end — Firebase Auth
+**Sprint goal:** a deployable skeleton that proves the full stack end to end - Firebase Auth
 sign-in works, the dashboard shell renders with real navigation, and one CRM entity (Accounts)
 has working Create/Read against Firestore through the repository → service → action → UI layering
 defined in [architecture.md](../architecture.md). No Opportunities, Contracts, Campaigns, ABM, or
-AI work happens this sprint — see [roadmap.md](../roadmap.md) Phase 1.
+AI work happens this sprint - see [roadmap.md](../roadmap.md) Phase 1.
 
-**Team:** three developers working in parallel per the project brief's Sprint 1 team shape —
+**Team:** three developers working in parallel per the project brief's Sprint 1 team shape -
 Developer 1 (Infrastructure & Auth, `INFRA-*`), Developer 2 (Shell, Design System & Navigation,
 `SHELL-*`), Developer 3 (Core CRM Domain, `CRM-*`). Field structure for every task below follows
 [task-template.md](./task-template.md) exactly; do not drop a field.
 
 **Ground truth reminder:** the project foundation (Next.js/Tailwind/shadcn, Firebase SDK wiring
 in `lib/firebase/`, Redux store, TanStack Query provider, `/docs`) is already scaffolded. None of
-the tasks below re-scaffold it — they build the first real features on top of it.
+the tasks below re-scaffold it - they build the first real features on top of it.
 
 **Project-wide Definition of Done** (referenced, not restated, by every task's Definition of Done
 checklist): acceptance criteria met; relevant `docs/*.md` updated in the same change;
@@ -22,7 +22,7 @@ checklist): acceptance criteria met; relevant `docs/*.md` updated in the same ch
 
 ---
 
-## Developer 1 — Infrastructure & Auth
+## Developer 1 - Infrastructure & Auth
 
 ### INFRA-001: Configure Firebase project and wire environment variables
 
@@ -35,15 +35,15 @@ checklist): acceptance criteria met; relevant `docs/*.md` updated in the same ch
   already-scaffolded `lib/firebase/client.ts` and `lib/firebase/admin.ts`, and populate real
   credentials through `config/env.ts` so every later task (auth, Firestore reads/writes) has a
   working backend to target instead of placeholder env values.
-- **Business Value**: Nothing else in the app — login, Accounts CRUD, AI jobs — can run against
+- **Business Value**: Nothing else in the app - login, Accounts CRUD, AI jobs - can run against
   real data until this lands. It is the root of the Sprint 1 critical path.
-- **Dependencies**: none — this is the root of the critical path (see
+- **Dependencies**: none - this is the root of the critical path (see
   [Cross-track dependencies](#cross-track-dependencies) below).
 - **Target Files**:
   - `.env.local` (untracked, created locally from `.env.example`)
   - `.env.example` (add any newly-required key names, no real values)
   - `config/env.ts` (extend the Zod schema only if a new required key is introduced)
-  - `firebase.json`, `firestore.rules`, `firestore.indexes.json` (deploy target project ID only —
+  - `firebase.json`, `firestore.rules`, `firestore.indexes.json` (deploy target project ID only -
     do not change rule logic in this task)
 - **Technical Instructions**:
   1. Create the Firebase project (or confirm the hackathon-provided one) with Authentication
@@ -51,7 +51,7 @@ checklist): acceptance criteria met; relevant `docs/*.md` updated in the same ch
      nearest region) enabled.
   2. Generate a Web App config for the client SDK and a Service Account key for the Admin SDK;
      populate `.env.local` per the keys already read by `getClientEnv()` / `getServerEnv()` in
-     `config/env.ts` — do not invent new env var names without updating `.env.example` and the
+     `config/env.ts` - do not invent new env var names without updating `.env.example` and the
      Zod schema together.
   3. Run `firebase use --add` to bind the CLI to the project and confirm
      `firebase deploy --only firestore:rules,firestore:indexes` succeeds against it.
@@ -89,11 +89,11 @@ checklist): acceptance criteria met; relevant `docs/*.md` updated in the same ch
 - **Priority**: P0
 - **Owner**: Developer 1
 - **Title**: Implement sign-in Server Action, session cookie issuance, and first-run org/user bootstrap
-- **Objective**: Give the app a working Firebase Auth sign-in path — the client signs in with
+- **Objective**: Give the app a working Firebase Auth sign-in path - the client signs in with
   Firebase Auth, exchanges the ID token for a server-issued `__session` HTTP-only cookie, and (on
   a brand-new user) bootstraps the `users/{uid}` and `organizations/{orgId}` documents so every
   later CRM write has a real `orgId` to scope into.
-- **Business Value**: This is the second link in the Sprint 1 demo's critical path — without it,
+- **Business Value**: This is the second link in the Sprint 1 demo's critical path - without it,
   the login page Developer 2 builds (`SHELL-001`) has nothing to call, and Accounts CRUD
   (`CRM-002`+) has no verified `orgId` to write under.
 - **Dependencies**: `INFRA-001`.
@@ -116,11 +116,11 @@ checklist): acceptance criteria met; relevant `docs/*.md` updated in the same ch
   3. `auth-service.ts` composes `users-repository.ts` + `organizations-repository.ts`: on first
      sign-in for a `uid` with no `users/{uid}` document, create a new `organizations/{orgId}`
      document (`orgId` generated) and a `users/{uid}` document (`{ orgId, role: "owner" }`) in a
-     single logical operation — this is the only place in the app allowed to create an
+     single logical operation - this is the only place in the app allowed to create an
      organization.
   4. `sign-out.ts` clears the `__session` cookie and calls `getAdminAuth().revokeRefreshTokens()`
      for the current `uid`.
-  5. Do not touch `middleware.ts` in this task — it already checks cookie presence; verification
+  5. Do not touch `middleware.ts` in this task - it already checks cookie presence; verification
      of the cookie's validity happens in `INFRA-003`.
 - **Acceptance Criteria**:
   - Submitting valid credentials from a form results in a `__session` HTTP-only cookie being set.
@@ -158,12 +158,12 @@ checklist): acceptance criteria met; relevant `docs/*.md` updated in the same ch
   `middleware.ts` only checks cookie _presence_, not validity, per
   [architecture.md](../architecture.md) §4.
 - **Business Value**: Every protected page and every Accounts read/write needs a trustworthy
-  `orgId` derived from a verified session, never from client input — this is the one place that
+  `orgId` derived from a verified session, never from client input - this is the one place that
   guarantee is enforced, closing the gap `middleware.ts` deliberately leaves open.
 - **Dependencies**: `INFRA-002`.
 - **Target Files**:
   - `lib/auth/get-current-user.ts` (new)
-  - `lib/auth/README.md` (new — short convention note, following the pattern of other `lib/`
+  - `lib/auth/README.md` (new - short convention note, following the pattern of other `lib/`
     subfolders)
 - **Technical Instructions**:
   1. `getCurrentUser()` reads the `__session` cookie via `next/headers` `cookies()`, verifies it
@@ -202,12 +202,12 @@ checklist): acceptance criteria met; relevant `docs/*.md` updated in the same ch
 - **Owner**: Developer 1
 - **Title**: Add a minimal GitHub Actions CI workflow (typecheck, lint, build)
 - **Objective**: Catch broken builds and lint/type regressions on every PR before they land, given
-  three parallel contributors touching shared files — no CI exists yet (see
+  three parallel contributors touching shared files - no CI exists yet (see
   [../risks.md](../risks.md) R1).
 - **Business Value**: With three developers (and possibly AI agents) shipping in parallel, an
-  unchecked broken build on `main` blocks everyone else's next PR right before a hackathon demo —
+  unchecked broken build on `main` blocks everyone else's next PR right before a hackathon demo -
   cheap insurance for a high-cost failure mode.
-- **Dependencies**: `INFRA-001` (soft — CI can be authored in parallel and only needs a working
+- **Dependencies**: `INFRA-001` (soft - CI can be authored in parallel and only needs a working
   env schema to pass its build step, so it can be built against `.env.example` placeholders and
   verified for real once `INFRA-001` lands).
 - **Target Files**:
@@ -216,7 +216,7 @@ checklist): acceptance criteria met; relevant `docs/*.md` updated in the same ch
   1. Add a workflow triggered on `pull_request` (and `push` to `main`) that runs
      `npm ci`, `npm run lint`, `tsc --noEmit`, and `npm run build` on Node 20.
   2. Use repository/GitHub Actions secrets for any build-time env vars `config/env.ts` requires
-     (placeholder values are acceptable for `getClientEnv()` — the build must not need live
+     (placeholder values are acceptable for `getClientEnv()` - the build must not need live
      Firebase credentials to compile).
   3. Keep the workflow to a single job for Sprint 1; do not add deploy steps here (Vercel handles
      deploys via its own GitHub integration, out of scope for this task).
@@ -240,21 +240,21 @@ checklist): acceptance criteria met; relevant `docs/*.md` updated in the same ch
 
 ---
 
-## Developer 2 — Shell, Design System & Navigation
+## Developer 2 - Shell, Design System & Navigation
 
 ### SHELL-001: Login page UI
 
 - **Task ID**: `SHELL-001`
-- **Epic**: Design System — Auth Surface
+- **Epic**: Design System - Auth Surface
 - **Priority**: P0
 - **Owner**: Developer 2
 - **Title**: Build the `/login` page UI and wire it to the sign-in Server Action
-- **Objective**: Build the only unauthenticated page in the app — a centered, minimal sign-in form
-  using `components/ui/field.tsx`, `input.tsx`, and `button.tsx` — and call `INFRA-002`'s sign-in
+- **Objective**: Build the only unauthenticated page in the app - a centered, minimal sign-in form
+  using `components/ui/field.tsx`, `input.tsx`, and `button.tsx` - and call `INFRA-002`'s sign-in
   Server Action from it.
 - **Business Value**: This is the first screen every user (and every judge) sees; it is also the
   entry point that makes the rest of the demo possible.
-- **Dependencies**: `INFRA-002` (soft — the form and validation can be built against a typed stub
+- **Dependencies**: `INFRA-002` (soft - the form and validation can be built against a typed stub
   action returning `{ ok: false, error: "not implemented" }` and swapped for the real import once
   `INFRA-002` merges, since both land in the same sprint in parallel).
 - **Target Files**:
@@ -268,7 +268,7 @@ checklist): acceptance criteria met; relevant `docs/*.md` updated in the same ch
   2. `login-form.tsx` uses `react-hook-form` + `@hookform/resolvers/zod` with
      `features/auth/schemas/sign-in-schema.ts` (from `INFRA-002`) for validation, and
      `components/ui/field.tsx` primitives (`FieldSet`/`FieldGroup`/`FieldLabel`) per
-     [../coding-standards.md](../coding-standards.md) — there is no legacy `Form`/`FormField`
+     [../coding-standards.md](../coding-standards.md) - there is no legacy `Form`/`FormField`
      wrapper in this shadcn version.
   3. On submit, first sign in on the client with `lib/firebase/client.ts`'s Auth instance to get
      an ID token, then call the `sign-in` Server Action with that token to establish the session
@@ -300,17 +300,17 @@ checklist): acceptance criteria met; relevant `docs/*.md` updated in the same ch
 ### SHELL-002: Dashboard shell layout and sidebar navigation
 
 - **Task ID**: `SHELL-002`
-- **Epic**: Design System — App Shell
+- **Epic**: Design System - App Shell
 - **Priority**: P0
 - **Owner**: Developer 2
 - **Title**: Build the authenticated dashboard shell layout and sidebar wired to `primaryNav`
 - **Objective**: Build the route-group layout every authenticated page renders inside
   (`app/(dashboard)/layout.tsx`) and the sidebar component that renders `config/site.ts`'s
   `primaryNav`, which today exists only as config with no UI consuming it.
-- **Business Value**: This is the visual backbone of the entire product — without it there is no
+- **Business Value**: This is the visual backbone of the entire product - without it there is no
   "app," only isolated pages. It's also the layout every other feature screen (Accounts,
   Contacts, Opportunities, ...) depends on for a consistent frame.
-- **Dependencies**: `INFRA-003` (soft — the layout can render with a temporary
+- **Dependencies**: `INFRA-003` (soft - the layout can render with a temporary
   "assume authenticated" stub during development and switch to `requireCurrentUser()` once
   `INFRA-003` merges, since redirect-on-missing-session is the only integration point).
 - **Target Files**:
@@ -325,10 +325,10 @@ checklist): acceptance criteria met; relevant `docs/*.md` updated in the same ch
      route highlighting uses `usePathname()` (Client Component boundary pushed down to just the
      nav list, not the whole sidebar).
   3. Wire the sidebar's collapsed/expanded state to the existing `store/slices/ui-slice.ts`
-     `sidebarCollapsed` Redux state (already scaffolded) via `store/hooks.ts` — do not add new
+     `sidebarCollapsed` Redux state (already scaffolded) via `store/hooks.ts` - do not add new
      Redux state for this; reuse what exists.
   4. Use `lucide-react` icons per `siteConfig`'s nav item `icon` field (add icon names to
-     `config/site.ts`'s `primaryNav` entries if missing — this is a shared file, keep the diff to
+     `config/site.ts`'s `primaryNav` entries if missing - this is a shared file, keep the diff to
      icon-name additions only to avoid colliding with other tracks' reads of that file).
 - **Acceptance Criteria**:
   - Visiting any `app/(dashboard)/...` route without a valid session redirects to `/login`.
@@ -357,27 +357,27 @@ checklist): acceptance criteria met; relevant `docs/*.md` updated in the same ch
 ### SHELL-003: Topbar, breadcrumbs, user menu, and theme toggle
 
 - **Task ID**: `SHELL-003`
-- **Epic**: Design System — App Shell
+- **Epic**: Design System - App Shell
 - **Priority**: P0
 - **Owner**: Developer 2
 - **Title**: Build the dashboard topbar with breadcrumbs, user menu, and theme toggle
-- **Objective**: Complete the dashboard shell's header row — breadcrumbs derived from the current
+- **Objective**: Complete the dashboard shell's header row - breadcrumbs derived from the current
   route, a user menu (avatar, sign-out), and a light/dark theme toggle using the already-wired
   `next-themes` provider.
 - **Business Value**: Breadcrumbs and a visible sign-out affordance are baseline enterprise-SaaS
   expectations (per [../vision.md](../vision.md) UI direction: Linear/Stripe/Vercel Dashboard
-  inspiration) — their absence would read as an unfinished shell to judges.
+  inspiration) - their absence would read as an unfinished shell to judges.
 - **Dependencies**: `SHELL-002`.
 - **Target Files**:
   - `components/shared/topbar.tsx` (new)
   - `components/shared/breadcrumbs.tsx` (new)
   - `components/shared/user-menu.tsx` (new)
   - `components/shared/theme-toggle.tsx` (new)
-  - `app/(dashboard)/layout.tsx` (modify — render `<Topbar />`)
+  - `app/(dashboard)/layout.tsx` (modify - render `<Topbar />`)
 - **Technical Instructions**:
   1. `breadcrumbs.tsx` derives segments from `usePathname()`, mapped against `primaryNav` labels
      where a segment matches a known route, falling back to a title-cased raw segment (e.g. a
-     future `/accounts/[id]` detail page) — uses `components/ui/breadcrumb.tsx`.
+     future `/accounts/[id]` detail page) - uses `components/ui/breadcrumb.tsx`.
   2. `user-menu.tsx` is a `components/ui/dropdown-menu.tsx` wrapping `components/ui/avatar.tsx`,
      showing the signed-in user's email (from `requireCurrentUser()`'s result, passed down from
      the layout) and a "Sign out" item calling the `sign-out` Server Action (`INFRA-002`).
@@ -405,7 +405,7 @@ checklist): acceptance criteria met; relevant `docs/*.md` updated in the same ch
 ### SHELL-004: Shared data table and empty-state primitives
 
 - **Task ID**: `SHELL-004`
-- **Epic**: Design System — Shared Components
+- **Epic**: Design System - Shared Components
 - **Priority**: P0
 - **Owner**: Developer 2
 - **Title**: Build shared data table and empty-state components for list views
@@ -414,7 +414,7 @@ checklist): acceptance criteria met; relevant `docs/*.md` updated in the same ch
   so every future list screen (Accounts now, Contacts/Opportunities/Contracts later) shares one
   table convention instead of each feature inventing its own.
 - **Business Value**: Every CRM entity in the product mission is fundamentally "a list of records
-  with a form to create/edit one" — a shared, accessible table primitive built once here is
+  with a form to create/edit one" - a shared, accessible table primitive built once here is
   reused across the rest of Sprint 1, 2, and 3, directly reducing per-feature build time.
 - **Dependencies**: none (built as a standalone shared component; consumed by `CRM-003`).
 - **Target Files**:
@@ -423,7 +423,7 @@ checklist): acceptance criteria met; relevant `docs/*.md` updated in the same ch
   - `components/shared/empty-state.tsx` (new)
 - **Technical Instructions**:
   1. `data-table.tsx` takes generic `columns` and `data` props (a thin wrapper, not a
-     full TanStack Table integration for Sprint 1 — keep it a simple typed prop-driven table over
+     full TanStack Table integration for Sprint 1 - keep it a simple typed prop-driven table over
      `components/ui/table.tsx`; a full `@tanstack/react-table` integration is an acceptable
      Sprint 2 upgrade if list complexity grows, tracked as a backlog note rather than scope creep
      here).
@@ -459,7 +459,7 @@ checklist): acceptance criteria met; relevant `docs/*.md` updated in the same ch
 
 ---
 
-## Developer 3 — Core CRM Domain
+## Developer 3 - Core CRM Domain
 
 ### CRM-001: Account schema and repository
 
@@ -484,21 +484,21 @@ checklist): acceptance criteria met; relevant `docs/*.md` updated in the same ch
   - `repositories/accounts-repository.ts` (new)
 - **Technical Instructions**:
   1. `account-schema.ts` defines `accountSchema` (Zod) with at minimum: `id`, `orgId`, `name`
-     (required, min length 1), `website` (optional URL), `industryVertical` (optional string —
+     (required, min length 1), `website` (optional URL), `industryVertical` (optional string -
      reserved for Sprint 3's Vertical Sales Indexing work, so the field exists early rather than
-     requiring a later migration), `healthScore` (optional number 0-100 — the externally-supplied
+     requiring a later migration), `healthScore` (optional number 0-100 - the externally-supplied
      BalloAds enrichment field per [../integrations.md](../integrations.md), not computed by
      BalloCRM), `lifecycleStage` (enum: `lead`, `qualified`, `onboarding`, `active`, `at_risk`,
-     `churned` — the CRM-native "Customer Journey" concept, never named `journey` per the naming
+     `churned` - the CRM-native "Customer Journey" concept, never named `journey` per the naming
      rule in [../integrations.md](../integrations.md)), `ownerId`, `createdBy`, `createdAt`,
      `updatedAt`. Export `type Account = z.infer<typeof accountSchema>` per the naming convention
      in `schemas/README.md`.
-  2. Add a separate `createAccountInputSchema` (omits `id`/`createdAt`/`updatedAt`/`healthScore` —
+  2. Add a separate `createAccountInputSchema` (omits `id`/`createdAt`/`updatedAt`/`healthScore` -
      fields the server or an external system sets, never the create form) for use by `CRM-002`.
   3. `accounts-repository.ts` exports plain functions taking/returning `Account`-typed data:
      `createAccount(orgId, input)`, `getAccountById(orgId, accountId)`,
      `listAccounts(orgId, { limit, cursor })`. This file is the only place `firebase-admin/firestore`
-     is imported for accounts — no validation beyond shape (Zod parse on read/write), no business
+     is imported for accounts - no validation beyond shape (Zod parse on read/write), no business
      rules (those live in `CRM-002`'s service).
   4. Use the Admin SDK (`lib/firebase/admin.ts`) since all repository access in this architecture
      is server-side; do not import the client SDK here.
@@ -532,12 +532,12 @@ checklist): acceptance criteria met; relevant `docs/*.md` updated in the same ch
 - **Priority**: P0
 - **Owner**: Developer 3
 - **Title**: Implement the Accounts service and `create-account` Server Action
-- **Objective**: Add the business-logic layer between the repository and the UI — validating
+- **Objective**: Add the business-logic layer between the repository and the UI - validating
   input, deriving `orgId`/`createdBy` from the verified session (never client input), and
   exposing a thin Server Action the create-account form calls.
 - **Business Value**: This is the write half of the Sprint 1 demo's "Accounts CRUD proving the
   stack end to end" proof point.
-- **Dependencies**: `CRM-001`; `INFRA-003` (soft — until it lands, derive `orgId` from a hardcoded
+- **Dependencies**: `CRM-001`; `INFRA-003` (soft - until it lands, derive `orgId` from a hardcoded
   development constant clearly marked `// TODO(INFRA-003): replace with requireCurrentUser()`,
   swapped out once the real session helper exists).
 - **Target Files**:
@@ -546,13 +546,13 @@ checklist): acceptance criteria met; relevant `docs/*.md` updated in the same ch
 - **Technical Instructions**:
   1. `accounts-service.ts` exports `createAccountForOrg(orgId, createdBy, input)`: validates
      `input` against `createAccountInputSchema`, calls `accounts-repository.ts`'s `createAccount`,
-     and (once `INFRA-002`'s Activity logging convention exists — otherwise stub with a `// TODO`
+     and (once `INFRA-002`'s Activity logging convention exists - otherwise stub with a `// TODO`
      comment referencing the follow-up) is the intended future site of an "Account created"
      Activity log write.
   2. `create-account.ts` is a `"use server"` action: calls `requireCurrentUser()` (`INFRA-003`)
      to get `{ uid, orgId }`, parses `FormData` with `createAccountInputSchema`, calls
      `createAccountForOrg`, and returns `{ ok: true, data: account } | { ok: false, error }` per
-     the shared Server Action result convention in `actions/README.md` — never throws to the
+     the shared Server Action result convention in `actions/README.md` - never throws to the
      client for expected validation errors.
   3. Revalidate the accounts list path (`revalidatePath("/accounts")`) on success so `CRM-003`'s
      list reflects the new record without a manual refetch.
@@ -584,18 +584,18 @@ checklist): acceptance criteria met; relevant `docs/*.md` updated in the same ch
 - **Priority**: P0
 - **Owner**: Developer 3
 - **Title**: Build the Accounts list page reading from Firestore via TanStack Query
-- **Objective**: Build the read half of the Sprint 1 demo's proof point — a real page at
+- **Objective**: Build the read half of the Sprint 1 demo's proof point - a real page at
   `/accounts` listing every Account in the caller's org, backed by a `list-accounts` Server
   Action and a TanStack Query hook.
 - **Business Value**: This is the page a judge sees to confirm the stack works end to end:
   sign in, see the shell, see real Firestore data rendered in a table.
 - **Dependencies**: `CRM-001`, `CRM-002`; soft dependency on `SHELL-004` (shared data table) and
-  `SHELL-002` (dashboard shell) — see [Cross-track dependencies](#cross-track-dependencies).
+  `SHELL-002` (dashboard shell) - see [Cross-track dependencies](#cross-track-dependencies).
 - **Target Files**:
   - `features/accounts/actions/list-accounts.ts` (new)
   - `features/accounts/hooks/use-accounts.ts` (new)
   - `features/accounts/components/accounts-table.tsx` (new)
-  - `app/accounts/page.tsx` (new — temporary location; re-parented to
+  - `app/accounts/page.tsx` (new - temporary location; re-parented to
     `app/(dashboard)/accounts/page.tsx` once `SHELL-002` lands, see cross-track note)
 - **Technical Instructions**:
   1. `list-accounts.ts` is a `"use server"` action wrapping `accounts-repository.ts`'s
@@ -643,12 +643,12 @@ checklist): acceptance criteria met; relevant `docs/*.md` updated in the same ch
 - **Priority**: P0
 - **Owner**: Developer 3
 - **Title**: Build the Create Account form dialog wired to the create-account action
-- **Objective**: Give users a way to trigger `CRM-002`'s Server Action from the UI — a dialog/sheet
+- **Objective**: Give users a way to trigger `CRM-002`'s Server Action from the UI - a dialog/sheet
   form on the Accounts list page using React Hook Form + Zod, matching the form conventions
   `SHELL-001` establishes for `/login`.
 - **Business Value**: Completes the Sprint 1 "Create" half of "Accounts has working Create/Read"
-  — without this task, `CRM-002`'s action has no UI entry point and the demo has no way to add
-  data live.
+  - without this task, `CRM-002`'s action has no UI entry point and the demo has no way to add
+    data live.
 - **Dependencies**: `CRM-002`, `CRM-003`.
 - **Target Files**:
   - `features/accounts/components/create-account-dialog.tsx` (new)
@@ -697,7 +697,7 @@ checklist): acceptance criteria met; relevant `docs/*.md` updated in the same ch
   dashboard shell, but neither is a hard blocker.** Developer 3 builds `CRM-003` against the bare
   `components/ui/table.tsx` primitive and a standalone `app/accounts/page.tsx` (no shell layout)
   from day one, then re-parents the page under `app/(dashboard)/accounts/page.tsx` and swaps in
-  `components/shared/data-table.tsx` once `SHELL-002`/`SHELL-004` land — tracked explicitly as a
+  `components/shared/data-table.tsx` once `SHELL-002`/`SHELL-004` land - tracked explicitly as a
   Definition of Done follow-up on `CRM-003` rather than left implicit.
 - **`SHELL-002`'s auth gate and `SHELL-001`'s login form both soft-depend on `INFRA-002`/
   `INFRA-003`.** Both build against typed stubs (`requireCurrentUser()` returning a hardcoded

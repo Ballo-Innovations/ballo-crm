@@ -1,8 +1,8 @@
-# Developer 1 — Phase 5: Hardening & Scale
+# Developer 1 - Phase 5: Hardening & Scale
 
 Phase 5 is the "make it production-credible" pass over everything Developer 1 built in Phases 1-3.
 Nothing here adds a new user-facing feature; each task strengthens resilience, security, cost, or
-deploy discipline. These are generally P2/P3 — pick them up once the core product demos cleanly.
+deploy discipline. These are generally P2/P3 - pick them up once the core product demos cleanly.
 They matter for the pitch (a judge asking "what happens when BalloAds is down?" or "how do you keep
 prod data clean?" has a real answer) and for any life beyond the hackathon.
 
@@ -24,23 +24,23 @@ there. Field order follows [../task-template.md](../task-template.md).
   invite, integration connect/rotate, AI job enqueue) so a buggy client or a malicious actor can't
   hammer auth or spend AI/BalloAds budget unbounded.
 - **Business Value**: Protects the auth surface from brute-force and the paid integration surfaces
-  (Brutus AI, BalloAds) from runaway cost — a concrete answer to "how do you stop abuse?" and cheap
+  (Brutus AI, BalloAds) from runaway cost - a concrete answer to "how do you stop abuse?" and cheap
   insurance during a live demo where a retry loop could otherwise rack up calls.
 - **Dependencies**: INFRA-003 (verified session to key limits per `uid`/`orgId`), INFRA-013 (typed
   error to return on limit exceeded). Soft: AI-001/COMM-001 (the AI/BalloAds actions worth
-  guarding) — the guard can wrap them as they land.
+  guarding) - the guard can wrap them as they land.
 - **Target Files**:
-  - `lib/rate-limit/index.ts` (new — a reusable limiter, `server-only`)
+  - `lib/rate-limit/index.ts` (new - a reusable limiter, `server-only`)
   - `actions/auth.ts`, `actions/invites.ts`, `actions/integrations.ts`, `services/ai-jobs.ts`
     (apply the guard at the entry points)
   - `config/env.ts` / `.env.example` (only if a backing store / limit config env is introduced)
 - **Technical Instructions**:
-  1. Implement a token-bucket / fixed-window limiter keyed by verified `uid` (and/or `orgId`) —
+  1. Implement a token-bucket / fixed-window limiter keyed by verified `uid` (and/or `orgId`) -
      for hackathon scale an in-memory or Firestore-backed counter is acceptable; document the
      choice and its single-instance caveat in [../../decisions.md](../../decisions.md).
   2. Apply it at the top of the sensitive Server Actions: sign-in (per-IP/email), invite, integration
      connect/rotate, and AI job enqueue. On exceed, return the typed `{ ok:false, error }` envelope
-     (INFRA-013) with a clear code — never throw for the expected "rate limited" case.
+     (INFRA-013) with a clear code - never throw for the expected "rate limited" case.
   3. Choose sane limits (documented), and ensure the guard reads its identity from the verified
      session, never client input.
 - **Acceptance Criteria**:
@@ -80,12 +80,12 @@ there. Field order follows [../task-template.md](../task-template.md).
   server or spamming a failing endpoint.
 - **Business Value**: BalloCRM is fully dependent on BalloAds/Brutus availability (an
   external-dependency risk in [../../risks.md](../../risks.md)). A circuit breaker is the concrete
-  answer to "what happens when BalloAds is down?" — the app fails fast and recovers, rather than
+  answer to "what happens when BalloAds is down?" - the app fails fast and recovers, rather than
   compounding an outage.
-- **Dependencies**: COMM-001 (BalloAds client), AI-002 (Brutus client — replaces its local retry),
+- **Dependencies**: COMM-001 (BalloAds client), AI-002 (Brutus client - replaces its local retry),
   INFRA-013 (typed error envelope). Soft: none.
 - **Target Files**:
-  - `lib/resilience/index.ts` (new — `withRetry` + `CircuitBreaker`, `server-only`)
+  - `lib/resilience/index.ts` (new - `withRetry` + `CircuitBreaker`, `server-only`)
   - `lib/balloads/client.ts`, `lib/ai/brutus.ts` (wrap outbound calls; AI-002's inline retry is
     removed in favor of this)
 - **Technical Instructions**:
@@ -128,11 +128,11 @@ there. Field order follows [../task-template.md](../task-template.md).
 - **Owner**: Developer 1
 - **Title**: Firestore index & query cost review at scale (audit `firestore.indexes.json` against actual query patterns)
 - **Objective**: Audit the deployed `firestore.indexes.json` against the queries the code actually
-  runs — removing unused indexes, confirming every real query has a matching index, and flagging
-  costly patterns — per the index-proliferation caution in [../../indexes.md](../../indexes.md).
+  runs - removing unused indexes, confirming every real query has a matching index, and flagging
+  costly patterns - per the index-proliferation caution in [../../indexes.md](../../indexes.md).
 - **Business Value**: Every composite index costs storage and slows writes; an index nobody queries
   is pure overhead. A clean, justified index set keeps write latency and Firestore cost down as the
-  CRM grows — a credible "we thought about scale" point for judges.
+  CRM grows - a credible "we thought about scale" point for judges.
 - **Dependencies**: INFRA-010 (the full index set to audit), plus the CRM feature tasks (Developers
   2/3) whose queries the audit checks against. Soft: best done after the feature set has stabilized.
 - **Target Files**:
@@ -143,7 +143,7 @@ there. Field order follows [../task-template.md](../task-template.md).
      ADR-002) and map each to the index that satisfies it, using the catalog in
      [../../indexes.md](../../indexes.md) as the baseline.
   2. Flag any query with no matching index (would fail at runtime) and any index with no matching
-     query (dead weight — remove it via `firebase deploy --only firestore:indexes`).
+     query (dead weight - remove it via `firebase deploy --only firestore:indexes`).
   3. Apply the [../../indexes.md](../../indexes.md) guidance: prefer reusing an existing index +
      small client-side filter over minting a near-duplicate; watch ASC/DESC reverse-sort
      duplication. Confirm all indexes remain `queryScope: "COLLECTION"`.
@@ -176,9 +176,9 @@ there. Field order follows [../task-template.md](../task-template.md).
 - **Priority**: P2
 - **Owner**: Developer 1
 - **Title**: Security hardening pass (rules audit, session/cookie hardening, credential rotation, dependency audit)
-- **Objective**: Do a focused security review across the surfaces Developer 1 owns — re-audit
+- **Objective**: Do a focused security review across the surfaces Developer 1 owns - re-audit
   `firestore.rules` for gaps, harden the `__session` cookie and session lifetime, verify integration
-  credential encryption/rotation, and run a dependency vulnerability audit — before the app is
+  credential encryption/rotation, and run a dependency vulnerability audit - before the app is
   exposed to real users.
 - **Business Value**: Firestore rules and a multi-tenant model raise the stakes of a single
   authorization regression (a risk called out in [../../risks.md](../../risks.md) and ADR-003). A
@@ -195,7 +195,7 @@ there. Field order follows [../task-template.md](../task-template.md).
   - `package.json` / lockfile (dependency updates from `npm audit`)
 - **Technical Instructions**:
   1. Re-walk the [../../firestore-rules.md](../../firestore-rules.md) matrix against
-     `firestore.rules` for every collection — confirm no write-locked collection (`auditLogs`,
+     `firestore.rules` for every collection - confirm no write-locked collection (`auditLogs`,
      `aiJobs`, `analyticsCache`, `integrations`) is client-writable, no cross-tenant read is
      possible, and `users` `role`/`orgId` remain self-escalation-proof. Verify in the emulator.
   2. Harden the `__session` cookie: confirm `HttpOnly`, `Secure`, `SameSite`, a sane `expiresIn`,
@@ -239,11 +239,11 @@ there. Field order follows [../task-template.md](../task-template.md).
 - **Owner**: Developer 1
 - **Title**: Per-environment deployment config (separate dev/staging/prod Firebase projects, Vercel env scoping, rules/indexes deploy automation)
 - **Objective**: Operationalize the three-environment strategy from
-  [../../deployment.md](../../deployment.md) — separate `ballocrm-dev`/`-staging`/`-prod` Firebase
+  [../../deployment.md](../../deployment.md) - separate `ballocrm-dev`/`-staging`/`-prod` Firebase
   projects, Vercel env-var scoping (Preview vs. Production), and automated deployment of
-  `firestore.rules`/`firestore.indexes.json` per environment — so a Preview deploy can never
+  `firestore.rules`/`firestore.indexes.json` per environment - so a Preview deploy can never
   authenticate against or pollute production data.
-- **Business Value**: A single shared Firebase project is a realistic hackathon failure mode — a
+- **Business Value**: A single shared Firebase project is a realistic hackathon failure mode - a
   stray Preview/local write into prod during a demo rehearsal pollutes real tenant data with no
   clean way to distinguish test from real. Separate projects + scoped env + automated rules deploy
   is what makes the deploy story safe and repeatable.
@@ -251,9 +251,9 @@ there. Field order follows [../task-template.md](../task-template.md).
   workflow the rules/indexes deploy step can hook into). Soft: none.
 - **Target Files**:
   - Firebase console: three projects (`ballocrm-dev`, `ballocrm-staging`, `ballocrm-prod`)
-  - Vercel project env settings (Preview → staging creds, Production → prod creds) — configuration,
+  - Vercel project env settings (Preview → staging creds, Production → prod creds) - configuration,
     not a repo file
-  - `.github/workflows/` (new/updated — deploy `firestore:rules,firestore:indexes` to the matching
+  - `.github/workflows/` (new/updated - deploy `firestore:rules,firestore:indexes` to the matching
     project on merge, closing the "Vercel doesn't deploy Firebase config" gap in
     [../../deployment.md](../../deployment.md))
   - `firebase.json` / `.firebaserc` (project aliases for `firebase use`)
@@ -263,7 +263,7 @@ there. Field order follows [../task-template.md](../task-template.md).
      [../../deployment.md](../../deployment.md).
   2. Set each environment's `NEXT_PUBLIC_FIREBASE_*` / `FIREBASE_ADMIN_*` (and integration secrets)
      in the matching Vercel scope so a Preview build authenticates against staging, Production
-     against prod — never crossed. Keep `.env.example` the source of truth for key names.
+     against prod - never crossed. Keep `.env.example` the source of truth for key names.
   3. Add project aliases (`.firebaserc`) so `firebase use dev|staging|prod` works, and automate
      `firebase deploy --only firestore:rules,firestore:indexes --project <env>` in CI on merge (or a
      documented manual runbook if a CI service account isn't available), since Vercel only ships the
@@ -289,6 +289,6 @@ there. Field order follows [../task-template.md](../task-template.md).
   [../../environment.md](../../environment.md), and
   [../../decisions.md](../../decisions.md) (ADR-011 Vercel) before starting; must update
   [../../deployment.md](../../deployment.md) and [../../environment.md](../../environment.md).
-- **Testing Notes**: Deployment task — verification is operational: create a record via a Preview
+- **Testing Notes**: Deployment task - verification is operational: create a record via a Preview
   deployment and confirm it lands in the staging project (not prod); push a rules change and confirm
   it deploys to the matching project. The INFRA-012 CI can gate the rules-deploy step.

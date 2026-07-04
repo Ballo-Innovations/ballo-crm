@@ -1,13 +1,13 @@
-# Sprint 3 — ABM, Commercial Analytics, Signals & Demo Hardening
+# Sprint 3 - ABM, Commercial Analytics, Signals & Demo Hardening
 
 **Sprint goal:** deliver Campaigns/Account-Based Marketing tied to real BalloAds triggers, a
 Commercial Analytics dashboard (pipeline velocity, forecasting, health-score distribution),
 cross-sell/upsell signal surfacing as a second Brutus AI Job type, Vertical Sales Indexing, and
-the polish/hardening pass a hackathon demo needs — empty states, loading skeletons, error
-boundaries, and a final documentation sync — per [roadmap.md](../roadmap.md) Phase 4 (pulled
+the polish/hardening pass a hackathon demo needs - empty states, loading skeletons, error
+boundaries, and a final documentation sync - per [roadmap.md](../roadmap.md) Phase 4 (pulled
 forward for the hackathon's compressed timeline).
 
-**Team and numbering:** tasks continue from [sprint-2.md](./sprint-2.md)'s numbering — `INFRA-*`
+**Team and numbering:** tasks continue from [sprint-2.md](./sprint-2.md)'s numbering - `INFRA-*`
 continues at `INFRA-006`, `SHELL-*` continues at `SHELL-006`, `CRM-*`'s Opportunities/Contracts
 work is done as of Sprint 2 so this sprint introduces `ABM-*` (Campaigns/ABM), `ANLY-*`
 (Commercial Analytics), and `VSI-*` (Vertical Sales Indexing) per [task-template.md](./task-template.md)'s
@@ -44,13 +44,13 @@ project-wide Definition of Done from [sprint-1.md](./sprint-1.md) applies throug
   - `features/campaigns/actions/create-campaign.ts`
   - `features/campaigns/actions/activate-campaign.ts`
 - **Technical Instructions**: `campaignSchema` fields: `id`, `orgId`, `name`, `targetFilter`
-  (a structured filter — e.g. `{ industryVertical, lifecycleStage }` — reused by `VSI-001`'s
+  (a structured filter - e.g. `{ industryVertical, lifecycleStage }` - reused by `VSI-001`'s
   segmentation work), `balloAdsJourneyRef` (named per the `balloAds`-prefix naming rule in
   [integrations.md](../integrations.md), never a bare `journeyId`), `status` (`draft`, `active`,
   `completed`, `paused`), `createdBy`, `createdAt`, `updatedAt`. `activate-campaign.ts` resolves
   `targetFilter` against `accounts-repository.ts`'s query functions, calls `lib/balloads/`'s
   trigger function once per resolved target, and writes an `activities` entry per account
-  triggered — reusing `COMM-002`'s established pattern rather than inventing a new one.
+  triggered - reusing `COMM-002`'s established pattern rather than inventing a new one.
 - **Acceptance Criteria**: Activating a campaign resolves the correct set of accounts per
   `targetFilter`, calls BalloAds (real or mock) once per account, and logs one `activities` entry
   per call; campaign `status` transitions to `active` only after at least one successful trigger
@@ -73,7 +73,7 @@ project-wide Definition of Done from [sprint-1.md](./sprint-1.md) applies throug
 - **Priority**: P1
 - **Owner**: Developer 3
 - **Title**: Build the Campaigns list page and campaign detail view
-- **Objective**: Give Campaigns a UI at `/campaigns` — a list, a create form, and a detail view
+- **Objective**: Give Campaigns a UI at `/campaigns` - a list, a create form, and a detail view
   showing the resolved target segment and the trigger/activity log from `ABM-001`.
 - **Business Value**: Completes the ABM vertical slice into something judge-demoable: build a
   segment, activate it, watch the Activity log populate.
@@ -108,12 +108,12 @@ project-wide Definition of Done from [sprint-1.md](./sprint-1.md) applies throug
 - **Owner**: Developer 3
 - **Title**: Implement the analytics aggregation service (pipeline velocity, forecast, health-score distribution)
 - **Objective**: Compute the three headline analytics metrics from existing `opportunities` and
-  `accounts` data — average time-in-stage (pipeline velocity), a simple weighted-pipeline revenue
-  forecast, and a health-score distribution histogram bucket count — and cache the result in
+  `accounts` data - average time-in-stage (pipeline velocity), a simple weighted-pipeline revenue
+  forecast, and a health-score distribution histogram bucket count - and cache the result in
   `organizations/{orgId}/analyticsCache` (already reserved in `firestore.rules`) rather than
   recomputing on every dashboard load.
 - **Business Value**: Commercial Analytics is a headline product-mission capability and the
-  data-layer prerequisite for `ANLY-002`'s dashboard — without a real aggregation, the dashboard
+  data-layer prerequisite for `ANLY-002`'s dashboard - without a real aggregation, the dashboard
   would have nothing genuine to chart.
 - **Dependencies**: `CRM-007` (Opportunities, for velocity/forecast), `COMM-002` (Health Score
   field, for the distribution).
@@ -125,7 +125,7 @@ project-wide Definition of Done from [sprint-1.md](./sprint-1.md) applies throug
   each `stage`, computed from the stage-transition `activities` entries `CRM-007`'s
   `update-opportunity-stage` already logs (avoiding a second source of truth, per
   [risks.md](../risks.md) R9). Forecast: sum of `amount` per open Opportunity weighted by a
-  simple per-stage probability table (e.g. `prospecting: 0.1`, ... `negotiation: 0.7`) — document
+  simple per-stage probability table (e.g. `prospecting: 0.1`, ... `negotiation: 0.7`) - document
   the weighting as an explicit, overridable constant, not a hidden magic number. Health-score
   distribution: bucket counts (e.g. 0-20, 21-40, ... 81-100) over Accounts with a non-null
   `healthScore`. Cache the computed result with a `computedAt` timestamp and a cheap
@@ -140,7 +140,7 @@ project-wide Definition of Done from [sprint-1.md](./sprint-1.md) applies throug
 - **Estimated Hours**: 5-7
 - **Documentation References**: [../risks.md](../risks.md) R9, [../database-schema.md](../database-schema.md).
 - **Testing Notes**: Unit tests for the velocity/forecast math against fixture data if the test
-  framework (`INFRA-005`) is in place by this sprint — this is exactly the kind of pure-function
+  framework (`INFRA-005`) is in place by this sprint - this is exactly the kind of pure-function
   business logic that's cheap to test and expensive to get subtly wrong in a live demo; otherwise
   manual verification against a known seeded data set with hand-checked expected output.
 
@@ -151,11 +151,11 @@ project-wide Definition of Done from [sprint-1.md](./sprint-1.md) applies throug
 - **Priority**: P1
 - **Owner**: Developer 2
 - **Title**: Build the `/analytics` dashboard page with Recharts visualizations
-- **Objective**: Render `ANLY-001`'s three metrics as an enterprise-dashboard page — a pipeline
+- **Objective**: Render `ANLY-001`'s three metrics as an enterprise-dashboard page - a pipeline
   velocity bar/funnel chart, a forecast line/area chart, and a health-score distribution
-  histogram — using `recharts` (already installed) and the dashboard shell from Sprint 1.
+  histogram - using `recharts` (already installed) and the dashboard shell from Sprint 1.
 - **Business Value**: This is the single most visually persuasive screen in the product for a
-  judging audience — dashboards are explicitly called out in the UI direction
+  judging audience - dashboards are explicitly called out in the UI direction
   ([vision.md](../vision.md): Stripe Dashboard, Vercel Dashboard inspiration).
 - **Dependencies**: `ANLY-001`; reuses `SHELL-002`'s dashboard shell.
 - **Target Files**:
@@ -168,7 +168,7 @@ project-wide Definition of Done from [sprint-1.md](./sprint-1.md) applies throug
   design-system conventions in [ui-design-system.md](../ui-design-system.md)) used above the
   charts for headline numbers (total pipeline value, weighted forecast, average velocity). Each
   chart component is a Client Component (Recharts requires it) kept as small and leaf-level as
-  possible per the Server/Client decision rule in [architecture.md](../architecture.md) §2 — the
+  possible per the Server/Client decision rule in [architecture.md](../architecture.md) §2 - the
   page itself stays a Server Component that prefetches `get-dashboard-metrics` and passes plain
   data down as props. Render an explicit loading-skeleton state (via
   `components/ui/skeleton.tsx`) and an explicit "not enough data yet" empty state for a brand-new
@@ -199,7 +199,7 @@ project-wide Definition of Done from [sprint-1.md](./sprint-1.md) applies throug
   cross-sell/upsell likelihood from its Health Score, contract status, and activity recency, and
   surfaces flagged accounts as a badge/panel on the Account list and detail views.
 - **Business Value**: Cross-selling/Upselling signals are an explicit product-mission item and a
-  strong differentiator in the pitch — "the CRM tells reps who to call next," not just "the CRM
+  strong differentiator in the pitch - "the CRM tells reps who to call next," not just "the CRM
   stores records."
 - **Dependencies**: `AI-001` (job scaffold, from Sprint 2), `COMM-002` (Health Score),
   `CRM-009` (Contracts, for renewal-proximity signal).
@@ -208,13 +208,13 @@ project-wide Definition of Done from [sprint-1.md](./sprint-1.md) applies throug
   - `features/accounts/actions/detect-cross-sell-signals.ts`
   - `features/accounts/components/cross-sell-badge.tsx`
   - `features/accounts/components/cross-sell-signal-panel.tsx`
-- **Technical Instructions**: Reuse `AI-001`'s `runAiJob` helper exactly as `AI-002` did — this
+- **Technical Instructions**: Reuse `AI-001`'s `runAiJob` helper exactly as `AI-002` did - this
   task should be materially smaller than `AI-002` because the job-lifecycle scaffolding already
   exists. The handler composes: `healthScore` (high score = healthy = good upsell candidate),
   contract `renewalDate` proximity (from `CRM-009`), and `activities` recency, sending this
   composed context to `lib/brutus/client.ts` for a signal + rationale. Run detection on-demand
   (an "Analyze" button on the Account list, batched across visible accounts) rather than a
-  background cron for Sprint 3's scope — a scheduled batch job is a reasonable Phase 5+ item
+  background cron for Sprint 3's scope - a scheduled batch job is a reasonable Phase 5+ item
   noted in [roadmap.md](../roadmap.md), not built here.
 - **Acceptance Criteria**: Running detection flags at least the accounts an obvious fixture case
   should flag (high health score + contract renewal within 60 days); flagged accounts show a
@@ -232,7 +232,7 @@ project-wide Definition of Done from [sprint-1.md](./sprint-1.md) applies throug
   (high health score, near-term renewal) and one that obviously shouldn't, confirming both are
   scored correctly.
 
-### VSI-001: Vertical Sales Indexing — segmentation and filtering
+### VSI-001: Vertical Sales Indexing - segmentation and filtering
 
 - **Task ID**: `VSI-001`
 - **Epic**: Vertical Sales Indexing
@@ -240,7 +240,7 @@ project-wide Definition of Done from [sprint-1.md](./sprint-1.md) applies throug
 - **Owner**: Developer 3
 - **Title**: Add industry-vertical filtering across Accounts, Opportunities, and Analytics
 - **Objective**: Turn the `industryVertical` field already reserved on the Account schema
-  (`CRM-001`, Sprint 1) into an actual segmentation feature — filter tabs/dropdowns on the
+  (`CRM-001`, Sprint 1) into an actual segmentation feature - filter tabs/dropdowns on the
   Accounts and Opportunities list views, and a vertical breakdown widget on the Analytics
   dashboard.
 - **Business Value**: Vertical Sales Indexing is an explicit product-mission item; because the
@@ -273,35 +273,35 @@ project-wide Definition of Done from [sprint-1.md](./sprint-1.md) applies throug
 - **Testing Notes**: Manual verification: seed accounts across at least three verticals, confirm
   each filter view and the analytics widget's totals match a hand-computed expectation.
 
-### SHELL-006: Demo polish — empty states, skeletons, and error boundaries
+### SHELL-006: Demo polish - empty states, skeletons, and error boundaries
 
 - **Task ID**: `SHELL-006`
-- **Epic**: Design System — Hardening
+- **Epic**: Design System - Hardening
 - **Priority**: P1
 - **Owner**: Developer 2
 - **Title**: Add empty states, loading skeletons, and error boundaries across all list/detail pages
 - **Objective**: Audit every screen shipped across Sprints 1-3 (Accounts, Contacts, Opportunities,
   Contracts, Campaigns, Analytics) and ensure each has a real loading skeleton
   (`components/ui/skeleton.tsx`), a real empty state (`components/shared/empty-state.tsx` from
-  Sprint 1's `SHELL-004`), and a route-level `error.tsx` boundary — no screen should be able to
+  Sprint 1's `SHELL-004`), and a route-level `error.tsx` boundary - no screen should be able to
   show a blank white page or an unhandled crash during the live demo.
 - **Business Value**: Directly mitigates [risks.md](../risks.md) R3 (hackathon time pressure vs.
-  quality bar) at the one point in the schedule reserved for it — a polish pass done once,
+  quality bar) at the one point in the schedule reserved for it - a polish pass done once,
   broadly, rather than piecemeal under pressure feature-by-feature.
 - **Dependencies**: All list/detail pages from Sprints 1-3 (`CRM-003`, `CRM-006`, `CRM-008`,
   `CRM-010`, `ABM-002`, `ANLY-002`).
 - **Target Files**:
   - `app/(dashboard)/accounts/error.tsx`, `.../contacts/error.tsx`,
     `.../opportunities/error.tsx`, `.../contracts/error.tsx`, `.../campaigns/error.tsx`,
-    `.../analytics/error.tsx` (new — one per route)
-  - `app/(dashboard)/loading.tsx` (new — shell-level fallback)
+    `.../analytics/error.tsx` (new - one per route)
+  - `app/(dashboard)/loading.tsx` (new - shell-level fallback)
   - Per-feature `components/*.tsx` touch-ups wherever a loading/empty state was skipped under
     Sprint 1-2 time pressure
 - **Technical Instructions**: Each `error.tsx` is a Client Component per Next.js's error-boundary
   contract, rendering `components/ui/alert.tsx` with a "Try again" button (calling the provided
   `reset()`), never a raw stack trace in the demo build. Sweep every list page built in Sprints
   1-2 and confirm it actually reaches `SHELL-004`'s empty-state component on zero rows rather than
-  an empty table header — several may have been left as a stopgap under sprint time pressure and
+  an empty table header - several may have been left as a stopgap under sprint time pressure and
   need to be finished here, not newly invented.
 - **Acceptance Criteria**: Every route listed above has a working `error.tsx` that renders on a
   forced error and recovers via "Try again"; every list page shows a real empty state on zero
@@ -329,7 +329,7 @@ project-wide Definition of Done from [sprint-1.md](./sprint-1.md) applies throug
   them in the Account/Contact timeline (the `activities` query, per
   [decisions.md](../decisions.md)) rather than maintaining a second status ledger.
 - **Business Value**: Completes the BalloAds read-back loop the product brief calls out
-  explicitly — reps see message delivery/opt-out state without leaving BalloCRM, without BalloCRM
+  explicitly - reps see message delivery/opt-out state without leaving BalloCRM, without BalloCRM
   ever owning that data.
 - **Dependencies**: `COMM-001`, `COMM-002`.
 - **Target Files**:
@@ -366,14 +366,14 @@ project-wide Definition of Done from [sprint-1.md](./sprint-1.md) applies throug
   `BRUTUS_AI_API_KEY`, Firebase Admin credentials) are set as Vercel environment variables (never
   committed), and a final smoke test passes against the deployed URL before the demo.
 - **Business Value**: A hackathon demo failing because of a misconfigured production environment,
-  rather than a code defect, is the most avoidable failure mode in the whole project — this task
+  rather than a code defect, is the most avoidable failure mode in the whole project - this task
   exists specifically to eliminate it.
 - **Dependencies**: All Sprint 1-3 feature work that's expected to be demoed.
 - **Target Files**:
   - `docs/deployment.md` (update with the final, real deployment steps taken)
-  - `.env.example` (final audit — confirm every key documented matches what's actually read by
+  - `.env.example` (final audit - confirm every key documented matches what's actually read by
     `config/env.ts`)
-  - `vercel.json` (if any project-level config is needed — otherwise confirm none is)
+  - `vercel.json` (if any project-level config is needed - otherwise confirm none is)
 - **Technical Instructions**: Re-run the full env var audit from [risks.md](../risks.md) R6:
   grep the codebase for every `process.env.` read and confirm each server-only key is never
   reachable from a file importable by a Client Component. Confirm Vercel's production environment
@@ -402,8 +402,8 @@ project-wide Definition of Done from [sprint-1.md](./sprint-1.md) applies throug
 - **Owner**: Developer 1 (coordinating; each developer updates the sections covering their own
   Sprint 3 tasks before handoff)
 - **Title**: Bring `progress.md`, `changelog.md`, and `roadmap.md` current before the hackathon demo
-- **Objective**: Do a final, deliberate documentation sync — rather than the per-task incremental
-  updates every prior task's Definition of Done already required — to catch any doc that drifted
+- **Objective**: Do a final, deliberate documentation sync - rather than the per-task incremental
+  updates every prior task's Definition of Done already required - to catch any doc that drifted
   from what actually shipped across three sprints, per the documentation-driven-development
   principle in the project brief.
 - **Business Value**: Judges and future contributors read `/docs` as the source of truth; a doc
@@ -419,7 +419,7 @@ project-wide Definition of Done from [sprint-1.md](./sprint-1.md) applies throug
   merged (not planned) as of the demo date; update `docs/roadmap.md`'s Phase 1-4 capability map to
   reflect real completion status per phase; append a final `docs/changelog.md` entry summarizing
   the hackathon build; in `docs/risks.md`, strike through (with a note, not a deletion, per its
-  own stated convention) any risk fully mitigated this sprint — e.g. R1 (testing/CI) if `INFRA-004`
+  own stated convention) any risk fully mitigated this sprint - e.g. R1 (testing/CI) if `INFRA-004`
   /`INFRA-005` fully landed, R2 (BalloAds contract) if a real sandbox was confirmed by
   `COMM-001`/`COMM-003`.
 - **Acceptance Criteria**: `docs/progress.md` matches the actual merged state of the app with no
@@ -435,27 +435,27 @@ project-wide Definition of Done from [sprint-1.md](./sprint-1.md) applies throug
 - **Documentation References**: [../roadmap.md](../roadmap.md), [../risks.md](../risks.md),
   and every task file in [docs/tasks/](./sprint-1.md).
 - **Testing Notes**: Not applicable in the code-testing sense; verification is a documentation
-  review — have a developer who did not write a given doc section read it against the live app
+  review - have a developer who did not write a given doc section read it against the live app
   and confirm no contradiction, mirroring the spirit of a code review for prose.
 
 ---
 
 ## Cross-track dependencies
 
-- **`ANLY-002`'s dashboard is the sprint's highest-risk single point of failure for the demo** —
+- **`ANLY-002`'s dashboard is the sprint's highest-risk single point of failure for the demo** -
   it depends on `ANLY-001`'s real aggregation, which in turn depends on `CRM-007`/`COMM-002` data
   actually existing in the demo org. Seed representative demo data (accounts across several
   verticals and health scores, opportunities across every stage, at least one closed-won
   contract) well before `SHELL-006`'s polish pass and `INFRA-006`'s production smoke test, so
   these later tasks are validating against realistic data, not an empty dashboard.
-- **`AI-003` and `VSI-001` are both P2 — if the sprint runs short, cut here first**, not from
+- **`AI-003` and `VSI-001` are both P2 - if the sprint runs short, cut here first**, not from
   `ABM-001`/`ANLY-001`/`ANLY-002`, since Campaigns and Analytics are the two headline demo
   narratives explicitly named in the sprint goal; cross-sell signals and vertical filtering
   strengthen the pitch but the demo survives without them.
-- **`SHELL-006` and `INFRA-006` should run last, in that order** — polish depends on every feature
+- **`SHELL-006` and `INFRA-006` should run last, in that order** - polish depends on every feature
   screen existing, and the production smoke test is only meaningful once polish has landed (no
   point smoke-testing broken empty states in production).
-- **`DOCS-001` is the explicit final task of the hackathon build** — it should not start in
+- **`DOCS-001` is the explicit final task of the hackathon build** - it should not start in
   earnest until the other tasks above are functionally complete, per its own dependency list.
 - See [sprint-1.md](./sprint-1.md) and [sprint-2.md](./sprint-2.md) for the full lineage this
   sprint's tasks build on.

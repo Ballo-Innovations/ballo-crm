@@ -5,7 +5,7 @@ const PUBLIC_PATHS = ["/", "/login", "/api/auth/session"];
 
 /**
  * Foundation-level route gate. Checks for the presence of the Firebase
- * session cookie only — it does NOT verify the token, since verification
+ * session cookie only - it does NOT verify the token, since verification
  * requires the Admin SDK and cannot run in the Edge middleware runtime.
  * Server Components/Actions behind this gate must still verify the session
  * with `lib/firebase/admin.ts` before trusting it. See docs/architecture.md

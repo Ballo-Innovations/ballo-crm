@@ -34,7 +34,7 @@ PascalCase identifier that matches its kebab-case filename one-to-one:
 | `data-table-toolbar.tsx`      | `DataTableToolbar`      |
 
 If the exported name and the filename diverge, an editor's "go to definition" and a plain
-filesystem search stop agreeing with each other — assume this convention has no exceptions.
+filesystem search stop agreeing with each other - assume this convention has no exceptions.
 
 ## Variable and function naming
 
@@ -45,7 +45,7 @@ const accountId = account.id;
 function getHealthScoreLabel(score: number): string { ... }
 ```
 
-Booleans read as a question or a state: `isOrgMember`, `hasPendingInvite`, `canEditContract` —
+Booleans read as a question or a state: `isOrgMember`, `hasPendingInvite`, `canEditContract` -
 not `orgMember` or `pendingInviteFlag`.
 
 ## Type / schema naming
@@ -61,21 +61,21 @@ Zod is the source of truth for any boundary-crossing shape (see
 
 Rules:
 
-- The schema gets the `Schema` suffix; the inferred type does **not** repeat it — `Account`, not
+- The schema gets the `Schema` suffix; the inferred type does **not** repeat it - `Account`, not
   `AccountType` or `AccountSchemaType`.
 - A schema that validates a narrower, purpose-specific payload (e.g. a create-form's subset of
   fields) gets its own name reflecting that purpose (`CreateAccountSchema`) rather than reusing
-  the base entity name — its inferred type is suffixed `Input` when it represents something being
+  the base entity name - its inferred type is suffixed `Input` when it represents something being
   submitted (`CreateAccountInput`), to distinguish it from the full persisted entity type
   (`Account`).
 - Ambient types that are **not** derived from a schema (see [types/README.md](../types/README.md))
-  don't follow this pairing at all — they're just PascalCase types living in `types/`
+  don't follow this pairing at all - they're just PascalCase types living in `types/`
   (`Nullable<T>`, `PaginatedResult<T>`).
 
 ## Firestore collection naming
 
 Collection names are camelCase and plural, already fixed by the real `firestore.rules` and
-`firestore.indexes.json` — do not introduce a new top-level collection or rename an existing one
+`firestore.indexes.json` - do not introduce a new top-level collection or rename an existing one
 without updating both files plus [database-schema.md](./database-schema.md) in the same change.
 The current, complete list:
 
@@ -98,7 +98,7 @@ The current, complete list:
 | `settings`       | `organizations/{orgId}/settings/{settingId}`                              |
 | `integrations`   | `organizations/{orgId}/integrations/{provider}` (server-only credentials) |
 
-Note there is deliberately **no separate `timeline` collection** — the Customer Journey/timeline
+Note there is deliberately **no separate `timeline` collection** - the Customer Journey/timeline
 UI is a query over `activities` filtered by `relatedTo.type` + `relatedTo.id`. See
 [decisions.md](./decisions.md) for the rationale and [database-schema.md](./database-schema.md)
 for how `activities` serves both the audit trail and the timeline view.
@@ -106,24 +106,24 @@ for how `activities` serves both the audit trail and the timeline view.
 ## Firestore field naming
 
 Fields are camelCase, matching the collection convention above. Do not contradict whatever
-[database-schema.md](./database-schema.md) states for a specific entity's fields — this section
+[database-schema.md](./database-schema.md) states for a specific entity's fields - this section
 restates the general rules that apply across every collection:
 
 - **Timestamps**: every document gets `createdAt` and `updatedAt` (Firestore `Timestamp`, written
   server-side). A domain-specific timestamp follows the same pattern:
   `closedAt`, `qualifiedAt`, `lastActivityAt`.
-- **Reference fields**: a field that holds another document's ID is named `<entity>Id` —
+- **Reference fields**: a field that holds another document's ID is named `<entity>Id` -
   `accountId` on a `contact`, `opportunityId` on a `contract`, `targetUserId` on a `notification`.
-  Never a bare `account` or `owner` holding a raw ID string — the `Id` suffix makes it unambiguous
+  Never a bare `account` or `owner` holding a raw ID string - the `Id` suffix makes it unambiguous
   at the call site that this is a reference, not an embedded object.
 - **Enums**: stored as their literal string value (`"open" | "won" | "lost"`), matching the Zod
-  `.enum()` defined alongside the entity's schema — never a numeric/magic-number encoding.
-- **Booleans**: same `is`/`has`/`can` prefix convention as in-memory variables — `isArchived`,
+  `.enum()` defined alongside the entity's schema - never a numeric/magic-number encoding.
+- **Booleans**: same `is`/`has`/`can` prefix convention as in-memory variables - `isArchived`,
   `hasOpenTasks`.
 
 ## Server Action naming
 
-`verbNoun`, always — the verb states the mutation, the noun states what it acts on:
+`verbNoun`, always - the verb states the mutation, the noun states what it acts on:
 
 | Good                     | Avoid                                                                     |
 | ------------------------ | ------------------------------------------------------------------------- |
@@ -138,7 +138,7 @@ differently: `create-account.ts` exports `createAccount`.
 ## Route naming
 
 URL segments are kebab-case, matching the entries already declared in `config/site.ts`'s
-`primaryNav` — `/dashboard`, `/accounts`, `/contacts`, `/opportunities`, `/contracts`,
+`primaryNav` - `/dashboard`, `/accounts`, `/contacts`, `/opportunities`, `/contracts`,
 `/campaigns`, `/analytics`, `/settings`. A nested detail route follows the same rule:
 `/accounts/[accountId]`, `/opportunities/[opportunityId]/edit`. Full inventory and any route not
 yet built: [routes.md](./routes.md).
@@ -146,7 +146,7 @@ yet built: [routes.md](./routes.md).
 ## Environment variable naming
 
 `NEXT_PUBLIC_` prefix only for values that are safe to ship to the browser bundle (Firebase client
-config, the public app URL) — anything without that prefix is server-only by Next.js convention
+config, the public app URL) - anything without that prefix is server-only by Next.js convention
 and by this project's own rule, enforced in `config/env.ts` via separate `ClientEnv`/`ServerEnv`
 Zod schemas:
 
@@ -155,7 +155,7 @@ Zod schemas:
 | `NEXT_PUBLIC_` | `NEXT_PUBLIC_FIREBASE_API_KEY`, `NEXT_PUBLIC_APP_URL`                           | Browser + server |
 | (none)         | `FIREBASE_ADMIN_PRIVATE_KEY`, `BALLOADS_DEVELOPER_API_KEY`, `BRUTUS_AI_API_KEY` | Server only      |
 
-Never add `NEXT_PUBLIC_` to a secret to "make it easier to read from a Client Component" — that
+Never add `NEXT_PUBLIC_` to a secret to "make it easier to read from a Client Component" - that
 is precisely the mistake this prefix convention exists to catch in code review. Full variable
 inventory: [environment.md](./environment.md).
 
@@ -164,12 +164,12 @@ inventory: [environment.md](./environment.md).
 Per [CONTRIBUTING.md](../CONTRIBUTING.md): branch from `main` as
 `feature/<task-id>-short-description` or `fix/<task-id>-short-description`, where `<task-id>`
 matches the task's identifier in `docs/tasks/`. Commit messages are imperative mood and explain
-_why_, not just _what_ — e.g. "Add health score badge to account card — surfaces BalloAds risk
+_why_, not just _what_ - e.g. "Add health score badge to account card - surfaces BalloAds risk
 signal without opening the record," not "update account-card.tsx."
 
 ## CSS / Tailwind class ordering
 
-Don't hand-order Tailwind classes — `prettier-plugin-tailwindcss` is installed and runs on save
+Don't hand-order Tailwind classes - `prettier-plugin-tailwindcss` is installed and runs on save
 via the project's Prettier config, and reorders classes into its canonical order automatically on
 every commit through the Husky pre-commit hook. Fighting the formatter's ordering in review is
 wasted effort; if a diff shows classes in a different order than expected, run Prettier rather

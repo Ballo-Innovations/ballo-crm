@@ -22,21 +22,21 @@ infrastructure that does not exist yet.
 | Commercial Analytics (dashboards, forecasting)            | Phase 4                                                                         |
 | ABM (Account-Based Marketing)                             | Phase 4                                                                         |
 | Vertical Sales Indexing                                   | Phase 4                                                                         |
-| Testing (Jest/Vitest/Playwright), CI (GitHub Actions)     | Cross-cutting — starts in Phase 2, see [Known Gaps](#known-gaps-to-close-early) |
+| Testing (Jest/Vitest/Playwright), CI (GitHub Actions)     | Cross-cutting - starts in Phase 2, see [Known Gaps](#known-gaps-to-close-early) |
 | Enterprise hardening (granular permissions, audit, scale) | Phase 5                                                                         |
 
-## Phase 1 — Foundation (in progress)
+## Phase 1 - Foundation (in progress)
 
 Deployable skeleton proving the stack end to end: Firebase Auth sign-in with session cookie
 issuance, a rendered dashboard shell with real sidebar/topbar navigation wired to `primaryNav`,
-and one working CRM entity — Accounts — with Create/Read against Firestore through the
+and one working CRM entity - Accounts - with Create/Read against Firestore through the
 repository → service → action pattern. No Opportunities, Contracts, Campaigns, ABM, or AI features
 yet. Full task ownership across the three Sprint 1 developers is tracked in
 [sprint-plan.md](./sprint-plan.md), [tasks/sprint-1.md](./tasks/sprint-1.md), and the per-developer
 files ([developer-1.md](./tasks/developer-1.md), [developer-2.md](./tasks/developer-2.md),
 [developer-3.md](./tasks/developer-3.md)).
 
-## Phase 2 — Core CRM MVP
+## Phase 2 - Core CRM MVP
 
 Complete the core commercial-operations data model and CRUD surface: full Opportunity pipeline
 (stages, Kanban/list views, Opportunity Qualification fields), Contracts (creation, renewal
@@ -46,10 +46,10 @@ not the same thing as a BalloAds Journey). This phase also delivers the first re
 integration with BalloAds: pulling Health Score and delivery/opt-out status into the Account and
 Contact timeline via the [Developer Portal API](./integrations.md). This is the phase where a
 minimal test framework and CI pipeline must be introduced (see
-[Known Gaps](#known-gaps-to-close-early)) — building Opportunities/Contracts without any
+[Known Gaps](#known-gaps-to-close-early)) - building Opportunities/Contracts without any
 regression safety net is the point at which the debt becomes expensive to defer further.
 
-## Phase 3 — AI Commercial Intelligence
+## Phase 3 - AI Commercial Intelligence
 
 Brutus AI comes online as the AI Job pipeline described in [architecture.md](./architecture.md):
 Opportunity Qualification scoring assistance, next-best-action recommendations surfaced on
@@ -57,9 +57,9 @@ Account and Opportunity views, account/contact summarization, and cross-sell/ups
 detection driven by health score, contract, and activity data. This phase also introduces
 outbound Automated Customer Communications: CRM workflows (e.g., an Opportunity stage change or a
 Customer Journey stage transition) triggering a BalloAds Journey or campaign via the Developer
-Portal API, always logged back as a CRM Activity — never a second delivery loop inside BalloCRM.
+Portal API, always logged back as a CRM Activity - never a second delivery loop inside BalloCRM.
 
-## Phase 4 — Advanced Analytics & ABM
+## Phase 4 - Advanced Analytics & ABM
 
 Commercial Analytics dashboards (pipeline velocity, win rate, forecasting, account health
 distribution) backed by aggregate queries and, where volume requires it, the
@@ -70,7 +70,7 @@ and analytics views, letting RevOps benchmark and forecast per industry vertical
 in aggregate. Automated Customer Communications matures from single triggers (Phase 3) to
 lifecycle-stage-driven sequences configured per vertical or segment.
 
-## Phase 5 — Scale & Enterprise Hardening
+## Phase 5 - Scale & Enterprise Hardening
 
 Once the product surface is complete, harden it for real multi-organization, multi-team usage:
 granular permission checks beyond the five base [Roles](./glossary.md#role) (e.g., account-level
@@ -88,4 +88,4 @@ framework is installed** (no Jest, Vitest, or Playwright, and `package.json` has
 script) and **no CI pipeline exists** (no GitHub Actions workflows). These are tracked as open
 risks in [risks.md](./risks.md) rather than assumed away. The roadmap treats closing this gap as
 mandatory work at the start of Phase 2, before Opportunities and Contracts CRUD grows the surface
-area that a regression would silently break — not a "someday" item deferred to Phase 5.
+area that a regression would silently break - not a "someday" item deferred to Phase 5.

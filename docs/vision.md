@@ -30,20 +30,20 @@ company's messaging platform) instead of a bolted-on afterthought.
 BalloCRM is built for the people who own commercial relationships and the revenue that flows
 through them:
 
-- **Sales Representatives** — manage a book of opportunities and need fast, low-friction logging
+- **Sales Representatives** - manage a book of opportunities and need fast, low-friction logging
   of activity and pipeline movement.
-- **Enterprise Account Managers** — own the ongoing relationship with existing customers, need
+- **Enterprise Account Managers** - own the ongoing relationship with existing customers, need
   visibility into account health, contract status, and communication history in one place.
-- **Sales Operations / RevOps Analysts** — maintain data quality, own pipeline reporting, and
+- **Sales Operations / RevOps Analysts** - maintain data quality, own pipeline reporting, and
   configure qualification criteria, territories, and vertical segmentation.
-- **Executives / VP of Sales** — need roll-up commercial analytics (pipeline velocity, forecast,
+- **Executives / VP of Sales** - need roll-up commercial analytics (pipeline velocity, forecast,
   account health distribution) without waiting on a manually assembled report.
-- **Customer Success Leads** — monitor post-sale account health and lifecycle stage to catch churn
+- **Customer Success Leads** - monitor post-sale account health and lifecycle stage to catch churn
   risk and cross-sell timing early.
 
 ## Personas
 
-### Amara Osei — Enterprise Account Manager
+### Amara Osei - Enterprise Account Manager
 
 - **Goals:** Keep a portfolio of ~40 enterprise accounts healthy and growing; know immediately
   when an account's health score drops or a contract is nearing renewal; log every meaningful
@@ -52,7 +52,7 @@ through them:
   access to; she finds out about a churn risk from a colleague instead of a dashboard; contract
   renewal dates are tracked in a personal spreadsheet that's always slightly out of date.
 
-### Priya Nandakumar — VP of Sales
+### Priya Nandakumar - VP of Sales
 
 - **Goals:** Trust the pipeline number she reports to the board; see forecast, win rate, and
   pipeline velocity by vertical without asking RevOps to build a one-off report; spot underused
@@ -61,7 +61,7 @@ through them:
   board meeting; qualification criteria are applied inconsistently across reps, so "commit" stage
   deals slip constantly.
 
-### Diego Fernandes — RevOps Analyst
+### Diego Fernandes - RevOps Analyst
 
 - **Goals:** Own clean, consistent data across accounts, contacts, and opportunities; configure
   vertical sales indexing and qualification scoring once and have it apply org-wide; produce
@@ -70,7 +70,7 @@ through them:
   a paywall; there's no audit trail when a rep manually overrides a pipeline stage; integrating
   the messaging platform's data required a bespoke ETL job that broke constantly.
 
-### Tafadzwa Chirwa — Customer Success Lead
+### Tafadzwa Chirwa - Customer Success Lead
 
 - **Goals:** Catch at-risk accounts before renewal, using account health signals fed from the
   messaging platform (activity recency, payment reliability) alongside CRM-tracked lifecycle
@@ -83,12 +83,12 @@ through them:
 
 Generic CRMs (Salesforce, HubSpot, and their smaller competitors) are built to be all things to
 all industries, which means B2B commercial teams spend months configuring them just to get basic
-account-health and vertical-segmentation workflows working — and none of them have a native
+account-health and vertical-segmentation workflows working - and none of them have a native
 relationship with BalloAds. BalloCRM differentiates on two fronts:
 
 1. **Native BalloAds integration.** Account health scores, delivery/opt-out status, and
    communication triggers flow directly from BalloAds' developer-portal API into the CRM's
-   Account and Contact views — no manual export, no second system to check. When a CRM workflow
+   Account and Contact views - no manual export, no second system to check. When a CRM workflow
    needs to reach a customer, it calls BalloAds directly and logs the result as a CRM Activity,
    instead of asking a rep to switch tools. See [integrations.md](./integrations.md) for the
    contract.
@@ -106,8 +106,8 @@ technical debt that makes generic CRMs slow to adapt to a B2B commercial team's 
 ## MVP Scope
 
 The Sprint 1 goal is a deployable skeleton that proves the full stack end to end: Firebase Auth
-sign-in issuing a session, a rendered dashboard shell with real navigation, and one CRM entity —
-Accounts — with working Create/Read against Firestore through the repository → service → action
+sign-in issuing a session, a rendered dashboard shell with real navigation, and one CRM entity -
+Accounts - with working Create/Read against Firestore through the repository → service → action
 pattern. It intentionally does not yet include Opportunities, Contracts, Campaigns, ABM, or any
 Brutus AI feature; those land in later sprints once the foundation is proven. Full task breakdown
 and ownership live in [sprint-1.md](./tasks/sprint-1.md) and the sprint plan overview in

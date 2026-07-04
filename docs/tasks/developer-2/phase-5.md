@@ -1,12 +1,12 @@
-# Phase 5 — Polish, accessibility & performance
+# Phase 5 - Polish, accessibility & performance
 
 Phase 5 is Developer 2's hardening pass over everything the shell and feature UI shipped in Phases
 1–4. Nothing here adds a new screen; each task is a **cross-cutting quality gate** applied to the
-existing surface — dark-mode fidelity, WCAG 2.1 AA accessibility, power-user keyboard navigation,
+existing surface - dark-mode fidelity, WCAG 2.1 AA accessibility, power-user keyboard navigation,
 responsive/mobile behavior, and route-transition/bundle performance. These map to the
 enterprise-hardening goals in [../../roadmap.md](../../roadmap.md#phase-5--scale--enterprise-hardening)
 and the accessibility direction in [../../ui-design-system.md](../../ui-design-system.md). They are
-generally `P2`/`P3` — pick them up once the Phase 1–4 product surface is demoable, not before.
+generally `P2`/`P3` - pick them up once the Phase 1–4 product surface is demoable, not before.
 
 Because these tasks touch many files that Developer 3's feature UI also lives in, coordinate timing:
 run each audit **after** the feature screens for a given entity have stabilized, and file any
@@ -20,7 +20,7 @@ in [../../sprint-plan.md](../../sprint-plan.md#definition-of-done).
 ### SHELL-016: Dark mode visual QA across all shadcn components in use
 
 - **Task ID**: `SHELL-016` (reconciles to [../backlog.md](../backlog.md) **SHELL-009**, "Dark mode
-  visual QA pass" — see [README.md](./README.md#id-reconciliation-note))
+  visual QA pass" - see [README.md](./README.md#id-reconciliation-note))
 - **Epic**: Design System & Shell
 - **Priority**: P3
 - **Owner**: Developer 2
@@ -38,7 +38,7 @@ in [../../sprint-plan.md](../../sprint-plan.md#definition-of-done).
   - `styles/globals.css` (fix any `--color-*` token that resolves wrong in the `.dark` scope)
   - `components/ui/*` and `components/shared/*` (remove hardcoded hex/`text-white`/`bg-black`; use
     semantic tokens `bg-background`, `text-foreground`, `border-border`, `bg-muted`, etc.)
-  - No new files expected — this is a fix-in-place audit.
+  - No new files expected - this is a fix-in-place audit.
 - **Technical Instructions**:
   1. Build a checklist of every route from [../../routes.md](../../routes.md) and every primitive
      from [../../ui-design-system.md](../../ui-design-system.md); visit each in `light` then `dark`
@@ -59,7 +59,7 @@ in [../../sprint-plan.md](../../sprint-plan.md#definition-of-done).
 - **Definition of Done**:
   - [ ] Acceptance criteria above all met
   - [ ] [../../ui-design-system.md](../../ui-design-system.md) updated if any token mapping changed
-  - [ ] Project-wide DoD met — see [../../sprint-plan.md](../../sprint-plan.md#definition-of-done)
+  - [ ] Project-wide DoD met - see [../../sprint-plan.md](../../sprint-plan.md#definition-of-done)
   - [ ] PR opened and reviewed per [../../../CONTRIBUTING.md](../../../CONTRIBUTING.md)
   - [ ] [../../progress.md](../../progress.md) and [../../changelog.md](../../changelog.md) updated
 - **Estimated Complexity**: S
@@ -74,13 +74,13 @@ in [../../sprint-plan.md](../../sprint-plan.md#definition-of-done).
 
 ### SHELL-017: WCAG 2.1 AA accessibility audit pass
 
-- **Task ID**: `SHELL-017` (new — see [README.md](./README.md#id-reconciliation-note))
+- **Task ID**: `SHELL-017` (new - see [README.md](./README.md#id-reconciliation-note))
 - **Epic**: Design System & Shell
 - **Priority**: P2
 - **Owner**: Developer 2
 - **Title**: Run and remediate a WCAG 2.1 AA accessibility audit across the shell and all screens
 - **Objective**: Bring the app to WCAG 2.1 AA on the load-bearing flows (login, navigation, list/
-  detail/create, dialogs, tables, charts) — focus order, visible focus, color contrast, semantic
+  detail/create, dialogs, tables, charts) - focus order, visible focus, color contrast, semantic
   landmarks, form labels, aria state, and keyboard operability of every interactive control.
 - **Business Value**: Accessibility is an explicit enterprise-hardening goal
   ([../../roadmap.md](../../roadmap.md#phase-5--scale--enterprise-hardening)); a demonstrably
@@ -91,7 +91,7 @@ in [../../sprint-plan.md](../../sprint-plan.md#definition-of-done).
 - **Target Files**:
   - `components/ui/*`, `components/shared/*` (add missing `aria-*`, labels, roles, focus management)
   - `app/(dashboard)/layout.tsx`, `app/login/page.tsx` (landmarks: `<nav>`, `<main>`, skip-link)
-  - `components/shared/skip-to-content.tsx` (new — skip-navigation link)
+  - `components/shared/skip-to-content.tsx` (new - skip-navigation link)
 - **Technical Instructions**:
   1. Audit each core flow with keyboard only (Tab/Shift-Tab/Enter/Escape/Arrow) and with an automated
      checker (axe DevTools / Lighthouse a11y). Record findings against the WCAG 2.1 AA checklist.
@@ -102,7 +102,7 @@ in [../../sprint-plan.md](../../sprint-plan.md#definition-of-done).
      focus, restore focus on close, and be labelled (`aria-labelledby`).
   4. Tables (`SHELL-013`) need proper header semantics and row-selection announced; the kanban
      (`SHELL-015`) needs a keyboard alternative to drag-drop (move-to-stage via menu).
-  5. Non-text status must never be color-only — pair every color signal (health band, stage,
+  5. Non-text status must never be color-only - pair every color signal (health band, stage,
      job status) with text/icon (coordinate any feature-side fixes with Developer 3).
 - **Acceptance Criteria**:
   - Every core flow (login → dashboard → accounts list → detail → create dialog → pipeline) is fully
@@ -115,7 +115,7 @@ in [../../sprint-plan.md](../../sprint-plan.md#definition-of-done).
   - [ ] Acceptance criteria above all met and captured in an audit note in the PR
   - [ ] [../../ui-design-system.md](../../ui-design-system.md) accessibility section updated with the
         conventions applied
-  - [ ] Project-wide DoD met — see [../../sprint-plan.md](../../sprint-plan.md#definition-of-done)
+  - [ ] Project-wide DoD met - see [../../sprint-plan.md](../../sprint-plan.md#definition-of-done)
   - [ ] PR opened and reviewed per [../../../CONTRIBUTING.md](../../../CONTRIBUTING.md)
   - [ ] [../../progress.md](../../progress.md) and [../../changelog.md](../../changelog.md) updated
 - **Estimated Complexity**: M
@@ -131,12 +131,12 @@ in [../../sprint-plan.md](../../sprint-plan.md#definition-of-done).
 ### SHELL-018: Keyboard shortcut system (power-user navigation)
 
 - **Task ID**: `SHELL-018` (reconciles to [../backlog.md](../backlog.md) **SHELL-007**, "Keyboard
-  shortcut system" — see [README.md](./README.md#id-reconciliation-note))
+  shortcut system" - see [README.md](./README.md#id-reconciliation-note))
 - **Epic**: Design System & Shell
 - **Priority**: P2
 - **Owner**: Developer 2
 - **Title**: Add a global keyboard-shortcut system for power-user navigation and actions
-- **Objective**: Layer a discoverable, non-conflicting keyboard-shortcut system over the shell —
+- **Objective**: Layer a discoverable, non-conflicting keyboard-shortcut system over the shell -
   `⌘K`/`Ctrl-K` for the command menu (already wired in `SHELL-006`), plus `g` then a key for "go to"
   navigation (`g a` accounts, `g o` opportunities, `g d` dashboard), `c` to create in the current
   context, and `?` for a shortcut cheat-sheet dialog.
@@ -145,8 +145,8 @@ in [../../sprint-plan.md](../../sprint-plan.md#definition-of-done).
 - **Dependencies**: `SHELL-002` (shell + nav), `SHELL-006` (command menu + `commandMenuOpen` Redux
   state). **Soft**: shortcuts that navigate depend only on routes existing (`../../routes.md`).
 - **Target Files**:
-  - `hooks/use-keyboard-shortcuts.ts` (new — global listener, respects input focus)
-  - `components/shared/shortcuts-dialog.tsx` (new — the `?` cheat sheet)
+  - `hooks/use-keyboard-shortcuts.ts` (new - global listener, respects input focus)
+  - `components/shared/shortcuts-dialog.tsx` (new - the `?` cheat sheet)
   - `store/slices/ui-slice.ts` (extend: `shortcutsDialogOpen` if a Redux-driven dialog is preferred)
   - `app/(dashboard)/layout.tsx` (mount the global listener + cheat-sheet)
 - **Technical Instructions**:
@@ -168,7 +168,7 @@ in [../../sprint-plan.md](../../sprint-plan.md#definition-of-done).
   - [ ] Acceptance criteria above all met
   - [ ] [../../routes.md](../../routes.md) cross-checked (shortcut targets match real routes); shortcut
         list documented in [../../ui-design-system.md](../../ui-design-system.md)
-  - [ ] Project-wide DoD met — see [../../sprint-plan.md](../../sprint-plan.md#definition-of-done)
+  - [ ] Project-wide DoD met - see [../../sprint-plan.md](../../sprint-plan.md#definition-of-done)
   - [ ] PR opened and reviewed per [../../../CONTRIBUTING.md](../../../CONTRIBUTING.md)
   - [ ] [../../progress.md](../../progress.md) and [../../changelog.md](../../changelog.md) updated
 - **Estimated Complexity**: M
@@ -184,23 +184,23 @@ in [../../sprint-plan.md](../../sprint-plan.md#definition-of-done).
 
 ### SHELL-019: Responsive / mobile QA pass
 
-- **Task ID**: `SHELL-019` (new — see [README.md](./README.md#id-reconciliation-note))
+- **Task ID**: `SHELL-019` (new - see [README.md](./README.md#id-reconciliation-note))
 - **Epic**: Design System & Shell
 - **Priority**: P3
 - **Owner**: Developer 2
 - **Title**: Audit and fix responsive behavior of the shell and feature screens down to mobile widths
 - **Objective**: Ensure the shell (sidebar/topbar) and every list/detail/form/kanban screen degrade
-  gracefully from desktop to tablet to mobile — the sidebar collapses to a drawer (`sheet`), tables
+  gracefully from desktop to tablet to mobile - the sidebar collapses to a drawer (`sheet`), tables
   scroll or reflow, dialogs fit small viewports, and no horizontal overflow appears at 375px.
 - **Business Value**: Judges may open the deployed Vercel URL on a phone; a shell that breaks below a
   laptop width undermines the "production-ready" claim even if the desktop experience is complete.
-- **Dependencies**: `SHELL-002` (responsive collapse already scoped there — this verifies + extends
+- **Dependencies**: `SHELL-002` (responsive collapse already scoped there - this verifies + extends
   it), `SHELL-013` (tables), `SHELL-014` (detail layout), `SHELL-015` (kanban). **Soft**: run per
   screen as they stabilize.
 - **Target Files**:
   - `app/(dashboard)/layout.tsx` (sidebar → `sheet` drawer at mobile breakpoint)
   - `components/shared/*` and `components/ui/table` wrapper (horizontal scroll containers)
-  - Feature screens are Developer 3's — file responsive defects to them; fix only shared primitives here.
+  - Feature screens are Developer 3's - file responsive defects to them; fix only shared primitives here.
 - **Technical Instructions**:
   1. Test at 375px, 768px, and 1280px. Confirm the sidebar collapses into a `sheet`/drawer toggle on
      mobile (driven by `sidebarCollapsed` in `store/slices/ui-slice.ts`) and the topbar stays usable.
@@ -218,7 +218,7 @@ in [../../sprint-plan.md](../../sprint-plan.md#definition-of-done).
 - **Definition of Done**:
   - [ ] Acceptance criteria above all met
   - [ ] Any non-shell defects filed to Developer 3 with the screen + width noted
-  - [ ] Project-wide DoD met — see [../../sprint-plan.md](../../sprint-plan.md#definition-of-done)
+  - [ ] Project-wide DoD met - see [../../sprint-plan.md](../../sprint-plan.md#definition-of-done)
   - [ ] PR opened and reviewed per [../../../CONTRIBUTING.md](../../../CONTRIBUTING.md)
   - [ ] [../../progress.md](../../progress.md) and [../../changelog.md](../../changelog.md) updated
 - **Estimated Complexity**: S
@@ -233,12 +233,12 @@ in [../../sprint-plan.md](../../sprint-plan.md#definition-of-done).
 
 ### SHELL-020: Route transition / loading + bundle & performance polish
 
-- **Task ID**: `SHELL-020` (new — see [README.md](./README.md#id-reconciliation-note))
+- **Task ID**: `SHELL-020` (new - see [README.md](./README.md#id-reconciliation-note))
 - **Epic**: Design System & Shell
 - **Priority**: P3
 - **Owner**: Developer 2
 - **Title**: Polish route transitions, loading states, and client bundle/performance
-- **Objective**: Make navigation feel instant and the app light — consistent route-level `loading.tsx`
+- **Objective**: Make navigation feel instant and the app light - consistent route-level `loading.tsx`
   skeletons, no layout shift on data arrival, prefetched primary-nav routes, and a client bundle
   trimmed of accidental heavy imports (e.g. Recharts/`cmdk` code-split, not in the shell's first load).
 - **Business Value**: Perceived speed is a large part of "this feels finished"; a snappy demo with no
@@ -248,7 +248,7 @@ in [../../sprint-plan.md](../../sprint-plan.md#definition-of-done).
 - **Target Files**:
   - `app/(dashboard)/**/loading.tsx` (add/standardize route-level loading skeletons)
   - `components/shared/*` (lazy-load heavy widgets: charts, command menu, kanban via `next/dynamic`)
-  - `next.config.ts` (only if a supported optimization flag is needed — keep minimal)
+  - `next.config.ts` (only if a supported optimization flag is needed - keep minimal)
 - **Technical Instructions**:
   1. Ensure every data-backed route has a `loading.tsx` using the `SHELL-011` skeletons that matches
      the final layout dimensions (no cumulative layout shift when data arrives).
@@ -270,7 +270,7 @@ in [../../sprint-plan.md](../../sprint-plan.md#definition-of-done).
   - [ ] Acceptance criteria above all met, with before/after bundle numbers in the PR
   - [ ] [../../architecture.md](../../architecture.md) / [../../ui-design-system.md](../../ui-design-system.md)
         updated if a loading/code-split convention is established
-  - [ ] Project-wide DoD met — see [../../sprint-plan.md](../../sprint-plan.md#definition-of-done)
+  - [ ] Project-wide DoD met - see [../../sprint-plan.md](../../sprint-plan.md#definition-of-done)
   - [ ] PR opened and reviewed per [../../../CONTRIBUTING.md](../../../CONTRIBUTING.md)
   - [ ] [../../progress.md](../../progress.md) and [../../changelog.md](../../changelog.md) updated
 - **Estimated Complexity**: M

@@ -2,7 +2,7 @@
 
 All notable changes to BalloCRM are documented here. Format loosely follows
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Every merged PR should add an entry
-under `[Unreleased]` in the relevant section (Added / Changed / Fixed / Removed) — see
+under `[Unreleased]` in the relevant section (Added / Changed / Fixed / Removed) - see
 `CONTRIBUTING.md`.
 
 ## [Unreleased]
@@ -27,14 +27,14 @@ under `[Unreleased]` in the relevant section (Added / Changed / Fixed / Removed)
 - Root project files: `.env.example`, `.gitignore`, `CONTRIBUTING.md`, `LICENSE`, GitHub issue
   and PR templates, VS Code workspace settings.
 - Deployment: pushed to `github.com/Ballo-Innovations/hackerthon-crm` and connected the Vercel
-  project (`ballo-innovations/hackerthon-crm`) via Vercel's native Git integration — pushes to
+  project (`ballo-innovations/hackerthon-crm`) via Vercel's native Git integration - pushes to
   `main` now deploy to Production automatically and PRs get automatic Preview deployments. Live
   at https://hackerthon-crm.vercel.app. See `docs/deployment.md`.
 
 ### Notes
 
 - No business features (Accounts, Opportunities, Contracts, etc.) are implemented yet by design
-  — see `docs/roadmap.md` and `docs/tasks/sprint-1.md` for what ships next.
+  - see `docs/roadmap.md` and `docs/tasks/sprint-1.md` for what ships next.
 
 ## [0.1.0] - 2026-07-04
 

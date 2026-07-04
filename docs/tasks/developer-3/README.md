@@ -1,4 +1,4 @@
-# Developer 3 — Core CRM Domain & Commercial Intelligence: Task Backlog
+# Developer 3 - Core CRM Domain & Commercial Intelligence: Task Backlog
 
 This folder is the complete, phased task backlog for **Developer 3**, who owns the CRM data model
 and every commercial-domain feature that sits on top of it: Accounts, Contacts, Opportunities,
@@ -6,7 +6,7 @@ Contracts, Tasks, Activities/Customer-Journey, Campaigns/ABM, Vertical Sales Ind
 AI commercial-intelligence jobs, the BalloAds-triggered communications, and the analytics
 aggregation that feeds the dashboards.
 
-Every task below is written in full against the [task template](../task-template.md) — same field
+Every task below is written in full against the [task template](../task-template.md) - same field
 order, same worked-example depth as `INFRA-001`. Read this README first for the map, then open the
 phase file for the task you're picking up.
 
@@ -18,16 +18,16 @@ Work freely in these without checking in with the other two tracks:
   `features/tasks/`, `features/campaigns/`, `features/customer-journey/`, `features/analytics/`
   (domain data + hooks + feature-scoped Server Actions; UI panels that Developer 2 owns are called
   out per-task)
-- `repositories/` — the **only** layer allowed to import `firebase-admin/firestore` directly, per
+- `repositories/` - the **only** layer allowed to import `firebase-admin/firestore` directly, per
   [ADR-002](../../decisions.md#adr-002-strict-feature-based-layering--ui--actions--services--repositories--firestore).
   One file per collection Developer 3 touches (`repositories/accounts.ts`, `contacts.ts`,
   `opportunities.ts`, `contracts.ts`, `tasks.ts`, `activities.ts`, `campaigns.ts`,
   `notifications.ts`, `templates.ts`, `settings.ts`, `analytics-cache.ts`, `ai-jobs.ts`).
-- `services/` — business logic composing repositories + referential-integrity checks (Firestore
+- `services/` - business logic composing repositories + referential-integrity checks (Firestore
   has no joins; the referenced doc's existence is verified here at write time).
-- `schemas/` and `features/<feature>/schemas/` — Zod schemas; **types are always `z.infer<...>`**,
+- `schemas/` and `features/<feature>/schemas/` - Zod schemas; **types are always `z.infer<...>`**,
   never hand-written in parallel ([ADR-009](../../decisions.md#adr-009-zod-as-the-single-source-of-truth-for-data-shapes-with-inferred-typescript-types)).
-- `actions/` and `features/<feature>/actions/` — thin `"use server"` entry points returning the
+- `actions/` and `features/<feature>/actions/` - thin `"use server"` entry points returning the
   shared `{ ok: true, data } | { ok: false, error }` result shape.
 
 If a change outside this list is required (a new Firestore role permission, a shared shell/table
@@ -50,12 +50,12 @@ Total: **41 tasks** across 4 phases.
 1. Pick the next task from your current phase (phases are roughly sequential; within a phase, honor
    each task's **Dependencies** field).
 2. Confirm the task meets the **Definition of Ready** in [../../sprint-plan.md](../../sprint-plan.md)
-   before starting — in particular that its cross-track dependencies are either resolved or have a
+   before starting - in particular that its cross-track dependencies are either resolved or have a
    documented stub/mock workaround.
 3. Build it top-to-bottom through the layers named in **Technical Instructions**
    (`repositories/` → `services/` → `actions/` → `features/*`), never skipping a layer.
 4. Verify against the **Acceptance Criteria** (a non-author must be able to check each bullet),
-   then close it out per the **Definition of Done**, which references — does not restate — the
+   then close it out per the **Definition of Done**, which references - does not restate - the
    project-wide DoD in [../../sprint-plan.md](../../sprint-plan.md).
 5. Move the task's status per the sprint-plan cadence (into [../completed.md](../completed.md) or
    [../blocked.md](../blocked.md)) and update [../../progress.md](../../progress.md) +
@@ -72,7 +72,7 @@ indexes), [../../firestore-rules.md](../../firestore-rules.md) (per-role permiss
 ## ID reconciliation note
 
 The pre-existing task files disagree on a few CRM IDs. This folder is authoritative for Developer
-3's scope and resolves them as follows — **follow [../developer-3.md](../developer-3.md) for
+3's scope and resolves them as follows - **follow [../developer-3.md](../developer-3.md) for
 CRM-006**, and use the newly-minted IDs below for the two backlog tasks that would otherwise
 collide.
 

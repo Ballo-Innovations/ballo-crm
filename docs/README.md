@@ -1,6 +1,6 @@
 # BalloCRM Documentation Index
 
-This is the source of truth for BalloCRM. If code and docs ever disagree, that's a bug — fix
+This is the source of truth for BalloCRM. If code and docs ever disagree, that's a bug - fix
 whichever one is wrong, in the same change. See [CONTRIBUTING.md](../CONTRIBUTING.md) for the
 workflow this implies.
 
@@ -15,7 +15,7 @@ New here? Read in this order: [vision.md](./vision.md) → [architecture.md](./a
 | [vision.md](./vision.md)       | Problem, users, personas, value proposition, MVP scope                        |
 | [glossary.md](./glossary.md)   | Every domain term, alphabetical (incl. Customer Journey vs. BalloAds Journey) |
 | [roadmap.md](./roadmap.md)     | Long-term phased roadmap beyond Sprint 1–3                                    |
-| [decisions.md](./decisions.md) | Architecture Decision Records — what was chosen and why                       |
+| [decisions.md](./decisions.md) | Architecture Decision Records - what was chosen and why                       |
 | [risks.md](./risks.md)         | Risk register: technical, product, timeline, security                         |
 
 ## Architecture & Data
@@ -56,9 +56,9 @@ New here? Read in this order: [vision.md](./vision.md) → [architecture.md](./a
 | [sprint-plan.md](./sprint-plan.md)                 | Sprint cadence, team shape, DoR/DoD, critical path |
 | [tasks/task-template.md](./tasks/task-template.md) | The required structure for every task              |
 | [tasks/backlog.md](./tasks/backlog.md)             | Full product backlog by epic, priority matrix      |
-| [tasks/sprint-1.md](./tasks/sprint-1.md)           | Current sprint — full task detail                  |
-| [tasks/sprint-2.md](./tasks/sprint-2.md)           | Next sprint — full task detail                     |
-| [tasks/sprint-3.md](./tasks/sprint-3.md)           | Sprint after that — full task detail               |
+| [tasks/sprint-1.md](./tasks/sprint-1.md)           | Current sprint - full task detail                  |
+| [tasks/sprint-2.md](./tasks/sprint-2.md)           | Next sprint - full task detail                     |
+| [tasks/sprint-3.md](./tasks/sprint-3.md)           | Sprint after that - full task detail               |
 | [tasks/developer-1.md](./tasks/developer-1.md)     | Infrastructure & Auth track                        |
 | [tasks/developer-2.md](./tasks/developer-2.md)     | Shell, Design System & Navigation track            |
 | [tasks/developer-3.md](./tasks/developer-3.md)     | Core CRM Domain track                              |
@@ -70,4 +70,4 @@ New here? Read in this order: [vision.md](./vision.md) → [architecture.md](./a
 | Doc                                                                                  | What it covers                                                                                            |
 | ------------------------------------------------------------------------------------ | --------------------------------------------------------------------------------------------------------- |
 | [reference/balloads-crm-backend-notes.md](./reference/balloads-crm-backend-notes.md) | Real BalloAds backend engineering notes (health score, journey triggers) used to ground `integrations.md` |
-| [_context/PROJECT_BRIEF.md](./_context/PROJECT_BRIEF.md)                             | Internal seed brief for anyone (human or AI) generating further docs/code — not end-user documentation    |
+| [_context/PROJECT_BRIEF.md](./_context/PROJECT_BRIEF.md)                             | Internal seed brief for anyone (human or AI) generating further docs/code - not end-user documentation    |

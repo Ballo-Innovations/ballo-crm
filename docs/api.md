@@ -1,6 +1,6 @@
 # API
 
-BalloCRM has almost no API code written yet — as of this document, `actions/`, `repositories/`,
+BalloCRM has almost no API code written yet - as of this document, `actions/`, `repositories/`,
 and `services/` contain only their convention `README.md` files, and `app/` has no route handlers
 beyond the root layout/page. This document is therefore **the contract**: the pattern every Server
 Action and Route Handler must follow once written, illustrated with worked examples. Treat
@@ -18,11 +18,11 @@ through **Server Actions** (`"use server"` functions), not a REST endpoint the c
 Reads for Server Components happen via direct server-side data access (repository/service calls in
 the Server Component tree); reads for Client Components go through TanStack Query calling a Server
 Action. Route Handlers (`app/api/**/route.ts`) are reserved for the narrow case of something a
-_third party_ calls into — see [Route Handlers](#route-handlers-webhookscallbacks-only) below.
+_third party_ calls into - see [Route Handlers](#route-handlers-webhookscallbacks-only) below.
 
 ### Shared result shape
 
-Every Server Action returns a discriminated union — never throws for an _expected_ failure
+Every Server Action returns a discriminated union - never throws for an _expected_ failure
 (validation, authorization, not-found), and never returns raw Firestore data or a raw error object:
 
 ```ts
@@ -47,11 +47,11 @@ touching `result.data`; it never assumes success.
 Every Server Action's first step is parsing its input with a Zod schema from `schemas/` or the
 owning feature's `features/<feature>/schemas/`. On `safeParse` failure, `error.flatten().fieldErrors`
 maps directly onto `error.fieldErrors` in the result, `error.code` is `"VALIDATION_ERROR"`, and
-`error.message` is a generic, user-safe string (e.g. "Please fix the highlighted fields") — the
+`error.message` is a generic, user-safe string (e.g. "Please fix the highlighted fields") - the
 raw Zod issue messages populate `fieldErrors`, not the top-level `message`, so client code can
 render per-field errors next to the offending inputs (React Hook Form + `@hookform/resolvers/zod`
 consumes the same schema client-side for instant feedback, but the server re-validates
-unconditionally — client-side validation is a UX nicety, never the security boundary).
+unconditionally - client-side validation is a UX nicety, never the security boundary).
 
 ### Auth context is derived server-side, never trusted from the client
 
@@ -60,7 +60,7 @@ arguments or `FormData`. Instead, every action starts by resolving the caller's 
 verified session on the server (reading the Firebase session cookie via `lib/firebase/admin.ts`,
 looking up `users/{uid}` for `orgId` and `role`), and every subsequent repository/service call is
 scoped to that resolved `orgId`. This mirrors why `middleware.ts` only checks for the _presence_ of
-the `__session` cookie (Edge runtime can't run the Admin SDK) — real verification, and the
+the `__session` cookie (Edge runtime can't run the Admin SDK) - real verification, and the
 derivation of `uid`/`orgId`/`role`, happens inside the Server Action/Server Component, not in
 middleware and not from anything the client asserts about itself. Role checks (e.g. "only
 `owner`/`admin`/`manager`/`rep` may write an Account," matching `firestore.rules`) are enforced in
@@ -69,20 +69,20 @@ rules themselves.
 
 ## Route Handlers (webhooks/callbacks only)
 
-Route Handlers under `app/api/` exist only for inbound calls from a third party — BalloAds
+Route Handlers under `app/api/` exist only for inbound calls from a third party - BalloAds
 callbacks today, potentially other webhook sources later. They are never used as a REST API for
 BalloCRM's own frontend.
 
 ### `POST /api/webhooks/balloads`
 
-BalloAds delivery-status callback — notifies BalloCRM when a previously-triggered send/journey
+BalloAds delivery-status callback - notifies BalloCRM when a previously-triggered send/journey
 step changes status (e.g. delivered, failed, opted-out), so the Account/Contact timeline can be
 updated without polling.
 
 **Request**
 
 - Method: `POST`
-- Headers: a signature/shared-secret header authenticating the sender — **exact header name and
+- Headers: a signature/shared-secret header authenticating the sender - **exact header name and
   signing scheme TBC pending BalloAds' webhook documentation** (commonly an HMAC signature header
   such as `X-BalloAds-Signature`, but this must not be hard-coded into implementation until
   confirmed against real BalloAds docs).
@@ -101,14 +101,14 @@ updated without polling.
 **Response**
 
 - `200 OK` with `{ "received": true }` on successful processing (including "already processed,"
-  see idempotency below) — BalloAds should treat a `200` as "stop retrying."
+  see idempotency below) - BalloAds should treat a `200` as "stop retrying."
 - Non-2xx signals BalloAds to retry per its own retry policy.
 
 **Authentication**
 
 Shared-secret or signature-header verification against a secret stored server-side (co-located
 with `BALLOADS_DEVELOPER_API_KEY` handling, never a `NEXT_PUBLIC_*` value). **Exact mechanism is
-TBC pending the BalloAds webhook reference** — this handler must reject any request that fails
+TBC pending the BalloAds webhook reference** - this handler must reject any request that fails
 verification with `401` before doing any further work, including before touching Firestore.
 
 **Validation**
@@ -120,12 +120,12 @@ indefinitely on events this version of BalloCRM doesn't yet understand.
 
 **Errors**
 
-- `400` — signature present but body fails Zod validation (malformed payload).
-- `401` — missing or invalid signature/shared secret.
-- `404` — is not used for "unknown event type" (see Validation above); it's reserved for genuinely
+- `400` - signature present but body fails Zod validation (malformed payload).
+- `401` - missing or invalid signature/shared secret.
+- `404` - is not used for "unknown event type" (see Validation above); it's reserved for genuinely
   wrong paths.
-- `5xx` — reserved for internal faults only (e.g. Firestore write failure) so BalloAds' retry
-  behavior is meaningful — a `5xx` should mean "try again later," never "your payload was wrong."
+- `5xx` - reserved for internal faults only (e.g. Firestore write failure) so BalloAds' retry
+  behavior is meaningful - a `5xx` should mean "try again later," never "your payload was wrong."
 
 **Rate limiting**
 
@@ -154,7 +154,7 @@ const createAccountSchema = z.object({
 });
 ```
 
-Note `orgId` and `createdBy` are **not** part of this schema — they are derived server-side, not
+Note `orgId` and `createdBy` are **not** part of this schema - they are derived server-side, not
 supplied by the caller (see [Auth context](#auth-context-is-derived-server-side-never-trusted-from-the-client)).
 
 **Response**
@@ -185,11 +185,11 @@ server-resolved one.
 | `VALIDATION_ERROR` | Zod parse failure                                                                               | 400                    |
 | `UNAUTHORIZED`     | No valid session, or role not in `["owner","admin","manager","rep"]` per `firestore.rules`      | 401/403                |
 | `NOT_FOUND`        | `primaryContactId` references a contact that doesn't exist in this org                          | 404                    |
-| `INTERNAL_ERROR`   | Firestore write failure or unexpected exception — logged server-side, generic message to client | 500                    |
+| `INTERNAL_ERROR`   | Firestore write failure or unexpected exception - logged server-side, generic message to client | 500                    |
 
 **Rate limiting**
 
-Not applicable for this hackathon's scope — `createAccount` is only callable by an authenticated,
+Not applicable for this hackathon's scope - `createAccount` is only callable by an authenticated,
 session-verified CRM user, not a public endpoint. If abuse becomes a concern (e.g. scripted bulk
 creation), a per-user/per-org write-rate check would be added in the service layer; none is planned
 for Sprint 1.
@@ -198,7 +198,7 @@ for Sprint 1.
 
 BalloCRM also calls out to BalloAds' own `/v1/developer-portal/*` API (sending messages/triggering
 journeys, reading delivery status, opt-outs, and health score). That surface is **owned by
-BalloAds, not BalloCRM** — it is documented in full in [`integrations.md`](./integrations.md)
+BalloAds, not BalloCRM** - it is documented in full in [`integrations.md`](./integrations.md)
 rather than duplicated here, since this file's job is to document APIs _BalloCRM exposes_, not
 APIs BalloCRM consumes.
 

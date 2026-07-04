@@ -1,4 +1,4 @@
-# Phase 2 — Design system depth & app-shell completion
+# Phase 2 - Design system depth & app-shell completion
 
 Phase 2 finishes the app shell (real user menu, breadcrumbs, notifications dropdown) and deepens
 the design system into the patterns the Sprint 2 feature screens need: a full form kit, a
@@ -21,25 +21,25 @@ Fields follow [../task-template.md](../task-template.md). Definition of Done ref
 - **Owner**: Developer 2
 - **Title**: Topbar user menu backed by real session data (name/role/org avatar, sign-out action)
 - **Objective**: Replace the SHELL-002 placeholder avatar with a real topbar user menu driven by
-  the verified session — display name, role, org, an `avatar.tsx` (photo or initials fallback) —
+  the verified session - display name, role, org, an `avatar.tsx` (photo or initials fallback) -
   and a sign-out action that clears the `__session` cookie.
 - **Business Value**: Shows the product knows who is logged in (name, role, org), which reads as
   "real multi-tenant SaaS" to judges, and completes the login → work → sign-out loop for the demo.
-- **Dependencies**: `SHELL-002` (topbar). `INFRA-003` (session verification) — **soft**: build
+- **Dependencies**: `SHELL-002` (topbar). `INFRA-003` (session verification) - **soft**: build
   against the session shape Developer 1 defines in `lib/auth/` (ask for the type even before the
   flow works, per [../developer-2.md](../developer-2.md)); render from a typed session mock until it
-  lands. Sign-out calls a Dev 1 `signOut`/`clear-session` action — stub it with the confirmed
+  lands. Sign-out calls a Dev 1 `signOut`/`clear-session` action - stub it with the confirmed
   signature.
 - **Target Files**:
   - `components/shared/user-menu.tsx` (new, `"use client"`)
   - `components/shared/app-topbar.tsx` (mount the user menu)
   - `app/(dashboard)/layout.tsx` (read the verified session server-side and pass a serializable
-    session view-model down as a prop — never pass secrets/tokens)
+    session view-model down as a prop - never pass secrets/tokens)
   - `types/session.ts` (only if Dev 1 hasn't already defined the session type; otherwise import it)
 - **Technical Instructions**:
   1. The `(dashboard)` layout (Server Component) reads the verified session via Dev 1's
      `lib/auth/` helper and passes a **serializable** `{ displayName, email, role, orgName,
-photoURL }` view-model to the topbar/user-menu — do not pass the raw token or Admin SDK
+photoURL }` view-model to the topbar/user-menu - do not pass the raw token or Admin SDK
      objects across the Server→Client boundary (per [../../architecture.md](../../architecture.md)
      and the credential rule in [../../integrations.md](../../integrations.md)).
   2. `UserMenu` uses `dropdown-menu.tsx` triggered by an `avatar.tsx` (image with initials
@@ -88,15 +88,15 @@ photoURL }` view-model to the topbar/user-menu — do not pass the raw token or 
 - **Dependencies**: `SHELL-002` (shell/topbar), `SHELL-005` (`PageHeader` breadcrumb slot).
   `breadcrumb.tsx` is already installed.
 - **Target Files**:
-  - `components/shared/breadcrumbs.tsx` (new, `"use client"` — uses `usePathname()`)
-  - `hooks/use-breadcrumbs.ts` (new — derives the trail from segments)
+  - `components/shared/breadcrumbs.tsx` (new, `"use client"` - uses `usePathname()`)
+  - `hooks/use-breadcrumbs.ts` (new - derives the trail from segments)
   - `config/site.ts` (read `primaryNav` for top-level labels; may add a label lookup map)
   - `components/shared/page-header.tsx` (render `Breadcrumbs` in its breadcrumb slot)
 - **Technical Instructions**:
   1. `use-breadcrumbs.ts` splits `usePathname()` into segments, maps each to `{ label, href }`.
      Top-level segments (`/accounts`, `/opportunities`) get their label from `primaryNav`; unknown
      segments fall back to a title-cased version of the segment.
-  2. Dynamic segments (`[id]`) can't be labeled from the path alone — accept an optional
+  2. Dynamic segments (`[id]`) can't be labeled from the path alone - accept an optional
      `labelOverrides` prop (e.g. `{ [accountId]: "Kestrel Freight Co." }`) so a detail page can
      pass the entity name. The last crumb renders as the current page (non-link, `aria-current`).
   3. Render with `breadcrumb.tsx` (`Breadcrumb`/`BreadcrumbList`/`BreadcrumbItem`/`BreadcrumbLink`/
@@ -137,31 +137,31 @@ photoURL }` view-model to the topbar/user-menu — do not pass the raw token or 
 - **Objective**: Add a topbar notifications bell that subscribes to the current user's
   `organizations/{orgId}/notifications` documents (their own only), shows an unread count badge,
   lists recent notifications, and lets the user mark items read (the self-serve read-receipt
-  pattern) — updating only the `read`/`readAt` fields.
+  pattern) - updating only the `read`/`readAt` fields.
 - **Business Value**: In-app notifications ("task assigned to you", "opportunity stalling") make the
   CRM feel alive and collaborative in the demo, and exercise a real Firestore subscription end-to-end.
 - **Dependencies**: `SHELL-002` (topbar). The `notifications` collection shape is defined in
   [../../database-schema.md](../../database-schema.md); documents are written server-side (Dev 1/3).
   **Soft**: build against a typed mock array matching the notification shape, then swap to a real
   `onSnapshot`/TanStack Query subscription. Mark-as-read uses the client SDK per the read-receipt
-  rule (only `read`/`readAt` are client-writable) — confirm the exact write path with Dev 1.
+  rule (only `read`/`readAt` are client-writable) - confirm the exact write path with Dev 1.
 - **Target Files**:
   - `components/shared/notifications-menu.tsx` (new, `"use client"`)
   - `components/shared/app-topbar.tsx` (mount the bell)
-  - `features/notifications/hooks/use-notifications.ts` (new — subscription hook; coordinate the
+  - `features/notifications/hooks/use-notifications.ts` (new - subscription hook; coordinate the
     `features/notifications/` folder)
-  - `schemas/notification-schema.ts` (if not already present — the Zod shape for a notification;
+  - `schemas/notification-schema.ts` (if not already present - the Zod shape for a notification;
     coordinate ownership with Dev 1/3)
 - **Technical Instructions**:
   1. Model the notification shape as a Zod schema matching
      [../../database-schema.md](../../database-schema.md): `notificationId`, `targetUserId`, `type`,
      `title`, `relatedTo { type, id }`, `read`, `readAt`, `createdAt`. Read only the current user's
-     notifications (`targetUserId == uid`), unread-first (`read ASC, createdAt DESC`) — the composite
+     notifications (`targetUserId == uid`), unread-first (`read ASC, createdAt DESC`) - the composite
      index already exists per the schema doc.
   2. `use-notifications.ts` subscribes via the client SDK `onSnapshot` (or a polling TanStack Query
      query) scoped to `organizations/{orgId}/notifications` filtered to the user. Firestore reads go
      through the client SDK here (this is a client-side subscription, not a repository/Server Action
-     read) — confirm this is acceptable with Dev 1 given the security rules already permit a user to
+     read) - confirm this is acceptable with Dev 1 given the security rules already permit a user to
      read their own notifications.
   3. `NotificationsMenu` is a `dropdown-menu.tsx` (or `popover.tsx` + `scroll-area.tsx`) triggered
      by a bell `Button variant="ghost" size="icon"` with an unread-count `Badge` overlay
@@ -195,16 +195,16 @@ text-muted-foreground`), and an unread indicator (dot + not-color-only text/weig
 
 ---
 
-### SHELL-010: Form kit — RHF + Zod field wrappers, combobox, date picker, currency/number, multi-select
+### SHELL-010: Form kit - RHF + Zod field wrappers, combobox, date picker, currency/number, multi-select
 
 - **Task ID**: `SHELL-010`
 - **Epic**: Design System & Shell
 - **Priority**: P1
 - **Owner**: Developer 2
-- **Title**: Form kit — React-Hook-Form + Zod resolver field wrappers, combobox, date picker, currency/number input, multi-select
-- **Objective**: Build the reusable form-building kit every CRM create/edit form needs — thin
+- **Title**: Form kit - React-Hook-Form + Zod resolver field wrappers, combobox, date picker, currency/number input, multi-select
+- **Objective**: Build the reusable form-building kit every CRM create/edit form needs - thin
   wrappers over shadcn `field.tsx` for RHF + Zod, plus composed controls (combobox owner/account
-  picker, date picker on `calendar.tsx`+`popover.tsx`, currency/number input, multi-select) — so
+  picker, date picker on `calendar.tsx`+`popover.tsx`, currency/number input, multi-select) - so
   feature forms are consistent and low-boilerplate.
 - **Business Value**: Every entity in the CRM is created/edited through a form; a consistent,
   validated, accessible form kit makes all of Developer 3's Sprint 2 CRUD screens look and behave
@@ -212,16 +212,16 @@ text-muted-foreground`), and an unread indicator (dot + not-color-only text/weig
 - **Dependencies**: `SHELL-004` (combobox primitives / any deps installed). Uses the Forms
   convention already documented in [../../ui-design-system.md](../../ui-design-system.md).
 - **Target Files**:
-  - `components/shared/form/field-wrapper.tsx` (new — `Field`+`FieldLabel`+`FieldContent`+
+  - `components/shared/form/field-wrapper.tsx` (new - `Field`+`FieldLabel`+`FieldContent`+
     `FieldDescription`+`FieldError` composed with RHF error wiring)
-  - `components/shared/form/combobox-field.tsx` (new — `command`+`popover`, RHF `Controller`)
-  - `components/shared/form/date-picker-field.tsx` (new — `calendar`+`popover`, `Controller`)
+  - `components/shared/form/combobox-field.tsx` (new - `command`+`popover`, RHF `Controller`)
+  - `components/shared/form/date-picker-field.tsx` (new - `calendar`+`popover`, `Controller`)
   - `components/shared/form/currency-input.tsx` / `number-input.tsx` (new)
   - `components/shared/form/multi-select-field.tsx` (new)
   - `components/shared/form/index.ts` (barrel export)
 - **Technical Instructions**:
   1. Follow the Forms section of [../../ui-design-system.md](../../ui-design-system.md) exactly:
-     this shadcn version has **no** legacy `Form`/`FormField` context — compose `FieldSet`/
+     this shadcn version has **no** legacy `Form`/`FormField` context - compose `FieldSet`/
      `FieldGroup`/`Field`/`FieldLabel`/`FieldContent`/`FieldDescription`/`FieldError` from
      `field.tsx`. Native inputs use RHF `register`; non-native shadcn controls (`Select`,
      `Checkbox`, `Switch`, `Calendar`, combobox, multi-select) use `Controller`.
@@ -229,7 +229,7 @@ text-muted-foreground`), and an unread indicator (dot + not-color-only text/weig
      destructive styling baked into `field.tsx`/`input.tsx` activates consistently, and renders
      `FieldError` (which already has `role="alert"`). Accept `{ name, label, description?, error,
 children }`.
-  3. `combobox-field.tsx`: the owner/account picker Developer 3 needs — `command.tsx` inside
+  3. `combobox-field.tsx`: the owner/account picker Developer 3 needs - `command.tsx` inside
      `popover.tsx`, searchable, single-select, `Controller`-bound, with an accessible trigger.
   4. `date-picker-field.tsx`: `calendar.tsx` inside `popover.tsx`, `Controller`-bound, stores an
      ISO date string (matching the Firestore field convention in
@@ -238,10 +238,10 @@ children }`.
      number; currency variant pairs with a currency code (default from org `settings.defaultCurrency`
      when available). Keep parsing robust (no `NaN` leaking to the schema).
   6. `multi-select-field.tsx`: for array fields (e.g. `optedOutChannels`, campaign
-     `targetAccountIds`) — `command.tsx`-based tag/checkbox multiselect, `Controller`-bound to a
+     `targetAccountIds`) - `command.tsx`-based tag/checkbox multiselect, `Controller`-bound to a
      string array.
   7. The Zod schema in `schemas/` (or `features/*/schemas/`) stays the single source of truth for
-     both the `z.infer` type and the resolver — these wrappers never define validation.
+     both the `z.infer` type and the resolver - these wrappers never define validation.
 - **Acceptance Criteria**:
   - A sample form composed only from the kit validates via a Zod resolver, shows inline errors with
     correct `aria-invalid`/`data-invalid`, and blocks submit on invalid input.
@@ -276,19 +276,19 @@ children }`.
 - **Priority**: P1
 - **Owner**: Developer 2
 - **Title**: Empty/error/loading state library + skeletons + route-level `error.tsx`/`loading.tsx` boundaries
-- **Objective**: Standardize the three non-happy-path states across the app — an error-state
+- **Objective**: Standardize the three non-happy-path states across the app - an error-state
   component, a per-surface skeleton set (table, cards, form, chart), and route-level `loading.tsx` /
-  `error.tsx` boundaries under `app/(dashboard)/` — extending the SHELL-005 `EmptyState` into a
+  `error.tsx` boundaries under `app/(dashboard)/` - extending the SHELL-005 `EmptyState` into a
   complete state library.
 - **Business Value**: Consistent loading/error/empty states are what separate a polished demo from a
-  janky one — no flashes of blank screens, no unhandled error white-screens in front of judges.
+  janky one - no flashes of blank screens, no unhandled error white-screens in front of judges.
 - **Dependencies**: `SHELL-002` (shell), `SHELL-005` (`EmptyState`). `skeleton.tsx`/`alert.tsx` are
   installed.
 - **Target Files**:
-  - `components/shared/error-state.tsx` (new — with retry action)
+  - `components/shared/error-state.tsx` (new - with retry action)
   - `components/shared/skeletons/table-skeleton.tsx`, `card-skeleton.tsx`, `form-skeleton.tsx`,
     `chart-skeleton.tsx` (new)
-  - `app/(dashboard)/loading.tsx`, `app/(dashboard)/error.tsx` (new — group-level boundaries;
+  - `app/(dashboard)/loading.tsx`, `app/(dashboard)/error.tsx` (new - group-level boundaries;
     `error.tsx` must be a Client Component per Next.js)
   - Per-route `loading.tsx`/`error.tsx` can be added by feature owners; provide the reusable pieces
     they compose
@@ -299,12 +299,12 @@ children }`.
   2. **Skeletons**: build `skeleton.tsx`-based components whose footprint matches the real content
      (`TableSkeleton` mirrors the `DataTable` header + N rows; `ChartSkeleton` matches the Recharts
      `ResponsiveContainer` fixed height per the Charts convention; `CardSkeleton`/`FormSkeleton`
-     likewise) so there is no layout shift when data resolves — a rule already stated for charts in
+     likewise) so there is no layout shift when data resolves - a rule already stated for charts in
      [../../ui-design-system.md](../../ui-design-system.md).
   3. **Route boundaries**: `app/(dashboard)/loading.tsx` renders a shell-aware skeleton (so the
      sidebar/topbar stay put while content streams). `app/(dashboard)/error.tsx` is a
      `"use client"` component (Next.js requires it) receiving `{ error, reset }` and rendering
-     `ErrorState` with `reset` wired to its retry. Follow the App Router error/loading conventions —
+     `ErrorState` with `reset` wired to its retry. Follow the App Router error/loading conventions -
      read the version-specific guide in `node_modules/next/dist/docs/` per
      [../../../AGENTS.md](../../../AGENTS.md) before implementing, since these APIs may differ from
      older Next.js.
@@ -326,7 +326,7 @@ children }`.
   - [ ] `../progress.md` + `../changelog.md` updated; task moved to [../completed.md](../completed.md)
 - **Estimated Complexity**: M
 - **Estimated Hours**: 4-5
-- **Documentation References**: Read `node_modules/next/dist/docs/` (App Router error/loading — per
+- **Documentation References**: Read `node_modules/next/dist/docs/` (App Router error/loading - per
   AGENTS.md), [../../ui-design-system.md](../../ui-design-system.md) (Charts skeleton rule, Tables
   empty state), and [../../folder-structure.md](../../folder-structure.md) before starting.
 - **Testing Notes**: No test framework yet (`INFRA-012`). Manual: throttle/delay a route to see the
@@ -346,16 +346,16 @@ children }`.
   results (`{ ok: true, data } | { ok: false, error }`) as `sonner` toasts, so every feature reports
   success/error identically instead of each screen hand-rolling toast calls.
 - **Business Value**: Consistent, immediate feedback on every save/delete/trigger action is what
-  makes the app feel responsive and trustworthy in a live demo — and prevents the "did that
+  makes the app feel responsive and trustworthy in a live demo - and prevents the "did that
   work?" ambiguity in front of judges.
 - **Dependencies**: none hard (`sonner.tsx` is installed and the toaster is mounted in
   `providers/app-providers.tsx`). Pairs with the Server Action result shape defined in `api.md` /
   [../../architecture.md](../../architecture.md).
 - **Target Files**:
-  - `hooks/use-action-toast.ts` (new — or `utils/action-toast.ts` if framework-agnostic) wrapping
+  - `hooks/use-action-toast.ts` (new - or `utils/action-toast.ts` if framework-agnostic) wrapping
     `sonner`'s `toast`
   - `providers/app-providers.tsx` (confirm the `Toaster` is mounted with sensible defaults/position;
-    adjust only if needed — this is the composition root)
+    adjust only if needed - this is the composition root)
   - A short convention note added to the relevant doc (see Documentation References)
 - **Technical Instructions**:
   1. Define the canonical result-to-toast mapping keyed on the shared Server Action return shape
@@ -364,7 +364,7 @@ children }`.
      promise form (`toast.promise`) for longer actions.
   2. Provide `useActionToast()` (or a pure `notifyActionResult(result, { success, error })` helper)
      so a component can do `notifyActionResult(await createAccount(input), { success: "Account
-created" })`. Field-specific validation errors still render via `FieldError` (SHELL-010) — the
+created" })`. Field-specific validation errors still render via `FieldError` (SHELL-010) - the
      toast is for the top-level result/transient errors, matching the Forms guidance in
      [../../ui-design-system.md](../../ui-design-system.md).
   3. Confirm the `Toaster` (from `sonner.tsx`) is mounted once in
@@ -396,16 +396,16 @@ created" })`. Field-specific validation errors still render via `FieldError` (SH
 
 ---
 
-### SHELL-013: DataTable enhancements — column visibility, filtering, faceted filters, pagination, row actions
+### SHELL-013: DataTable enhancements - column visibility, filtering, faceted filters, pagination, row actions
 
 - **Task ID**: `SHELL-013`
 - **Epic**: Design System & Shell
 - **Priority**: P1
 - **Owner**: Developer 2
-- **Title**: DataTable enhancements — column visibility, filtering, faceted filters, pagination controls, row actions
+- **Title**: DataTable enhancements - column visibility, filtering, faceted filters, pagination controls, row actions
 - **Objective**: Extend the SHELL-005 `DataTable` wrapper with a toolbar (text search + faceted
   categorical filters), column-visibility toggling, richer pagination controls, and a standardized
-  row-actions menu — the full "power-user table" every list view needs.
+  row-actions menu - the full "power-user table" every list view needs.
 - **Business Value**: Dense, filterable, configurable tables are the heart of a CRM's daily use and
   a strong "this is a real product" signal to judges when they filter Accounts by vertical or hide
   columns live.
@@ -413,14 +413,14 @@ created" })`. Field-specific validation errors still render via `FieldError` (SH
   Tables conventions in [../../ui-design-system.md](../../ui-design-system.md).
 - **Target Files**:
   - `components/shared/data-table.tsx` (extend)
-  - `components/shared/data-table-toolbar.tsx` (new — search + faceted filters)
-  - `components/shared/data-table-faceted-filter.tsx` (new — `popover`+`command` multi-value filter)
-  - `components/shared/data-table-view-options.tsx` (new — column-visibility `dropdown-menu`)
-  - `components/shared/data-table-pagination.tsx` (new — page size + page nav on `pagination.tsx`)
+  - `components/shared/data-table-toolbar.tsx` (new - search + faceted filters)
+  - `components/shared/data-table-faceted-filter.tsx` (new - `popover`+`command` multi-value filter)
+  - `components/shared/data-table-view-options.tsx` (new - column-visibility `dropdown-menu`)
+  - `components/shared/data-table-pagination.tsx` (new - page size + page nav on `pagination.tsx`)
 - **Technical Instructions**:
   1. **Toolbar**: a text `input.tsx` search (debounced via `hooks/use-debounced-value`) plus one or
      more faceted filters, per the "Sorting/filtering" rule in
-     [../../ui-design-system.md](../../ui-design-system.md) — filters live in a toolbar **above** the
+     [../../ui-design-system.md](../../ui-design-system.md) - filters live in a toolbar **above** the
      table, not inline per-column rows. Use `select.tsx` for single-value categorical filters and a
      `popover.tsx`+`command.tsx` faceted filter for multi-value (e.g. filter Accounts by multiple
      `vertical`s). Show active-filter chips with a "Reset" button.
@@ -428,12 +428,12 @@ created" })`. Field-specific validation errors still render via `FieldError` (SH
      columns (only columns marked hideable). If SHELL-004 adopted `@tanstack/react-table`, drive
      this off its column-visibility state; otherwise track a local visibility map.
   3. **Pagination**: `data-table-pagination.tsx` on `pagination.tsx` with page-size select and
-     prev/next — remain **server-driven** (accept page/cursor + total/hasNext props; do not slice a
+     prev/next - remain **server-driven** (accept page/cursor + total/hasNext props; do not slice a
      full client dataset), matching the Firestore query-level pagination rule in
      [../../database-schema.md](../../database-schema.md).
   4. **Row actions**: standardize a trailing actions column using `dropdown-menu.tsx` triggered by
      an icon-only `Button variant="ghost" size="icon"` with `aria-label`, keyboard-operable
-     (Radix) — no hover-only affordances (Accessibility rule).
+     (Radix) - no hover-only affordances (Accessibility rule).
   5. Keep all additions optional/composable so a simple list (SHELL-005 baseline) still works
      without a toolbar. Preserve sticky header + density from SHELL-005.
 - **Acceptance Criteria**:
@@ -469,8 +469,8 @@ created" })`. Field-specific validation errors still render via `FieldError` (SH
 - **Priority**: P1
 - **Owner**: Developer 2
 - **Title**: Reusable detail-page layout pattern (header + tabs + right-rail timeline) for entity detail screens
-- **Objective**: Build a reusable detail-page scaffold — a summary header (name, status badge,
-  key metadata, actions), a `tabs.tsx` content area, and an optional right-rail timeline slot — that
+- **Objective**: Build a reusable detail-page scaffold - a summary header (name, status badge,
+  key metadata, actions), a `tabs.tsx` content area, and an optional right-rail timeline slot - that
   `/accounts/[id]`, `/opportunities/[id]`, `/contacts/[id]`, and `/contracts/[id]` all compose,
   keeping every entity detail screen structurally identical.
 - **Business Value**: A single detail layout means every record in the CRM opens to the same
@@ -478,12 +478,12 @@ created" })`. Field-specific validation errors still render via `FieldError` (SH
   four detail pages by filling slots instead of designing four layouts.
 - **Dependencies**: `SHELL-005` (`PageHeader`/cards), `SHELL-008` (breadcrumbs). `tabs.tsx`,
   `card.tsx`, `avatar.tsx`, `separator.tsx`, `scroll-area.tsx` are installed. The timeline data is
-  a query over `activities` (Developer 3) — **soft**: provide the timeline slot + item component and
+  a query over `activities` (Developer 3) - **soft**: provide the timeline slot + item component and
   build against mock activity items.
 - **Target Files**:
-  - `components/shared/detail-layout.tsx` (new — the scaffold)
-  - `components/shared/detail-header.tsx` (new — summary card header)
-  - `components/shared/timeline.tsx` + `components/shared/timeline-item.tsx` (new — right-rail
+  - `components/shared/detail-layout.tsx` (new - the scaffold)
+  - `components/shared/detail-header.tsx` (new - summary card header)
+  - `components/shared/timeline.tsx` + `components/shared/timeline-item.tsx` (new - right-rail
     activity feed presentation)
 - **Technical Instructions**:
   1. `DetailLayout` accepts `{ header, tabs, rail? }` and lays out a responsive two-column grid:
@@ -502,7 +502,7 @@ created" })`. Field-specific validation errors still render via `FieldError` (SH
      (`note_added`, `stage_changed`, `email_logged`, `balloads_campaign_triggered`,
      `ai_insight_generated`, …), actor, relative `occurredAt` time, and a `type`-specific summary
      line. Build against the `activities` shape in [../../database-schema.md](../../database-schema.md)
-     (remember: there is **no `timeline` collection** — it's a query over `activities` filtered by
+     (remember: there is **no `timeline` collection** - it's a query over `activities` filtered by
      `relatedTo`). Wrap the rail in `scroll-area.tsx`.
   5. Keep everything generic and slot-based; no entity-specific logic in the shared layer.
 - **Acceptance Criteria**:
@@ -538,39 +538,39 @@ created" })`. Field-specific validation errors still render via `FieldError` (SH
 - **Priority**: P2
 - **Owner**: Developer 2
 - **Title**: Kanban board primitive (drag-and-drop columns/cards) for the opportunity pipeline view
-- **Objective**: Build a reusable kanban board primitive — stage columns with draggable cards and an
-  `onMoveCard(cardId, fromColumn, toColumn)` callback — that the `/opportunities` pipeline view
+- **Objective**: Build a reusable kanban board primitive - stage columns with draggable cards and an
+  `onMoveCard(cardId, fromColumn, toColumn)` callback - that the `/opportunities` pipeline view
   (Developer 3, CRM-021) composes to render deals by stage and move them between stages.
 - **Business Value**: A drag-and-drop pipeline is the archetypal "sales CRM" visual and one of the
-  strongest demo moments — dragging a deal from Negotiation to Closed-Won in front of judges is the
+  strongest demo moments - dragging a deal from Negotiation to Closed-Won in front of judges is the
   core Sales Pipelines story.
 - **Dependencies**: none hard. Consumed by backlog `CRM-021` (Developer 3). Requires a DnD approach:
   choose a library (e.g. `@dnd-kit/*`) or a minimal HTML5 drag implementation and record the choice
   in [../../decisions.md](../../decisions.md). The stage list comes from
   `organizations/{orgId}/settings/{settingId=pipeline}` (per [../../database-schema.md](../../database-schema.md))
-  — **soft**: build against the default stage array (`prospecting`, `qualification`, `proposal`,
-  `negotiation`, `closed_won`, `closed_lost`) and mock cards.
+  - **soft**: build against the default stage array (`prospecting`, `qualification`, `proposal`,
+    `negotiation`, `closed_won`, `closed_lost`) and mock cards.
 - **Target Files**:
   - `components/shared/kanban/kanban-board.tsx` (new)
   - `components/shared/kanban/kanban-column.tsx` (new)
   - `components/shared/kanban/kanban-card.tsx` (new)
   - `package.json` / `package-lock.json` (DnD dependency, if adopted)
-  - `constants/` (may reference/import the default pipeline stages if a constant is introduced —
+  - `constants/` (may reference/import the default pipeline stages if a constant is introduced -
     per [../../folder-structure.md](../../folder-structure.md), e.g. `OPPORTUNITY_STAGES`)
 - **Technical Instructions**:
   1. Model the board generically: `KanbanBoard<TCard>` accepts `{ columns: { id, title }[], cards:
 TCard[], getColumnId(card), renderCard(card), onMoveCard(cardId, from, to) }`. It knows nothing
-     about opportunities specifically — CRM-021 supplies opportunity cards and the move handler
+     about opportunities specifically - CRM-021 supplies opportunity cards and the move handler
      (which will call `moveOpportunityStage`).
   2. Columns are built from `card.tsx` per [../../ui-design-system.md](../../ui-design-system.md)
-     (no dedicated shadcn kanban primitive exists — this is that primitive). Each column shows its
+     (no dedicated shadcn kanban primitive exists - this is that primitive). Each column shows its
      stage title, a count `Badge`, and a scrollable (`scroll-area.tsx`) card list.
   3. `KanbanCard` follows the entity-card anatomy: name, a stage/qualification-score `Badge` (text-
      labeled, not color-only), amount, and a `dropdown-menu.tsx` for per-card quick actions.
   4. Implement drag-and-drop with the chosen approach; on drop into a different column, call
      `onMoveCard` optimistically (the consumer persists via its Server Action and reconciles).
      **Accessibility is mandatory**: provide a keyboard-operable move path (e.g. a card actions
-     menu "Move to stage →" submenu) so the board is not drag-only — per the keyboard-navigation
+     menu "Move to stage →" submenu) so the board is not drag-only - per the keyboard-navigation
      requirement in [../../ui-design-system.md](../../ui-design-system.md). Record the DnD library
      decision in [../../decisions.md](../../decisions.md).
   5. Keep the board horizontally scrollable on narrow viewports (`overflow-x-auto`) rather than

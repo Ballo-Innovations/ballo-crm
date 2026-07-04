@@ -5,7 +5,7 @@ import uiReducer from "@/store/slices/ui-slice";
 /**
  * Redux Toolkit is reserved for cross-cutting client UI state (shell layout,
  * global dialogs/menus). Server data (accounts, opportunities, etc.) belongs
- * in TanStack Query, not Redux — see docs/architecture.md.
+ * in TanStack Query, not Redux - see docs/architecture.md.
  */
 export function makeStore() {
   return configureStore({
