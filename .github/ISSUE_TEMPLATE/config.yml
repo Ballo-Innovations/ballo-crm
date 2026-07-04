@@ -1,0 +1,5 @@
+blank_issues_enabled: true
+contact_links:
+  - name: Task board
+    url: https://github.com/search?q=repo%3A%3Aowner%2F%3Arepo+is%3Aissue&type=issues
+    about: Check docs/tasks/backlog.md and docs/tasks/sprint-*.md before opening a new task issue.
