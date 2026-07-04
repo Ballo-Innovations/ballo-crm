@@ -26,6 +26,10 @@ under `[Unreleased]` in the relevant section (Added / Changed / Fixed / Removed)
   per-developer assignments, task template).
 - Root project files: `.env.example`, `.gitignore`, `CONTRIBUTING.md`, `LICENSE`, GitHub issue
   and PR templates, VS Code workspace settings.
+- Deployment: pushed to `github.com/Ballo-Innovations/hackerthon-crm` and connected the Vercel
+  project (`ballo-innovations/hackerthon-crm`) via Vercel's native Git integration — pushes to
+  `main` now deploy to Production automatically and PRs get automatic Preview deployments. Live
+  at https://hackerthon-crm.vercel.app. See `docs/deployment.md`.
 
 ### Notes
 

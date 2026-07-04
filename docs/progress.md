@@ -48,6 +48,13 @@ Foundation/scaffolding work only — no user-facing feature is live yet.
   `docs/tasks/`.
 - **GitHub templates and VS Code workspace config** (`.github/`, `.vscode/`) for consistent PR/
   issue structure and shared editor settings across contributors.
+- **Repository pushed and deployed**: code lives at
+  [github.com/Ballo-Innovations/hackerthon-crm](https://github.com/Ballo-Innovations/hackerthon-crm)
+  (`main`), and the Vercel project (`ballo-innovations/hackerthon-crm`) is connected via Vercel's
+  native Git integration — pushes to `main` deploy to Production automatically, PRs get Preview
+  deployments automatically. Live at **https://hackerthon-crm.vercel.app**. No environment
+  variables are set on Vercel yet, so this is the foundation landing page only — see
+  [deployment.md](./deployment.md#current-status).
 
 ## In Progress
 
@@ -85,9 +92,11 @@ tracking, and the first read-only BalloAds integration — remains pending and u
 - **No test framework installed** (no Jest, Vitest, or Playwright; `package.json` has no `test`
   script). Flagged as risk R1 in [risks.md](./risks.md); roadmap requires closing this at the
   start of Phase 2 (see [roadmap.md](./roadmap.md#known-gaps-to-close-early)).
-- **No CI pipeline** (no GitHub Actions workflows exist yet — lint/typecheck/build are run
-  manually today). Also part of risk R1 in [risks.md](./risks.md); see
-  [deployment.md](./deployment.md#no-ci-pipeline-yet) for the recommended first workflow.
+- **No lint/typecheck/build gate** (no GitHub Actions workflows exist yet — Vercel deploys on
+  every push regardless of lint/typecheck state; those checks are run manually today). Also part
+  of risk R1 in [risks.md](./risks.md); see
+  [deployment.md](./deployment.md#no-lint-typecheck-build-gate-yet) for the recommended first
+  workflow.
 
 ## Future Enhancements
 

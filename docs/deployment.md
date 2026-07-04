@@ -49,6 +49,18 @@ Practical setup:
    (`firebase.json` already configures `auth`, `firestore`, and the emulator UI) is the safer
    default for local dev, since it never touches a real project at all.
 
+## Current status
+
+The Vercel project (`ballo-innovations/hackerthon-crm`) is connected to
+[github.com/Ballo-Innovations/hackerthon-crm](https://github.com/Ballo-Innovations/hackerthon-crm)
+via Vercel's native Git integration — pushes to `main` trigger a Production deployment and PRs
+get an automatic Preview deployment, with no GitHub Actions workflow required for this part.
+Production is live at **https://hackerthon-crm.vercel.app**. No environment variables are
+configured on Vercel yet (see [environment.md](./environment.md)) — the app builds and serves
+the foundation landing page without them, but any code that calls `getServerEnv()`/
+`getClientEnv()` (Firebase, BalloAds, Brutus AI) will fail at runtime until they're set in the
+Vercel project's Environment Variables settings, scoped per environment as described below.
+
 ## Deploy flow
 
 1. **Push to a feature branch** and open a PR against `main`.
@@ -120,11 +132,14 @@ Rollback only affects the Next.js app. If the regression was caused by a Firesto
 indexes change, roll those back separately with `firebase deploy --only firestore:rules` (or
 `firestore:indexes`) using the previous committed version of those files.
 
-## No CI pipeline yet
+## No lint/typecheck/build gate yet
 
-Per the [project brief](./_context/PROJECT_BRIEF.md)'s ground-truth state, **no GitHub Actions
-workflow exists yet** — the lint/typecheck/build checklist above is run manually by each
-developer. This is tracked as a known gap in [risks.md](./risks.md) (R1) and
+Vercel's Git integration (above) deploys on every push regardless of whether lint, typecheck, or
+even the build itself would have failed a stricter gate — Vercel's own build step is the only
+thing standing between a broken PR and a broken Preview/Production deployment today. **No GitHub
+Actions workflow exists yet** to run lint/typecheck as a required status check before that
+happens, so the checklist above is run manually by each developer. This is tracked as a known gap
+in [risks.md](./risks.md) (R1) and
 [roadmap.md](./roadmap.md#known-gaps-to-close-early), which schedules closing it at the start of
 Phase 2, before the surface area of a regression gets expensive.
 
