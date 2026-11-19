@@ -1,0 +1,80 @@
+ID,Epic,Title,Assignee,Priority,Estimate(h),Week,Depends on,Acceptance criteria
+E0-01,E0 Foundations,Init Next.js 15 + TS + Tailwind + shadcn + pnpm + ESLint/Prettier,Dev A,P0,2,0,,Repo builds; lint passes; README with run instructions
+E0-02,E0 Foundations,docker-compose (app postgres minio mock-integrations) + .env.example,Dev C,P0,3,0,E0-01,`docker compose up` boots all services; healthchecks green
+E0-03,E0 Foundations,Prisma schema v1 + initial migration,Dev A,P0,3,0,E0-01,Schema from kit applied; `prisma studio` shows tables
+E0-04,E0 Foundations,Auth.js credentials login + session + role claim,Dev A,P0,4,0,E0-03,Login/logout; role in session; protected routes redirect
+E0-05,E0 Foundations,RBAC helper requireRole + row filters,Dev A,P0,3,0,E0-04,Unit tests for matrix in security doc
+E0-06,E0 Foundations,Audit middleware withAudit + AuditLog writes,Dev A,P0,3,0,E0-03,Every wrapped action creates AuditLog with diff
+E0-07,E0 Foundations,App shell: sidebar nav topbar ⌘K search placeholder dark theme tokens,Dev B,P0,4,0,E0-01,All 9 nav items route to placeholder pages; responsive
+E0-08,E0 Foundations,Shared components: DataTable KpiCard Badge(grade) Drawer Toast Skeletons,Dev B,P0,5,0,E0-07,Storybook-free demo page renders all
+E0-09,E0 Foundations,GitHub Actions CI lint/typecheck/test/build,Dev C,P0,2,0,E0-01,CI green on main
+E0-10,E0 Foundations,Seed v0 (users products 5 accounts),Dev A,P0,2,0,E0-03,`pnpm db:seed --reset` idempotent
+E0-11,E0 Foundations,Deploy pipeline to Railway/Render + MinIO/R2,Dev C,P0,4,0,E0-09,Public URL serves login
+E0-12,E0 Foundations,formatZMW + date helpers + zod error mapping,Dev A,P0,1,0,E0-01,Unit tests
+E1-01,E1 Pipeline,Leads list + create/edit + status,Dev A,P0,4,1,E0-10,CRUD; search; audited
+E1-02,E1 Pipeline,Lead convert flow (existing/new account + opportunity),Dev A,P0,4,1,E1-01,Lead marked CONVERTED; opp appears in QUALIFY
+E1-03,E1 Pipeline,Opportunity CRUD + stage change action + lost reason,Dev A,P0,5,1,E0-10,Stage change updates lastActivityAt; audited
+E1-04,E1 Pipeline,Kanban board (dnd-kit) with per-column count/value/weighted,Dev A,P0,6,1,E1-03,Drag changes stage; totals update; filters owner/grade/sector
+E1-05,E1 Pipeline,Opportunity drawer (summary committee timeline actions),Dev A,P0,5,1,E1-04,Opens from card; no page nav
+E1-06,E1 Pipeline,Activities on opportunity (note call meeting) → EngagementEvent,Dev A,P1,3,1,E1-05,Appears in account timeline too
+E2-01,E2 Accounts,Accounts list with sector/tier/lifecycle filters,Dev A,P0,3,1,E0-10,Paginated; sortable; search
+E2-02,E2 Accounts,Account 360 header + Overview tab,Dev A,P0,5,1,E2-01,Shows ARR open pipeline engagement health
+E2-03,E2 Accounts,Contacts tab CRUD with influence/stance,Dev A,P0,4,1,E2-02,
+E2-04,E2 Accounts,Services tab (subscriptions + usage bars),Dev A,P0,3,1,E2-02,Drives whitespace
+E2-05,E2 Accounts,Timeline tab (unified EngagementEvent list),Dev A,P0,3,1,E2-02,Filter by type
+E2-06,E2 Accounts,Lifecycle + health score roll-up job,Dev B,P1,2,1,E2-02,Matches spec formula
+E3-01,E3 ABM & Engagement,EngagementEvent log form (DC tour demo event meeting) + list page,Dev C,P0,5,1,E0-10,Creating event recomputes account engagement score
+E3-02,E3 ABM & Engagement,Buying committee CRUD per opportunity + CommitteeMap UI,Dev C,P0,5,1,E1-05,Roles/engaged flag; feeds scoring
+E3-03,E3 ABM & Engagement,ABM page: strategic accounts (Tier1/2) table,Dev C,P0,2,1,E2-01,
+E3-04,E3 ABM & Engagement,Account Plan editor + Playbook checklist,Dev C,P1,4,2,E3-03,Playbook tasks toggle persist
+E3-05,E3 ABM & Engagement,Playbook auto-generation from grade gaps (e.g. add technical buyer),Dev B,P1,3,2,E4-03,Tasks derived from explanation.nextBestActions
+E3-06,E3 ABM & Engagement,Engagement analytics chart (events/month by type),Dev C,P1,2,2,E3-01,
+E4-01,E4 Scoring,computeScore pure function + unit tests vs spec worked example,Dev B,P0,5,1,E0-03,Example yields 58/GOLD
+E4-02,E4 Scoring,recomputeOpportunity + triggers (opp/committee/event changes) + ScoreHistory,Dev B,P0,4,1,E4-01,Changing committee updates score within request
+E4-03,E4 Scoring,Explanation drawer: ScoreRing FactorList next best actions sparkline,Dev B,P0,5,1,E4-02 E1-05,Every factor listed with impact sign
+E4-04,E4 Scoring,Grade badges on kanban/list/360 + grade filter,Dev B,P0,2,1,E4-02,
+E4-05,E4 Scoring,Nightly recompute job + stale downgrade rule,Dev B,P1,2,2,E4-02,
+E4-06,E4 Scoring,Focus List page (ranking formula + urgency chips),Dev B,P0,4,1,E4-02,Top 5 for rep top 10 manager
+E5-01,E5 Recommender,Rule engine + modifiers + unit tests,Dev B,P0,5,2,E2-04,Rules table in spec implemented; probabilities clamped
+E5-02,E5 Recommender,LLM narrative service + AiArtifact cache + template fallback,Dev B,P0,4,2,E5-01,Works with API key absent
+E5-03,E5 Recommender,RecommendationCard on Account 360 + [Create opportunity from recommendation],Dev B,P0,3,2,E5-01 E1-03,Prefilled opp
+E5-04,E5 Recommender,Focus list AI one-liners (cached),Dev B,P1,2,2,E5-02 E4-06,
+E5-05,E5 Recommender,Whitespace matrix component (accounts × products),Dev B,P1,4,2,E5-01,Used in VSI drilldown
+E5-06,E5 Recommender,Insights generator (rules in spec) + Insight model + feed UI + dismiss,Dev B,P0,5,2,E4-02 E5-01,≥6 insight types on seed
+E6-01,E6 Dashboards,Executive dashboard KPIs + forecast chart,Dev B,P0,5,2,E4-02,Commit/best/closed by month
+E6-02,E6 Dashboards,VSI service (ARR growth pipeline rank penetration) + table,Dev B,P0,5,2,E2-04,Rank movement vs prior quarter
+E6-03,E6 Dashboards,Sector drilldown page,Dev B,P0,4,2,E6-02 E5-05,
+E6-04,E6 Dashboards,Top accounts widget + tour-vs-no-tour win rate chart,Dev B,P1,3,2,E6-01,
+E6-05,E6 Dashboards,Sales dashboard (funnel stale deals grade distribution leaderboard),Dev B,P1,4,2,E6-01,
+E7-01,E7 Contracts,ContractTemplate model + 3 seeded templates (MSA SLA Order Form) with merge fields,Dev C,P0,3,2,E0-10,
+E7-02,E7 Contracts,New contract flow: template → merge form → preview,Dev C,P0,5,2,E7-01,
+E7-03,E7 Contracts,PDF render (@react-pdf) → MinIO upload + download,Dev C,P0,4,2,E7-02 E0-02,
+E7-04,E7 Contracts,Send for signature: signers tokens emails(mock) status stepper,Dev C,P0,4,2,E7-03,
+E7-05,E7 Contracts,Public /sign/[token] page with SignaturePad + stamp signature into PDF (pdf-lib),Dev C,P0,6,2,E7-04,Signed PDF stored; status SIGNED
+E7-06,E7 Contracts,Renewals page + 90/60/30 insight generation,Dev C,P0,3,2,E7-03 E5-06,
+E7-07,E7 Contracts,Generate contract from WON opportunity button,Dev C,P1,2,2,E7-02 E1-03,
+E8-01,E8 CIMS,Admin users & roles page,Dev A,P0,3,2,E0-05,
+E8-02,E8 CIMS,Audit log page with filters + JSON diff expand,Dev A,P0,4,2,E0-06,
+E8-03,E8 CIMS,API keys (hashed show-once) + Bearer auth on /api/v1,Dev A,P0,4,2,E0-05,
+E8-04,E8 CIMS,OpenAPI generation + /openapi.json + Swagger UI page,Dev A,P1,3,2,E8-03,
+E8-05,E8 CIMS,Data protection: export JSON + erase (anonymise) + policy page,Dev A,P1,4,2,E8-02,Both audited
+E8-06,E8 CIMS,Global search ⌘K (accounts contacts opps contracts),Dev A,P1,3,2,E2-01,
+E9-01,E9 Integrations,Adapter interfaces + registry + IntegrationLog,Dev C,P0,3,1,E0-03,
+E9-02,E9 Integrations,mock-integrations Express service (sms telephony erp espf email),Dev C,P0,4,1,E9-01,
+E9-03,E9 Integrations,Inbound email webhook (HMAC) → EngagementEvent,Dev C,P0,3,1,E9-01,
+E9-04,E9 Integrations,Admin Integrations tab (live log polling) + test buttons,Dev C,P0,3,2,E9-02,
+E9-05,E9 Integrations,ERP push on opportunity WON,Dev C,P1,2,2,E9-02 E1-03,
+E9-06,E9 Integrations,Click-to-call + SMS send from contact (mock),Dev C,P2,3,2,E9-02,
+E9-07,E9 Integrations,eSPF sync button + assumed contract doc,Dev C,P2,2,2,E9-02,
+E10-01,E10 Data & QA,Seed v1 realistic (60 accounts 150 opps 600 events contracts) per seed spec,Dev A,P0,6,1,E0-10,Dashboards look alive; every grade present
+E10-02,E10 Data & QA,Seed-time generation of recommendations insights AI cache,Dev B,P0,2,2,E5-02 E5-06,Offline demo works
+E10-03,E10 Data & QA,Vitest unit suite ≥ 40 tests (scoring recommender vsi rbac),Dev B,P0,4,2,E4-01 E5-01,
+E10-04,E10 Data & QA,Playwright smoke: login kanban drag score drawer sign flow,Dev C,P1,5,3,E7-05,Runs in CI
+E10-05,E10 Data & QA,Full QA pass against test cases + bug bash,All,P0,8,3,,All P0 cases pass
+E10-06,E10 Data & QA,Performance check on seed (<1.5s pages) + indexes,Dev A,P1,2,3,E10-01,
+E10-07,E10 Data & QA,Mobile 390px pass,Dev B,P1,2,3,,
+E11-01,E11 Pitch,Pitch deck per outline,Dev B+CEO,P0,4,3,,
+E11-02,E11 Pitch,Demo script rehearsals ×3 + timer,All,P0,3,3,E10-05,<8 min
+E11-03,E11 Pitch,Dry-run judging with outsider + fix lowest row,All,P0,4,3,E11-02,
+E11-04,E11 Pitch,Submission package: repo README arch doc demo URL creds video backup,Dev A,P0,3,3,E11-03,
+E11-05,E11 Pitch,Backup: laptop docker-compose + screen recording of full demo,Dev C,P0,2,3,E11-04,

@@ -1,0 +1,39 @@
+# From the project kit (07-dev-setup/docker-compose.yml).
+# `docker compose up` starts Postgres + MinIO, which is all local dev needs today.
+# The `app` and `mock-integrations` services sit behind the "full" profile until their
+# Dockerfiles exist (tickets E0-02 and E9-02): `docker compose --profile full up`.
+services:
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: compass
+      POSTGRES_PASSWORD: compass
+      POSTGRES_DB: compass
+    ports: ["5432:5432"]
+    volumes: [pgdata:/var/lib/postgresql/data]
+    healthcheck: { test: ["CMD-SHELL", "pg_isready -U compass"], interval: 5s, retries: 10 }
+  minio:
+    image: minio/minio:latest
+    command: server /data --console-address ":9001"
+    environment: { MINIO_ROOT_USER: minio, MINIO_ROOT_PASSWORD: minio12345 }
+    ports: ["9000:9000", "9001:9001"]
+    volumes: [minio:/data]
+  mock-integrations:
+    profiles: ["full"]
+    build: ./mock-integrations
+    environment: { APP_WEBHOOK_URL: http://app:3000/api/v1/webhooks }
+    ports: ["4100:4100"]
+  app:
+    profiles: ["full"]
+    build: .
+    depends_on:
+      db: { condition: service_healthy }
+      minio: { condition: service_started }
+    env_file: .env
+    environment:
+      DATABASE_URL: postgresql://compass:compass@db:5432/compass
+      S3_ENDPOINT: http://minio:9000
+      INTEGRATIONS_URL: http://mock-integrations:4100
+    ports: ["3000:3000"]
+    command: sh -c "pnpm prisma migrate deploy && pnpm db:seed && pnpm start"
+volumes: { pgdata: {}, minio: {} }

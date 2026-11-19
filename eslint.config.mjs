@@ -20,7 +20,14 @@ const eslintConfig = defineConfig([
       "@typescript-eslint/consistent-type-imports": "warn",
     },
   },
-  globalIgnores([".next/**", "out/**", "build/**", "next-env.d.ts", "components/ui/**"]),
+  globalIgnores([
+    ".next/**",
+    "out/**",
+    "build/**",
+    "next-env.d.ts",
+    "src/components/ui/**",
+    "src/generated/**",
+  ]),
 ]);
 
 export default eslintConfig;

@@ -7,6 +7,29 @@ under `[Unreleased]` in the relevant section (Added / Changed / Fixed / Removed)
 
 ## [Unreleased]
 
+### Changed
+
+- Re-scaffolded the repo to match the Compass project kit: code moved under `src/`, one folder
+  per module in `src/modules/` (`actions` / `queries` / `service` / `types`), navigation renamed
+  to the kit's nine modules with placeholder routes, npm replaced by pnpm.
+- Docs replaced by the kit (`docs/00-executive` to `docs/07-dev-setup`); the earlier docs and
+  task files moved to `docs/_archive/ballocrm-firebase/`.
+
+### Added
+
+- Prisma schema v1 from the kit (`prisma/schema.prisma`), seed inputs and a seed entry point,
+  `docker-compose.yml` (Postgres 16 + MinIO), kit `.env.example`.
+- `src/lib` stubs: `db`, `auth` (`requireRole`), `audit` (`withAudit`), `errors`, `llm`, `money`
+  (`formatZMW`).
+- Vitest and a GitHub Actions CI workflow (lint, typecheck, test, build).
+
+### Removed
+
+- Firebase (Auth, Firestore, rules, indexes), Redux Toolkit, TanStack Query, the session-cookie
+  middleware, and the README-only layer folders.
+
+## Earlier foundation (superseded by the re-scaffold above)
+
 ### Added
 
 - Project foundation: Next.js 15 (App Router, TypeScript strict) scaffolded with Tailwind CSS v4

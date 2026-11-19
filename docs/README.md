@@ -1,73 +1,41 @@
-# BalloCRM Documentation Index
+# BalloCRM docs
 
-This is the source of truth for BalloCRM. If code and docs ever disagree, that's a bug - fix
-whichever one is wrong, in the same change. See [CONTRIBUTING.md](../CONTRIBUTING.md) for the
-workflow this implies.
+These are the Compass project kit documents, copied in with their content unchanged (Markdown
+reformatted by Prettier). The kit calls the product
+"Compass"; it is the same product as BalloCRM.
 
-New here? Read in this order: [vision.md](./vision.md) → [architecture.md](./architecture.md) →
-[folder-structure.md](./folder-structure.md) → [coding-standards.md](./coding-standards.md) →
-[tasks/sprint-1.md](./tasks/sprint-1.md).
+Read in this order on day 0:
 
-## Product & Vision
+1. [00-executive/01-vision-and-strategy.md](00-executive/01-vision-and-strategy.md) - what we are building and why it wins
+2. [01-product/01-PRD.md](01-product/01-PRD.md) - requirements, personas, user stories, coverage matrix
+3. [02-architecture/01-architecture.md](02-architecture/01-architecture.md) and [02-data-model.md](02-architecture/02-data-model.md) - how it is built
+4. [04-delivery/02-sprint-plan.md](04-delivery/02-sprint-plan.md) and [03-tickets.csv](04-delivery/03-tickets.csv) - who does what, when
+5. [../AGENTS.md](../AGENTS.md) - conventions for every contributor and AI agent
 
-| Doc                            | What it covers                                                                |
-| ------------------------------ | ----------------------------------------------------------------------------- |
-| [vision.md](./vision.md)       | Problem, users, personas, value proposition, MVP scope                        |
-| [glossary.md](./glossary.md)   | Every domain term, alphabetical (incl. Customer Journey vs. BalloAds Journey) |
-| [roadmap.md](./roadmap.md)     | Long-term phased roadmap beyond Sprint 1–3                                    |
-| [decisions.md](./decisions.md) | Architecture Decision Records - what was chosen and why                       |
-| [risks.md](./risks.md)         | Risk register: technical, product, timeline, security                         |
+| Folder                             | Contents                                                                             |
+| ---------------------------------- | ------------------------------------------------------------------------------------ |
+| [00-executive](00-executive)       | Vision, judging strategy, risk register                                              |
+| [01-product](01-product)           | PRD, scoring and grading spec, VSI and dashboards spec, recommender spec             |
+| [02-architecture](02-architecture) | Architecture, data model, API spec, adapters, security, ADRs, original Prisma schema |
+| [03-design](03-design)             | Design system, wireframes, UX flows                                                  |
+| [04-delivery](04-delivery)         | Team roles, sprint plan, tickets (CSV), definition of done, git workflow             |
+| [05-qa](05-qa)                     | Test strategy, test cases, seed data spec                                            |
+| [06-pitch](06-pitch)               | Deck outline, demo script, one-pager                                                 |
+| [07-dev-setup](07-dev-setup)       | Day-0 checklist                                                                      |
 
-## Architecture & Data
+The live schema is `prisma/schema.prisma` at the repo root; seed inputs are in `prisma/seed/`.
 
-| Doc                                        | What it covers                                                       |
-| ------------------------------------------ | -------------------------------------------------------------------- |
-| [architecture.md](./architecture.md)       | System, component, API, auth, and deployment architecture            |
-| [tech-stack.md](./tech-stack.md)           | Every technology choice, why, and installed version                  |
-| [database-schema.md](./database-schema.md) | Every Firestore collection, example docs, relationships              |
-| [firestore-rules.md](./firestore-rules.md) | Security rules model, role matrix, emulator testing                  |
-| [indexes.md](./indexes.md)                 | Composite indexes and the query patterns they support                |
-| [api.md](./api.md)                         | Internal Server Action/Route Handler conventions and worked examples |
-| [integrations.md](./integrations.md)       | BalloAds Developer Portal API and Brutus AI integration contracts    |
+## Where the repo differs from the kit
 
-## UI & Conventions
+- **Name:** BalloCRM, not Compass.
+- **Prisma is pinned to v6**, because the kit schema is written for it (`prisma-client-js`,
+  `url` in the datasource block).
+- **docker-compose:** `app` and `mock-integrations` are behind the `full` profile until their
+  Dockerfiles exist.
+- **Hosting:** the repo is currently connected to Vercel; the kit names Railway/Render. Decide in
+  ticket E0-11.
 
-| Doc                                              | What it covers                                          |
-| ------------------------------------------------ | ------------------------------------------------------- |
-| [ui-design-system.md](./ui-design-system.md)     | Typography, spacing, components, color, dark mode, a11y |
-| [routes.md](./routes.md)                         | Every page: purpose, permissions, components, status    |
-| [folder-structure.md](./folder-structure.md)     | The real repo layout and the feature-based pattern      |
-| [coding-standards.md](./coding-standards.md)     | How to write code in this repo                          |
-| [naming-conventions.md](./naming-conventions.md) | File, variable, schema, Firestore, and route naming     |
+## Archive
 
-## Operations
-
-| Doc                                | What it covers                                                  |
-| ---------------------------------- | --------------------------------------------------------------- |
-| [deployment.md](./deployment.md)   | Environments, deploy flow, rollback, CI gap                     |
-| [environment.md](./environment.md) | Every env var, where to get it, client vs. server               |
-| [changelog.md](./changelog.md)     | Points to the root [CHANGELOG.md](../CHANGELOG.md)              |
-| [progress.md](./progress.md)       | Live project state: completed / in progress / blocked / pending |
-
-## Project Management ([tasks/](./tasks/))
-
-| Doc                                                | What it covers                                     |
-| -------------------------------------------------- | -------------------------------------------------- |
-| [sprint-plan.md](./sprint-plan.md)                 | Sprint cadence, team shape, DoR/DoD, critical path |
-| [tasks/task-template.md](./tasks/task-template.md) | The required structure for every task              |
-| [tasks/backlog.md](./tasks/backlog.md)             | Full product backlog by epic, priority matrix      |
-| [tasks/sprint-1.md](./tasks/sprint-1.md)           | Current sprint - full task detail                  |
-| [tasks/sprint-2.md](./tasks/sprint-2.md)           | Next sprint - full task detail                     |
-| [tasks/sprint-3.md](./tasks/sprint-3.md)           | Sprint after that - full task detail               |
-| [tasks/developer-1.md](./tasks/developer-1.md)     | Infrastructure & Auth track                        |
-| [tasks/developer-2.md](./tasks/developer-2.md)     | Shell, Design System & Navigation track            |
-| [tasks/developer-3.md](./tasks/developer-3.md)     | Core CRM Domain track                              |
-| [tasks/completed.md](./tasks/completed.md)         | Completed task log                                 |
-| [tasks/blocked.md](./tasks/blocked.md)             | Blocked task log                                   |
-
-## Reference
-
-| Doc                                                                                  | What it covers                                                                                            |
-| ------------------------------------------------------------------------------------ | --------------------------------------------------------------------------------------------------------- |
-| [reference/balloads-crm-backend-notes.md](./reference/balloads-crm-backend-notes.md) | Real BalloAds backend engineering notes (health score, journey triggers) used to ground `integrations.md` |
-| [_context/PROJECT_BRIEF.md](./_context/PROJECT_BRIEF.md)                             | Internal seed brief for anyone (human or AI) generating further docs/code - not end-user documentation    |
+[_archive/ballocrm-firebase](_archive/ballocrm-firebase) is the earlier Firebase / BalloAds /
+Brutus AI plan. It is superseded and kept only for reference.
