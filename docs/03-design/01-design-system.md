@@ -164,6 +164,30 @@ Reference: option A in `docs/03-design/reference/toast-options.html` (press the 
 - **Accessibility:** container is a labelled region; toasts use `role="status"`, errors
   `role="alert"`; the action is keyboard-reachable.
 
+## Empty, loading and error states (decided)
+
+Reference: option D in `docs/03-design/reference/states-options.html` (use its state switch).
+Every list and page has all four.
+
+- **Loading:** skeletons in the exact shapes of the real content (KPI cards, rows, avatars,
+  pills) in `--line` / `--soft`, with a left-to-right shimmer (1.3s). Never a spinner for a
+  page or list. Buttons and the top bar stay usable.
+- **Empty (first use):** the page never goes blank. Show 3–4 example rows behind the message,
+  **blurred** (`blur(5px)`, greyscale, ~55% opacity, fading out downwards) so there is no
+  readable text, only a hint of what will appear. Centred on top: title ("Your leads will
+  appear here"), one helpful line, and the actions (hero button + secondary, e.g. Add lead ·
+  Import CSV). The message sits on a solid `--card` patch that fades into the rows (box-shadow
+  glow of about 44px blur / 36px spread) so it stays readable.
+- **No results (search or filters):** the illustrated style. A small monochrome illustration
+  built from three stacked card shapes with a round badge (white with a search icon), title
+  "No leads match", a line naming the search, and a Clear search button. The active search or
+  filter also shows as a removable black chip above the list.
+- **Error:** the illustrated style with a red-tinted card and a red ⓘ badge, title "Couldn't
+  load leads", a reassuring line ("Your data is safe — try again in a moment"), a black Retry
+  button and a ghost Contact support button. KPI values show "—".
+- **Copy:** say what the thing is and what to do next; no blame, no jargon, no raw error
+  codes in the message.
+
 ## Components (shadcn, restyled to the above)
 
 KpiCard (icon circle, big number, two-line label; one may be highlighted with a black icon and
