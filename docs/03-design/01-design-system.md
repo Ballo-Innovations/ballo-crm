@@ -143,6 +143,27 @@ Reference: option D in `docs/03-design/reference/button-options.html`.
 - **Placement:** in footers the secondary or destructive action sits left and the hero or
   primary sits right.
 
+## Toasts (decided: black pill, bottom centre)
+
+Reference: option A in `docs/03-design/reference/toast-options.html` (press the buttons).
+
+- **Look:** black `--ink` pill, `--shell` text 14px/500, one line. Left: a 28px icon circle
+  (white with a black check for success, red with a white ⓘ for errors, a spinner while
+  loading). Right: optional action as a translucent pill (Undo, Retry, Download) and a faint ✕.
+- **Position:** bottom centre of the window, 22px up; newest at the bottom, up to 3 stacked
+  with 8px gaps (the oldest leaves first). On phones it spans the width minus 14px each side
+  and may wrap to two lines.
+- **Motion:** rises 20px and fades in over 320ms; drops and fades out over 250ms.
+- **Timing:** success 4s; with Undo 6s; errors stay until dismissed; loading stays until it
+  resolves and then turns into the success or error toast in place. Hover pauses the timer.
+- **When:** every successful write (with Undo where it's cheap), background work (export,
+  import), and recoverable errors. Not for validation errors (those sit on the field) and never
+  for anything the user must decide (use a confirm dialog).
+- **Copy:** past tense, specific, short: "Lead saved", "Moved to Negotiate", "Couldn't save
+  changes". Undo turns the toast into "Change undone".
+- **Accessibility:** container is a labelled region; toasts use `role="status"`, errors
+  `role="alert"`; the action is keyboard-reachable.
+
 ## Components (shadcn, restyled to the above)
 
 KpiCard (icon circle, big number, two-line label; one may be highlighted with a black icon and
