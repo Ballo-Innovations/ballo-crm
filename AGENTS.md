@@ -55,7 +55,9 @@ adding anything that is not on it.
 - Every mutating server action: `requireRole([...])` → zod parse → `withAudit(...)`.
 - Money is integer ngwee; format with `formatZMW`. Dates UTC in DB; display Africa/Lusaka.
 - Enums come from Prisma; never string-literal a stage/grade/role.
-- UI: shadcn components only; dark theme tokens from `docs/03-design/01-design-system.md`; detail
+- UI: shadcn components only, styled to the monochrome design in `docs/03-design/01-design-system.md`.
+  Match the reference build `docs/03-design/reference/dashboard-concept.html` (and its
+  screenshots) for every screen: layout shell, tokens, radii, Urbanist, pills, cards; detail
   views open in the right Drawer, not a new page.
 - Loading, empty, error states are mandatory on every list/page.
 - No `any`. No console.log in committed code.

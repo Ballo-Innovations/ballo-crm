@@ -13,4 +13,4 @@
 11. **Roadmap** — eSPF mapping (1 day with spec), live email/SMS, ML scoring once 2 quarters of data, mobile PWA, multi-entity.
 12. **Try it** — URL, credentials, repo QR, thank you.
 
-Design: dark theme matching the app; one idea per slide; no bullet walls; screenshots over text.
+Design: monochrome style matching the app (see docs/03-design/reference); one idea per slide; no bullet walls; screenshots over text.
