@@ -98,8 +98,8 @@ Reference: option C in `docs/03-design/reference/form-options.html` (click into 
   nothing shifts when it floats.
 - **Always-up labels:** fields with a prefix (`+260`, `K`), selects and date pickers keep the
   label above at all times.
-- **Placeholder / hint text** shows inside the pill only once it is focused (e.g. "e.g. Zambeef
-  Products").
+- **Placeholder / hint text** shows inside the pill only once it is focused (e.g. "e.g. Kafue Valley
+  Foods").
 - **Focus:** pill turns `--card` with a 1.5px `--ink` border.
 - **Error:** 1.5px `--danger` border, label turns `--danger`, a message with an ⓘ icon below
   (12px), replacing the help text. Validate on submit and on blur once the field has been

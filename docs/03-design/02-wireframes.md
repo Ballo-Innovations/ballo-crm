@@ -22,7 +22,7 @@
 [Filters: owner, grade, sector]  [Focus List ▸]            [+ Opportunity]
 QUALIFY (12 · K1.2m · w K120k) | DISCOVER | PROPOSE | NEGOTIATE | WON | LOST
 +----------------------------+
-| Zanaco — DRaaS   [GOLD] 62 |
+| Nyali — DRaaS    [GOLD] 62 |
 | K 350,000 · close 12 Dec   |
 | ●●●○ committee · 3d ago    |
 +----------------------------+
