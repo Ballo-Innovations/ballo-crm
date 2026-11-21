@@ -9,6 +9,13 @@ under `[Unreleased]` in the relevant section (Added / Changed / Fixed / Removed)
 
 ### Added
 
+- Testing standards for AI-assisted work (`docs/05-qa/01-test-strategy.md`): tests are written
+  first from each ticket's acceptance criteria, every criterion maps to a named test in the PR,
+  bug fixes start with a failing test. Playwright is set up (`e2e/`, `pnpm test:e2e`) and runs
+  on every pull request instead of nightly; each UI ticket adds its own spec. CI gained a
+  Postgres service for integration tests (`pnpm test:int`) and a coverage floor on
+  `src/modules/**/service.ts` (`pnpm test:coverage`).
+
 - `docs/01-product/00-goals-and-success-metrics.md`: the Challenge 2 problem statement, seven
   goals with metrics, a project scorecard and a capability-to-ticket coverage table. Tickets gained
   a `Goal` column; forecast definitions added to the dashboards spec.

@@ -29,7 +29,7 @@
 
 ## CI and deploys
 
-- Every PR: `pnpm lint && pnpm typecheck && pnpm test && pnpm build`.
+- Every PR: `pnpm lint && pnpm typecheck && pnpm test:coverage && pnpm test:int && pnpm build && pnpm test:e2e`.
 - Every push to `dev`, `stage` or `main`: the same checks, then image build and deploy to that
   branch's environment. See `docs/07-dev-setup/environments-and-deployment.md`.
 
