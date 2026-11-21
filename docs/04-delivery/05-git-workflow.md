@@ -10,8 +10,10 @@
 
 - Ticket branches are short-lived and start from `dev`: `feat/<ticket-id>-slug` (also `fix/`,
   `chore/`, `docs/`, `test/`). One ticket per branch, one branch per PR.
-- All three long-lived branches are protected: pull request, green CI and one approval required;
-  no direct or force pushes.
+- All three long-lived branches are protected: pull request and green CI required; no direct or
+  force pushes. An approval is not required, because the deadline is close: the author may merge
+  their own PR once CI is green and they have read the whole diff. Ask for a review anyway when
+  the change touches `prisma/schema.prisma`, `src/lib/`, scoring, auth or `deploy/`.
 - **Promotion:** Dev C opens `dev` → `stage` at the end of each day once dev is healthy.
   `stage` → `main` happens after the QA checklist passes on stage, and needs the prod approver.
   Promotion PRs use a merge commit, never squash, so the three branches keep the same history.

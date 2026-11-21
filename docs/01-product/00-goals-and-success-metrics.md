@@ -6,6 +6,8 @@ Every ticket in `docs/04-delivery/03-tickets.csv` names the goal it serves in it
 
 If a change does not move one of the seven goals below, or enable one that does, do not build it.
 
+**Submission deadline: 29 November 2026.** Day-by-day plan: `docs/04-delivery/02-sprint-plan.md`.
+
 ## The problem (iHub Hackathon 2026, Challenge 2)
 
 **Commercial Operations Automation & B2B CRM Intelligence Platform.**

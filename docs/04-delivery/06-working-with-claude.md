@@ -26,8 +26,9 @@ Personal preferences go in `.claude/settings.local.json`, which is gitignored.
 3. **Specs before code.** Claude reads the spec the ticket points at. If the spec and the ticket
    disagree, stop and ask in the team channel; do not let Claude pick.
 4. **A human reads every line.** The developer who ran the session reads the whole diff before
-   opening the PR, and a second developer reviews it. "Claude wrote it" is not a review. Run
-   `/code-review` first so the reviewer's time goes on design, not typos.
+   opening the PR. "Claude wrote it" is not a review. Run `/code-review` before merging. A second
+   developer's review is optional, except for schema, `src/lib/`, scoring, auth and `deploy/`
+   changes. The developer merges; Claude does not.
 5. **Tests are not negotiable.** Scoring, grading and recommender logic is written test-first
    against the spec's worked examples. Never accept a change that edits a test to make it pass
    without checking the spec.

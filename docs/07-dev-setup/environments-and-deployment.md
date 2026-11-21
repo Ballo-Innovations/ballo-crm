@@ -218,7 +218,7 @@ VM):
 Done for dev and stage. For prod, or to rebuild the setup:
 
 1. Long-lived branches `dev`, `stage` and `main`, each protected: pull request required, CI
-   `check` must pass, one approval, no force pushes.
+   `check` must pass, no approval required, no force pushes.
 2. Environments `dev`, `stage` and `prod`, with required reviewers on `prod`.
 3. In each environment:
 
