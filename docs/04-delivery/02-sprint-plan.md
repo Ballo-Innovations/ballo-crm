@@ -28,4 +28,11 @@
 
 ## Cut list (if behind at mid-point, cut in this order)
 
-1. Live SMS/email → mock only 2. Sales dashboard → fold into executive 3. Account plan editor → read-only seeded plan 4. Signer order → single signer 5. Whitespace matrix → table of recommendations
+1. Live SMS/email → mock only
+2. Sales dashboard → fold into executive (the conversion funnel moves with it; it is a challenge capability)
+3. Account plan editor → read-only seeded plan
+4. Signer order → single signer
+5. Whitespace matrix → table of recommendations
+
+Before cutting anything, check "Do not cut without a fallback" in
+`01-product/00-goals-and-success-metrics.md`. A cut must never drop a challenge capability.

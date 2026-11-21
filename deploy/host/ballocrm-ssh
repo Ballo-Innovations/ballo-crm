@@ -1,0 +1,9 @@
+#!/bin/sh
+# Forced SSH command for BalloCRM team keys (see ballocrm-admin add-user). Whatever the
+# client asks to run is split into plain words and handed to the root-owned `ballocrm`
+# command, which validates every word. There is no path from here to a host shell.
+set -f
+IFS=' '
+# shellcheck disable=SC2086
+set -- ${SSH_ORIGINAL_COMMAND:-help}
+exec sudo -n /usr/local/bin/ballocrm "$@"

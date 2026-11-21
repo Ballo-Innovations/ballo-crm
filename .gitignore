@@ -54,3 +54,6 @@ next-env.d.ts
 # local scratch
 .DS_Store
 Thumbs.db
+
+# Claude Code: shared settings are committed, personal ones are not
+.claude/settings.local.json

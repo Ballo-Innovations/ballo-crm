@@ -12,6 +12,6 @@ Shared duties: everyone writes unit tests for their `service.ts`; everyone revie
 ## Rituals
 
 - Daily 15-min stand-up (blockers only).
-- End-of-day deploy + 5-min demo of what shipped.
+- End of day: Dev C promotes `dev` to `stage`, then a 5-min demo of what shipped, on stage.
 - Mid-point scope review (cut list activated here).
 - Dry-run judging 48h before.

@@ -7,7 +7,19 @@ under `[Unreleased]` in the relevant section (Added / Changed / Fixed / Removed)
 
 ## [Unreleased]
 
+### Added
+
+- `docs/01-product/00-goals-and-success-metrics.md`: the Challenge 2 problem statement, seven
+  goals with metrics, a project scorecard and a capability-to-ticket coverage table. Tickets gained
+  a `Goal` column; forecast definitions added to the dashboards spec.
+
 ### Changed
+
+- MinIO image switched to `cgr.dev/chainguard/minio` in both compose files; the official
+  `minio/minio` image is no longer published.
+
+- Git workflow: promotion flow `dev` → `stage` → `main` replaces trunk-based. Ticket E0-11
+  rewritten for the new hosting; E0-13 (prod host) added.
 
 - Re-scaffolded the repo to match the Compass project kit: code moved under `src/`, one folder
   per module in `src/modules/` (`actions` / `queries` / `service` / `types`), navigation renamed
@@ -16,6 +28,16 @@ under `[Unreleased]` in the relevant section (Added / Changed / Fixed / Removed)
   task files moved to `docs/_archive/ballocrm-firebase/`.
 
 ### Added
+
+- Environments: dev / stage / prod from the `dev` / `stage` / `main` branches. `Dockerfile`,
+  `deploy/` (compose file behind Traefik, deploy and backup scripts), a Deploy workflow (GHCR
+  image, SSH deploy, health check) and `GET /api/v1/health`. Nothing is deployed yet.
+- Runbook `docs/07-dev-setup/environments-and-deployment.md`, ADR-004 (hosting and backend),
+  `docs/04-delivery/06-working-with-claude.md`, shared `.claude/` settings and skills, `.mcp.json`.
+- Restricted SSH access for the team: `deploy/host/` (the `ballocrm` host command, forced SSH
+  command, sudo rule, admin script). Installed on the dev/staging VM with dev and stage
+  databases running.
+- `APP_ENV` variable; `db:seed --reset` refuses to run when it is `prod`.
 
 - Prisma schema v1 from the kit (`prisma/schema.prisma`), seed inputs and a seed entry point,
   `docker-compose.yml` (Postgres 16 + MinIO), kit `.env.example`.

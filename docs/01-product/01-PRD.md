@@ -10,6 +10,8 @@
 | **Legal / Contracts (Bwalya)**          | Generate, sign, store, renew contracts           | Contracts                          |
 | **Admin / IT**                          | Control access, audit, integrate                 | CIMS Admin, Integrations           |
 
+Goals, outcomes and metrics: [00-goals-and-success-metrics.md](00-goals-and-success-metrics.md).
+
 ## 2. Coverage matrix (Challenge 2 → feature → module → ticket epic)
 
 | Challenge bullet                         | Feature                                                      | Module       | Epic |

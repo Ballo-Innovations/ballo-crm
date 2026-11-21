@@ -3,6 +3,7 @@ import { z } from "zod";
 const blankToUndefined = (value: unknown) => (value === "" ? undefined : value);
 
 const envSchema = z.object({
+  APP_ENV: z.enum(["local", "dev", "stage", "prod"]).default("local"),
   DATABASE_URL: z.string().min(1),
   AUTH_SECRET: z.string().min(32),
   NEXTAUTH_URL: z.string().url(),

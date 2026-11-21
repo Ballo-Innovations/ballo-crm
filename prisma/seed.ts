@@ -20,6 +20,11 @@ function loadJson<T>(name: string): T {
 }
 
 async function main() {
+  // Reset wipes data: allowed locally and on dev, by hand on stage, never on prod.
+  if (process.argv.includes("--reset") && process.env.APP_ENV === "prod") {
+    throw new Error("Refusing to run db:seed --reset with APP_ENV=prod.");
+  }
+
   const products = loadJson<ProductSeed[]>("products.json");
   for (const product of products) {
     await db.product.upsert({ where: { code: product.code }, update: product, create: product });

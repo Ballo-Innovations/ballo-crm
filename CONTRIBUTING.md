@@ -13,8 +13,11 @@ Work comes from the ticket list in `docs/04-delivery/03-tickets.csv`. Every PR c
 
 Full rules: `docs/04-delivery/05-git-workflow.md`.
 
-- Trunk-based: short-lived branches `feat/<ticket-id>-slug`, squash-merge to `main`.
-- Conventional commits (`feat:`, `fix:`, `chore:`, `test:`).
+- Short-lived branches `feat/<ticket-id>-slug` from `dev`, squash-merged to `dev`.
+- `dev` → `stage` → `main` by promotion PR; each branch deploys to its own environment
+  (`docs/07-dev-setup/environments-and-deployment.md`).
+- Coding with Claude: `docs/04-delivery/06-working-with-claude.md`.
+- Conventional commits (`feat:`, `fix:`, `chore:`, `test:`, `docs:`).
 - Migrations only via `pnpm db:migrate --name <slug>`; never edit a committed migration.
 - `pnpm db:seed --reset` must always work on a fresh database.
 

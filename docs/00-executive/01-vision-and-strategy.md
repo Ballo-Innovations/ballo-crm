@@ -32,6 +32,8 @@ Most teams will build a generic CRM. The challenge is explicit that Infratel's p
 
 ## Success criteria
 
+The full list of goals and metrics is in `01-product/00-goals-and-success-metrics.md`. In short:
+
 - Our own dry-run judging panel scores ≥ 90% on `02-judging-strategy-platinum.md` 48h before submission.
 - Full demo script runs in < 8 minutes with zero manual DB edits.
 - Every challenge bullet maps to a visible screen or a documented adapter.

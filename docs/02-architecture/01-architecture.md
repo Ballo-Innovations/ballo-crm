@@ -10,7 +10,7 @@
 - **Files:** MinIO (S3-compatible) for contract PDFs
 - **PDF:** @react-pdf/renderer (contracts), pdf-lib (signature stamping)
 - **LLM:** Anthropic API from server only; outputs cached in `AiArtifact`
-- **Infra:** docker-compose (app, postgres, minio, mock-integrations); deployed to a single VPS or Railway/Render
+- **Infra:** docker-compose (app, postgres, minio, mock-integrations); deployed with Docker Compose behind Traefik on our own hosts, three environments (dev, stage, prod) - see ADR-004
 
 ## Diagram
 
@@ -83,5 +83,8 @@ Pure function `computeScore(input: ScoreInput): ScoreResult` in `intelligence/sc
 ## Deployment
 
 - `docker compose up` for local & judge-laptop fallback.
-- Production: Railway/Render (app + Postgres) + MinIO or Cloudflare R2. GitHub Actions: lint → typecheck → unit tests → build → deploy on `main`.
+- Three environments from three branches: `dev` → dev, `stage` → stage, `main` → prod. dev and stage run on a shared dev/staging VM, prod on a separate host; each has its own Postgres and MinIO.
+- GitHub Actions: lint → typecheck → unit tests → build → image to GHCR → deploy over SSH → health check.
+- `api.<app host>/v1/...` is the same app's `/api/v1/...`, routed by Traefik; there is no separate backend service.
+- Runbook: `docs/07-dev-setup/environments-and-deployment.md`. Decision: `adr/ADR-004-hosting-and-environments.md`.
 - Seed command idempotent: `pnpm db:seed --reset`.

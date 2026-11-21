@@ -1,0 +1,149 @@
+name: Deploy
+
+# Branch -> environment:  dev -> dev,  stage -> stage,  main -> prod.
+# Manual run: pick an environment and a ref (branch, tag or SHA) - this is also the rollback.
+# Runbook: docs/07-dev-setup/environments-and-deployment.md
+on:
+  push:
+    branches: [dev, stage, main]
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: Environment to deploy to
+        type: choice
+        options: [dev, stage, prod]
+        required: true
+      ref:
+        description: Branch, tag or commit SHA to deploy (blank = the selected branch)
+        type: string
+        required: false
+
+permissions:
+  contents: read
+  packages: write
+
+jobs:
+  plan:
+    runs-on: ubuntu-latest
+    outputs:
+      environment: ${{ steps.plan.outputs.environment }}
+      sha: ${{ steps.plan.outputs.sha }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.ref || github.sha }}
+      - id: plan
+        env:
+          INPUT_ENVIRONMENT: ${{ inputs.environment }}
+          BRANCH: ${{ github.ref_name }}
+        run: |
+          if [ -n "$INPUT_ENVIRONMENT" ]; then
+            environment="$INPUT_ENVIRONMENT"
+          else
+            case "$BRANCH" in
+              dev) environment=dev ;;
+              stage) environment=stage ;;
+              main) environment=prod ;;
+              *) echo "No environment for branch $BRANCH" >&2; exit 1 ;;
+            esac
+          fi
+          echo "environment=$environment" >> "$GITHUB_OUTPUT"
+          echo "sha=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
+
+  checks:
+    needs: plan
+    uses: ./.github/workflows/ci.yml
+    with:
+      ref: ${{ needs.plan.outputs.sha }}
+
+  image:
+    needs: [plan, checks]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ needs.plan.outputs.sha }}
+      - uses: docker/setup-buildx-action@v3
+      - uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - name: Build and push app image
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          target: runner
+          push: true
+          tags: ghcr.io/ballo-innovations/ballo-crm:${{ needs.plan.outputs.sha }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+      - name: Build and push migrate image
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          target: migrate
+          push: true
+          tags: ghcr.io/ballo-innovations/ballo-crm-migrate:${{ needs.plan.outputs.sha }}
+          cache-from: type=gha
+
+  deploy:
+    needs: [plan, image]
+    runs-on: ubuntu-latest
+    # Each environment has its own secrets; prod also needs an approver (set in GitHub).
+    environment: ${{ needs.plan.outputs.environment }}
+    concurrency:
+      group: deploy-${{ needs.plan.outputs.environment }}
+      cancel-in-progress: false
+    env:
+      ENVIRONMENT: ${{ needs.plan.outputs.environment }}
+      SHA: ${{ needs.plan.outputs.sha }}
+      DEPLOY_ENABLED: ${{ vars.DEPLOY_ENABLED }}
+      DEPLOY_HOST: ${{ secrets.DEPLOY_HOST }}
+      DEPLOY_USER: ${{ secrets.DEPLOY_USER }}
+      APP_URL: ${{ vars.APP_URL }}
+    steps:
+      - name: Skip when the environment is not set up yet
+        if: env.DEPLOY_ENABLED != 'true'
+        run: echo "DEPLOY_ENABLED is not 'true' for $ENVIRONMENT - images were built, nothing was deployed."
+      - uses: actions/checkout@v4
+        if: env.DEPLOY_ENABLED == 'true'
+        with:
+          ref: ${{ needs.plan.outputs.sha }}
+      - name: Set up SSH
+        if: env.DEPLOY_ENABLED == 'true'
+        env:
+          DEPLOY_SSH_KEY: ${{ secrets.DEPLOY_SSH_KEY }}
+          DEPLOY_KNOWN_HOSTS: ${{ secrets.DEPLOY_KNOWN_HOSTS }}
+        run: |
+          mkdir -p ~/.ssh
+          printf '%s\n' "$DEPLOY_SSH_KEY" > ~/.ssh/deploy_key
+          printf '%s\n' "$DEPLOY_KNOWN_HOSTS" > ~/.ssh/known_hosts
+          chmod 600 ~/.ssh/deploy_key ~/.ssh/known_hosts
+      - name: Deploy
+        if: env.DEPLOY_ENABLED == 'true'
+        env:
+          GHCR_USER: ${{ github.actor }}
+          GHCR_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          # The deploy key can only run the `ballocrm` host command (deploy/host/ballocrm).
+          target="$DEPLOY_USER@$DEPLOY_HOST"
+          ssh_opts="-i $HOME/.ssh/deploy_key -o StrictHostKeyChecking=yes"
+          tar -C deploy -cf - compose.yml deploy.sh backup.sh | ssh $ssh_opts "$target" "$ENVIRONMENT sync"
+          # Short-lived registry login: the token expires when this job ends.
+          printf '%s' "$GHCR_TOKEN" | ssh $ssh_opts "$target" "$ENVIRONMENT login $GHCR_USER"
+          status=0
+          ssh $ssh_opts "$target" "$ENVIRONMENT deploy $SHA" || status=$?
+          ssh $ssh_opts "$target" "$ENVIRONMENT logout"
+          exit $status
+      - name: Smoke test
+        if: env.DEPLOY_ENABLED == 'true' && env.APP_URL != ''
+        run: |
+          for attempt in $(seq 1 12); do
+            if curl -fsS "$APP_URL/api/v1/health" | grep -q "\"release\":\"$SHA\""; then
+              echo "Healthy on $SHA"; exit 0
+            fi
+            sleep 5
+          done
+          echo "Health check did not report release $SHA" >&2
+          exit 1
