@@ -115,6 +115,34 @@ Reference: option C in `docs/03-design/reference/form-options.html` (click into 
 - **Submit button** shows a busy label ("Creating…") and is disabled while saving; success
   shows a toast.
 
+## Buttons (decided: pills, with an icon-circle hero)
+
+Reference: option D in `docs/03-design/reference/button-options.html`.
+
+- **Shape:** every button is a fully rounded pill. Heights 34 / 44 / 52px (sm / md / lg), side
+  padding 14 / 20 / 26px, 600 weight, 13 / 14 / 15px text, 16px icon before the label (a
+  trailing chevron for dropdown triggers). Medium is the default; large for phone footers and
+  empty states.
+- **Variants:**
+  - **Hero:** black pill with the icon in a white circle on the left (like the active nav item);
+    the circle tilts slightly on hover. **At most one per area** (top bar, page header, drawer
+    footer, empty state) for the main thing to do there: Quick add, Add lead, Create, Advance
+    stage.
+  - **Primary:** black pill. Save, Export, Confirm.
+  - **Secondary:** outline pill (1.5px `--ink`), transparent fill. Cancel, Stage filter.
+  - **Tertiary:** `--soft` fill, no border. Filters and toggles on white cards.
+  - **Ghost:** no fill until hover. Inline and low-emphasis actions.
+  - **Destructive:** the outlined red pill starts a destructive action (Mark as lost, Delete);
+    the solid red pill appears only inside the confirm dialog.
+- **Icon buttons:** round, same heights; `--soft` fill by default, black for the main one
+  (Quick add on phones). Always have an `aria-label` and tooltip. Notification dot top right.
+- **Split button:** black pill with a divider and a chevron segment for alternatives.
+- **States:** hover darkens or adds a soft fill; press scales to 97%; focus shows a 2px `--ink`
+  ring 3px out; disabled is 40% opacity with a not-allowed cursor; loading keeps the button's
+  width, swaps the icon for a spinner and blocks repeat clicks.
+- **Placement:** in footers the secondary or destructive action sits left and the hero or
+  primary sits right.
+
 ## Components (shadcn, restyled to the above)
 
 KpiCard (icon circle, big number, two-line label; one may be highlighted with a black icon and
