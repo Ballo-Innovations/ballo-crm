@@ -4,7 +4,7 @@ out
 build
 coverage
 public
-package-lock.json
-components/ui
-docs/reference
+pnpm-lock.yaml
+src/components/ui
+docs/_archive
 CHANGELOG.md

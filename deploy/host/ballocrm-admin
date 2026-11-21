@@ -1,0 +1,113 @@
+#!/usr/bin/env bash
+# BalloCRM host administration. Root only. Installed at /usr/local/sbin/ballocrm-admin.
+#   ballocrm-admin init-env <dev|stage|prod> <app-host>   create an environment directory + .env
+#   ballocrm-admin add-user <name> < public-key           create crm-<name>, limited to `ballocrm`
+#   ballocrm-admin add-github-user <github-user> [name] same, using their first key on GitHub
+#   ballocrm-admin remove-user <name>                     delete crm-<name> and end their sessions
+#   ballocrm-admin list-users
+set -euo pipefail
+PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+
+die() {
+  echo "ballocrm-admin: $*" >&2
+  exit 1
+}
+[ "$(id -u)" -eq 0 ] || die "must run as root"
+
+action="${1:-}"
+case "$action" in
+  init-env)
+    env="${2:-}"
+    host="${3:-}"
+    case "$env" in dev | stage | prod) ;; *) die "environment must be dev, stage or prod" ;; esac
+    [[ "$host" =~ ^[a-z0-9.-]+$ ]] || die "app host looks wrong: '$host'"
+    dir="/var/apps/ballocrm-$env/deploy"
+    install -d -o root -g root -m 0750 "/var/apps/ballocrm-$env" "$dir"
+    install -d -o root -g root -m 0700 /var/lib/ballocrm/docker "/var/backups/ballocrm/$env"
+    if [ -f "$dir/.env" ]; then
+      echo "$dir/.env already exists - left untouched"
+    else
+      umask 077
+      cat > "$dir/.env" <<ENV
+APP_ENV=$env
+COMPOSE_PROJECT_NAME=ballocrm-$env
+APP_HOST=$host
+
+POSTGRES_PASSWORD=$(openssl rand -hex 24)
+MINIO_ROOT_USER=ballocrm
+MINIO_ROOT_PASSWORD=$(openssl rand -hex 24)
+S3_BUCKET=contracts
+
+AUTH_SECRET=$(openssl rand -hex 32)
+
+ANTHROPIC_API_KEY=
+
+INTEGRATION_MODE=mock
+INTEGRATIONS_URL=http://mock-integrations:4100
+EMAIL_WEBHOOK_SECRET=$(openssl rand -hex 24)
+
+AT_USERNAME=sandbox
+AT_API_KEY=
+ENV
+      chmod 600 "$dir/.env"
+      echo "created $dir/.env with generated secrets"
+    fi
+    ;;
+
+  add-user)
+    name="${2:-}"
+    [[ "$name" =~ ^[a-z][a-z0-9-]{1,24}$ ]] || die "name must be lowercase letters, digits, hyphens"
+    user="crm-$name"
+    key="$(cat)"
+    [ "$(printf '%s\n' "$key" | grep -c .)" -eq 1 ] || die "pass exactly one public key on stdin"
+    tmp="$(mktemp)"
+    trap 'rm -f "$tmp"' EXIT
+    printf '%s\n' "$key" > "$tmp"
+    ssh-keygen -l -f "$tmp" > /dev/null || die "that is not a valid SSH public key"
+    case "$key" in ssh-* | ecdsa-* | sk-*) ;; *) die "key must start with its type, no options" ;; esac
+
+    getent group ballocrm > /dev/null || groupadd --system ballocrm
+    if ! id "$user" > /dev/null 2>&1; then
+      useradd --create-home --shell /bin/sh --gid ballocrm --comment "BalloCRM team" "$user"
+      passwd --lock "$user" > /dev/null
+    fi
+    home="$(getent passwd "$user" | cut -d: -f6)"
+    # Root owns the home and the key file, so the account cannot change its own restrictions.
+    chown root:root "$home"
+    chmod 755 "$home"
+    install -d -o root -g root -m 0755 "$home/.ssh"
+    printf 'restrict,pty,command="/usr/local/bin/ballocrm-ssh" %s\n' "$key" > "$home/.ssh/authorized_keys"
+    chown root:root "$home/.ssh/authorized_keys"
+    chmod 644 "$home/.ssh/authorized_keys"
+    echo "$user can now run: ssh $user@<host> <env> <action>"
+    ;;
+
+  add-github-user)
+    # Uses the first public key the person has published on GitHub (github.com/<user>.keys).
+    gh_user="${2:-}"
+    [[ "$gh_user" =~ ^[A-Za-z0-9-]{1,39}$ ]] || die "GitHub username looks wrong: '$gh_user'"
+    name="${3:-$(printf '%s' "$gh_user" | tr 'A-Z' 'a-z')}"
+    keys="$(curl -fsS -m 20 "https://github.com/$gh_user.keys" | grep -E '^(ssh-|ecdsa-|sk-)' || true)"
+    [ -n "$keys" ] || die "$gh_user has no SSH key on GitHub yet (GitHub > Settings > SSH and GPG keys)"
+    printf '%s\n' "$keys" | head -n 1 | "$0" add-user "$name"
+    ;;
+
+  remove-user)
+    name="${2:-}"
+    [[ "$name" =~ ^[a-z][a-z0-9-]{1,24}$ ]] || die "name must be lowercase letters, digits, hyphens"
+    user="crm-$name"
+    id "$user" > /dev/null 2>&1 || die "$user does not exist"
+    [ "$(id -gn "$user")" = "ballocrm" ] || die "$user is not a BalloCRM account"
+    pkill -KILL -u "$user" || true
+    # The home is root-owned, so remove it ourselves rather than with userdel --remove.
+    userdel "$user"
+    rm -rf "/home/$user"
+    echo "removed $user"
+    ;;
+
+  list-users)
+    getent passwd | awk -F: -v gid="$(getent group ballocrm | cut -d: -f3)" '$4 == gid { print $1 }'
+    ;;
+
+  *) die "usage: ballocrm-admin init-env|add-user|add-github-user|remove-user|list-users ..." ;;
+esac

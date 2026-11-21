@@ -1,0 +1,193 @@
+#!/usr/bin/env bash
+# BalloCRM host command. The ONLY thing members of the `ballocrm` group can run as root
+# (see ballocrm.sudoers), and the only thing their SSH keys can reach (see ballocrm-ssh).
+# It works strictly inside /var/apps/ballocrm-<env>/deploy and never passes free text to
+# docker, so it gives no access to other projects on the host.
+# Installed root-owned at /usr/local/bin/ballocrm. Docs:
+# docs/07-dev-setup/environments-and-deployment.md ("SSH access for the team").
+set -euo pipefail
+PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+umask 077
+
+CI_USER="crm-ci"
+CALLER="${SUDO_USER:-$(id -un)}"
+# BalloCRM's registry login is kept apart from the host's other Docker credentials.
+export DOCKER_CONFIG=/var/lib/ballocrm/docker
+
+usage() {
+  cat <<'USAGE'
+Usage: ssh <you>@<host> <env> <action> [argument]
+
+  <env>     dev | stage | prod (whichever exist on this host)
+
+  status            containers and the deployed release
+  health            call the app's health endpoint
+  logs [service]    last 300 log lines         (service: app | db | minio, default app)
+  follow [service]  stream logs until Ctrl-C
+  restart           restart the app container
+  deploy <sha>      deploy a commit SHA whose image is already on this host
+  rollback          deploy the previous release again
+  migrate           run `prisma migrate deploy` with the deployed release
+  seed [--reset]    run the seed (--reset wipes data: never on prod, backs up first on stage)
+  backup            write a database dump now
+  backups           list database dumps
+  psql              database prompt            (connect with: ssh -t ...)
+  shell             shell inside the app container (connect with: ssh -t ...)
+
+New commits are deployed by merging to dev / stage / main (GitHub Actions), not from here.
+USAGE
+}
+
+die() {
+  echo "ballocrm: $*" >&2
+  exit 1
+}
+
+[ "$#" -le 3 ] || die "too many arguments (run with no arguments for help)"
+env="${1:-}"
+action="${2:-}"
+arg="${3:-}"
+
+case "$env" in
+  "" | help | -h | --help)
+    usage
+    exit 0
+    ;;
+  dev | stage | prod) ;;
+  *) die "unknown environment '$env' (dev, stage or prod)" ;;
+esac
+
+dir="/var/apps/ballocrm-$env/deploy"
+[ -d "$dir" ] || die "environment '$env' is not set up on this host"
+cd "$dir"
+
+logger -t ballocrm -- "$CALLER: $env $action $arg" || true
+
+release="none"
+[ -f .release ] && release="$(cat .release)"
+export IMAGE_TAG="$release"
+
+dc() { docker compose -f compose.yml "$@"; }
+need_compose() { [ -f compose.yml ] || die "no compose.yml yet - the first deploy has not run"; }
+need_release() { [ "$release" != "none" ] || die "nothing is deployed to $env yet"; }
+no_arg() { [ -z "$arg" ] || die "'$action' takes no argument"; }
+ci_only() { [ "$CALLER" = "$CI_USER" ] || [ "$CALLER" = "root" ] || die "'$action' is reserved for the deploy pipeline"; }
+service() {
+  case "${arg:-app}" in
+    app | db | minio) echo "${arg:-app}" ;;
+    *) die "unknown service '$arg' (app, db or minio)" ;;
+  esac
+}
+
+case "$action" in
+  status)
+    no_arg
+    need_compose
+    echo "release: $release"
+    dc ps
+    ;;
+  health)
+    no_arg
+    need_compose
+    dc exec -T app wget -qO- http://127.0.0.1:3000/api/v1/health
+    echo
+    ;;
+  logs)
+    need_compose
+    svc="$(service)"
+    dc logs --tail 300 "$svc"
+    ;;
+  follow)
+    need_compose
+    svc="$(service)"
+    exec docker compose -f compose.yml logs --tail 50 -f "$svc"
+    ;;
+  restart)
+    no_arg
+    need_compose
+    dc restart app
+    ;;
+  deploy)
+    need_compose
+    [[ "$arg" =~ ^[0-9a-f]{7,40}$ ]] || die "deploy needs a commit SHA (7-40 hex characters)"
+    ./deploy.sh "$arg"
+    ;;
+  rollback)
+    no_arg
+    need_compose
+    [ -f .release.previous ] || die "no previous release recorded"
+    ./deploy.sh "$(cat .release.previous)"
+    ;;
+  migrate)
+    no_arg
+    need_compose
+    need_release
+    dc run --rm migrate
+    ;;
+  seed)
+    need_compose
+    need_release
+    case "$arg" in
+      "") dc run --rm migrate pnpm db:seed ;;
+      --reset)
+        [ "$env" != "prod" ] || die "seed --reset is never allowed on prod"
+        [ "$env" != "stage" ] || ./backup.sh
+        dc run --rm migrate pnpm db:seed --reset
+        ;;
+      *) die "seed takes no argument or --reset" ;;
+    esac
+    ;;
+  backup)
+    no_arg
+    need_compose
+    ./backup.sh
+    ;;
+  backups)
+    no_arg
+    ls -lh "/var/backups/ballocrm/$env" 2>/dev/null || echo "no backups yet"
+    ;;
+  psql)
+    no_arg
+    need_compose
+    # shellcheck disable=SC2046
+    exec docker compose -f compose.yml exec $([ -t 0 ] || echo -T) db psql -U ballocrm ballocrm
+    ;;
+  shell)
+    no_arg
+    need_compose
+    [ -t 0 ] || die "shell needs a terminal: connect with ssh -t"
+    exec docker compose -f compose.yml exec app sh
+    ;;
+
+  # --- deploy pipeline only -------------------------------------------------------------
+  sync)
+    # Reads a tar of compose.yml, deploy.sh and backup.sh on stdin. Whoever controls
+    # compose.yml controls the host, so only the pipeline (reviewed code) may replace it.
+    no_arg
+    ci_only
+    tmp="$(mktemp -d)"
+    trap 'rm -rf "$tmp"' EXIT
+    tar -x --no-same-owner --no-same-permissions -C "$tmp" -f -
+    for file in compose.yml deploy.sh backup.sh; do
+      [ -f "$tmp/$file" ] && [ ! -L "$tmp/$file" ] || die "sync: $file missing from upload"
+    done
+    install -o root -g root -m 0644 "$tmp/compose.yml" compose.yml
+    install -o root -g root -m 0755 "$tmp/deploy.sh" deploy.sh
+    install -o root -g root -m 0755 "$tmp/backup.sh" backup.sh
+    echo "synced deploy files for $env"
+    ;;
+  login)
+    # Reads a registry token on stdin.
+    ci_only
+    [[ "$arg" =~ ^[][A-Za-z0-9._-]{1,60}$ ]] || die "login needs a registry username"
+    mkdir -p "$DOCKER_CONFIG"
+    docker login ghcr.io -u "$arg" --password-stdin
+    ;;
+  logout)
+    no_arg
+    ci_only
+    docker logout ghcr.io
+    ;;
+  "") die "missing action (run with no arguments for help)" ;;
+  *) die "unknown action '$action' (run with no arguments for help)" ;;
+esac

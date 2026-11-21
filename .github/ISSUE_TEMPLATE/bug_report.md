@@ -30,4 +30,4 @@ assignees: ""
 
 ## Related docs or tasks
 
-<!-- Link the relevant docs/tasks/*.md entry or docs/*.md page if applicable. -->
+<!-- Link the relevant ticket ID from docs/04-delivery/03-tickets.csv or docs page if applicable. -->

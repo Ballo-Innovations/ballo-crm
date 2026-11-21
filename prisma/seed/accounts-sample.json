@@ -1,0 +1,74 @@
+[
+  {
+    "name": "Zambezi Commercial Bank",
+    "sector": "BANKING",
+    "tier": "TIER1",
+    "lifecycle": "ACTIVE",
+    "sites": 12,
+    "city": "Lusaka",
+    "subscriptions": ["FIB", "COLO", "MPLS"]
+  },
+  {
+    "name": "Konkola Copper Resources",
+    "sector": "MINING",
+    "tier": "TIER1",
+    "lifecycle": "ACTIVE",
+    "sites": 4,
+    "city": "Chingola",
+    "subscriptions": ["FIB", "CLOUD"]
+  },
+  {
+    "name": "ZedMobile",
+    "sector": "TELECOMS",
+    "tier": "TIER1",
+    "lifecycle": "ACTIVE",
+    "sites": 30,
+    "city": "Lusaka",
+    "subscriptions": ["COLO", "DRAAS", "MSEC"]
+  },
+  {
+    "name": "Ministry of Health",
+    "sector": "GOVERNMENT",
+    "tier": "TIER2",
+    "lifecycle": "ONBOARDING",
+    "sites": 8,
+    "city": "Lusaka",
+    "subscriptions": ["FIB"]
+  },
+  {
+    "name": "Hope Zambia",
+    "sector": "NGO",
+    "tier": "TIER3",
+    "lifecycle": "ACTIVE",
+    "sites": 2,
+    "city": "Ndola",
+    "subscriptions": ["FIB", "VOICE"]
+  },
+  {
+    "name": "MegaMart Zambia",
+    "sector": "RETAIL",
+    "tier": "TIER2",
+    "lifecycle": "AT_RISK",
+    "sites": 14,
+    "city": "Kitwe",
+    "subscriptions": ["FIB", "CLOUD"]
+  },
+  {
+    "name": "SolarZed",
+    "sector": "ENERGY",
+    "tier": "TIER2",
+    "lifecycle": "PROSPECT",
+    "sites": 3,
+    "city": "Solwezi",
+    "subscriptions": []
+  },
+  {
+    "name": "UNZA ICT",
+    "sector": "EDUCATION_HEALTH",
+    "tier": "TIER3",
+    "lifecycle": "ACTIVE",
+    "sites": 1,
+    "city": "Lusaka",
+    "subscriptions": ["FIB", "COLO"]
+  }
+]
