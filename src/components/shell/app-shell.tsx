@@ -6,6 +6,7 @@ import { usePathname } from "next/navigation";
 import { Bell, ChevronLeft, LayoutDashboard, LogOut, Menu, Plus, Search, X } from "lucide-react";
 
 import { signOutAction } from "@/app/login/actions";
+import { BrandMark } from "@/components/marketing/brand-logo";
 import { ThemeToggle } from "@/components/shared/theme-toggle";
 import { CommandPalette } from "@/components/shell/command-palette";
 import { NAV_ICONS } from "@/components/shell/nav-icons";
@@ -117,9 +118,7 @@ export function AppShell({ user, children }: { user: ShellUser; children: React.
             href="/dashboard"
             className="flex items-center gap-2.5 text-2xl font-bold whitespace-nowrap"
           >
-            <span className="bg-ink text-shell grid size-9 shrink-0 place-items-center rounded-full text-base">
-              b
-            </span>
+            <BrandMark className="size-10 shrink-0" />
             <span className={cn(collapsed && "md:hidden")}>{siteConfig.name}</span>
           </Link>
           <button

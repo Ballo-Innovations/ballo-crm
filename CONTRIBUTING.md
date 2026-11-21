@@ -24,13 +24,14 @@ Full rules: `docs/04-delivery/05-git-workflow.md`.
 ## Definition of done
 
 `docs/04-delivery/04-definition-of-done.md`. In short: one review, zod + `withAudit` +
-`requireRole` on every server action, unit tests for any computation in `service.ts`, loading /
+`requireRole` on every server action, a test for every acceptance criterion (unit, integration or Playwright), loading /
 empty / error states, works at 390px, seed data exercises it, CI green.
 
 ## Checks
 
 ```bash
-pnpm lint && pnpm typecheck && pnpm test && pnpm build
+pnpm lint && pnpm typecheck && pnpm test:coverage && pnpm test:int && pnpm build && pnpm test:e2e
 ```
 
-CI runs the same four on every PR.
+CI runs the same six on every PR. Testing rules, including what each ticket must add:
+`docs/05-qa/01-test-strategy.md`.
