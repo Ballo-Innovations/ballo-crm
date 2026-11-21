@@ -41,12 +41,8 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
-# firebase
-.firebase/
-firebase-debug.log
-firestore-debug.log
-ui-debug.log
-*.firebase.json.bak
+# local reference repos (read-only inspiration, never copied)
+/reference/
 
 # editors
 .idea/
@@ -58,3 +54,6 @@ ui-debug.log
 # local scratch
 .DS_Store
 Thumbs.db
+
+# Claude Code: shared settings are committed, personal ones are not
+.claude/settings.local.json

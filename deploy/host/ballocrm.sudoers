@@ -1,0 +1,3 @@
+# BalloCRM: members of the ballocrm group may run the BalloCRM host command as root,
+# and nothing else. Installed at /etc/sudoers.d/ballocrm (mode 0440).
+%ballocrm ALL=(root) NOPASSWD: /usr/local/bin/ballocrm

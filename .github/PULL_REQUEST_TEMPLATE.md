@@ -1,28 +1,24 @@
-## Summary
+## What
 
-<!-- What does this PR do, and why? Link the task (docs/tasks/sprint-*.md, Task ID) it closes. -->
+<!-- What does this PR do? -->
 
-Closes: <!-- Task ID, e.g. INFRA-003 -->
+Ticket: <!-- e.g. E1-04 -->
 
-## Changes
+Goal: <!-- e.g. G1, from the ticket's Goal column -->
 
--
+## Why
 
-## Documentation
+## Screenshot
 
-- [ ] Relevant `docs/*.md` updated (or N/A - explain why below)
-- [ ] `docs/progress.md` updated
-- [ ] `docs/changelog.md` entry added
+<!-- Required for UI changes; include the 390px view. -->
 
-## Testing
+## Test notes
 
-<!-- How did you verify this? Commands run, screenshots, manual steps. -->
+<!-- How did you verify this? -->
 
-- [ ] `npm run lint` passes
-- [ ] `npm run typecheck` passes
-- [ ] `npm run build` passes
-- [ ] Manually verified in the browser (UI changes)
-
-## Screenshots
-
-<!-- Before/after for UI changes. -->
+- [ ] `pnpm lint`, `pnpm typecheck`, `pnpm test`, `pnpm build` pass
+- [ ] Server actions: zod validation, `requireRole`, `withAudit`
+- [ ] Loading, empty and error states
+- [ ] Seed data exercises it
+- [ ] Targets `dev` (only promotion PRs target `stage` or `main`)
+- [ ] Written with Claude? A human has read the whole diff

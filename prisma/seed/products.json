@@ -1,0 +1,30 @@
+[
+  {
+    "code": "FIB",
+    "name": "Dedicated Fibre Internet",
+    "category": "Connectivity",
+    "listPrice": 18000000
+  },
+  { "code": "MPLS", "name": "MPLS / SD-WAN", "category": "Connectivity", "listPrice": 24000000 },
+  { "code": "COLO", "name": "Colocation (rack)", "category": "Data Centre", "listPrice": 15000000 },
+  { "code": "CLOUD", "name": "Cloud Compute (IaaS)", "category": "Cloud", "listPrice": 12000000 },
+  {
+    "code": "DRAAS",
+    "name": "Disaster Recovery as a Service",
+    "category": "Cloud",
+    "listPrice": 20000000
+  },
+  { "code": "BACKUP", "name": "Backup as a Service", "category": "Cloud", "listPrice": 6000000 },
+  {
+    "code": "MSEC",
+    "name": "Managed Security / SOC",
+    "category": "Security",
+    "listPrice": 16000000
+  },
+  {
+    "code": "VOICE",
+    "name": "SIP Trunking / Voice",
+    "category": "Connectivity",
+    "listPrice": 4800000
+  }
+]

@@ -1,0 +1,303 @@
+// Compass — Prisma schema (v1). Money in ngwee (ZMW*100). Dates UTC.
+generator client { provider = "prisma-client-js" }
+datasource db { provider = "postgresql"; url = env("DATABASE_URL") }
+
+enum Role { ADMIN MANAGER REP MARKETING LEGAL READONLY }
+enum Sector { BANKING MINING TELECOMS GOVERNMENT NGO RETAIL ENERGY EDUCATION_HEALTH }
+enum Lifecycle { PROSPECT ONBOARDING ACTIVE AT_RISK CHURNED }
+enum Tier { TIER1 TIER2 TIER3 }
+enum LeadStatus { NEW CONTACTED QUALIFIED DISQUALIFIED CONVERTED }
+enum Stage { QUALIFY DISCOVER PROPOSE NEGOTIATE CLOSED_WON CLOSED_LOST }
+enum Grade { BRONZE SILVER GOLD PLATINUM }
+enum CommitteeRole { ECONOMIC_BUYER CHAMPION TECHNICAL_BUYER PROCUREMENT USER INFLUENCER BLOCKER }
+enum Stance { SUPPORTER NEUTRAL SKEPTIC }
+enum EngagementType { DC_TOUR DEMO EVENT MEETING CALL EMAIL_IN EMAIL_OUT SMS NOTE }
+enum ContractStatus { DRAFT SENT PARTIALLY_SIGNED SIGNED ACTIVE EXPIRED TERMINATED }
+enum InsightSeverity { INFO WARNING OPPORTUNITY }
+
+model User {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  name      String
+  password  String
+  role      Role     @default(REP)
+  teamId    String?
+  createdAt DateTime @default(now())
+  ownedAccounts Account[]   @relation("owner")
+  ownedOpps     Opportunity[] @relation("oppOwner")
+  audits        AuditLog[]
+  apiKeys       ApiKey[]
+}
+
+model Account {
+  id             String    @id @default(cuid())
+  name           String
+  sector         Sector
+  tier           Tier      @default(TIER3)
+  lifecycle      Lifecycle @default(PROSPECT)
+  employees      Int?
+  sites          Int       @default(1)
+  website        String?
+  city           String?
+  ownerId        String
+  owner          User      @relation("owner", fields: [ownerId], references: [id])
+  engagementScore Int      @default(0)
+  healthScore    Float     @default(1.0)
+  consentMarketing Boolean @default(false)
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+  contacts       Contact[]
+  opportunities  Opportunity[]
+  subscriptions  Subscription[]
+  events         EngagementEvent[]
+  contracts      Contract[]
+  recommendations Recommendation[]
+  accountPlan    AccountPlan?
+  insights       Insight[]
+  @@index([sector]) @@index([ownerId])
+}
+
+model Contact {
+  id         String   @id @default(cuid())
+  accountId  String
+  account    Account  @relation(fields: [accountId], references: [id], onDelete: Cascade)
+  firstName  String
+  lastName   String
+  title      String?
+  email      String?
+  phone      String?
+  influence  Int      @default(3) // 1-5
+  stance     Stance   @default(NEUTRAL)
+  committeeMemberships CommitteeMember[]
+  events     EngagementEvent[]
+  @@index([accountId])
+}
+
+model Lead {
+  id        String     @id @default(cuid())
+  company   String
+  contactName String
+  email     String?
+  phone     String?
+  sector    Sector?
+  source    String?
+  status    LeadStatus @default(NEW)
+  notes     String?
+  ownerId   String?
+  convertedAccountId String?
+  convertedOpportunityId String?
+  createdAt DateTime   @default(now())
+}
+
+model Opportunity {
+  id            String   @id @default(cuid())
+  accountId     String
+  account       Account  @relation(fields: [accountId], references: [id])
+  name          String
+  productCodes  String[]
+  amount        Int      // ngwee, annual value
+  stage         Stage    @default(QUALIFY)
+  closeDate     DateTime
+  ownerId       String
+  owner         User     @relation("oppOwner", fields: [ownerId], references: [id])
+  competitorPresent Boolean @default(false)
+  budgetConfirmed   Boolean @default(false)
+  score         Int      @default(0)
+  grade         Grade    @default(BRONZE)
+  weightedValue Int      @default(0)
+  explanation   Json?
+  lastActivityAt DateTime @default(now())
+  wonAt         DateTime?
+  lostReason    String?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  committee     CommitteeMember[]
+  events        EngagementEvent[]
+  scoreHistory  ScoreHistory[]
+  contracts     Contract[]
+  @@index([accountId]) @@index([stage]) @@index([ownerId])
+}
+
+model CommitteeMember {
+  id            String        @id @default(cuid())
+  opportunityId String
+  opportunity   Opportunity   @relation(fields: [opportunityId], references: [id], onDelete: Cascade)
+  contactId     String
+  contact       Contact       @relation(fields: [contactId], references: [id])
+  role          CommitteeRole
+  engaged       Boolean       @default(false)
+  @@unique([opportunityId, contactId])
+}
+
+model ScoreHistory {
+  id            String   @id @default(cuid())
+  opportunityId String
+  opportunity   Opportunity @relation(fields: [opportunityId], references: [id], onDelete: Cascade)
+  score         Int
+  grade         Grade
+  at            DateTime @default(now())
+}
+
+model Product {
+  code      String  @id
+  name      String
+  category  String
+  listPrice Int     // ngwee / yr
+  subscriptions Subscription[]
+}
+
+model Subscription {
+  id          String   @id @default(cuid())
+  accountId   String
+  account     Account  @relation(fields: [accountId], references: [id], onDelete: Cascade)
+  productCode String
+  product     Product  @relation(fields: [productCode], references: [code])
+  annualValue Int
+  startDate   DateTime
+  endDate     DateTime?
+  usagePct    Int?     // 0-100 utilisation signal
+  active      Boolean  @default(true)
+  @@index([accountId])
+}
+
+model EngagementEvent {
+  id            String         @id @default(cuid())
+  accountId     String
+  account       Account        @relation(fields: [accountId], references: [id], onDelete: Cascade)
+  opportunityId String?
+  opportunity   Opportunity?   @relation(fields: [opportunityId], references: [id])
+  contactId     String?
+  contact       Contact?       @relation(fields: [contactId], references: [id])
+  type          EngagementType
+  title         String
+  body          String?
+  productCode   String?        // for demos
+  occurredAt    DateTime       @default(now())
+  createdById   String?
+  meta          Json?
+  @@index([accountId, occurredAt])
+}
+
+model AccountPlan {
+  id          String  @id @default(cuid())
+  accountId   String  @unique
+  account     Account @relation(fields: [accountId], references: [id], onDelete: Cascade)
+  objectives  String
+  strategy    String
+  playbook    Json    // [{task, done, dueDate}]
+  updatedAt   DateTime @updatedAt
+}
+
+model Recommendation {
+  id             String  @id @default(cuid())
+  accountId      String
+  account        Account @relation(fields: [accountId], references: [id], onDelete: Cascade)
+  productCode    String
+  probability    Float
+  estimatedValue Int
+  reasons        String[]
+  narrative      String?
+  generatedAt    DateTime @default(now())
+  dismissed      Boolean  @default(false)
+  @@index([accountId])
+}
+
+model Insight {
+  id        String          @id @default(cuid())
+  type      String
+  severity  InsightSeverity
+  title     String
+  body      String
+  linkHref  String?
+  accountId String?
+  account   Account?        @relation(fields: [accountId], references: [id])
+  dismissed Boolean         @default(false)
+  createdAt DateTime        @default(now())
+}
+
+model ContractTemplate {
+  id        String @id @default(cuid())
+  name      String
+  body      String   // markdown with {{mergeFields}}
+  version   Int      @default(1)
+  contracts Contract[]
+}
+
+model Contract {
+  id            String         @id @default(cuid())
+  accountId     String
+  account       Account        @relation(fields: [accountId], references: [id])
+  opportunityId String?
+  opportunity   Opportunity?   @relation(fields: [opportunityId], references: [id])
+  templateId    String
+  template      ContractTemplate @relation(fields: [templateId], references: [id])
+  title         String
+  status        ContractStatus @default(DRAFT)
+  annualValue   Int
+  startDate     DateTime
+  endDate       DateTime
+  renewalNoticeDays Int        @default(90)
+  pdfKey        String?        // MinIO object key
+  signedPdfKey  String?
+  mergeData     Json
+  signers       Signer[]
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+  @@index([endDate])
+}
+
+model Signer {
+  id         String   @id @default(cuid())
+  contractId String
+  contract   Contract @relation(fields: [contractId], references: [id], onDelete: Cascade)
+  name       String
+  email      String
+  order      Int
+  token      String   @unique
+  signedAt   DateTime?
+  signatureKey String?
+  ip         String?
+}
+
+model AuditLog {
+  id        String   @id @default(cuid())
+  actorId   String?
+  actor     User?    @relation(fields: [actorId], references: [id])
+  entity    String
+  entityId  String
+  action    String   // CREATE UPDATE DELETE EXPORT
+  before    Json?
+  after     Json?
+  at        DateTime @default(now())
+  @@index([entity, entityId]) @@index([at])
+}
+
+model ApiKey {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  name      String
+  hash      String   @unique
+  lastUsed  DateTime?
+  createdAt DateTime @default(now())
+}
+
+model IntegrationLog {
+  id        String   @id @default(cuid())
+  adapter   String   // ESPF ERP SMS TELEPHONY EMAIL
+  direction String   // IN OUT
+  payload   Json
+  status    String
+  at        DateTime @default(now())
+}
+
+model AiArtifact {
+  id        String   @id @default(cuid())
+  kind      String   // RECO_NARRATIVE FOCUS_ONELINER
+  refId     String
+  prompt    String
+  output    String
+  model     String
+  createdAt DateTime @default(now())
+  @@index([kind, refId])
+}

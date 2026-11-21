@@ -1,0 +1,62 @@
+{
+  "rules": [
+    {
+      "id": 1,
+      "has": ["COLO"],
+      "lacks": ["DRAAS"],
+      "recommend": "DRAAS",
+      "p": 0.55,
+      "reason": "Colocation customers without disaster recovery"
+    },
+    {
+      "id": 2,
+      "has": ["CLOUD"],
+      "lacks": ["BACKUP"],
+      "recommend": "BACKUP",
+      "p": 0.6,
+      "reason": "Cloud compute without backup"
+    },
+    {
+      "id": 3,
+      "has": ["FIB"],
+      "sectors": ["BANKING", "GOVERNMENT"],
+      "lacks": ["MSEC"],
+      "recommend": "MSEC",
+      "p": 0.5,
+      "reason": "Regulated sector on fibre without managed security"
+    },
+    {
+      "id": 4,
+      "has": ["FIB"],
+      "minSites": 3,
+      "lacks": ["MPLS"],
+      "recommend": "MPLS",
+      "p": 0.45,
+      "reason": "Multi-site customer without private WAN"
+    },
+    {
+      "id": 5,
+      "hasCategory": "Connectivity",
+      "lacks": ["VOICE"],
+      "recommend": "VOICE",
+      "p": 0.35,
+      "reason": "Connectivity customer without voice"
+    },
+    {
+      "id": 6,
+      "peerAdoptionAbove": 0.6,
+      "recommend": "*",
+      "p": 0.4,
+      "reason": "Sector peers have adopted this product"
+    }
+  ],
+  "modifiers": [
+    { "key": "dcTour180d", "delta": 0.15 },
+    { "key": "demoOfProduct", "delta": 0.2 },
+    { "key": "championExists", "delta": 0.05 },
+    { "key": "atRisk", "delta": -0.2 },
+    { "key": "openEscalation", "delta": -0.1 },
+    { "key": "renewalWithin90d", "delta": 0.1 }
+  ],
+  "clamp": [0.05, 0.95]
+}

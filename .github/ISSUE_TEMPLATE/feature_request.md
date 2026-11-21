@@ -8,7 +8,7 @@ assignees: ""
 
 ## Problem
 
-<!-- What commercial-ops pain does this solve? Reference docs/vision.md personas if relevant. -->
+<!-- What commercial-ops pain does this solve? Reference the personas in docs/01-product/01-PRD.md if relevant. -->
 
 ## Proposed solution
 
