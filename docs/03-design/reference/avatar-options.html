@@ -1,0 +1,531 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Avatar Options</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Urbanist:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="kit/tokens.css" />
+    <link rel="stylesheet" href="kit/components.css" />
+    <style>
+      body {
+        padding: 40px 32px 80px;
+      }
+      .wrap {
+        max-width: 1300px;
+        margin: auto;
+      }
+      .page-hd {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-end;
+        gap: 16px;
+        flex-wrap: wrap;
+        margin-bottom: 28px;
+      }
+      .page-hd h1 {
+        font-size: 30px;
+        font-weight: 700;
+      }
+      .page-hd p {
+        color: var(--mute);
+        margin-top: 6px;
+        font-size: 15px;
+        max-width: 800px;
+        line-height: 1.5;
+      }
+      .opt {
+        margin-bottom: 48px;
+      }
+      .opt-hd {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin-bottom: 6px;
+      }
+      .badge {
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        background: var(--ink);
+        color: var(--shell);
+        display: grid;
+        place-items: center;
+        font-weight: 700;
+        font-size: 15px;
+        flex: none;
+      }
+      .opt-hd h2 {
+        font-size: 22px;
+        font-weight: 600;
+      }
+      .opt-desc {
+        color: var(--mute);
+        font-size: 15px;
+        margin: 0 0 14px 48px;
+        line-height: 1.5;
+        max-width: 900px;
+      }
+      .stage {
+        background: var(--main);
+        border-radius: 28px;
+        padding: 18px;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 16px;
+      }
+      .cd {
+        background: var(--card);
+        border-radius: 24px;
+        padding: 20px;
+        display: flex;
+        flex-direction: column;
+        gap: 14px;
+        min-width: 0;
+      }
+      .cd h3 {
+        font-size: 12px;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.07em;
+        color: var(--mute);
+      }
+      .sizes {
+        display: flex;
+        align-items: flex-end;
+        gap: 16px;
+        flex-wrap: wrap;
+      }
+      .sizes figure {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 6px;
+        margin: 0;
+        font-size: 11px;
+        color: var(--mute);
+      }
+      .rowl {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        background: var(--soft);
+        border-radius: 16px;
+        padding: 10px 14px;
+        font-size: 14px;
+      }
+      .rowl b {
+        flex: 1;
+        font-weight: 600;
+      }
+      .rowl span.m {
+        color: var(--mute);
+        font-size: 13px;
+      }
+      .dhead {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+      }
+      .dhead b {
+        display: block;
+        font-size: 17px;
+      }
+      .dhead small {
+        color: var(--mute);
+        font-size: 13px;
+      }
+      .stack {
+        display: flex;
+        align-items: center;
+      }
+      .stack > * + * {
+        margin-left: -10px;
+      }
+      .pair {
+        display: flex;
+        gap: 20px;
+        align-items: center;
+        flex-wrap: wrap;
+        font-size: 12px;
+        color: var(--mute);
+      }
+      .pair div {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 6px;
+      }
+      /* generic avatar */
+      .av {
+        display: grid;
+        place-items: center;
+        flex: none;
+        font-weight: 700;
+        position: relative;
+        overflow: visible;
+        line-height: 1;
+        user-select: none;
+      }
+      .av img,
+      .av svg.logo {
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+        border-radius: inherit;
+        display: block;
+      }
+      .av .st {
+        position: absolute;
+        right: -1px;
+        bottom: -1px;
+        width: 28%;
+        height: 28%;
+        min-width: 8px;
+        min-height: 8px;
+        border-radius: 50%;
+        background: var(--ink);
+        border: 2px solid var(--card);
+      }
+      .more {
+        background: var(--ink) !important;
+        color: var(--shell) !important;
+      }
+      /* A: grey circles for everyone */
+      .A .av {
+        border-radius: 50%;
+        background: var(--soft);
+        color: var(--ink);
+        box-shadow: 0 0 0 2px var(--card);
+      }
+      .A .av.org {
+        background: var(--soft);
+      }
+      .A .av.logo {
+        background: var(--card);
+        box-shadow:
+          0 0 0 1px var(--line),
+          0 0 0 3px var(--card);
+      }
+      /* B: circles for people, rounded squares for companies (black) */
+      .B .av.person {
+        border-radius: 50%;
+        background: var(--soft);
+        color: var(--ink);
+        box-shadow: 0 0 0 2px var(--card);
+      }
+      .B .av.org {
+        border-radius: 30%;
+        background: var(--ink);
+        color: var(--shell);
+        box-shadow: 0 0 0 2px var(--card);
+      }
+      .B .av.org.logo {
+        background: var(--card);
+        box-shadow:
+          inset 0 0 0 1px var(--line),
+          0 0 0 2px var(--card);
+      }
+      .B .av.org.logo svg {
+        padding: 16%;
+      }
+      /* C: generated monochrome marks for companies, outlined people */
+      .C .av.person {
+        border-radius: 50%;
+        background: var(--card);
+        color: var(--ink);
+        box-shadow:
+          inset 0 0 0 1.5px var(--ink),
+          0 0 0 2px var(--card);
+      }
+      .C .av.org {
+        border-radius: 30%;
+        color: var(--ink);
+        overflow: hidden;
+        box-shadow: 0 0 0 2px var(--card);
+      }
+      .C .av.org svg.gen {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        border-radius: inherit;
+      }
+      .C .av.org .l {
+        position: relative;
+        z-index: 1;
+        background: var(--card);
+        border-radius: 30%;
+        width: 52%;
+        height: 52%;
+        display: grid;
+        place-items: center;
+      }
+      .C .av.org.logo {
+        background: var(--card);
+        box-shadow:
+          inset 0 0 0 1px var(--line),
+          0 0 0 2px var(--card);
+      }
+      .C .av.org.logo svg {
+        padding: 16%;
+      }
+      .note {
+        background: var(--soft);
+        border-radius: 20px;
+        padding: 18px 20px;
+        font-size: 15px;
+        line-height: 1.6;
+      }
+      @media (max-width: 900px) {
+        body {
+          padding: 20px 12px 60px;
+        }
+        .opt-desc {
+          margin-left: 0;
+        }
+        .stage {
+          grid-template-columns: 1fr;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <div class="page-hd">
+        <div>
+          <h1>Avatars &amp; logos — 3 options</h1>
+          <p>
+            People (contacts, users) and companies (accounts) at every size, in a list row, the
+            drawer header, an overlapping stack, and with an uploaded logo next to the fallback when
+            there is none. All company names and logos are fictional.
+          </p>
+        </div>
+        <div class="tabs tabs--segmented" id="thm">
+          <button class="tab" aria-selected="true" data-v="light">Light</button
+          ><button class="tab" aria-selected="false" data-v="dark">Dark</button>
+        </div>
+      </div>
+      <div id="opts"></div>
+      <div class="note">
+        <b>Same in every option:</b> initials are the first letters of the first two words (“Kariba
+        Power Co.” → KP, “Ruth Phiri” → RP); sizes 24 · 32 · 40 · 56px with the font at 38% of the
+        size; uploaded logos are shown in monochrome on a white tile so they sit in the
+        black-and-white UI; a black dot marks online users; stacks show up to 3 and then “+N”; every
+        avatar has the full name as its accessible label and tooltip.
+      </div>
+    </div>
+    <script>
+      var $ = function (s, r) {
+          return (r || document).querySelector(s);
+        },
+        $$ = function (s, r) {
+          return [].slice.call((r || document).querySelectorAll(s));
+        };
+      function ini(n) {
+        var w = n
+          .replace(/[^A-Za-z ]/g, "")
+          .split(" ")
+          .filter(Boolean);
+        return (w[0][0] + (w[1] ? w[1][0] : "")).toUpperCase();
+      }
+      function hash(s) {
+        var h = 0;
+        for (var i = 0; i < s.length; i++) h = (h * 31 + s.charCodeAt(i)) >>> 0;
+        return h;
+      }
+      // fictional logo: a simple monochrome mark
+      var LOGO =
+        '<svg class="logo" viewBox="0 0 40 40"><circle cx="20" cy="20" r="14" fill="none" stroke="currentColor" stroke-width="4"/><path d="M13 24l7-12 7 12z" fill="currentColor"/></svg>';
+      function gen(name) {
+        var h = hash(name),
+          k = h % 4,
+          g = "";
+        var bg = ["var(--soft)", "var(--line)", "var(--bar2)"][h % 3];
+        if (k === 0)
+          for (var i = 0; i < 5; i++)
+            g +=
+              '<rect x="' +
+              i * 9 +
+              '" y="0" width="4" height="40" fill="var(--ink)" opacity="' +
+              (0.15 + ((h >> i) & 1) * 0.35) +
+              '"/>';
+        if (k === 1)
+          for (var i = 0; i < 4; i++)
+            g +=
+              '<circle cx="' +
+              (h % 40) +
+              '" cy="' +
+              ((h >> 3) % 40) +
+              '" r="' +
+              (8 + i * 9) +
+              '" fill="none" stroke="var(--ink)" stroke-width="3" opacity=".25"/>';
+        if (k === 2)
+          for (var i = 0; i < 4; i++)
+            for (var j = 0; j < 4; j++)
+              if ((h >> (i * 4 + j)) & 1)
+                g +=
+                  '<rect x="' +
+                  i * 10 +
+                  '" y="' +
+                  j * 10 +
+                  '" width="10" height="10" fill="var(--ink)" opacity=".22"/>';
+        if (k === 3)
+          g +=
+            '<path d="M0 40L40 0V40Z" fill="var(--ink)" opacity=".25"/><path d="M0 ' +
+            (10 + (h % 20)) +
+            "L40 " +
+            (30 - (h % 20)) +
+            '" stroke="var(--ink)" stroke-width="4" opacity=".3"/>';
+        return (
+          '<svg class="gen" viewBox="0 0 40 40" preserveAspectRatio="none"><rect width="40" height="40" fill="' +
+          bg +
+          '"/>' +
+          g +
+          "</svg>"
+        );
+      }
+      function av(o, name, size, kind, opts) {
+        opts = opts || {};
+        var fs = Math.round(size * 0.38),
+          cls = "av " + kind + (opts.logo ? " logo" : "") + (opts.more ? " more" : ""),
+          inner;
+        if (opts.more) inner = "+" + opts.more;
+        else if (opts.logo) inner = LOGO;
+        else if (o === "C" && kind === "org")
+          inner =
+            gen(name) +
+            '<span class="l" style="font-size:' +
+            Math.round(size * 0.26) +
+            'px">' +
+            ini(name) +
+            "</span>";
+        else inner = ini(name);
+        return (
+          '<span class="' +
+          cls +
+          '" style="width:' +
+          size +
+          "px;height:" +
+          size +
+          "px;font-size:" +
+          fs +
+          'px" title="' +
+          name +
+          '" aria-label="' +
+          name +
+          '" role="img">' +
+          inner +
+          (opts.online ? '<span class="st"></span>' : "") +
+          "</span>"
+        );
+      }
+      var PEOPLE = ["Ruth Phiri", "Chanda Mulenga", "George M.", "Natasha L.", "Joseph Tembo"],
+        ORGS = ["Kariba Power Co.", "Nyali Mobile", "Zedcell Networks", "Kafue Valley Foods"];
+      var DESC = {
+        A: [
+          "Grey circles for everything",
+          "The current look: every person and company is a grey initials circle; an uploaded logo sits in a white circle with a thin ring. Simplest and calmest, but people and companies look the same.",
+        ],
+        B: [
+          "People round, companies square",
+          "People are grey circles; companies are black rounded squares with white initials (or their logo on a white square). You can tell a contact from an account at a glance, and the black squares match the active nav and hero buttons.",
+        ],
+        C: [
+          "Generated company marks",
+          "People are outlined circles; companies get a unique monochrome pattern (stripes, rings, grid, diagonal) generated from the name, with initials on a small white chip. Every account is recognisable without a logo, still strictly black and white.",
+        ],
+      };
+      var h = "";
+      ["A", "B", "C"].forEach(function (o) {
+        var sizes =
+          [24, 32, 40, 56]
+            .map(function (s) {
+              return (
+                "<figure>" + av(o, "Ruth Phiri", s, "person", { online: s >= 32 }) + s + "</figure>"
+              );
+            })
+            .join("") +
+          [24, 32, 40, 56]
+            .map(function (s) {
+              return "<figure>" + av(o, "Kariba Power Co.", s, "org") + s + "</figure>";
+            })
+            .join("");
+        var rows =
+          ORGS.slice(0, 3)
+            .map(function (n, i) {
+              return (
+                '<div class="rowl">' +
+                av(o, n, 36, "org", { logo: i === 1 }) +
+                "<b>" +
+                n +
+                '</b><span class="m">' +
+                ["Tier 1 · Energy", "Tier 2 · Telecom", "Tier 1 · Telecom"][i] +
+                "</span>" +
+                av(o, PEOPLE[i + 2] || "George M.", 28, "person") +
+                "</div>"
+              );
+            })
+            .join("") +
+          '<div class="rowl">' +
+          av(o, "Ruth Phiri", 36, "person", { online: true }) +
+          '<b>Ruth Phiri</b><span class="m">CFO · Kariba Power Co.</span></div>';
+        h +=
+          '<section class="opt ' +
+          o +
+          '" data-o="' +
+          o +
+          '"><div class="opt-hd"><div class="badge">' +
+          o +
+          "</div><h2>" +
+          DESC[o][0] +
+          '</h2></div><p class="opt-desc">' +
+          DESC[o][1] +
+          '</p><div class="stage">' +
+          '<div class="cd"><h3>Sizes · person and company</h3><div class="sizes">' +
+          sizes +
+          '</div><h3>Logo or fallback</h3><div class="pair"><div>' +
+          av(o, "Nyali Mobile", 56, "org", { logo: true }) +
+          "Uploaded logo</div><div>" +
+          av(o, "Nyali Mobile", 56, "org") +
+          "No logo</div><div>" +
+          av(o, "Zedcell Networks", 56, "org") +
+          "Zedcell</div><div>" +
+          av(o, "Kafue Valley Foods", 56, "org") +
+          "Kafue Valley</div></div></div>" +
+          '<div class="cd"><h3>Drawer header</h3><div class="dhead">' +
+          av(o, "Kariba Power Co.", 48, "org") +
+          '<div><b>Kariba Power Co.</b><small>Account · Energy · Lusaka</small></div></div><div class="dhead">' +
+          av(o, "Ruth Phiri", 48, "person", { online: true }) +
+          '<div><b>Ruth Phiri</b><small>Contact · CFO · Economic buyer</small></div></div><h3>Stacks</h3><div class="pair"><div><span class="stack">' +
+          PEOPLE.slice(0, 3)
+            .map(function (p) {
+              return av(o, p, 32, "person");
+            })
+            .join("") +
+          av(o, "more", 32, "person", { more: 2 }) +
+          '</span>Meeting attendees</div><div><span class="stack">' +
+          ORGS.map(function (n) {
+            return av(o, n, 32, "org");
+          }).join("") +
+          "</span>Accounts in a segment</div></div></div>" +
+          '<div class="cd" style="grid-column:1/-1"><h3>In a list</h3>' +
+          rows +
+          "</div>" +
+          "</div></section>";
+      });
+      $("#opts").innerHTML = h;
+      $$("#thm .tab").forEach(function (b) {
+        b.onclick = function () {
+          $$("#thm .tab").forEach(function (x) {
+            x.setAttribute("aria-selected", x === b);
+          });
+          document.documentElement.dataset.theme = b.dataset.v;
+        };
+      });
+    </script>
+  </body>
+</html>
