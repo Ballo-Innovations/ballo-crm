@@ -5,7 +5,7 @@ E0-03,E0 Foundations,Prisma schema v1 + initial migration,Dev A,P0,3,0,E0-01,Ena
 E0-04,E0 Foundations,Auth.js credentials login + session + role claim,Dev A,P0,4,0,E0-03,G6,Login/logout; role in session; protected routes redirect
 E0-05,E0 Foundations,RBAC helper requireRole + row filters,Dev A,P0,3,0,E0-04,G6,Unit tests for matrix in security doc
 E0-06,E0 Foundations,Audit middleware withAudit + AuditLog writes,Dev A,P0,3,0,E0-03,G6,Every wrapped action creates AuditLog with diff
-E0-07,E0 Foundations,App shell: sidebar nav topbar ⌘K search placeholder dark theme tokens,Dev B,P0,4,0,E0-01,Enabler,All 9 nav items route to placeholder pages; responsive
+E0-07,E0 Foundations,App shell: sidebar nav topbar ⌘K search placeholder monochrome theme tokens per docs/03-design/reference/dashboard-concept.html,Dev B,P0,4,0,E0-01,Enabler,All 9 nav items route to placeholder pages; responsive
 E0-08,E0 Foundations,Shared components: DataTable KpiCard Badge(grade) Drawer Toast Skeletons,Dev B,P0,5,0,E0-07,Enabler,Storybook-free demo page renders all
 E0-09,E0 Foundations,GitHub Actions CI lint/typecheck/test/build,Dev C,P0,2,0,E0-01,Enabler,CI `check` runs on every pull request and is green on `dev`
 E0-10,E0 Foundations,Seed v0 (users products 5 accounts),Dev A,P0,2,0,E0-03,Enabler,`pnpm db:seed --reset` idempotent
@@ -74,7 +74,7 @@ E10-04,E10 Data & QA,Playwright smoke: login kanban drag score drawer sign flow,
 E10-05,E10 Data & QA,Full QA pass against test cases + bug bash,All,P0,8,3,,Enabler,All P0 cases pass
 E10-06,E10 Data & QA,Performance check on seed (<1.5s pages) + indexes,Dev A,P1,2,3,E10-01,Enabler,Dashboard Kanban and Account 360 each load in under 1.5s on the full seed on the stage URL (TC-80); missing indexes added by migration; no N+1 queries on those three pages; before and after timings recorded in the PR
 E10-07,E10 Data & QA,Mobile 390px pass,Dev B,P1,2,3,,Enabler,Every page works at 390px (TC-81): no sideways page scroll; nav collapses; tables scroll or stack; drawers go full width; kanban scrolls by column; every demo-script screen checked on a real phone
-E11-01,E11 Pitch,Pitch deck per outline,Dev B+CEO,P0,4,3,,Enabler,12 slides following docs/06-pitch/01-pitch-deck-outline.md; dark theme matching the app; real screenshots from the seeded app; coverage slide maps every challenge bullet to a screen; last slide has demo URL credentials and repo QR; deck plus demo fits 8 minutes
+E11-01,E11 Pitch,Pitch deck per outline,Dev B+CEO,P0,4,3,,Enabler,12 slides following docs/06-pitch/01-pitch-deck-outline.md; monochrome style matching the app; real screenshots from the seeded app; coverage slide maps every challenge bullet to a screen; last slide has demo URL credentials and repo QR; deck plus demo fits 8 minutes
 E11-02,E11 Pitch,Demo script rehearsals ×3 + timer,All,P0,3,3,E10-05,Enabler,<8 min
 E11-03,E11 Pitch,Dry-run judging with outsider + fix lowest row,All,P0,4,3,E11-02,Enabler,Someone outside the team scores the full pitch and demo against the rubric in docs/00-executive/02-judging-strategy-platinum.md at least 48h before judging; scores are written down; the lowest-scoring row has a fix that is done and re-checked
 E11-04,E11 Pitch,Submission package: repo README arch doc demo URL creds video backup,Dev A,P0,3,3,E11-03,Enabler,README with run instructions; architecture doc; demo URL on a freshly reset seed; working login for each of the 6 roles; demo video; all checked from a clean clone and an incognito window by someone other than the author; submitted before the deadline

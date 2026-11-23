@@ -1,0 +1,1155 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Drawer Options</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Urbanist:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --shell: #fff;
+        --main: #ececec;
+        --card: #fff;
+        --ink: #0d0d0d;
+        --mute: #6b6b6b;
+        --soft: #f3f3f3;
+        --line: #e4e4e4;
+        --bar2: #d4d4d4;
+        --danger: #dc2626;
+      }
+      :root[data-theme="dark"] {
+        --shell: #111;
+        --main: #1b1b1b;
+        --card: #242424;
+        --ink: #f5f5f5;
+        --mute: #9a9a9a;
+        --soft: #2e2e2e;
+        --line: #333;
+        --bar2: #505050;
+        --danger: #f87171;
+      }
+      * {
+        box-sizing: border-box;
+        margin: 0;
+      }
+      body {
+        background: var(--shell);
+        color: var(--ink);
+        font-family: Urbanist, system-ui, sans-serif;
+        -webkit-font-smoothing: antialiased;
+        padding: 40px 32px 80px;
+      }
+      button {
+        font: inherit;
+        color: inherit;
+        cursor: pointer;
+      }
+      svg {
+        width: 17px;
+        height: 17px;
+        flex: none;
+      }
+      .wrap {
+        max-width: 1280px;
+        margin: auto;
+      }
+      .page-hd {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-end;
+        gap: 16px;
+        flex-wrap: wrap;
+        margin-bottom: 28px;
+      }
+      .page-hd h1 {
+        font-size: 30px;
+        font-weight: 700;
+      }
+      .page-hd p {
+        color: var(--mute);
+        margin-top: 6px;
+        font-size: 15px;
+        max-width: 640px;
+        line-height: 1.5;
+      }
+      .seg {
+        display: inline-flex;
+        background: var(--soft);
+        border-radius: 30px;
+        padding: 4px;
+        gap: 2px;
+      }
+      .seg button {
+        border: 0;
+        background: none;
+        padding: 8px 16px;
+        border-radius: 24px;
+        font-size: 14px;
+        font-weight: 500;
+      }
+      .seg button.on {
+        background: var(--ink);
+        color: var(--shell);
+      }
+      .opt {
+        margin-bottom: 56px;
+      }
+      .opt-hd {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        margin-bottom: 8px;
+      }
+      .badge {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        background: var(--ink);
+        color: var(--shell);
+        display: grid;
+        place-items: center;
+        font-weight: 700;
+        font-size: 17px;
+      }
+      .opt-hd h2 {
+        font-size: 22px;
+        font-weight: 600;
+      }
+      .opt-desc {
+        color: var(--mute);
+        font-size: 15px;
+        line-height: 1.5;
+        margin: 0 0 6px 54px;
+        max-width: 820px;
+      }
+      .pros {
+        display: flex;
+        gap: 24px;
+        flex-wrap: wrap;
+        margin: 0 0 16px 54px;
+        font-size: 14px;
+      }
+      .pros span {
+        color: var(--mute);
+      }
+      .pros b {
+        font-weight: 600;
+        color: var(--ink);
+      }
+
+      /* mini app stage */
+      .stage {
+        position: relative;
+        height: 640px;
+        border-radius: 28px;
+        background: var(--shell);
+        border: 1px solid var(--line);
+        overflow: hidden;
+        display: grid;
+        grid-template-columns: 72px 1fr;
+      }
+      .stage.phone {
+        width: 390px;
+        height: 780px;
+        grid-template-columns: 1fr;
+        margin: 0 auto;
+        border-radius: 40px;
+        border-width: 8px;
+        border-color: var(--ink);
+      }
+      .phone .rail {
+        display: none;
+      }
+      .rail {
+        padding: 18px 0;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 8px;
+      }
+      .rail i {
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        background: var(--soft);
+      }
+      .rail i.on {
+        background: var(--ink);
+      }
+      .rail i:first-child {
+        background: none;
+        border: 3px solid var(--ink);
+        width: 30px;
+        height: 30px;
+        margin-bottom: 14px;
+      }
+      .panel {
+        margin: 12px 12px 12px 0;
+        background: var(--main);
+        border-radius: 26px;
+        padding: 20px;
+        overflow: hidden;
+        position: relative;
+        display: flex;
+        gap: 16px;
+      }
+      .phone .panel {
+        margin: 8px;
+        border-radius: 22px;
+        padding: 14px;
+      }
+      .content {
+        flex: 1;
+        min-width: 0;
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+      }
+      .bar {
+        height: 40px;
+        border-radius: 14px;
+        background: var(--card);
+        width: 55%;
+      }
+      .ttl {
+        font-size: 20px;
+        font-weight: 600;
+        margin: 6px 0 2px;
+      }
+      .row {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        background: var(--card);
+        border-radius: 16px;
+        padding: 12px 14px;
+        font-size: 14px;
+      }
+      .row.sel {
+        outline: 2px solid var(--ink);
+      }
+      .row .n {
+        flex: 1;
+        font-weight: 600;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+      .row .v {
+        font-weight: 600;
+      }
+      .row .a {
+        color: var(--mute);
+        width: 110px;
+      }
+      .phone .row .a {
+        display: none;
+      }
+
+      .pill {
+        border: 1px solid var(--line);
+        background: var(--soft);
+        border-radius: 20px;
+        padding: 4px 11px;
+        font-size: 12px;
+        white-space: nowrap;
+      }
+      .pill.d {
+        background: var(--ink);
+        color: var(--shell);
+        border-color: var(--ink);
+      }
+
+      /* drawer common */
+      .drawer {
+        background: var(--card);
+        display: flex;
+        flex-direction: column;
+        min-height: 0;
+      }
+      .d-hd {
+        padding: 20px 22px 0;
+        display: flex;
+        align-items: flex-start;
+        gap: 12px;
+      }
+      .d-hd .lg {
+        width: 44px;
+        height: 44px;
+        border-radius: 50%;
+        background: var(--soft);
+        display: grid;
+        place-items: center;
+        font-weight: 700;
+        font-size: 13px;
+        flex: none;
+      }
+      .d-hd .t {
+        flex: 1;
+        min-width: 0;
+      }
+      .d-hd h3 {
+        font-size: 19px;
+        font-weight: 600;
+        line-height: 1.25;
+      }
+      .d-hd small {
+        color: var(--mute);
+        font-size: 13px;
+      }
+      .icb {
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        border: 0;
+        background: var(--soft);
+        display: grid;
+        place-items: center;
+        flex: none;
+      }
+      .icb svg {
+        width: 15px;
+        height: 15px;
+      }
+      .tabs {
+        display: flex;
+        gap: 4px;
+        padding: 16px 22px 0;
+        border-bottom: 1px solid var(--line);
+      }
+      .tabs span {
+        padding: 8px 12px;
+        font-size: 14px;
+        color: var(--mute);
+        border-bottom: 2px solid transparent;
+        margin-bottom: -1px;
+      }
+      .tabs span.on {
+        color: var(--ink);
+        border-color: var(--ink);
+        font-weight: 600;
+      }
+      .d-body {
+        flex: 1;
+        overflow: auto;
+        padding: 18px 22px;
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+      }
+      .score {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        background: var(--soft);
+        border-radius: 20px;
+        padding: 16px;
+      }
+      .ring {
+        width: 64px;
+        height: 64px;
+        border-radius: 50%;
+        background: conic-gradient(var(--ink) 0 58%, var(--bar2) 58% 100%);
+        display: grid;
+        place-items: center;
+        flex: none;
+      }
+      .ring b {
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        background: var(--soft);
+        display: grid;
+        place-items: center;
+        font-size: 18px;
+      }
+      .score .t b {
+        display: block;
+        font-size: 15px;
+      }
+      .score .t small {
+        color: var(--mute);
+        font-size: 13px;
+      }
+      .kv {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 12px;
+      }
+      .kv div {
+        background: var(--soft);
+        border-radius: 14px;
+        padding: 10px 12px;
+      }
+      .kv small {
+        display: block;
+        color: var(--mute);
+        font-size: 12px;
+      }
+      .kv b {
+        font-size: 14px;
+        font-weight: 600;
+      }
+      .f-ttl {
+        font-size: 14px;
+        font-weight: 600;
+      }
+      .factor {
+        display: flex;
+        justify-content: space-between;
+        font-size: 14px;
+        padding: 8px 0;
+        border-bottom: 1px solid var(--line);
+      }
+      .factor span:last-child {
+        font-weight: 600;
+      }
+      .d-ft {
+        padding: 14px 22px;
+        border-top: 1px solid var(--line);
+        display: flex;
+        gap: 10px;
+        justify-content: flex-end;
+        background: var(--card);
+      }
+      .btn {
+        border: 1px solid var(--ink);
+        border-radius: 14px;
+        padding: 10px 18px;
+        font-size: 14px;
+        font-weight: 500;
+        background: none;
+      }
+      .btn.d {
+        background: var(--ink);
+        color: var(--shell);
+      }
+
+      /* A — floating overlay */
+      .scrim {
+        position: absolute;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.28);
+        z-index: 2;
+      }
+      .A .drawer {
+        position: absolute;
+        z-index: 3;
+        top: 12px;
+        right: 12px;
+        bottom: 12px;
+        width: 440px;
+        border-radius: 26px;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.18);
+        overflow: hidden;
+      }
+      .phone.A .drawer {
+        left: 8px;
+        right: 8px;
+        top: auto;
+        bottom: 8px;
+        width: auto;
+        height: 84%;
+        border-radius: 26px;
+      }
+      .grab {
+        width: 40px;
+        height: 5px;
+        border-radius: 5px;
+        background: var(--bar2);
+        margin: 10px auto -6px;
+        display: none;
+      }
+      .phone .grab {
+        display: block;
+      }
+
+      /* B — docked push panel */
+      .B .drawer {
+        width: 400px;
+        border-radius: 22px;
+        overflow: hidden;
+        flex: none;
+      }
+      .phone.B .panel {
+        padding: 0;
+        gap: 0;
+      }
+      .phone.B .content {
+        display: none;
+      }
+      .phone.B .drawer {
+        width: 100%;
+        border-radius: 22px;
+      }
+
+      /* C — wide sheet with summary header */
+      .C .drawer {
+        position: absolute;
+        z-index: 3;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        width: 560px;
+        border-radius: 26px 0 0 26px;
+        box-shadow: -20px 0 60px rgba(0, 0, 0, 0.15);
+        overflow: hidden;
+      }
+      .C .d-hero {
+        background: var(--ink);
+        color: var(--shell);
+        padding: 20px 22px 22px;
+      }
+      .C .d-hero .top {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 18px;
+      }
+      .C .d-hero .icb {
+        background: rgba(255, 255, 255, 0.14);
+        color: var(--shell);
+      }
+      :root[data-theme="dark"] .C .d-hero .icb {
+        background: rgba(0, 0, 0, 0.12);
+      }
+      .C .d-hero h3 {
+        font-size: 22px;
+        font-weight: 600;
+      }
+      .C .d-hero small {
+        opacity: 0.65;
+        font-size: 13px;
+      }
+      .C .hero-stats {
+        display: flex;
+        gap: 10px;
+        margin-top: 16px;
+      }
+      .C .hero-stats div {
+        flex: 1;
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 16px;
+        padding: 10px 12px;
+      }
+      :root[data-theme="dark"] .C .hero-stats div {
+        background: rgba(0, 0, 0, 0.08);
+      }
+      .C .hero-stats small {
+        display: block;
+        font-size: 12px;
+      }
+      .C .hero-stats b {
+        font-size: 17px;
+      }
+      .C .tabs {
+        padding-top: 12px;
+      }
+      .phone.C .drawer {
+        width: 100%;
+        border-radius: 0;
+      }
+      .C .crumb {
+        font-size: 13px;
+        opacity: 0.65;
+      }
+
+      /* ---- interactivity ---- */
+      .row {
+        cursor: pointer;
+        transition:
+          background 0.15s,
+          outline-color 0.15s;
+      }
+      .row:hover {
+        background: var(--soft);
+      }
+      .row.sel {
+        outline: 2px solid var(--ink);
+      }
+      .hint {
+        font-size: 13px;
+        color: var(--mute);
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+      .hint::before {
+        content: "";
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: var(--ink);
+        animation: pulse 1.6s infinite;
+      }
+      @keyframes pulse {
+        50% {
+          opacity: 0.25;
+        }
+      }
+      .stage.open .hint {
+        visibility: hidden;
+      }
+      .scrim {
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.28s ease;
+      }
+      .stage.open .scrim {
+        opacity: 1;
+        pointer-events: auto;
+        cursor: pointer;
+      }
+      .A .drawer {
+        transform: translateX(calc(100% + 24px));
+        transition: transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
+      }
+      .A.open .drawer {
+        transform: none;
+      }
+      .phone.A .drawer {
+        transform: translateY(calc(100% + 24px));
+      }
+      .phone.A.open .drawer {
+        transform: none;
+      }
+      .B .drawer {
+        width: 0;
+        opacity: 0;
+        transition:
+          width 0.3s cubic-bezier(0.2, 0.8, 0.2, 1),
+          opacity 0.2s;
+        margin-left: -16px;
+      }
+      .B.open .drawer {
+        width: 400px;
+        opacity: 1;
+        margin-left: 0;
+      }
+      .B .drawer > * {
+        min-width: 400px;
+      }
+      .phone.B .drawer {
+        position: absolute;
+        inset: 0;
+        width: 100% !important;
+        margin: 0;
+        transform: translateX(100%);
+        opacity: 1;
+        transition: transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
+      }
+      .phone.B .drawer > * {
+        min-width: 0;
+      }
+      .phone.B.open .drawer {
+        transform: none;
+      }
+      .phone.B .content {
+        display: flex;
+      }
+      .phone.B .panel {
+        padding: 14px;
+      }
+      .C .drawer {
+        transform: translateX(105%);
+        transition: transform 0.32s cubic-bezier(0.2, 0.8, 0.2, 1);
+      }
+      .C.open .drawer {
+        transform: none;
+      }
+      .tabs span {
+        cursor: pointer;
+      }
+      .tabs span:hover {
+        color: var(--ink);
+      }
+      .icb {
+        transition: background 0.15s;
+      }
+      .icb:hover {
+        background: var(--line);
+      }
+      .btn {
+        transition: opacity 0.15s;
+      }
+      .btn:hover {
+        opacity: 0.8;
+      }
+      .menu {
+        position: absolute;
+        right: 22px;
+        top: 62px;
+        z-index: 5;
+        background: var(--card);
+        border: 1px solid var(--line);
+        border-radius: 16px;
+        padding: 6px;
+        box-shadow: 0 12px 30px rgba(0, 0, 0, 0.12);
+        display: none;
+        min-width: 170px;
+      }
+      .menu.on {
+        display: block;
+      }
+      .menu div {
+        padding: 9px 12px;
+        border-radius: 10px;
+        font-size: 14px;
+        cursor: pointer;
+      }
+      .menu div:hover {
+        background: var(--soft);
+      }
+      .menu div.r {
+        color: var(--danger);
+      }
+      .toast {
+        position: fixed;
+        left: 50%;
+        bottom: 24px;
+        transform: translate(-50%, 120px);
+        background: var(--ink);
+        color: var(--shell);
+        padding: 12px 18px;
+        border-radius: 30px;
+        font-size: 14px;
+        transition: transform 0.3s;
+        z-index: 50;
+      }
+      .toast {
+        opacity: 0;
+      }
+      .toast.on {
+        transform: translate(-50%, 0);
+        opacity: 1;
+      }
+      .stage:not(.open) .drawer {
+        box-shadow: none;
+      }
+      .drawer {
+        position: relative;
+      }
+      .empty {
+        color: var(--mute);
+        font-size: 14px;
+        text-align: center;
+        padding: 40px 0;
+      }
+      .footer-note {
+        margin-top: 20px;
+        padding: 20px;
+        border-radius: 20px;
+        background: var(--soft);
+        font-size: 15px;
+        line-height: 1.6;
+      }
+      @media (max-width: 820px) {
+        body {
+          padding: 20px 12px 60px;
+        }
+        .opt-desc,
+        .pros {
+          margin-left: 0;
+        }
+        .stage:not(.phone) {
+          grid-template-columns: 1fr;
+        }
+        .stage:not(.phone) .rail {
+          display: none;
+        }
+        .stage:not(.phone) .panel {
+          margin: 8px;
+        }
+        .A .drawer,
+        .C .drawer {
+          width: auto;
+          left: 40px;
+        }
+        .B .drawer {
+          width: 60%;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <div class="page-hd">
+        <div>
+          <h1>Drawer — 3 options</h1>
+          <p>
+            The drawer is where every detail view opens (opportunity, account, lead, score
+            explanation). Click any row to open the drawer, switch tabs, try ⋯ and the buttons;
+            close with ✕, Esc or by clicking outside. Switch device and theme to compare.
+          </p>
+        </div>
+        <div style="display: flex; gap: 10px; flex-wrap: wrap">
+          <div class="seg" id="dev">
+            <button class="on" data-v="desktop">Desktop</button
+            ><button data-v="phone">Phone</button>
+          </div>
+          <div class="seg" id="thm">
+            <button class="on" data-v="light">Light</button><button data-v="dark">Dark</button>
+          </div>
+        </div>
+      </div>
+
+      <section class="opt">
+        <div class="opt-hd">
+          <div class="badge">A</div>
+          <h2>Floating card</h2>
+        </div>
+        <p class="opt-desc">
+          A rounded card floats over the page with a 12px gap on three sides and a soft dim behind
+          it. Matches the rounded panel language most closely. On phones it becomes a bottom sheet
+          you can drag down.
+        </p>
+        <div class="pros">
+          <span><b>+</b> Most on-brand, feels light</span><span><b>+</b> Clear focus</span
+          ><span><b>−</b> Covers the list behind it</span>
+        </div>
+        <div class="stage A" data-opt="A"></div>
+      </section>
+
+      <section class="opt">
+        <div class="opt-hd">
+          <div class="badge">B</div>
+          <h2>Docked side panel</h2>
+        </div>
+        <p class="opt-desc">
+          The drawer slides in as a white column inside the grey panel and the list shrinks to make
+          room. No dimming — you can keep clicking rows and the drawer updates. On phones it takes
+          the whole panel.
+        </p>
+        <div class="pros">
+          <span><b>+</b> Work through a list fast (row → row)</span
+          ><span><b>+</b> Nothing hidden</span><span><b>−</b> Squeezes wide tables</span>
+        </div>
+        <div class="stage B" data-opt="B"></div>
+      </section>
+
+      <section class="opt">
+        <div class="opt-hd">
+          <div class="badge">C</div>
+          <h2>Wide sheet with black summary header</h2>
+        </div>
+        <p class="opt-desc">
+          A wider sheet attached to the right edge. The top is a black band with the key numbers
+          (value, score, stage) — the same "one strong black element" idea as the highlighted KPI.
+          On phones it goes full screen.
+        </p>
+        <div class="pros">
+          <span><b>+</b> Key numbers jump out (great for demos)</span
+          ><span><b>+</b> Room for tables and timelines</span
+          ><span><b>−</b> Heaviest; covers most of the page</span>
+        </div>
+        <div class="stage C" data-opt="C"></div>
+      </section>
+
+      <div class="footer-note">
+        <b>Shared in every option:</b> ✕ and ⋯ in the header, tabs (Overview · Score · Activity ·
+        Contacts), a sticky footer with the actions, Esc closes, focus stays inside while open, the
+        selected row stays highlighted.
+      </div>
+    </div>
+
+    <script>
+      var _x =
+        '<svg viewBox="0 0 24 24" fill="currentColor"><circle cx="5" cy="12" r="2"/><circle cx="12" cy="12" r="2"/><circle cx="19" cy="12" r="2"/></svg>';
+      var rows = [
+        [
+          "Fibre backbone Lusaka–Ndola",
+          "Kariba Power Co.",
+          "6,400,000",
+          "Gold",
+          58,
+          "Negotiate",
+          "15 Dec 2026",
+        ],
+        [
+          "Tower lease — 40 sites",
+          "Nyali Mobile",
+          "3,150,000",
+          "Silver",
+          47,
+          "Propose",
+          "30 Jan 2027",
+        ],
+        [
+          "SD-WAN branch rollout",
+          "Mutual Bank of Lusaka",
+          "1,820,000",
+          "Bronze",
+          28,
+          "Discover",
+          "28 Feb 2027",
+        ],
+        [
+          "Data-centre colocation",
+          "Zedcell Networks",
+          "8,900,000",
+          "Platinum",
+          81,
+          "Negotiate",
+          "10 Dec 2026",
+        ],
+        [
+          "Managed Wi-Fi campus",
+          "Chalimbana University",
+          "900,000",
+          "Silver",
+          39,
+          "Propose",
+          "20 Jan 2027",
+        ],
+        ["Dark fibre IRU", "Mwezi Fibre", "5,100,000", "Gold", 61, "Negotiate", "5 Jan 2027"],
+      ];
+      function ini(n) {
+        var w = n.split(/\s+/);
+        return (w.length > 1 ? w[0][0] + w[1][0] : n.slice(0, 2)).toUpperCase();
+      }
+      function compact(v) {
+        var n = +v.replace(/,/g, "");
+        return "K" + (n >= 1e6 ? (n / 1e6).toFixed(1) + "M" : (n / 1e3).toFixed(0) + "K");
+      }
+      function dark(g) {
+        return g === "Gold" || g === "Platinum";
+      }
+      function list() {
+        return (
+          '<div class="content"><div class="bar"></div><div style="display:flex;justify-content:space-between;align-items:center"><div class="ttl">Opportunities</div><span class="hint">Click a row</span></div>' +
+          rows
+            .map(function (r, i) {
+              return (
+                '<div class="row" data-i="' +
+                i +
+                '"><span class="n">' +
+                r[0] +
+                '</span><span class="a">' +
+                r[1] +
+                '</span><span class="pill' +
+                (dark(r[3]) ? " d" : "") +
+                '">' +
+                r[3] +
+                " · " +
+                r[4] +
+                '</span><span class="v">' +
+                compact(r[2]) +
+                "</span></div>"
+              );
+            })
+            .join("") +
+          "</div>"
+        );
+      }
+      function tabBody(r, t) {
+        if (t === "Overview")
+          return (
+            '<div class="score"><div class="ring" style="background:conic-gradient(var(--ink) 0 ' +
+            r[4] +
+            "%,var(--bar2) " +
+            r[4] +
+            '% 100%)"><b>' +
+            r[4] +
+            '</b></div><div class="t"><b>' +
+            r[3] +
+            " · " +
+            r[4] +
+            " / 100</b><small>Weighted value " +
+            compact(String(Math.round((+r[2].replace(/,/g, "") * r[4]) / 100))) +
+            "</small></div></div>" +
+            '<div class="kv"><div><small>Stage</small><b>' +
+            r[5] +
+            "</b></div><div><small>Value</small><b>K" +
+            r[2] +
+            "</b></div><div><small>Owner</small><b>George M.</b></div><div><small>Close date</small><b>" +
+            r[6] +
+            "</b></div></div>"
+          );
+        if (t === "Score")
+          return (
+            '<div><div class="f-ttl">Why this score</div><div class="factor"><span>Stage: ' +
+            r[5] +
+            "</span><span>× " +
+            { Discover: "0.25", Propose: "0.50", Negotiate: "0.75" }[r[5]] +
+            '</span></div><div class="factor"><span>Buying committee 0.7</span><span>× 0.88</span></div><div class="factor"><span>Engagement 60</span><span>× 0.88</span></div><div class="factor"><span>Recency, size, health</span><span>× 1.00</span></div><div class="factor"><span>Score</span><span>' +
+            r[4] +
+            "</span></div></div>"
+          );
+        if (t === "Activity")
+          return '<div class="factor"><span>Exec meeting booked</span><span style="font-weight:400;color:var(--mute)">2h ago</span></div><div class="factor"><span>Revised quote sent</span><span style="font-weight:400;color:var(--mute)">Yesterday</span></div><div class="factor"><span>Site survey completed</span><span style="font-weight:400;color:var(--mute)">12 Nov</span></div>';
+        return '<div class="factor"><span>Mwila Banda · Economic buyer</span><span>Champion</span></div><div class="factor"><span>Chanda Phiri · Technical</span><span>Neutral</span></div><div class="factor"><span>Joseph Tembo · Procurement</span><span>Blocker</span></div>';
+      }
+      var X =
+          '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg>',
+        DOTS =
+          '<svg viewBox="0 0 24 24" fill="currentColor"><circle cx="5" cy="12" r="2"/><circle cx="12" cy="12" r="2"/><circle cx="19" cy="12" r="2"/></svg>';
+      function drawerHTML(o, r, t) {
+        var tabs =
+          '<div class="tabs">' +
+          ["Overview", "Score", "Activity", "Contacts"]
+            .map(function (x) {
+              return (
+                '<span data-tab="' + x + '"' + (x === t ? ' class="on"' : "") + ">" + x + "</span>"
+              );
+            })
+            .join("") +
+          "</div>";
+        var menu =
+          '<div class="menu"><div>Edit details</div><div>Reassign owner</div><div>Copy link</div><div class="r">Delete</div></div>';
+        var top =
+          o === "C"
+            ? '<div class="d-hero"><div class="top"><span class="crumb">' +
+              r[1] +
+              ' · Opportunity</span><div style="display:flex;gap:8px"><button class="icb" data-act="menu" title="More">' +
+              DOTS +
+              '</button><button class="icb" data-act="close" title="Close (Esc)">' +
+              X +
+              "</button></div></div><h3>" +
+              r[0] +
+              '</h3><div class="hero-stats"><div><small>Value</small><b>' +
+              compact(r[2]) +
+              "</b></div><div><small>Score</small><b>" +
+              r[3] +
+              " · " +
+              r[4] +
+              "</b></div><div><small>Stage</small><b>" +
+              r[5] +
+              "</b></div></div></div>"
+            : '<div class="grab"></div><div class="d-hd"><div class="lg">' +
+              ini(r[1]) +
+              '</div><div class="t"><h3>' +
+              r[0] +
+              "</h3><small>" +
+              r[1] +
+              ' · Opportunity</small></div><button class="icb" data-act="menu" title="More">' +
+              DOTS +
+              '</button><button class="icb" data-act="close" title="Close (Esc)">' +
+              X +
+              "</button></div>";
+        return (
+          "<div>" +
+          menu +
+          top +
+          tabs +
+          '</div><div class="d-body">' +
+          tabBody(r, t) +
+          '</div><div class="d-ft"><button class="btn" data-act="lost">Mark as lost</button><button class="btn d" data-act="adv">Advance stage</button></div>'
+        );
+      }
+      var state = {};
+      function render() {
+        document.querySelectorAll(".stage").forEach(function (s) {
+          var o = s.dataset.opt;
+          state[o] = state[o] || { i: 0, t: "Overview" };
+          s.innerHTML =
+            '<div class="rail"><i></i><i class="on"></i><i></i><i></i><i></i><i></i></div><div class="panel">' +
+            list() +
+            (o !== "B" ? '<div class="scrim" data-act="close"></div>' : "") +
+            '<div class="drawer" role="dialog" aria-label="Opportunity details"></div></div>';
+          fill(s);
+        });
+      }
+      function fill(s) {
+        var o = s.dataset.opt,
+          st = state[o],
+          d = s.querySelector(".drawer");
+        d.style.display = "flex";
+        d.style.flexDirection = "column";
+        var inner = drawerHTML(o, rows[st.i], st.t);
+        d.innerHTML = inner;
+        // keep wrapper for B min-width trick
+        s.querySelectorAll(".row").forEach(function (r) {
+          r.classList.toggle("sel", s.classList.contains("open") && +r.dataset.i === st.i);
+        });
+      }
+      var toastT;
+      function toast(m) {
+        var t = document.getElementById("toast");
+        t.textContent = m;
+        t.classList.add("on");
+        clearTimeout(toastT);
+        toastT = setTimeout(function () {
+          t.classList.remove("on");
+        }, 2200);
+      }
+      document.addEventListener("click", function (e) {
+        var s = e.target.closest(".stage");
+        if (!s) return;
+        var o = s.dataset.opt,
+          st = state[o];
+        var row = e.target.closest(".row");
+        if (row) {
+          st.i = +row.dataset.i;
+          s.classList.add("open");
+          fill(s);
+          return;
+        }
+        var tab = e.target.closest("[data-tab]");
+        if (tab) {
+          st.t = tab.dataset.tab;
+          fill(s);
+          return;
+        }
+        var act = e.target.closest("[data-act]");
+        if (!act) {
+          var m = s.querySelector(".menu.on");
+          if (m) m.classList.remove("on");
+          return;
+        }
+        var a = act.dataset.act;
+        if (a === "close") {
+          s.classList.remove("open");
+          fill(s);
+        }
+        if (a === "menu") {
+          s.querySelector(".menu").classList.toggle("on");
+        }
+        if (a === "adv") {
+          var order = ["Discover", "Propose", "Negotiate", "Closed Won"],
+            r = rows[st.i],
+            k = order.indexOf(r[5]);
+          if (k < 3) {
+            r[5] = order[k + 1];
+            toast("Moved to " + r[5] + " · Undo");
+          }
+          fill(s);
+        }
+        if (a === "lost") {
+          toast("Would open a confirm dialog with a reason (modal)");
+        }
+      });
+      document.addEventListener("keydown", function (e) {
+        if (e.key === "Escape")
+          document.querySelectorAll(".stage.open").forEach(function (s) {
+            s.classList.remove("open");
+            fill(s);
+          });
+      });
+      render();
+      function seg(id, fn) {
+        var g = document.getElementById(id);
+        g.querySelectorAll("button").forEach(function (b) {
+          b.onclick = function () {
+            g.querySelectorAll("button").forEach(function (x) {
+              x.classList.remove("on");
+            });
+            b.classList.add("on");
+            fn(b.dataset.v);
+          };
+        });
+      }
+      seg("dev", function (v) {
+        document.querySelectorAll(".stage").forEach(function (s) {
+          s.classList.toggle("phone", v === "phone");
+        });
+      });
+      seg("thm", function (v) {
+        document.documentElement.dataset.theme = v;
+      });
+    </script>
+    <div class="toast" id="toast"></div>
+  </body>
+</html>

@@ -1,0 +1,865 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Page States</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Urbanist:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --shell: #fff;
+        --main: #ececec;
+        --card: #fff;
+        --ink: #0d0d0d;
+        --mute: #6b6b6b;
+        --soft: #f3f3f3;
+        --line: #e4e4e4;
+        --bar2: #d4d4d4;
+        --danger: #dc2626;
+      }
+      :root[data-theme="dark"] {
+        --shell: #111;
+        --main: #1b1b1b;
+        --card: #242424;
+        --ink: #f5f5f5;
+        --mute: #9a9a9a;
+        --soft: #2e2e2e;
+        --line: #3a3a3a;
+        --bar2: #505050;
+        --danger: #f87171;
+      }
+      * {
+        box-sizing: border-box;
+        margin: 0;
+      }
+      body {
+        background: var(--shell);
+        color: var(--ink);
+        font-family: Urbanist, system-ui, sans-serif;
+        -webkit-font-smoothing: antialiased;
+        padding: 40px 32px 80px;
+      }
+      button,
+      input {
+        font: inherit;
+        color: inherit;
+      }
+      button {
+        cursor: pointer;
+      }
+      svg {
+        width: 16px;
+        height: 16px;
+        flex: none;
+      }
+      .wrap {
+        max-width: 1360px;
+        margin: auto;
+      }
+      .page-hd {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-end;
+        gap: 16px;
+        flex-wrap: wrap;
+        margin-bottom: 20px;
+      }
+      .page-hd h1 {
+        font-size: 30px;
+        font-weight: 700;
+      }
+      .page-hd p {
+        color: var(--mute);
+        margin-top: 6px;
+        font-size: 15px;
+        max-width: 720px;
+        line-height: 1.5;
+      }
+      .seg {
+        display: inline-flex;
+        background: var(--soft);
+        border-radius: 30px;
+        padding: 4px;
+        gap: 2px;
+        flex-wrap: wrap;
+      }
+      .seg button {
+        border: 0;
+        background: none;
+        padding: 8px 14px;
+        border-radius: 24px;
+        font-size: 13px;
+        font-weight: 600;
+      }
+      .seg button.on {
+        background: var(--ink);
+        color: var(--shell);
+      }
+      .ctrl {
+        display: flex;
+        gap: 12px;
+        align-items: center;
+        flex-wrap: wrap;
+        margin-bottom: 14px;
+      }
+      .ctrl small {
+        color: var(--mute);
+        font-size: 14px;
+      }
+
+      .app {
+        background: var(--main);
+        border-radius: 28px;
+        padding: 20px;
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+        min-height: 540px;
+        position: relative;
+      }
+      .kpis {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 12px;
+      }
+      .kpi {
+        background: var(--card);
+        border-radius: 22px;
+        padding: 16px;
+        text-align: center;
+      }
+      .kpi .ci {
+        width: 38px;
+        height: 38px;
+        border-radius: 50%;
+        background: var(--soft);
+        display: grid;
+        place-items: center;
+        margin: 0 auto 10px;
+      }
+      .kpi b {
+        display: block;
+        font-size: 22px;
+      }
+      .kpi span {
+        font-size: 12px;
+        color: var(--mute);
+      }
+      .card {
+        background: var(--card);
+        border-radius: 24px;
+        padding: 20px;
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        position: relative;
+        overflow: hidden;
+      }
+      .hd {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 10px;
+        flex-wrap: wrap;
+        margin-bottom: 12px;
+      }
+      .hd h3 {
+        font-size: 20px;
+        font-weight: 600;
+      }
+      .tools {
+        display: flex;
+        gap: 8px;
+        align-items: center;
+        flex-wrap: wrap;
+      }
+      .search {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        background: var(--soft);
+        border-radius: 999px;
+        height: 38px;
+        padding: 0 14px;
+        color: var(--mute);
+        min-width: 200px;
+      }
+      .search input {
+        border: 0;
+        background: none;
+        outline: none;
+        flex: 1;
+        min-width: 0;
+        font-size: 14px;
+      }
+      .rows {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+      }
+      .r {
+        display: grid;
+        grid-template-columns: 40px 1.4fr 1fr 110px 90px;
+        gap: 12px;
+        align-items: center;
+        background: var(--soft);
+        border-radius: 16px;
+        padding: 10px 14px;
+        font-size: 14px;
+      }
+      .r .av {
+        width: 34px;
+        height: 34px;
+        border-radius: 50%;
+        background: var(--card);
+        display: grid;
+        place-items: center;
+        font-weight: 700;
+        font-size: 12px;
+      }
+      .r b {
+        font-weight: 600;
+      }
+      .r .m {
+        color: var(--mute);
+      }
+      .pill {
+        border: 1px solid var(--line);
+        background: var(--card);
+        border-radius: 20px;
+        padding: 4px 11px;
+        font-size: 12px;
+        justify-self: start;
+      }
+      .b {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        border: 1.5px solid transparent;
+        border-radius: 999px;
+        height: 44px;
+        padding: 0 20px;
+        font-size: 14px;
+        font-weight: 600;
+        white-space: nowrap;
+        background: none;
+        transition:
+          opacity 0.15s,
+          background 0.15s;
+      }
+      .b.sm {
+        height: 36px;
+        padding: 0 14px;
+        font-size: 13px;
+      }
+      .b.pri {
+        background: var(--ink);
+        color: var(--shell);
+      }
+      .b.pri:hover {
+        opacity: 0.85;
+      }
+      .b.sec {
+        border-color: var(--ink);
+      }
+      .b.sec:hover,
+      .b.gho:hover {
+        background: var(--soft);
+      }
+      .b.hero {
+        padding-left: 5px;
+      }
+      .b.hero .circ {
+        width: 34px;
+        height: 34px;
+        border-radius: 50%;
+        background: var(--shell);
+        color: var(--ink);
+        display: grid;
+        place-items: center;
+      }
+      .b.sm.hero {
+        padding-left: 4px;
+      }
+      .b.sm.hero .circ {
+        width: 28px;
+        height: 28px;
+      }
+      .in {
+        animation: fade 0.3s both;
+      }
+      @keyframes fade {
+        from {
+          opacity: 0;
+          transform: translateY(4px);
+        }
+      }
+
+      /* loading: blurred content + loader pill; header stays sharp */
+      .bl {
+        filter: blur(7px) grayscale(1);
+        opacity: 0.5;
+        pointer-events: none;
+        user-select: none;
+      }
+      .unblur {
+        animation: unblur 0.6s ease both;
+      }
+      @keyframes unblur {
+        from {
+          filter: blur(7px) grayscale(1);
+          opacity: 0.5;
+        }
+      }
+      .veil {
+        position: absolute;
+        inset: 0;
+        display: grid;
+        place-items: center;
+        z-index: 4;
+        pointer-events: none;
+      }
+      .lp {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        background: var(--ink);
+        color: var(--shell);
+        border-radius: 999px;
+        padding: 6px 16px 6px 6px;
+        font-size: 14px;
+        font-weight: 500;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.18);
+        animation: fade 0.3s;
+        pointer-events: auto;
+      }
+      .lp .c {
+        width: 30px;
+        height: 30px;
+        border-radius: 50%;
+        background: var(--shell);
+        display: grid;
+        place-items: center;
+      }
+      .lp .c i {
+        width: 16px;
+        height: 16px;
+        border-radius: 50%;
+        border: 2.5px solid var(--ink);
+        border-right-color: transparent;
+        animation: spn 0.7s linear infinite;
+      }
+      @keyframes spn {
+        to {
+          transform: rotate(360deg);
+        }
+      }
+
+      /* empty: blurred example rows + message on a glow */
+      .ghost {
+        position: relative;
+        flex: 1;
+      }
+      .ghost .rows {
+        filter: grayscale(1) blur(5px);
+        opacity: 0.55;
+        pointer-events: none;
+        -webkit-mask-image: linear-gradient(#000 30%, transparent);
+        mask-image: linear-gradient(#000 30%, transparent);
+      }
+      .over {
+        position: absolute;
+        inset: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        padding: 20px;
+      }
+      .over .in2 {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        background: var(--card);
+        border-radius: 28px;
+        padding: 14px 24px;
+        box-shadow: 0 0 44px 36px var(--card);
+      }
+      .over h4,
+      .center h4 {
+        font-size: 18px;
+        font-weight: 600;
+        margin-bottom: 6px;
+      }
+      .over p,
+      .center p {
+        color: var(--mute);
+        font-size: 14px;
+        max-width: 360px;
+        line-height: 1.5;
+        margin-bottom: 16px;
+      }
+      .acts {
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+        justify-content: center;
+      }
+
+      /* no results + error: illustrated */
+      .center {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        padding: 30px 16px;
+      }
+      .ill {
+        position: relative;
+        width: 180px;
+        height: 110px;
+        margin-bottom: 18px;
+      }
+      .ill i {
+        position: absolute;
+        left: 20px;
+        right: 20px;
+        height: 30px;
+        border-radius: 12px;
+        background: var(--card);
+        border: 1px solid var(--line);
+        box-shadow: 0 6px 16px rgba(0, 0, 0, 0.06);
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 0 10px;
+      }
+      .ill i::before {
+        content: "";
+        width: 16px;
+        height: 16px;
+        border-radius: 50%;
+        background: var(--soft);
+      }
+      .ill i::after {
+        content: "";
+        height: 6px;
+        border-radius: 4px;
+        background: var(--soft);
+        flex: 1;
+      }
+      .ill i:nth-child(1) {
+        top: 0;
+        transform: scale(0.86);
+        opacity: 0.5;
+      }
+      .ill i:nth-child(2) {
+        top: 22px;
+        transform: scale(0.93);
+        opacity: 0.8;
+      }
+      .ill i:nth-child(3) {
+        top: 46px;
+      }
+      .ill .bdg {
+        position: absolute;
+        right: 6px;
+        bottom: 6px;
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        display: grid;
+        place-items: center;
+        box-shadow: 0 8px 18px rgba(0, 0, 0, 0.15);
+        background: var(--card);
+        color: var(--ink);
+        border: 1.5px solid var(--ink);
+      }
+      .ill.err i:nth-child(3) {
+        border-color: color-mix(in srgb, var(--danger) 40%, transparent);
+      }
+      .ill.err .bdg {
+        background: var(--danger);
+        color: #fff;
+        border-color: var(--danger);
+      }
+      .chip {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        background: var(--ink);
+        color: var(--shell);
+        border-radius: 999px;
+        padding: 5px 8px 5px 12px;
+        font-size: 12px;
+        font-weight: 600;
+        margin-bottom: 4px;
+        align-self: flex-start;
+      }
+      .chip button {
+        border: 0;
+        background: color-mix(in srgb, var(--shell) 20%, transparent);
+        color: var(--shell);
+        width: 18px;
+        height: 18px;
+        border-radius: 50%;
+        display: grid;
+        place-items: center;
+        padding: 0;
+      }
+      .chip svg {
+        width: 10px;
+        height: 10px;
+      }
+
+      .toast {
+        position: fixed;
+        left: 50%;
+        bottom: 24px;
+        transform: translate(-50%, 120px);
+        opacity: 0;
+        background: var(--ink);
+        color: var(--shell);
+        padding: 6px 16px 6px 6px;
+        border-radius: 999px;
+        font-size: 14px;
+        display: flex;
+        gap: 10px;
+        align-items: center;
+        transition: all 0.3s;
+        z-index: 50;
+      }
+      .toast i {
+        width: 28px;
+        height: 28px;
+        border-radius: 50%;
+        background: var(--shell);
+        color: var(--ink);
+        display: grid;
+        place-items: center;
+      }
+      .toast.on {
+        transform: translate(-50%, 0);
+        opacity: 1;
+      }
+      .legend {
+        margin-top: 22px;
+        display: grid;
+        grid-template-columns: repeat(5, 1fr);
+        gap: 12px;
+      }
+      .legend div {
+        background: var(--soft);
+        border-radius: 18px;
+        padding: 14px;
+        font-size: 13px;
+        line-height: 1.5;
+        color: var(--mute);
+      }
+      .legend b {
+        display: block;
+        color: var(--ink);
+        font-size: 14px;
+        margin-bottom: 4px;
+      }
+      @media (max-width: 900px) {
+        body {
+          padding: 20px 12px 60px;
+        }
+        .kpis {
+          grid-template-columns: 1fr 1fr;
+        }
+        .r {
+          grid-template-columns: 36px 1fr 80px;
+        }
+        .r > :nth-child(3),
+        .r > :nth-child(4) {
+          display: none;
+        }
+        .legend {
+          grid-template-columns: 1fr 1fr;
+        }
+        .search {
+          min-width: 0;
+          flex: 1;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <div class="page-hd">
+        <div>
+          <h1>Page states</h1>
+          <p>
+            The decided look for every state of a list page, shown on Leads. Switch states below, or
+            use the buttons inside: Add lead, Import CSV, Retry and Clear search all work. Every
+            list and page in the app needs all five.
+          </p>
+        </div>
+        <div class="seg" id="thm">
+          <button class="on" data-v="light">Light</button><button data-v="dark">Dark</button>
+        </div>
+      </div>
+      <div class="ctrl"><div class="seg" id="st"></div></div>
+      <div class="app" id="app"></div>
+      <div class="legend">
+        <div><b>Loaded</b>The real data.</div>
+        <div>
+          <b>Loading</b>KPIs and rows blur, the black loader pill sits on top; header, search and
+          buttons stay sharp. Sharpens when data arrives.
+        </div>
+        <div>
+          <b>Empty (first use)</b>Blurred example rows behind a message on a soft glow, with Add
+          lead + Import CSV.
+        </div>
+        <div>
+          <b>No results</b>Illustration with a search badge, the search as a removable chip, Clear
+          search.
+        </div>
+        <div>
+          <b>Error</b>Illustration with a red badge, a reassuring line, Retry and Contact support.
+          KPIs show “—”.
+        </div>
+      </div>
+    </div>
+    <div class="toast" id="toast"><i></i><span></span></div>
+    <script>
+      var P = {
+        plus: '<path d="M12 5v14M5 12h14"/>',
+        err: '<circle cx="12" cy="12" r="9"/><path d="M12 8v5M12 16v.5"/>',
+        search: '<circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/>',
+        up: '<path d="M12 15V4M7 9l5-5 5 5M5 20h14"/>',
+        x: '<path d="M6 6l12 12M18 6L6 18"/>',
+        retry: '<path d="M4 12a8 8 0 0 1 14-5.3M20 12a8 8 0 0 1-14 5.3M18 3v4h-4M6 21v-4h4"/>',
+        target: '<circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="3"/>',
+        check: '<path d="M4 12l5 5L20 6"/>',
+      };
+      function ic(k) {
+        return (
+          '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">' +
+          P[k] +
+          "</svg>"
+        );
+      }
+      var seed = [
+        ["Kafue Valley Foods", "Mwila Banda", "Referral", "K1.2M"],
+        ["Copperline Power", "Chanda Phiri", "Event", "K3.4M"],
+        ["Kalulu Retail", "Joseph Tembo", "Website", "K0.8M"],
+        ["Mulungushi Town Trust", "Grace Mulenga", "Partner", "K2.1M"],
+        ["Zambezi Ridge Traders", "Peter Zulu", "Cold outreach", "K0.6M"],
+      ];
+      var NAMES = {
+        loaded: "Loaded",
+        loading: "Loading",
+        empty: "Empty (first use)",
+        nores: "No results",
+        error: "Error",
+      };
+      var state = "loaded",
+        data = seed.slice(),
+        was = "";
+      function ini(n) {
+        var w = n.split(" ");
+        return (w[0][0] + (w[1] ? w[1][0] : "")).toUpperCase();
+      }
+      function row(r) {
+        return (
+          '<div class="r"><span class="av">' +
+          ini(r[0]) +
+          "</span><b>" +
+          r[0] +
+          '</b><span class="m">' +
+          r[1] +
+          '</span><span class="pill">' +
+          r[2] +
+          "</span><b>" +
+          r[3] +
+          "</b></div>"
+        );
+      }
+      function kpis(rows, dash) {
+        var n = rows.length,
+          v = dash
+            ? ["—", "—", "—", "—"]
+            : n
+              ? [n, "K" + (n * 1.6).toFixed(1) + "M", "32%", "4 days"]
+              : ["0", "K0", "—", "—"];
+        var L = ["Open leads", "Pipeline value", "Conversion", "Avg. response"],
+          I = ["target", "up", "check", "retry"];
+        return (
+          '<div class="kpis">' +
+          v
+            .map(function (x, i) {
+              return (
+                '<div class="kpi"><div class="ci">' +
+                ic(I[i]) +
+                "</div><b>" +
+                x +
+                "</b><span>" +
+                L[i] +
+                "</span></div>"
+              );
+            })
+            .join("") +
+          "</div>"
+        );
+      }
+      function hd(q) {
+        return (
+          '<div class="hd"><h3>Leads</h3><div class="tools"><label class="search">' +
+          ic("search") +
+          '<input value="' +
+          (q || "") +
+          '" placeholder="Search leads"></label><button class="b sm pri hero" data-a="add"><span class="circ">' +
+          ic("plus") +
+          "</span>Add lead</button></div></div>"
+        );
+      }
+      var ADD =
+          '<button class="b pri hero" data-a="add"><span class="circ">' +
+          ic("plus") +
+          "</span>Add lead</button>",
+        IMP = '<button class="b sec" data-a="import">' + ic("up") + "Import CSV</button>";
+      function render() {
+        var a = document.getElementById("app"),
+          un = was === "loading" && state !== "loading" ? " unblur" : "",
+          h;
+        if (state === "loading")
+          h =
+            '<div class="bl">' +
+            kpis(seed) +
+            '</div><div class="card">' +
+            hd() +
+            '<div class="rows bl">' +
+            seed.map(row).join("") +
+            '</div></div><div class="veil"><div class="lp" role="status"><span class="c"><i></i></span>Loading leads…</div></div>';
+        else if (state === "loaded")
+          h =
+            '<div class="' +
+            un +
+            '">' +
+            kpis(data) +
+            '</div><div class="card">' +
+            hd() +
+            '<div class="rows' +
+            un +
+            '">' +
+            data.map(row).join("") +
+            "</div></div>";
+        else if (state === "empty")
+          h =
+            kpis([]) +
+            '<div class="card">' +
+            hd() +
+            '<div class="ghost"><div class="rows">' +
+            seed.slice(0, 4).map(row).join("") +
+            '</div><div class="over"><div class="in2"><h4>Your leads will appear here</h4><p>Leads are new prospects before they become opportunities. Add your first one or import a list.</p><div class="acts">' +
+            ADD +
+            IMP +
+            "</div></div></div></div></div>";
+        else if (state === "nores")
+          h =
+            kpis(data) +
+            '<div class="card">' +
+            hd("Kafue Gorge") +
+            '<span class="chip">Search: Kafue Gorge<button data-a="clear" aria-label="Clear search">' +
+            ic("x") +
+            '</button></span><div class="center"><div class="ill"><i></i><i></i><i></i><span class="bdg">' +
+            ic("search") +
+            '</span></div><h4>No leads match “Kafue Gorge”</h4><p>Check the spelling or try a company or contact name.</p><button class="b sec" data-a="clear">' +
+            ic("x") +
+            "Clear search</button></div></div>";
+        else
+          h =
+            kpis([], 1) +
+            '<div class="card">' +
+            hd() +
+            '<div class="center" role="alert"><div class="ill err"><i></i><i></i><i></i><span class="bdg">' +
+            ic("err") +
+            '</span></div><h4>Couldn’t load leads</h4><p>The server didn’t respond. Your data is safe — try again in a moment.</p><div class="acts"><button class="b pri" data-a="retry">' +
+            ic("retry") +
+            'Retry</button><button class="b gho" data-a="support">Contact support</button></div></div></div>';
+        a.innerHTML = h;
+        was = state;
+        document.querySelectorAll("#st button").forEach(function (b) {
+          b.classList.toggle("on", b.dataset.s === state);
+        });
+      }
+      function go(s) {
+        state = s;
+        render();
+      }
+      function load(then) {
+        go("loading");
+        setTimeout(function () {
+          go(then || "loaded");
+        }, 1600);
+      }
+      function toast(m) {
+        var t = document.getElementById("toast");
+        t.querySelector("i").innerHTML = ic("check");
+        t.querySelector("span").textContent = m;
+        t.classList.add("on");
+        clearTimeout(t._t);
+        t._t = setTimeout(function () {
+          t.classList.remove("on");
+        }, 2400);
+      }
+      document.getElementById("st").innerHTML = Object.keys(NAMES)
+        .map(function (s) {
+          return '<button data-s="' + s + '">' + NAMES[s] + "</button>";
+        })
+        .join("");
+      document.addEventListener("click", function (e) {
+        var s = e.target.closest("#st button");
+        if (s) {
+          var v = s.dataset.s;
+          if (v === "loading") return load();
+          if (v === "loaded" && !data.length) data = seed.slice();
+          return go(v);
+        }
+        var b = e.target.closest("[data-a]");
+        if (!b) return;
+        var a = b.dataset.a;
+        if (a === "add") {
+          data.unshift(["Chisamba Agro Co-op", "Natasha Lungu", "Referral", "K0.4M"]);
+          go("loaded");
+          toast("Lead added");
+        }
+        if (a === "import") {
+          data = seed.slice();
+          load();
+          setTimeout(function () {
+            toast("5 leads imported");
+          }, 1600);
+        }
+        if (a === "retry") {
+          if (!data.length) data = seed.slice();
+          load();
+        }
+        if (a === "clear") {
+          if (!data.length) data = seed.slice();
+          go("loaded");
+        }
+        if (a === "support") toast("Support request sent");
+      });
+      var t = document.getElementById("thm");
+      t.querySelectorAll("button").forEach(function (b) {
+        b.onclick = function () {
+          t.querySelectorAll("button").forEach(function (x) {
+            x.classList.remove("on");
+          });
+          b.classList.add("on");
+          document.documentElement.dataset.theme = b.dataset.v;
+        };
+      });
+      render();
+    </script>
+  </body>
+</html>
