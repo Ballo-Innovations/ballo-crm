@@ -564,6 +564,127 @@
       </section>
 
       <section class="sec">
+        <h2>Charts</h2>
+        <p>
+          Bold pills: fat rounded bars, pill funnel and quota track, black tooltip on hover. Series
+          greys come from <code>--ink</code>, <code>--chart-2</code>, hatch, <code>--chart-3</code>.
+        </p>
+        <div class="grid2">
+          <div class="card chart-card">
+            <div class="chart-card__head">
+              <div>
+                <div class="chart-card__title">Revenue</div>
+                <div class="chart-card__sub">Last 6 months</div>
+              </div>
+              <div class="chart-card__hero">K24.3M<small>+18%</small></div>
+            </div>
+            <div class="chart-bars" role="img" aria-label="Monthly revenue June to November">
+              <div class="chart-bars__col" data-ctip="<b>Jun 2026</b><br>K3.0M">
+                <span class="chart-bars__bar" style="height: 60%"></span>Jun
+              </div>
+              <div class="chart-bars__col" data-ctip="<b>Jul 2026</b><br>K3.8M">
+                <span class="chart-bars__bar" style="height: 76%"></span>Jul
+              </div>
+              <div class="chart-bars__col" data-ctip="<b>Aug 2026</b><br>K4.1M">
+                <span class="chart-bars__bar" style="height: 82%"></span>Aug
+              </div>
+              <div class="chart-bars__col" data-ctip="<b>Sep 2026</b><br>K3.9M">
+                <span class="chart-bars__bar" style="height: 78%"></span>Sep
+              </div>
+              <div class="chart-bars__col" data-ctip="<b>Oct 2026</b><br>K4.6M">
+                <span class="chart-bars__bar" style="height: 92%"></span>Oct
+              </div>
+              <div class="chart-bars__col" data-ctip="<b>Nov 2026</b><br>K4.9M">
+                <span class="chart-bars__bar is-primary" style="height: 98%"></span>Nov
+              </div>
+            </div>
+          </div>
+          <div class="card chart-card">
+            <div class="chart-card__head">
+              <div>
+                <div class="chart-card__title">Conversion funnel</div>
+                <div class="chart-card__sub">Last 12 months · 5.1% lead to won</div>
+              </div>
+            </div>
+            <div class="chart-funnel">
+              <div class="chart-funnel__row" data-ctip="<b>Leads</b><br>412">
+                <span class="chart-funnel__label">Leads</span
+                ><span class="chart-funnel__track"
+                  ><span class="chart-funnel__bar" style="width: 100%">412</span></span
+                ><span class="chart-funnel__rate"></span>
+              </div>
+              <div
+                class="chart-funnel__row"
+                data-ctip="<b>Qualified</b><br>186 · 45% from previous"
+              >
+                <span class="chart-funnel__label">Qualified</span
+                ><span class="chart-funnel__track"
+                  ><span class="chart-funnel__bar" style="width: 45%">186</span></span
+                ><span class="chart-funnel__rate">45%</span>
+              </div>
+              <div class="chart-funnel__row" data-ctip="<b>Proposal</b><br>74 · 40% from previous">
+                <span class="chart-funnel__label">Proposal</span
+                ><span class="chart-funnel__track"
+                  ><span class="chart-funnel__bar" style="width: 18%">74</span></span
+                ><span class="chart-funnel__rate">40%</span>
+              </div>
+              <div
+                class="chart-funnel__row"
+                data-ctip="<b>Negotiation</b><br>38 · 51% from previous"
+              >
+                <span class="chart-funnel__label">Negotiation</span
+                ><span class="chart-funnel__track"
+                  ><span class="chart-funnel__bar" style="width: 9%">38</span></span
+                ><span class="chart-funnel__rate">51%</span>
+              </div>
+              <div class="chart-funnel__row" data-ctip="<b>Won</b><br>21 · 55% from previous">
+                <span class="chart-funnel__label">Won</span
+                ><span class="chart-funnel__track"
+                  ><span class="chart-funnel__bar" style="width: 5%">21</span></span
+                ><span class="chart-funnel__rate">55%</span>
+              </div>
+            </div>
+          </div>
+          <div class="card chart-card" style="grid-column: 1 / -1">
+            <div class="chart-card__head">
+              <div>
+                <div class="chart-card__title">Forecast vs quota</div>
+                <div class="chart-card__sub">Q4 2026</div>
+              </div>
+              <div class="chart-card__hero">K27.0M</div>
+            </div>
+            <div
+              class="chart-quota"
+              role="img"
+              aria-label="Won 12.6M, commit 8.3M, best case 6.1M of 30M quota"
+            >
+              <i
+                style="width: 42%; background: var(--ink)"
+                data-ctip="<b>Won</b><br>K12.6M · 42%"
+              ></i
+              ><i
+                style="width: 28%; background: var(--chart-2)"
+                data-ctip="<b>Commit</b><br>K8.3M · 28%"
+              ></i
+              ><i
+                class="chart-hatch"
+                style="width: 20%"
+                data-ctip="<b>Best case</b><br>K6.1M · 20%"
+              ></i>
+            </div>
+            <div class="chart-legend">
+              <span><i style="background: var(--ink)"></i>Won K12.6M</span
+              ><span><i style="background: var(--chart-2)"></i>Commit K8.3M</span
+              ><span><i class="chart-hatch"></i>Best case K6.1M</span
+              ><span style="margin-left: auto; color: var(--ink); font-weight: 600"
+                >90% of K30.0M quota</span
+              >
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="sec">
         <h2>Page states</h2>
         <p>Loading, empty (first use), no results, error. Switch:</p>
         <div class="tabs tabs--segmented" role="tablist" id="states">
@@ -1322,6 +1443,26 @@
           s[3].className = "progress__step is-done";
           s[4].className = "progress__step is-current";
           toast("Contract signed");
+        });
+      })();
+
+      // chart tooltips
+      (function () {
+        var tip = document.createElement("div");
+        tip.className = "chart-tooltip";
+        document.body.appendChild(tip);
+        document.addEventListener("mousemove", function (e) {
+          var t = e.target.closest("[data-ctip]");
+          if (!t) {
+            tip.classList.remove("is-on");
+            return;
+          }
+          tip.innerHTML = t.dataset.ctip;
+          tip.classList.add("is-on");
+          var x = e.clientX + 14;
+          if (x + tip.offsetWidth > innerWidth - 10) x = e.clientX - tip.offsetWidth - 14;
+          tip.style.left = x + "px";
+          tip.style.top = e.clientY + 14 + "px";
         });
       })();
     </script>

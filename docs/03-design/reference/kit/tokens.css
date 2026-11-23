@@ -12,8 +12,10 @@
   --mute: #6b6b6b; /* secondary text, axis labels */
   --soft: #f3f3f3; /* icon circles, rows, neutral pills, fields */
   --line: #e4e4e4; /* borders, grid lines, row hover */
-  --bar2: #d4d4d4; /* secondary chart series, unchecked controls */
+  --bar2: #d4d4d4; /* unchecked controls, quiet fills (charts use --chart-2/3) */
   --danger: #dc2626; /* at-risk, lost, destructive only */
+  --chart-2: #7a7a7a; /* chart comparison series (validated grey ramp) */
+  --chart-3: #c8c8c8; /* chart third series */
   --scrim: rgb(0 0 0 / 0.32);
 
   /* type */
@@ -67,6 +69,8 @@
     --line: #3a3a3a;
     --bar2: #505050;
     --danger: #f87171;
+    --chart-2: #9a9a9a;
+    --chart-3: #505050;
   }
 }
 :root[data-theme="dark"],
@@ -80,6 +84,8 @@
   --line: #3a3a3a;
   --bar2: #505050;
   --danger: #f87171;
+  --chart-2: #9a9a9a;
+  --chart-3: #505050;
 }
 
 @media (prefers-reduced-motion: reduce) {
