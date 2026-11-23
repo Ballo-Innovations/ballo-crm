@@ -74,8 +74,8 @@ Reference: option B in `docs/03-design/reference/drawer-options.html` (click a r
 - **Row to row.** Clicking another row swaps the drawer's content in place; the open row keeps a
   2px `--ink` outline. Tables in a docked state hide their lowest-priority columns rather than
   scroll sideways.
-- **Structure:** header (avatar circle, title, "Account · Type" subtitle, ⋯ menu, ✕) · tabs
-  with a 2px `--ink` underline on the active tab · scrolling body · sticky footer with actions
+- **Structure:** header (avatar circle, title, "Account · Type" subtitle, ⋯ menu, ✕) · pill
+  tabs (see Tabs and segmented controls) · scrolling body · sticky footer with actions
   (outline secondary on the left, black primary on the right).
 - **Opening and closing:** width animates 0 → 400px in 300ms `cubic-bezier(.2,.8,.2,1)`.
   Closes with ✕ or Esc. Focus moves into the drawer on open and back to the row on close.
@@ -219,6 +219,27 @@ Reference: option A in `docs/03-design/reference/modal-options.html` (use the dr
   except while saving. The action shows a spinner and blocks repeat clicks, then the dialog
   closes and a toast confirms (with Undo where the action can be reversed, e.g. Mark as lost).
   `role="dialog"`, `aria-modal="true"`, labelled by the title.
+
+## Tabs and segmented controls (decided: pills everywhere)
+
+Reference: option B in `docs/03-design/reference/tabs-options.html` (click the tabs).
+
+- **Tabs** switch between sections of the same thing (All accounts | Target accounts; the
+  drawer's Overview · Score · Activity · Contacts). **Segmented controls** switch how you view
+  it (Board | List; 7D · 30D · QTR · YTD). Both use the same pill style.
+- **Look:** each option is its own pill with a 6px gap: `--soft` fill, `--ink` text 14px/500,
+  8px × 16px padding (segmented: 7px × 13px); hover `--line`. The selected pill turns `--ink`
+  with `--shell` text, like the active nav item.
+- **Counts:** a small pill inside the tab (12px/600); on the selected tab it becomes translucent
+  white.
+- **Icon options** (Board | List): icon before the label; the selected one shows its icon in a
+  white circle, like the hero button.
+- **Placement:** page-level tabs sit under the page or card title; segmented controls sit at the
+  right of a card header.
+- **Behaviour:** the selected tab is in the URL (`?tab=target`) so it survives reloads and can
+  be shared. Keyboard: ← → move and select, Home/End jump to the ends; `role="tablist"` /
+  `role="tab"` with `aria-selected` and roving tabindex. On phones a row scrolls sideways
+  rather than wrapping. Never more than 6 options in a row; content swaps with a short fade.
 
 ## Components (shadcn, restyled to the above)
 

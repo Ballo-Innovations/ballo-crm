@@ -1,0 +1,772 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Tabs Options</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Urbanist:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --shell: #fff;
+        --main: #ececec;
+        --card: #fff;
+        --ink: #0d0d0d;
+        --mute: #6b6b6b;
+        --soft: #f3f3f3;
+        --line: #e4e4e4;
+        --bar2: #d4d4d4;
+      }
+      :root[data-theme="dark"] {
+        --shell: #111;
+        --main: #1b1b1b;
+        --card: #242424;
+        --ink: #f5f5f5;
+        --mute: #9a9a9a;
+        --soft: #2e2e2e;
+        --line: #3a3a3a;
+        --bar2: #505050;
+      }
+      * {
+        box-sizing: border-box;
+        margin: 0;
+      }
+      body {
+        background: var(--shell);
+        color: var(--ink);
+        font-family: Urbanist, system-ui, sans-serif;
+        -webkit-font-smoothing: antialiased;
+        padding: 40px 32px 80px;
+      }
+      button {
+        font: inherit;
+        color: inherit;
+        cursor: pointer;
+      }
+      svg {
+        width: 16px;
+        height: 16px;
+        flex: none;
+      }
+      .wrap {
+        max-width: 1360px;
+        margin: auto;
+      }
+      .page-hd {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-end;
+        gap: 16px;
+        flex-wrap: wrap;
+        margin-bottom: 28px;
+      }
+      .page-hd h1 {
+        font-size: 30px;
+        font-weight: 700;
+      }
+      .page-hd p {
+        color: var(--mute);
+        margin-top: 6px;
+        font-size: 15px;
+        max-width: 720px;
+        line-height: 1.5;
+      }
+      .ctl-seg {
+        display: inline-flex;
+        background: var(--soft);
+        border-radius: 30px;
+        padding: 4px;
+        gap: 2px;
+      }
+      .ctl-seg button {
+        border: 0;
+        background: none;
+        padding: 8px 16px;
+        border-radius: 24px;
+        font-size: 14px;
+        font-weight: 500;
+      }
+      .ctl-seg button.on {
+        background: var(--ink);
+        color: var(--shell);
+      }
+      .opt {
+        margin-bottom: 44px;
+      }
+      .opt-hd {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin-bottom: 6px;
+      }
+      .badge {
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        background: var(--ink);
+        color: var(--shell);
+        display: grid;
+        place-items: center;
+        font-weight: 700;
+        font-size: 16px;
+        flex: none;
+      }
+      .opt-hd h2 {
+        font-size: 22px;
+        font-weight: 600;
+      }
+      .opt-desc {
+        color: var(--mute);
+        font-size: 15px;
+        margin: 0 0 14px 48px;
+        line-height: 1.5;
+        max-width: 880px;
+      }
+      .app {
+        background: var(--main);
+        border-radius: 28px;
+        padding: 18px;
+        display: grid;
+        grid-template-columns: 1.6fr 1fr;
+        gap: 16px;
+      }
+      .card {
+        background: var(--card);
+        border-radius: 24px;
+        padding: 20px;
+        min-width: 0;
+      }
+      .ttl {
+        font-size: 22px;
+        font-weight: 600;
+      }
+      .cap {
+        font-size: 12px;
+        font-weight: 600;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        color: var(--mute);
+        margin-bottom: 10px;
+      }
+      .hdr {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 12px;
+        flex-wrap: wrap;
+        margin-bottom: 14px;
+      }
+      .rows {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+      }
+      .r {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        background: var(--soft);
+        border-radius: 14px;
+        padding: 10px 14px;
+        font-size: 14px;
+        animation: fd 0.25s;
+      }
+      .r .av {
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        background: var(--card);
+        display: grid;
+        place-items: center;
+        font-weight: 700;
+        font-size: 11px;
+      }
+      .r b {
+        flex: 1;
+        font-weight: 600;
+      }
+      .r span {
+        color: var(--mute);
+      }
+      .pill {
+        border: 1px solid var(--line);
+        background: var(--card);
+        border-radius: 20px;
+        padding: 3px 10px;
+        font-size: 12px;
+        color: var(--ink) !important;
+      }
+      .board {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 8px;
+        animation: fd 0.25s;
+      }
+      .col {
+        background: var(--soft);
+        border-radius: 16px;
+        padding: 10px;
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+        font-size: 12px;
+        color: var(--mute);
+        font-weight: 600;
+      }
+      .col i {
+        display: block;
+        height: 46px;
+        background: var(--card);
+        border-radius: 12px;
+      }
+      .chart {
+        display: flex;
+        align-items: flex-end;
+        gap: 6px;
+        height: 120px;
+        padding-top: 10px;
+        animation: fd 0.25s;
+      }
+      .chart em {
+        flex: 1;
+        background: var(--ink);
+        border-radius: 6px 6px 3px 3px;
+        transition: height 0.3s;
+      }
+      .chart em:nth-child(even) {
+        background: var(--bar2);
+      }
+      .pane {
+        font-size: 14px;
+        color: var(--mute);
+        line-height: 1.6;
+        animation: fd 0.25s;
+        padding-top: 12px;
+      }
+      .pane b {
+        color: var(--ink);
+      }
+      @keyframes fd {
+        from {
+          opacity: 0;
+          transform: translateY(3px);
+        }
+      }
+      .tl {
+        display: flex;
+        gap: 4px;
+        position: relative;
+      }
+      .tl [role="tab"] {
+        border: 0;
+        background: none;
+        white-space: nowrap;
+        display: inline-flex;
+        align-items: center;
+        gap: 7px;
+        font-size: 14px;
+        font-weight: 500;
+        transition:
+          color 0.15s,
+          background 0.15s;
+      }
+      .tl [role="tab"]:focus-visible {
+        outline: 2px solid var(--ink);
+        outline-offset: 2px;
+      }
+      .tl .n {
+        font-size: 12px;
+        font-weight: 600;
+        border-radius: 20px;
+        padding: 1px 7px;
+        background: var(--soft);
+        color: var(--mute);
+        transition: all 0.15s;
+      }
+      .scroller {
+        overflow-x: auto;
+        scrollbar-width: none;
+        max-width: 100%;
+      }
+      .scroller::-webkit-scrollbar {
+        display: none;
+      }
+
+      /* ===== A: underline tabs + segmented track ===== */
+      .A .tabs {
+        border-bottom: 1px solid var(--line);
+      }
+      .A .tabs [role="tab"] {
+        padding: 10px 12px;
+        color: var(--mute);
+        border-bottom: 2px solid transparent;
+        margin-bottom: -1px;
+      }
+      .A .tabs [role="tab"]:hover {
+        color: var(--ink);
+      }
+      .A .tabs [role="tab"][aria-selected="true"] {
+        color: var(--ink);
+        font-weight: 600;
+      }
+      .A .tabs .ind {
+        position: absolute;
+        bottom: -1px;
+        height: 2px;
+        background: var(--ink);
+        border-radius: 2px;
+        transition:
+          left 0.25s cubic-bezier(0.2, 0.8, 0.2, 1),
+          width 0.25s cubic-bezier(0.2, 0.8, 0.2, 1);
+      }
+      .A .tabs [aria-selected="true"] .n {
+        background: var(--ink);
+        color: var(--shell);
+      }
+      .A .seg {
+        background: var(--soft);
+        border-radius: 999px;
+        padding: 4px;
+      }
+      .A .seg [role="tab"] {
+        padding: 7px 14px;
+        border-radius: 999px;
+        color: var(--mute);
+        position: relative;
+        z-index: 1;
+      }
+      .A .seg [role="tab"][aria-selected="true"] {
+        color: var(--shell);
+      }
+      .A .seg .ind {
+        position: absolute;
+        top: 4px;
+        bottom: 4px;
+        background: var(--ink);
+        border-radius: 999px;
+        transition:
+          left 0.25s cubic-bezier(0.2, 0.8, 0.2, 1),
+          width 0.25s cubic-bezier(0.2, 0.8, 0.2, 1);
+      }
+
+      /* ===== B: pills everywhere ===== */
+      .B .tl {
+        gap: 6px;
+      }
+      .B [role="tab"] {
+        padding: 8px 16px;
+        border-radius: 999px;
+        color: var(--ink);
+        background: var(--soft) !important;
+      }
+      .B [role="tab"]:hover {
+        background: var(--line) !important;
+      }
+      .B [role="tab"][aria-selected="true"] {
+        background: var(--ink) !important;
+        color: var(--shell);
+      }
+      .B [aria-selected="true"] .n {
+        background: color-mix(in srgb, var(--shell) 22%, transparent);
+        color: var(--shell);
+      }
+      .B .seg [role="tab"] {
+        padding: 7px 13px;
+      }
+      .B .ind {
+        display: none;
+      }
+      .B .tabs.icon [role="tab"][aria-selected="true"] {
+        padding-left: 5px;
+      }
+      .B .tabs.icon [role="tab"][aria-selected="true"] .ic {
+        width: 26px;
+        height: 26px;
+        border-radius: 50%;
+        background: var(--shell);
+        color: var(--ink);
+        display: grid;
+        place-items: center;
+      }
+
+      /* ===== C: folder tabs attached to the card ===== */
+      .C .app {
+        gap: 16px;
+      }
+      .C .folder {
+        display: flex;
+        flex-direction: column;
+        min-width: 0;
+      }
+      .C .folder .tabs {
+        gap: 4px;
+        padding: 0 10px;
+      }
+      .C .folder .tabs [role="tab"] {
+        padding: 10px 18px;
+        border-radius: 18px 18px 0 0;
+        background: color-mix(in srgb, var(--card) 45%, transparent);
+        color: var(--mute);
+        position: relative;
+        top: 1px;
+      }
+      .C .folder .tabs [role="tab"]:hover {
+        color: var(--ink);
+      }
+      .C .folder .tabs [role="tab"][aria-selected="true"] {
+        background: var(--card);
+        color: var(--ink);
+        font-weight: 600;
+      }
+      .C .folder .tabs [aria-selected="true"] .n {
+        background: var(--ink);
+        color: var(--shell);
+      }
+      .C .folder .card {
+        border-top-left-radius: 24px;
+      }
+      .C .card .tabs {
+        border-bottom: 1px solid var(--line);
+      }
+      .C .card .tabs [role="tab"] {
+        padding: 10px 12px;
+        color: var(--mute);
+        border-bottom: 2px solid transparent;
+        margin-bottom: -1px;
+      }
+      .C .card .tabs [role="tab"][aria-selected="true"] {
+        color: var(--ink);
+        font-weight: 600;
+        border-bottom-color: var(--ink);
+      }
+      .C .seg {
+        border: 1.5px solid var(--line);
+        border-radius: 14px;
+        padding: 3px;
+      }
+      .C .seg [role="tab"] {
+        padding: 6px 12px;
+        border-radius: 10px;
+        color: var(--mute);
+      }
+      .C .seg [role="tab"][aria-selected="true"] {
+        background: var(--soft);
+        color: var(--ink);
+        font-weight: 600;
+        box-shadow: inset 0 0 0 1.5px var(--ink);
+      }
+      .C .ind {
+        display: none;
+      }
+
+      .note {
+        background: var(--soft);
+        border-radius: 20px;
+        padding: 18px 20px;
+        font-size: 15px;
+        line-height: 1.6;
+      }
+      @media (max-width: 1000px) {
+        .app {
+          grid-template-columns: 1fr;
+        }
+        body {
+          padding: 20px 12px 60px;
+        }
+        .opt-desc {
+          margin-left: 0;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <div class="page-hd">
+        <div>
+          <h1>Tabs &amp; segmented controls — 3 options</h1>
+          <p>
+            Tabs switch between sections of the same thing (All / Target accounts, drawer sections);
+            segmented controls switch how you view it (Board / List, 7D / 30D). Click them — or
+            focus one and use the arrow keys.
+          </p>
+        </div>
+        <div class="ctl-seg" id="thm">
+          <button class="on" data-v="light">Light</button><button data-v="dark">Dark</button>
+        </div>
+      </div>
+      <div id="opts"></div>
+      <div class="note">
+        <b>Same in every option:</b> counts sit in a small pill inside the tab; the selected tab is
+        in the URL (<code>?tab=target</code>) so it survives reloads and can be shared; ← → move
+        between tabs and Home/End jump to the ends; on phones a row of tabs scrolls sideways instead
+        of wrapping; never more than 6 tabs in a row.
+      </div>
+    </div>
+    <script>
+      var P = {
+        board: '<path d="M4 5h4v14H4zM10 5h4v9h-4zM16 5h4v5h-4z"/>',
+        list: '<path d="M8 6h12M8 12h12M8 18h12M4 6h.01M4 12h.01M4 18h.01"/>',
+      };
+      function ic(k) {
+        return (
+          '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">' +
+          P[k] +
+          "</svg>"
+        );
+      }
+      var ACC = {
+        all: [
+          ["KP", "Kariba Power Co.", "Tier 1"],
+          ["NM", "Nyali Mobile", "Tier 2"],
+          ["KV", "Kafue Valley Foods", "Tier 3"],
+          ["ZC", "Zedcell Networks", "Tier 1"],
+        ],
+        target: [
+          ["KP", "Kariba Power Co.", "Tier 1"],
+          ["ZC", "Zedcell Networks", "Tier 1"],
+          ["NM", "Nyali Mobile", "Tier 2"],
+        ],
+      };
+      var PER = {
+        "7D": [3, 5, 4, 6, 5, 7, 6],
+        "30D": [4, 6, 5, 7, 6, 8, 5, 6, 7, 9],
+        QTR: [5, 7, 6, 8, 9, 7, 10, 8, 9, 11, 10, 12],
+        YTD: [3, 7, 4, 6, 5, 8, 4, 6, 3, 8, 4, 6],
+      };
+      var DESC = {
+        A: [
+          "Underline tabs + sliding segmented control",
+          "Section tabs are text with a black underline that slides to the selected tab (like the drawer). View switches are a soft grey track with a black pill that slides between options.",
+        ],
+        B: [
+          "Pills everywhere",
+          "Every tab is a pill and the selected one turns black — the same language as the nav, chips and buttons. Icon tabs get the white icon circle when selected, like the hero button.",
+        ],
+        C: [
+          "Folder tabs + outlined segments",
+          "Page-level tabs sit on top of the card like folder tabs, merging into it when selected. Drawer tabs stay underlined; view switches are an outlined box with the selected option outlined in black.",
+        ],
+      };
+      function tl(kind, items, sel, extra) {
+        return (
+          '<div class="scroller"><div class="tl ' +
+          kind +
+          (extra || "") +
+          '" role="tablist">' +
+          items
+            .map(function (t) {
+              return (
+                '<button role="tab" data-v="' +
+                t[0] +
+                '" aria-selected="' +
+                (t[0] === sel) +
+                '" tabindex="' +
+                (t[0] === sel ? 0 : -1) +
+                '">' +
+                (t[2] ? '<span class="ic">' + ic(t[2]) + "</span>" : "") +
+                t[1] +
+                (t[3] != null ? '<span class="n">' + t[3] + "</span>" : "") +
+                "</button>"
+              );
+            })
+            .join("") +
+          '<span class="ind"></span></div></div>'
+        );
+      }
+      function accRows(k) {
+        return (
+          '<div class="rows">' +
+          ACC[k]
+            .map(function (r) {
+              return (
+                '<div class="r"><span class="av">' +
+                r[0] +
+                "</span><b>" +
+                r[1] +
+                '</b><span class="pill">' +
+                r[2] +
+                "</span></div>"
+              );
+            })
+            .join("") +
+          "</div>"
+        );
+      }
+      var h = "";
+      ["A", "B", "C"].forEach(function (o) {
+        var accTabs = tl(
+          "tabs",
+          [
+            ["all", "All accounts", null, 68],
+            ["target", "Target accounts", null, 12],
+          ],
+          "all",
+          " acc",
+        );
+        var accBody = '<div class="acc-body">' + accRows("all") + "</div>";
+        var acc =
+          o === "C"
+            ? '<div class="folder">' +
+              accTabs +
+              '<div class="card"><div class="hdr"><span class="ttl">Accounts</span></div>' +
+              accBody +
+              "</div></div>"
+            : '<div class="card"><div class="hdr"><span class="ttl">Accounts</span></div>' +
+              accTabs +
+              '<div style="height:14px"></div>' +
+              accBody +
+              "</div>";
+        var pipe =
+          '<div class="card"><div class="hdr"><span class="ttl">Pipeline</span>' +
+          tl(
+            o === "A" || o === "C" ? "seg" : "seg tabs icon",
+            [
+              ["board", "Board", null],
+              ["list", "List", null],
+            ].map(function (x) {
+              x[2] = x[0];
+              return x;
+            }),
+            "board",
+            " view",
+          ) +
+          '</div><div class="pipe-body"><div class="board"><div class="col">Discover<i></i><i></i></div><div class="col">Propose<i></i></div><div class="col">Negotiate<i></i><i></i><i></i></div></div></div></div>';
+        var drawer =
+          '<div class="card"><div class="cap">Drawer</div><b style="font-size:16px">Fibre backbone Lusaka–Ndola</b>' +
+          '<div style="height:10px"></div>' +
+          tl(
+            o === "B" ? "tabs" : "tabs",
+            [
+              ["ov", "Overview"],
+              ["sc", "Score"],
+              ["ac", "Activity", null, 3],
+              ["co", "Contacts", null, 4],
+            ],
+            "ov",
+            " drw",
+          ) +
+          '<div class="drw-body pane"><b>Overview</b> — stage Negotiate, value K6,400,000, owner George M.</div></div>';
+        var chart =
+          '<div class="card"><div class="hdr"><span class="ttl">Revenue</span>' +
+          tl(
+            "seg",
+            [
+              ["7D", "7D"],
+              ["30D", "30D"],
+              ["QTR", "QTR"],
+              ["YTD", "YTD"],
+            ],
+            "QTR",
+            " per",
+          ) +
+          '</div><div class="chart-body"></div></div>';
+        h +=
+          '<section class="opt ' +
+          o +
+          '" data-o="' +
+          o +
+          '"><div class="opt-hd"><div class="badge">' +
+          o +
+          "</div><h2>" +
+          DESC[o][0] +
+          '</h2></div><p class="opt-desc">' +
+          DESC[o][1] +
+          '</p><div class="app"><div style="display:flex;flex-direction:column;gap:16px;min-width:0">' +
+          acc +
+          pipe +
+          '</div><div style="display:flex;flex-direction:column;gap:16px;min-width:0">' +
+          drawer +
+          chart +
+          "</div></div></section>";
+      });
+      document.getElementById("opts").innerHTML = h;
+      function chartHTML(k) {
+        var v = PER[k],
+          m = Math.max.apply(null, v);
+        return (
+          '<div class="chart">' +
+          v
+            .map(function (x) {
+              return '<em style="height:' + (x / m) * 100 + '%"></em>';
+            })
+            .join("") +
+          "</div>"
+        );
+      }
+      document.querySelectorAll(".chart-body").forEach(function (c) {
+        c.innerHTML = chartHTML("QTR");
+      });
+      function ind(list) {
+        var i = list.querySelector(".ind"),
+          s = list.querySelector("[aria-selected=true]");
+        if (!i || !s) return;
+        i.style.left = s.offsetLeft + "px";
+        i.style.width = s.offsetWidth + "px";
+      }
+      function placeAll() {
+        document.querySelectorAll(".tl").forEach(ind);
+      }
+      requestAnimationFrame(placeAll);
+      document.fonts && document.fonts.ready.then(placeAll);
+      window.addEventListener("resize", placeAll);
+      function select(tab) {
+        var list = tab.closest(".tl");
+        list.querySelectorAll("[role=tab]").forEach(function (t) {
+          var on = t === tab;
+          t.setAttribute("aria-selected", on);
+          t.tabIndex = on ? 0 : -1;
+        });
+        ind(list);
+        var sec = tab.closest(".opt"),
+          v = tab.dataset.v;
+        if (list.classList.contains("acc")) sec.querySelector(".acc-body").innerHTML = accRows(v);
+        if (list.classList.contains("view"))
+          sec.querySelector(".pipe-body").innerHTML =
+            v === "board"
+              ? '<div class="board"><div class="col">Discover<i></i><i></i></div><div class="col">Propose<i></i></div><div class="col">Negotiate<i></i><i></i><i></i></div></div>'
+              : '<div class="rows"><div class="r"><span class="av">KP</span><b>Fibre backbone</b><span>Negotiate</span></div><div class="r"><span class="av">NM</span><b>Tower lease</b><span>Propose</span></div><div class="r"><span class="av">MB</span><b>SD-WAN rollout</b><span>Discover</span></div></div>';
+        if (list.classList.contains("drw"))
+          sec.querySelector(".drw-body").innerHTML = {
+            ov: "<b>Overview</b> — stage Negotiate, value K6,400,000, owner George M.",
+            sc: "<b>Score 58 · Gold</b> — stage × committee × engagement.",
+            ac: "<b>3 activities</b> — exec meeting booked, quote sent, site survey.",
+            co: "<b>4 contacts</b> — economic buyer, champion, technical, procurement.",
+          }[v];
+        if (list.classList.contains("per"))
+          sec.querySelector(".chart-body").innerHTML = chartHTML(v);
+      }
+      document.addEventListener("click", function (e) {
+        var t = e.target.closest("[role=tab]");
+        if (t) select(t);
+      });
+      document.addEventListener("keydown", function (e) {
+        var t = e.target.closest("[role=tab]");
+        if (!t) return;
+        var all = [].slice.call(t.closest(".tl").querySelectorAll("[role=tab]")),
+          i = all.indexOf(t),
+          n = null;
+        if (e.key === "ArrowRight") n = all[(i + 1) % all.length];
+        if (e.key === "ArrowLeft") n = all[(i - 1 + all.length) % all.length];
+        if (e.key === "Home") n = all[0];
+        if (e.key === "End") n = all[all.length - 1];
+        if (n) {
+          e.preventDefault();
+          n.focus();
+          select(n);
+        }
+      });
+      var g = document.getElementById("thm");
+      g.querySelectorAll("button").forEach(function (b) {
+        b.onclick = function () {
+          g.querySelectorAll("button").forEach(function (x) {
+            x.classList.remove("on");
+          });
+          b.classList.add("on");
+          document.documentElement.dataset.theme = b.dataset.v;
+        };
+      });
+    </script>
+  </body>
+</html>
