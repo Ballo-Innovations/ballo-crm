@@ -297,6 +297,31 @@ and `menu` in the UI kit.
   read-only team views. On phones menus and the Filters panel open as bottom sheets.
 - **No results** uses the illustrated state with "Clear all filters".
 
+## Command palette (decided: centred palette)
+
+Reference: option A in `docs/03-design/reference/command-options.html`. Styles and markup:
+`palette` in the UI kit.
+
+- **Opening:** ⌘K / Ctrl K from anywhere, or clicking the top-bar search pill. Opens over a 28%
+  black scrim; the page stays behind it.
+- **Look:** a `--card` card, 600px wide (max: window minus 32px), max 470px tall, 26px radius,
+  large soft shadow, about 70px from the top of the content panel. It drops in with a 200ms
+  fade and a small scale.
+- **Search field:** 58px row with a search icon, 17px/500 input ("Search or type a command…")
+  and an `esc` key hint on the right; a 1px divider below.
+- **Results:** grouped under small uppercase headings: Actions, Opportunities, Accounts, Leads,
+  Contacts. Each row: a 34px icon circle (initials for records, a symbol for actions), the title
+  (14px/600) with the matched letters bold and underlined, a `--mute` subtitle ("Kariba Power
+  Co. · Negotiate"), and a short detail on the right ("K6.4M · Gold 58", or the shortcut for
+  actions). The highlighted row is `--soft` with a ↵ hint.
+- **Empty query:** shows Recent (last opened records) and Quick actions (New lead, New
+  opportunity, Go to Pipeline…).
+- **Footer:** keyboard hints: ↑↓ move · ↵ open · esc close.
+- **Behaviour:** results update as you type (debounced, one search endpoint, only records the
+  user may see); ↑ ↓ move, Enter opens records in the drawer and runs actions, Esc or the scrim
+  closes and returns focus. No results: "No results for “…”. Try a company, contact or
+  action." `role="dialog"` with a combobox and listbox. On phones it opens full screen.
+
 ## Components (shadcn, restyled to the above)
 
 KpiCard (icon circle, big number, two-line label; one may be highlighted with a black icon and
