@@ -1,0 +1,844 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Command Palette Options</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Urbanist:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="kit/tokens.css" />
+    <link rel="stylesheet" href="kit/components.css" />
+    <style>
+      body {
+        padding: 40px 32px 80px;
+      }
+      .wrap {
+        max-width: 1300px;
+        margin: auto;
+      }
+      .page-hd {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-end;
+        gap: 16px;
+        flex-wrap: wrap;
+        margin-bottom: 28px;
+      }
+      .page-hd h1 {
+        font-size: 30px;
+        font-weight: 700;
+      }
+      .page-hd p {
+        color: var(--mute);
+        margin-top: 6px;
+        font-size: 15px;
+        max-width: 760px;
+        line-height: 1.5;
+      }
+      .opt {
+        margin-bottom: 48px;
+      }
+      .opt-hd {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin-bottom: 6px;
+      }
+      .badge {
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        background: var(--ink);
+        color: var(--shell);
+        display: grid;
+        place-items: center;
+        font-weight: 700;
+        font-size: 15px;
+        flex: none;
+      }
+      .opt-hd h2 {
+        font-size: 22px;
+        font-weight: 600;
+      }
+      .opt-desc {
+        color: var(--mute);
+        font-size: 15px;
+        margin: 0 0 14px 48px;
+        line-height: 1.5;
+        max-width: 900px;
+      }
+      .app {
+        position: relative;
+        height: 600px;
+        border: 1px solid var(--line);
+        border-radius: 28px;
+        background: var(--shell);
+        overflow: hidden;
+        display: grid;
+        grid-template-columns: 64px 1fr;
+      }
+      .rail {
+        padding: 16px 0;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 8px;
+      }
+      .rail i {
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        background: var(--soft);
+      }
+      .rail i.on {
+        background: var(--ink);
+      }
+      .pnl {
+        margin: 10px 10px 10px 0;
+        background: var(--main);
+        border-radius: 24px;
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+        position: relative;
+      }
+      .tb {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 16px 18px 6px;
+        position: relative;
+        z-index: 5;
+      }
+      .sbox {
+        flex: 1;
+        max-width: 460px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        background: var(--card);
+        border-radius: 16px;
+        height: 44px;
+        padding: 0 14px;
+        color: var(--mute);
+        cursor: text;
+        font-size: 15px;
+        border: 1.5px solid transparent;
+        position: relative;
+      }
+      .sbox kbd {
+        margin-left: auto;
+        font: 500 12px var(--font);
+        border: 1px solid var(--line);
+        background: var(--soft);
+        border-radius: 6px;
+        padding: 2px 6px;
+      }
+      .ghost-rows {
+        padding: 14px 18px;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+      }
+      .ghost-rows i {
+        height: 46px;
+        border-radius: 16px;
+        background: var(--card);
+        display: block;
+      }
+      .ghost-rows i:first-child {
+        height: 110px;
+      }
+      /* shared palette pieces */
+      .pal-in {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 0 18px;
+        height: 58px;
+        border-bottom: 1px solid var(--line);
+      }
+      .pal-in input {
+        flex: 1;
+        border: 0;
+        background: none;
+        outline: none;
+        font-size: 17px;
+        font-weight: 500;
+        min-width: 0;
+      }
+      .pal-in .esc {
+        font: 500 11px var(--font);
+        border: 1px solid var(--line);
+        border-radius: 6px;
+        padding: 2px 6px;
+        color: var(--mute);
+      }
+      .res {
+        overflow: auto;
+        padding: 8px;
+      }
+      .grp {
+        font-size: 11px;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.07em;
+        color: var(--mute);
+        padding: 10px 12px 4px;
+      }
+      .it {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        width: 100%;
+        border: 0;
+        background: none;
+        text-align: left;
+        padding: 9px 12px;
+        border-radius: 16px;
+        font-size: 14px;
+        cursor: pointer;
+      }
+      .it .ic {
+        width: 34px;
+        height: 34px;
+        border-radius: 50%;
+        background: var(--soft);
+        display: grid;
+        place-items: center;
+        font-size: 12px;
+        font-weight: 700;
+        flex: none;
+      }
+      .it .tx {
+        display: flex;
+        flex-direction: column;
+        min-width: 0;
+        flex: 1;
+      }
+      .it .tx b {
+        font-weight: 600;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+      .it .tx small {
+        font-size: 12px;
+        color: var(--mute);
+      }
+      .it .meta {
+        font-size: 12px;
+        color: var(--mute);
+        white-space: nowrap;
+      }
+      .it .go {
+        font-size: 11px;
+        color: var(--mute);
+        opacity: 0;
+      }
+      .it.hl {
+        background: var(--soft);
+      }
+      .it.hl .go {
+        opacity: 1;
+      }
+      .it mark {
+        background: none;
+        color: inherit;
+        font-weight: 800;
+        text-decoration: underline;
+        text-underline-offset: 3px;
+      }
+      .foot {
+        display: flex;
+        gap: 16px;
+        padding: 10px 16px;
+        border-top: 1px solid var(--line);
+        font-size: 12px;
+        color: var(--mute);
+      }
+      .foot kbd {
+        font: 500 11px var(--font);
+        border: 1px solid var(--line);
+        border-radius: 6px;
+        padding: 1px 5px;
+        margin-right: 4px;
+      }
+      .none {
+        padding: 30px;
+        text-align: center;
+        color: var(--mute);
+        font-size: 14px;
+      }
+      .recent {
+        display: flex;
+        gap: 6px;
+        flex-wrap: wrap;
+        padding: 4px 12px 8px;
+      }
+      .scrim {
+        position: absolute;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.28);
+        z-index: 30;
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.2s;
+      }
+      .scrim.on {
+        opacity: 1;
+        pointer-events: auto;
+      }
+      /* A centred */
+      .A .pal {
+        position: absolute;
+        left: 50%;
+        top: 70px;
+        width: 600px;
+        max-width: calc(100% - 32px);
+        max-height: 470px;
+        background: var(--card);
+        border-radius: 26px;
+        box-shadow: 0 30px 80px rgba(0, 0, 0, 0.28);
+        z-index: 31;
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+        opacity: 0;
+        pointer-events: none;
+        transform: translate(-50%, -8px) scale(0.98);
+        transition: all 0.2s var(--ease);
+      }
+      .A .pal.on {
+        opacity: 1;
+        pointer-events: auto;
+        transform: translate(-50%, 0) scale(1);
+      }
+      /* B inline from top bar */
+      .B .sbox.open {
+        border-color: var(--ink);
+        border-radius: 16px 16px 0 0;
+      }
+      .B .sbox {
+        max-width: 560px;
+      }
+      .B .pal {
+        position: absolute;
+        left: 18px;
+        top: 60px;
+        width: min(560px, calc(100% - 36px));
+        max-height: 440px;
+        background: var(--card);
+        border: 1.5px solid var(--ink);
+        border-top: 0;
+        border-radius: 0 0 22px 22px;
+        box-shadow: 0 24px 50px rgba(0, 0, 0, 0.16);
+        z-index: 31;
+        display: none;
+        flex-direction: column;
+        overflow: hidden;
+      }
+      .B .pal.on {
+        display: flex;
+      }
+      .B .pal .pal-in {
+        display: none;
+      }
+      .B .sbox input {
+        flex: 1;
+        border: 0;
+        background: none;
+        outline: none;
+        font-size: 15px;
+        color: var(--ink);
+        min-width: 0;
+      }
+      /* C split preview */
+      .C .pal {
+        position: absolute;
+        left: 50%;
+        top: 60px;
+        width: 820px;
+        max-width: calc(100% - 32px);
+        height: 480px;
+        background: var(--card);
+        border-radius: 26px;
+        box-shadow: 0 30px 80px rgba(0, 0, 0, 0.28);
+        z-index: 31;
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+        opacity: 0;
+        pointer-events: none;
+        transform: translate(-50%, -8px) scale(0.98);
+        transition: all 0.2s var(--ease);
+      }
+      .C .pal.on {
+        opacity: 1;
+        pointer-events: auto;
+        transform: translate(-50%, 0) scale(1);
+      }
+      .C .split2 {
+        display: grid;
+        grid-template-columns: 1fr 300px;
+        flex: 1;
+        min-height: 0;
+      }
+      .C .prev {
+        border-left: 1px solid var(--line);
+        padding: 18px;
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        background: color-mix(in srgb, var(--soft) 50%, var(--card));
+      }
+      .C .prev .ph {
+        display: flex;
+        gap: 12px;
+        align-items: center;
+      }
+      .C .prev .ph .ic {
+        width: 44px;
+        height: 44px;
+        border-radius: 50%;
+        background: var(--card);
+        display: grid;
+        place-items: center;
+        font-weight: 700;
+      }
+      .C .prev b.t {
+        font-size: 16px;
+      }
+      .C .prev small {
+        color: var(--mute);
+        font-size: 12px;
+      }
+      .C .kv {
+        display: flex;
+        justify-content: space-between;
+        background: var(--card);
+        border-radius: 14px;
+        padding: 9px 12px;
+        font-size: 13px;
+      }
+      .C .kv span {
+        color: var(--mute);
+      }
+      .note {
+        background: var(--soft);
+        border-radius: 20px;
+        padding: 18px 20px;
+        font-size: 15px;
+        line-height: 1.6;
+      }
+      @media (max-width: 820px) {
+        body {
+          padding: 20px 12px 60px;
+        }
+        .opt-desc {
+          margin-left: 0;
+        }
+        .app {
+          grid-template-columns: 1fr;
+        }
+        .rail {
+          display: none;
+        }
+        .pnl {
+          margin: 6px;
+        }
+        .C .split2 {
+          grid-template-columns: 1fr;
+        }
+        .C .prev {
+          display: none;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <div class="page-hd">
+        <div>
+          <h1>Command palette (⌘K) — 3 options</h1>
+          <p>
+            Global search plus quick actions. In any window, click the search bar or press
+            <b>⌘K / Ctrl K</b> (opens the window you last clicked), then type — try “fib”, “nyali”,
+            “new” or “pipe”. ↑ ↓ to move, Enter to open, Esc to close.
+          </p>
+        </div>
+        <div class="tabs tabs--segmented" id="thm">
+          <button class="tab" aria-selected="true" data-v="light">Light</button
+          ><button class="tab" aria-selected="false" data-v="dark">Dark</button>
+        </div>
+      </div>
+      <div id="opts"></div>
+      <div class="note">
+        <b>Same in every option:</b> ⌘K / Ctrl K opens it from anywhere; empty state shows recent
+        items and the most-used actions; results are grouped (Actions, Opportunities, Accounts,
+        Leads, Contacts) with matched letters underlined; Enter opens records in the drawer and runs
+        actions; results come from one search endpoint scoped to what the user may see; on phones it
+        opens full-screen.
+      </div>
+    </div>
+    <div class="toasts" id="toasts"></div>
+    <script>
+      var $ = function (s, r) {
+          return (r || document).querySelector(s);
+        },
+        $$ = function (s, r) {
+          return [].slice.call((r || document).querySelectorAll(s));
+        };
+      var ITEMS = [
+        { g: "Actions", ic: "＋", t: "New lead", s: "Create a lead", m: "N L" },
+        { g: "Actions", ic: "＋", t: "New opportunity", s: "Create an opportunity", m: "N O" },
+        { g: "Actions", ic: "↗", t: "Go to Pipeline", s: "Board of open deals", m: "G P" },
+        { g: "Actions", ic: "▦", t: "Go to Accounts", s: "All and target accounts", m: "G A" },
+        { g: "Actions", ic: "◐", t: "Toggle dark mode", s: "Appearance", m: "" },
+        {
+          g: "Opportunities",
+          ic: "KP",
+          t: "Fibre backbone Lusaka–Ndola",
+          s: "Kariba Power Co. · Negotiate",
+          m: "K6.4M · Gold 58",
+          p: ["Negotiate", "K6,400,000", "Gold · 58", "George M."],
+        },
+        {
+          g: "Opportunities",
+          ic: "ZN",
+          t: "Data-centre colocation",
+          s: "Zedcell Networks · Negotiate",
+          m: "K8.9M · Platinum 81",
+          p: ["Negotiate", "K8,900,000", "Platinum · 81", "George M."],
+        },
+        {
+          g: "Opportunities",
+          ic: "NM",
+          t: "Tower lease — 40 sites",
+          s: "Nyali Mobile · Propose",
+          m: "K3.2M · Silver 47",
+          p: ["Propose", "K3,150,000", "Silver · 47", "Chileshe B."],
+        },
+        {
+          g: "Opportunities",
+          ic: "MF",
+          t: "Dark fibre IRU",
+          s: "Mwezi Fibre · Negotiate",
+          m: "K5.1M · Gold 61",
+          p: ["Negotiate", "K5,100,000", "Gold · 61", "Chileshe B."],
+        },
+        {
+          g: "Accounts",
+          ic: "KP",
+          t: "Kariba Power Co.",
+          s: "Tier 1 · Energy",
+          m: "3 open deals",
+          p: ["Tier 1", "K9,800,000 pipeline", "Active", "George M."],
+        },
+        {
+          g: "Accounts",
+          ic: "NM",
+          t: "Nyali Mobile",
+          s: "Tier 2 · Telecom",
+          m: "2 open deals",
+          p: ["Tier 2", "K3,150,000 pipeline", "Active", "Chileshe B."],
+        },
+        {
+          g: "Accounts",
+          ic: "ZN",
+          t: "Zedcell Networks",
+          s: "Tier 1 · Telecom",
+          m: "1 open deal",
+          p: ["Tier 1", "K8,900,000 pipeline", "Active", "George M."],
+        },
+        {
+          g: "Leads",
+          ic: "KV",
+          t: "Kafue Valley Foods",
+          s: "Referral · Mwila Banda",
+          m: "K1.2M",
+          p: ["New lead", "K1,200,000", "Referral", "Natasha L."],
+        },
+        {
+          g: "Leads",
+          ic: "KR",
+          t: "Kalulu Retail",
+          s: "Website · Joseph Tembo",
+          m: "K0.8M",
+          p: ["New lead", "K800,000", "Website", "George M."],
+        },
+        {
+          g: "Contacts",
+          ic: "MB",
+          t: "Mwila Banda",
+          s: "Economic buyer · Kafue Valley Foods",
+          m: "Champion",
+          p: ["Contact", "mwila@kafuevalley.example", "Economic buyer", "Kafue Valley Foods"],
+        },
+      ];
+      var RECENT = [5, 9, 6];
+      function hl(t, q) {
+        if (!q) return t;
+        var i = t.toLowerCase().indexOf(q.toLowerCase());
+        return i < 0
+          ? t
+          : t.slice(0, i) + "<mark>" + t.slice(i, i + q.length) + "</mark>" + t.slice(i + q.length);
+      }
+      function results(q) {
+        q = q.trim().toLowerCase();
+        if (!q)
+          return RECENT.map(function (i) {
+            return ITEMS[i];
+          }).concat(ITEMS.slice(0, 3));
+        return ITEMS.filter(function (x) {
+          return (x.t + " " + x.s).toLowerCase().indexOf(q) >= 0;
+        });
+      }
+      var S = {};
+      function resHTML(o, st) {
+        var r = results(st.q);
+        st.list = r;
+        if (!r.length)
+          return (
+            '<div class="none">No results for “' +
+            st.q +
+            "”. Try a company, contact or action.</div>"
+          );
+        var h = "",
+          last = "";
+        r.forEach(function (x, i) {
+          var g = st.q.trim() ? x.g : i < RECENT.length ? "Recent" : "Quick actions";
+          if (g !== last) {
+            h += '<div class="grp">' + g + "</div>";
+            last = g;
+          }
+          h +=
+            '<button class="it' +
+            (i === st.sel ? " hl" : "") +
+            '" data-i="' +
+            i +
+            '"><span class="ic">' +
+            x.ic +
+            '</span><span class="tx"><b>' +
+            hl(x.t, st.q.trim()) +
+            "</b><small>" +
+            x.s +
+            "</small></span>" +
+            (o !== "C" ? '<span class="meta">' + (x.m || "") + "</span>" : "") +
+            '<span class="go">↵</span></button>';
+        });
+        return h;
+      }
+      function prevHTML(st) {
+        var x = st.list && st.list[st.sel];
+        if (!x) return "";
+        if (!x.p)
+          return (
+            '<div class="ph"><span class="ic">' +
+            x.ic +
+            '</span><div><b class="t">' +
+            x.t +
+            "</b><br><small>" +
+            x.s +
+            '</small></div></div><p style="color:var(--mute);font-size:13px;line-height:1.5">Press Enter to run this action.</p>'
+          );
+        return (
+          '<div class="ph"><span class="ic">' +
+          x.ic +
+          '</span><div><b class="t">' +
+          x.t +
+          "</b><br><small>" +
+          { Opportunities: "Opportunity", Accounts: "Account", Leads: "Lead", Contacts: "Contact" }[
+            x.g
+          ] +
+          "</small></div></div>" +
+          ["Stage / status", "Value", "Grade / detail", "Owner"]
+            .map(function (k, i) {
+              return '<div class="kv"><span>' + k + "</span><b>" + x.p[i] + "</b></div>";
+            })
+            .join("") +
+          '<button class="btn btn--hero btn--sm" style="align-self:flex-start;margin-top:auto"><span class="btn__circle">↗</span>Open</button>'
+        );
+      }
+      function render(o) {
+        var st = S[o],
+          app = $('.opt[data-o="' + o + '"] .app'),
+          pal = $(".pal", app);
+        if (o === "C") {
+          $(".res", pal).innerHTML = resHTML(o, st);
+          $(".prev", pal).innerHTML = prevHTML(st);
+        } else $(".res", pal).innerHTML = resHTML(o, st);
+        pal.classList.toggle("on", st.open);
+        var sc = $(".scrim", app);
+        if (sc) sc.classList.toggle("on", st.open);
+        if (o === "B") $(".sbox", app).classList.toggle("open", st.open);
+        var h = $(".it.hl", pal);
+        if (h) h.scrollIntoView({ block: "nearest" });
+      }
+      function open(o) {
+        var st = S[o];
+        st.open = true;
+        st.q = "";
+        st.sel = 0;
+        render(o);
+        var i =
+          o === "B"
+            ? $('.opt[data-o="B"] .sbox input')
+            : $('.opt[data-o="' + o + '"] .pal-in input');
+        i.value = "";
+        setTimeout(function () {
+          i.focus();
+        }, 30);
+      }
+      function close(o) {
+        S[o].open = false;
+        render(o);
+      }
+      function run(o) {
+        var st = S[o],
+          x = st.list[st.sel];
+        if (!x) return;
+        close(o);
+        toast(x.g === "Actions" ? x.t : "Opening " + x.t + " in the drawer");
+      }
+      function toast(m) {
+        var t = document.createElement("div");
+        t.className = "toast";
+        t.innerHTML = '<span class="toast__icon">✓</span><span>' + m + "</span>";
+        $("#toasts").appendChild(t);
+        setTimeout(function () {
+          t.remove();
+        }, 3000);
+      }
+      var DESC = {
+        A: [
+          "Centred palette",
+          "A large rounded card drops in near the top over a dimmed page: a big search field, grouped results with icon circles and a short detail on the right, and keyboard hints in the footer. The classic (Linear, Raycast).",
+        ],
+        B: [
+          "Grows from the search bar",
+          "No overlay: the top-bar search box itself expands into a results panel underneath, keeping the page visible. Feels lightweight and stays where people already look.",
+        ],
+        C: [
+          "Palette with preview",
+          "The centred palette widened with a preview pane: as you move through results, the right side shows the record's key facts and an Open button, so you can check before jumping.",
+        ],
+      };
+      var h = "";
+      ["A", "B", "C"].forEach(function (o) {
+        S[o] = { open: false, q: "", sel: 0, list: [] };
+        var pal =
+          o === "B"
+            ? '<div class="pal"><div class="res"></div><div class="foot"><span><kbd>↑↓</kbd>move</span><span><kbd>↵</kbd>open</span><span><kbd>esc</kbd>close</span></div></div>'
+            : '<div class="pal" role="dialog" aria-label="Command palette"><div class="pal-in">⌕<input placeholder="Search or type a command…"><span class="esc">esc</span></div>' +
+              (o === "C"
+                ? '<div class="split2"><div class="res"></div><div class="prev"></div></div>'
+                : '<div class="res"></div>') +
+              '<div class="foot"><span><kbd>↑↓</kbd>move</span><span><kbd>↵</kbd>open</span><span><kbd>esc</kbd>close</span></div></div>';
+        h +=
+          '<section class="opt ' +
+          o +
+          '" data-o="' +
+          o +
+          '"><div class="opt-hd"><div class="badge">' +
+          o +
+          "</div><h2>" +
+          DESC[o][0] +
+          '</h2></div><p class="opt-desc">' +
+          DESC[o][1] +
+          '</p><div class="app"><div class="rail"><i></i><i class="on"></i><i></i><i></i></div><div class="pnl"><div class="tb"><label class="sbox" data-open>⌕ ' +
+          (o === "B"
+            ? '<input placeholder="Search accounts, leads, opportunities…">'
+            : "<span>Search accounts, leads, opportunities…</span>") +
+          '<kbd>⌘K</kbd></label><button class="btn btn--hero btn--sm" style="margin-left:auto"><span class="btn__circle">＋</span>Quick add</button></div>' +
+          (o === "B" ? pal : "") +
+          '<div class="ghost-rows"><i></i><i></i><i></i><i></i><i></i></div>' +
+          (o !== "B" ? '<div class="scrim" data-close></div>' + pal : "") +
+          "</div></div></section>";
+      });
+      $("#opts").innerHTML = h;
+      ["A", "B", "C"].forEach(render);
+      var last = "A";
+      document.addEventListener("click", function (e) {
+        var op = e.target.closest(".opt");
+        if (op) last = op.dataset.o;
+        Object.keys(S).forEach(function (o) {
+          if (
+            S[o].open &&
+            o === "B" &&
+            !e.target.closest('.opt[data-o="B"] .tb, .opt[data-o="B"] .pal')
+          )
+            close(o);
+        });
+        if (!op) return;
+        var o = op.dataset.o;
+        if (e.target.closest("[data-open]") && !S[o].open) return open(o);
+        if (e.target.closest("[data-close]")) return close(o);
+        var it = e.target.closest(".it");
+        if (it) {
+          S[o].sel = +it.dataset.i;
+          run(o);
+        }
+      });
+      document.addEventListener("mousemove", function (e) {
+        var it = e.target.closest(".it");
+        if (!it) return;
+        var o = it.closest(".opt").dataset.o;
+        if (S[o].sel !== +it.dataset.i) {
+          S[o].sel = +it.dataset.i;
+          $$(".it", it.parentNode).forEach(function (x) {
+            x.classList.toggle("hl", x === it);
+          });
+          if (o === "C") $('.opt[data-o="C"] .prev').innerHTML = prevHTML(S.C);
+        }
+      });
+      document.addEventListener("input", function (e) {
+        var op = e.target.closest(".opt");
+        if (!op || e.target.tagName !== "INPUT") return;
+        var o = op.dataset.o;
+        if (o === "B" && !S.B.open) {
+          S.B.open = true;
+        }
+        S[o].q = e.target.value;
+        S[o].sel = 0;
+        render(o);
+      });
+      document.addEventListener("keydown", function (e) {
+        if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === "k") {
+          e.preventDefault();
+          return S[last].open ? close(last) : open(last);
+        }
+        var o = Object.keys(S).filter(function (k) {
+          return S[k].open;
+        })[0];
+        if (!o) return;
+        var st = S[o];
+        if (e.key === "Escape") {
+          close(o);
+          return;
+        }
+        if (e.key === "ArrowDown" || e.key === "ArrowUp") {
+          e.preventDefault();
+          var n = st.list.length;
+          if (!n) return;
+          st.sel = e.key === "ArrowDown" ? (st.sel + 1) % n : (st.sel - 1 + n) % n;
+          render(o);
+        }
+        if (e.key === "Enter") {
+          e.preventDefault();
+          run(o);
+        }
+      });
+      $$("#thm .tab").forEach(function (b) {
+        b.onclick = function () {
+          $$("#thm .tab").forEach(function (x) {
+            x.setAttribute("aria-selected", x === b);
+          });
+          document.documentElement.dataset.theme = b.dataset.v;
+        };
+      });
+    </script>
+  </body>
+</html>

@@ -313,6 +313,16 @@
       </section>
 
       <section class="sec">
+        <h2>Command palette</h2>
+        <p>Press ⌘K / Ctrl K (or the button), type “fib”, “nyali” or “new”, use ↑ ↓ and Enter.</p>
+        <div class="line">
+          <button class="btn btn--secondary" data-palette>
+            ⌕ Search <span class="kbd">⌘K</span>
+          </button>
+        </div>
+      </section>
+
+      <section class="sec">
         <h2>Page states</h2>
         <p>Loading, empty (first use), no results, error. Switch:</p>
         <div class="tabs tabs--segmented" role="tablist" id="states">
@@ -341,6 +351,23 @@
       <div class="modal__actions">
         <button class="btn btn--secondary" data-cancel>Cancel</button
         ><button class="btn btn--danger" id="lost" disabled>Mark as lost</button>
+      </div>
+    </div>
+    <div class="scrim" id="pscrim"></div>
+    <div class="palette" id="palette" role="dialog" aria-label="Command palette">
+      <div class="palette__input">
+        ⌕<input
+          id="pq"
+          placeholder="Search or type a command…"
+          role="combobox"
+          aria-expanded="true"
+          aria-controls="pres"
+        /><span class="kbd">esc</span>
+      </div>
+      <div class="palette__results" id="pres" role="listbox"></div>
+      <div class="palette__foot">
+        <span><span class="kbd">↑↓</span> move</span><span><span class="kbd">↵</span> open</span
+        ><span><span class="kbd">esc</span> close</span>
       </div>
     </div>
     <div class="toasts" id="toasts" role="region" aria-label="Notifications"></div>
@@ -802,6 +829,146 @@
         it[i].focus();
       });
       fDraw();
+
+      // command palette
+      var PI = [
+        { g: "Actions", ic: "＋", t: "New lead", s: "Create a lead", m: "N L" },
+        { g: "Actions", ic: "＋", t: "New opportunity", s: "Create an opportunity", m: "N O" },
+        { g: "Actions", ic: "↗", t: "Go to Pipeline", s: "Board of open deals", m: "G P" },
+        {
+          g: "Opportunities",
+          ic: "KP",
+          t: "Fibre backbone Lusaka–Ndola",
+          s: "Kariba Power Co. · Negotiate",
+          m: "K6.4M · Gold 58",
+        },
+        {
+          g: "Opportunities",
+          ic: "MF",
+          t: "Dark fibre IRU",
+          s: "Mwezi Fibre · Negotiate",
+          m: "K5.1M · Gold 61",
+        },
+        { g: "Accounts", ic: "NM", t: "Nyali Mobile", s: "Tier 2 · Telecom", m: "2 open deals" },
+        { g: "Leads", ic: "KV", t: "Kafue Valley Foods", s: "Referral · Mwila Banda", m: "K1.2M" },
+      ];
+      var pst = { q: "", sel: 0, list: [], opener: null };
+      function pResults(q) {
+        q = q.trim().toLowerCase();
+        if (!q) return [PI[3], PI[5], PI[0], PI[1], PI[2]];
+        return PI.filter(function (x) {
+          return (x.t + " " + x.s).toLowerCase().indexOf(q) >= 0;
+        });
+      }
+      function pMark(t, q) {
+        q = q.trim();
+        if (!q) return t;
+        var i = t.toLowerCase().indexOf(q.toLowerCase());
+        return i < 0
+          ? t
+          : t.slice(0, i) + "<mark>" + t.slice(i, i + q.length) + "</mark>" + t.slice(i + q.length);
+      }
+      function pDraw() {
+        var r = (pst.list = pResults(pst.q)),
+          h = "",
+          last = "";
+        if (!r.length) {
+          $("#pres").innerHTML =
+            '<div class="palette__empty">No results for “' +
+            pst.q +
+            "”. Try a company, contact or action.</div>";
+          return;
+        }
+        r.forEach(function (x, i) {
+          var g = pst.q.trim() ? x.g : i < 2 ? "Recent" : "Quick actions";
+          if (g !== last) {
+            h += '<div class="palette__group">' + g + "</div>";
+            last = g;
+          }
+          h +=
+            '<button class="palette__item" role="option" aria-selected="' +
+            (i === pst.sel) +
+            '" data-pi="' +
+            i +
+            '"><span class="palette__icon">' +
+            x.ic +
+            '</span><span class="palette__text"><span class="palette__title">' +
+            pMark(x.t, pst.q) +
+            '</span><span class="palette__sub">' +
+            x.s +
+            '</span></span><span class="palette__meta">' +
+            x.m +
+            "</span></button>";
+        });
+        $("#pres").innerHTML = h;
+        var s = $('.palette__item[aria-selected="true"]');
+        if (s) s.scrollIntoView({ block: "nearest" });
+      }
+      function pOpen() {
+        pst.opener = document.activeElement;
+        pst.q = "";
+        pst.sel = 0;
+        $("#pq").value = "";
+        pDraw();
+        $("#palette").classList.add("is-open");
+        $("#pscrim").classList.add("is-open");
+        setTimeout(function () {
+          $("#pq").focus();
+        }, 30);
+      }
+      function pClose() {
+        $("#palette").classList.remove("is-open");
+        $("#pscrim").classList.remove("is-open");
+        if (pst.opener) pst.opener.focus();
+      }
+      function pRun() {
+        var x = pst.list[pst.sel];
+        if (!x) return;
+        pClose();
+        toast(x.g === "Actions" ? x.t : "Opening " + x.t);
+      }
+      function pIsOpen() {
+        return $("#palette").classList.contains("is-open");
+      }
+      $("#pq").addEventListener("input", function () {
+        pst.q = this.value;
+        pst.sel = 0;
+        pDraw();
+      });
+      document.addEventListener("click", function (e) {
+        if (e.target.closest("[data-palette]")) return pOpen();
+        if (e.target.id === "pscrim") return pClose();
+        var it = e.target.closest("[data-pi]");
+        if (it) {
+          pst.sel = +it.dataset.pi;
+          pRun();
+        }
+      });
+      document.addEventListener(
+        "keydown",
+        function (e) {
+          if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === "k") {
+            e.preventDefault();
+            return pIsOpen() ? pClose() : pOpen();
+          }
+          if (!pIsOpen()) return;
+          var n = pst.list.length;
+          if (e.key === "Escape") {
+            e.stopPropagation();
+            pClose();
+          }
+          if ((e.key === "ArrowDown" || e.key === "ArrowUp") && n) {
+            e.preventDefault();
+            pst.sel = e.key === "ArrowDown" ? (pst.sel + 1) % n : (pst.sel - 1 + n) % n;
+            pDraw();
+          }
+          if (e.key === "Enter") {
+            e.preventDefault();
+            pRun();
+          }
+        },
+        true,
+      );
     </script>
   </body>
 </html>
