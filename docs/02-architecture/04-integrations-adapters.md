@@ -32,7 +32,7 @@ Resolved by `getAdapter('sms')` reading `INTEGRATION_MODE=mock|live`. Every call
 | POST /erp/orders                                                                                                   | returns `ERP-xxxx`; echoes line items                                               |
 | POST /espf/accounts                                                                                                | returns `ESPF-xxxx`; GET /espf/accounts/:id returns status cycling ACTIVE/SUSPENDED |
 | POST /email/send                                                                                                   | logs; returns messageId                                                             |
-| Mock UI page `/admin/integrations` shows last 20 IntegrationLog rows live (polling) — this is what we show judges. |
+| Mock UI page `/settings/integrations` shows last 20 IntegrationLog rows live (polling) — this is what we show judges. |
 
 ## eSPF (internal, unknown)
 

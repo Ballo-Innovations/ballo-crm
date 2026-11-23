@@ -57,7 +57,8 @@ KPI numbers 24px/700, body 15px, secondary 13px, labels 12px. Money right-aligne
 
 - **Sidebar** (248px, collapsible to 84px icon rail via a round chevron button by the logo):
   Dashboard · Pipeline · Accounts · Leads · Forecast · Engagement · Contracts · Intelligence ·
-  Settings. Active item = black pill with the icon in a white circle. User card at the bottom.
+  Settings (routes `/dashboard` … `/settings`; ABM lives in Accounts, VSI in Forecast, CIMS admin
+  in Settings). Active item = black pill with the icon in a white circle. User card at the bottom.
   Target (ABM) accounts live under Accounts as a tab, not a nav item.
 - **Content panel**: one `--main` rounded panel with a 16px gap from the top, right and bottom
   edges of the window. The page never scrolls; the panel scrolls inside itself, so its edges
@@ -436,15 +437,15 @@ Reference: option B in `docs/03-design/reference/chart-options.html` (hover the 
   (28px/700) with a small change note.
 - Animations grow bars and lines once on load (300ms), none with reduced motion.
 
-## Avatars and logos (decided: people round, companies square)
+## Avatars and logos (decided: grey circles for everything)
 
-Reference: option B in `docs/03-design/reference/avatar-options.html`. Styles: `avatar` in the UI
+Reference: option A in `docs/03-design/reference/avatar-options.html`. Styles: `avatar` in the UI
 kit.
 
-- **People** (contacts, users): circles, `--soft` fill, `--ink` initials.
-- **Companies** (accounts): rounded squares (30% radius), `--ink` fill, `--shell` initials. With an
-  uploaded logo: the logo shown in monochrome (grayscale) on a `--card` square with a 1px `--line`
-  inner ring and 16% padding.
+- **Everyone** (contacts, users and accounts): circles, `--soft` fill, `--ink` initials. People and
+  companies look the same on purpose; the name or row next to the avatar says which it is.
+- **Logos:** an uploaded company logo shown in monochrome (grayscale) in a `--card` circle with a
+  1px `--line` ring and 16% padding.
 - **Initials:** first letters of the first two words ("Kariba Power Co." → KP, "Ruth Phiri" → RP),
   700 weight at 38% of the size.
 - **Sizes:** 24 (inline, stacks in tables) · 32 (lists, stacks) · 40 (cards) · 48–56 (drawer and
@@ -453,7 +454,7 @@ kit.
   only.
 - **Stacks:** overlap by 10px with a 2px `--card` ring; at most 3, then a black "+N" circle.
 - Every avatar has the full name as its accessible label and tooltip. Inside a row on `--soft`,
-  person circles switch to `--card` so they stay visible.
+  circles switch to `--card` so they stay visible.
 
 ## Accessibility (rules)
 

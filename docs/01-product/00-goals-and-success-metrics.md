@@ -75,7 +75,7 @@ engaged them.
   - Adding a technical buyer raises the score and updates the factor (TC-21).
   - Logging a data-centre tour adds 25 to the account's engagement score, capped at 100 (TC-30).
   - Playbook tasks persist (TC-32) and are generated from the gaps in a deal's grade.
-  - `/abm` lists only Tier 1 and Tier 2 accounts.
+  - ABM view in `/accounts` lists only Tier 1 and Tier 2 accounts.
 - **Tickets:** E2-03, E3-01 to E3-05.
 
 ### G3. Strengthen pipeline forecasting
