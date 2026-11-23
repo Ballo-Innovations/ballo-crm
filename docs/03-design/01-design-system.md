@@ -436,6 +436,25 @@ Reference: option B in `docs/03-design/reference/chart-options.html` (hover the 
   (28px/700) with a small change note.
 - Animations grow bars and lines once on load (300ms), none with reduced motion.
 
+## Avatars and logos (decided: people round, companies square)
+
+Reference: option B in `docs/03-design/reference/avatar-options.html`. Styles: `avatar` in the UI
+kit.
+
+- **People** (contacts, users): circles, `--soft` fill, `--ink` initials.
+- **Companies** (accounts): rounded squares (30% radius), `--ink` fill, `--shell` initials. With an
+  uploaded logo: the logo shown in monochrome (grayscale) on a `--card` square with a 1px `--line`
+  inner ring and 16% padding.
+- **Initials:** first letters of the first two words ("Kariba Power Co." → KP, "Ruth Phiri" → RP),
+  700 weight at 38% of the size.
+- **Sizes:** 24 (inline, stacks in tables) · 32 (lists, stacks) · 40 (cards) · 48–56 (drawer and
+  page headers).
+- **Online:** a black dot (28% of the size, min 8px) with a 2px `--card` ring, bottom right; users
+  only.
+- **Stacks:** overlap by 10px with a 2px `--card` ring; at most 3, then a black "+N" circle.
+- Every avatar has the full name as its accessible label and tooltip. Inside a row on `--soft`,
+  person circles switch to `--card` so they stay visible.
+
 ## Components (shadcn, restyled to the above)
 
 KpiCard (icon circle, big number, two-line label; one may be highlighted with a black icon and
