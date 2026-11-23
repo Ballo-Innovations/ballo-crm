@@ -379,6 +379,33 @@ Newest first; full date on hover; stage and score changes are logged automatical
 in; loads 20 at a time as you scroll. Empty: "No activity yet. Log the first call or meeting."
 with the log box focused.
 
+## Contract progress and signature (decided: progress bar + status card)
+
+Reference: option C in `docs/03-design/reference/contract-options.html` (step through it and sign).
+Styles and markup: `contract` and `signature` in the UI kit.
+
+1. **Header:** document icon tile, contract title (18px/600), "Account · contract number · from
+   opportunity" (13px `--mute`), value on the right (22px/700).
+2. **Progress bar:** five equal 8px pill segments with 6px gaps, labelled underneath (12px/600):
+   Draft · Sent · Viewed · Signed · Active. Done segments are `--ink`; the current one is `--line`
+   with an `--ink` fill that gently pulses (none with reduced motion); later ones `--line` with
+   `--mute` labels. Declined or expired turns the current segment and label `--danger`.
+3. **Status card:** black card (22px radius) with a 52px white icon circle, a small uppercase
+   status ("VIEWED"), a plain-language headline ("Ruth has opened it twice", 20px/600), one line
+   of context (13px, 75% opacity: when, reminders, start date) and the single next action as a
+   white hero button on the right ("Send for signature", "Mark as viewed", "Activate contract").
+4. **Details:** four `--soft` tiles: term, start, billing, owner.
+5. **Signature (signing step):** Draw / Type pill tabs. Draw: a 170px `--soft` pad (20px radius)
+   with a dashed signature line and ×, placeholder "Sign here with your mouse or finger", pen
+   width varying with speed, and a Clear pill once inked. Type: a full-name field with a
+   handwriting-font preview. Consent line underneath (12px `--mute`). "Sign contract" (hero)
+   stays disabled with the hint "Add a signature to continue" until there is a signature.
+6. **Signed:** the signature image with "Signed by …", date, time and IP in a `--soft` box, and
+   the audit trail as small pills (Draft 20 Nov · Sent 21 Nov · …).
+
+Every step records who and when; the signed PDF is stamped with the signature, name, time and IP.
+On phones the pad fills the width and the status card's button drops below the text.
+
 ## Components (shadcn, restyled to the above)
 
 KpiCard (icon circle, big number, two-line label; one may be highlighted with a black icon and
