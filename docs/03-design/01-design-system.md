@@ -455,6 +455,78 @@ kit.
 - Every avatar has the full name as its accessible label and tooltip. Inside a row on `--soft`,
   person circles switch to `--card` so they stay visible.
 
+## Accessibility (rules)
+
+Target: WCAG 2.2 AA on every screen, checked with axe in CI and by hand with a keyboard.
+
+- **Contrast:** body text ≥ 4.5:1, large text (≥ 18px or 14px bold) and UI parts ≥ 3:1, in light and
+  dark. `--mute` is for secondary text only, never for anything a user must read to act. Greys
+  below 3:1 (`--line`, `--chart-3`) are never the only way to tell things apart.
+- **Never colour alone:** grades have their name on the pill, status has an icon and a word,
+  `--danger` always comes with text ("At risk"), charts have legends, labels and a table view.
+- **Keyboard:** everything clickable is reachable with Tab in reading order and works with Enter
+  or Space. Composite widgets use arrow keys (tabs, menus, the palette, the Kanban board). Esc
+  closes the top layer. ⌘K works everywhere. A "Skip to content" link is the first Tab stop.
+- **Focus:** a 2px `--ink` outline with 3px offset on `:focus-visible`, never removed. Focus moves
+  into drawers, modals and the palette when they open and returns to the opener when they close;
+  modals trap focus.
+- **Targets:** at least 44×44px on touch (small buttons get a larger hit area), 24×24px minimum on
+  desktop, with 8px between adjacent targets.
+- **Semantics:** real `<button>` and `<a>` elements; one `<h1>` per page and headings in order;
+  landmarks (`nav`, `main`, `aside` for the drawer); every icon-only button has an `aria-label`;
+  every input has a visible label (the floating label counts) tied with `for`/`id`; errors are
+  linked with `aria-describedby`.
+- **Announcements:** toasts use `role="status"` (errors `role="alert"`); live counts ("6 of 9")
+  and drag-and-drop moves are announced; loading regions set `aria-busy`.
+- **Zoom and text:** usable at 200% zoom and 320px wide with no sideways scrolling; text sizes in
+  rem so browser font settings apply; nothing important in images of text.
+- **Avatars and charts:** avatars carry the full name as their label; every chart has an
+  `aria-label` summary and a "View as table" toggle.
+
+## Motion (rules)
+
+- **Purpose:** motion explains a change (something opened, moved or updated), never decorates.
+- **Durations:** 150ms for hovers and small state changes (`--t-fast`), 220ms for things that
+  appear (`--t-base`: menus, modals, fades), 300ms for things that travel (`--t-slow`: drawer,
+  sidebar, bars growing). Nothing longer than 600ms (the loading unblur is the only exception).
+- **Easing:** `--ease` (cubic-bezier(0.2, 0.8, 0.2, 1)) for entering and moving; a plain ease-out
+  for leaving, about 20% faster than entering.
+- **What moves:** opacity and transform only (no animating width/height of large areas except
+  the docked drawer); small scales (97% → 100%) and short slides (≤ 20px).
+- **Feedback:** buttons scale to 97% when pressed; cards lift 2–3px on hover; new list items slide
+  in 6–8px; changed numbers do not count up (they just update, with a "+4" chip when useful).
+- **Reduced motion:** with `prefers-reduced-motion: reduce`, durations drop to 0, nothing pulses
+  or loops, and fades replace slides. The UI must work exactly the same without motion.
+- **Never:** parallax, auto-playing carousels, flashing (more than 3 per second), or motion that
+  blocks input.
+
+## Numbers, dates and text (rules)
+
+The app is for Zambia: English (UK spelling), Zambian kwacha, Central Africa Time.
+
+- **Money:** kwacha with a "K" and no space, comma thousands: **K6,400,000**. Compact in KPIs,
+  cards and charts: **K6.4M**, **K450K**, **K1.2B** (one decimal, dropped when .0 is not useful).
+  Exact value in tooltips and drawers. Negative: **−K12,000** (true minus sign). No currency
+  code in the UI unless several currencies appear (then "ZMW 6,400,000"). Use `formatZMW` /
+  `formatZMWCompact`; never format by hand.
+- **Numbers:** comma thousands, full stop decimals (12,480.5); tabular figures wherever numbers
+  line up; counts under 10,000 in full.
+- **Percentages:** whole numbers by default (75%), one decimal only when it matters (5.1%);
+  changes with a sign: **+18%**, **−4%**; percentage points as "pts" (+3 pts).
+- **Scores:** whole numbers 0–100, shown as "58" or "58 / 100" with the grade ("Gold · 58").
+- **Dates:** day month year, month as a short word: **23 Nov 2026**; same year may drop the year in
+  tight spaces (**23 Nov**); with weekday: **Thu 26 Nov**. Never 11/23/2026 or 23/11/2026 in the UI
+  (ambiguous). ISO 8601 (2026-11-23) only in exports and the API.
+- **Times:** 24-hour, **10:42**; with a date: **23 Nov 2026, 10:42**. Stored in UTC, shown in the
+  user's time zone (default Africa/Lusaka, CAT, UTC+2); show the zone only when it differs.
+- **Relative times:** for recent activity: "just now" (< 1 min), "5 min ago", "3h ago", "1d ago" up
+  to 7 days, then the date. Future: "in 3 days". The exact date and time is always in the tooltip.
+- **Ranges:** en dash with no spaces: 1–7 Dec 2026, K1M–K5M, 15–30 days.
+- **Phone numbers:** stored as E.164, shown as **+260 97 123 4567**.
+- **Text:** sentence case for everything (titles, buttons, menus, column headers); buttons say the
+  action ("Mark as lost", not "OK"); numbers as digits in the UI ("3 deals"); truncate with an
+  ellipsis and show the full text in a tooltip.
+
 ## Components (shadcn, restyled to the above)
 
 KpiCard (icon circle, big number, two-line label; one may be highlighted with a black icon and
