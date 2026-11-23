@@ -19,17 +19,19 @@ shadows except a faint lift on hover.
 
 Light is the default; dark is a toggle in the top bar and follows `prefers-color-scheme`.
 
-| Token      | Light     | Dark      | Use                                                     |
-| ---------- | --------- | --------- | ------------------------------------------------------- |
-| `--shell`  | `#FFFFFF` | `#111111` | app background, sidebar                                 |
-| `--main`   | `#ECECEC` | `#1B1B1B` | the rounded content panel                               |
-| `--card`   | `#FFFFFF` | `#242424` | cards, top-bar controls on the panel                    |
-| `--ink`    | `#0D0D0D` | `#F5F5F5` | text, active nav, primary buttons, primary chart series |
-| `--mute`   | `#6B6B6B` | `#9A9A9A` | secondary text, axis labels                             |
-| `--soft`   | `#F3F3F3` | `#2E2E2E` | icon circles, table rows, neutral pills                 |
-| `--line`   | `#E4E4E4` | `#333333` | borders, grid lines, row hover                          |
-| `--bar2`   | `#D4D4D4` | `#505050` | secondary chart series                                  |
-| `--danger` | `#DC2626` | `#F87171` | at-risk, lost, destructive actions only                 |
+| Token       | Light     | Dark      | Use                                                     |
+| ----------- | --------- | --------- | ------------------------------------------------------- |
+| `--shell`   | `#FFFFFF` | `#111111` | app background, sidebar                                 |
+| `--main`    | `#ECECEC` | `#1B1B1B` | the rounded content panel                               |
+| `--card`    | `#FFFFFF` | `#242424` | cards, top-bar controls on the panel                    |
+| `--ink`     | `#0D0D0D` | `#F5F5F5` | text, active nav, primary buttons, primary chart series |
+| `--mute`    | `#6B6B6B` | `#9A9A9A` | secondary text, axis labels                             |
+| `--soft`    | `#F3F3F3` | `#2E2E2E` | icon circles, table rows, neutral pills                 |
+| `--line`    | `#E4E4E4` | `#333333` | borders, grid lines, row hover                          |
+| `--bar2`    | `#D4D4D4` | `#505050` | unchecked controls, quiet fills (not chart series)      |
+| `--chart-2` | `#7A7A7A` | `#9A9A9A` | chart: comparison series, target line, hatch stripes    |
+| `--chart-3` | `#C8C8C8` | `#505050` | chart: third / remaining series                         |
+| `--danger`  | `#DC2626` | `#F87171` | at-risk, lost, destructive actions only                 |
 
 Semantic colour (`--danger`, and green/amber if ever needed) is used for small marks only: a dot,
 an icon, a thin badge border. Never for large fills.
@@ -406,14 +408,41 @@ Styles and markup: `contract` and `signature` in the UI kit.
 Every step records who and when; the signed PDF is stamped with the signature, name, time and IP.
 On phones the pad fills the width and the status card's button drops below the text.
 
+## Charts (decided: bold pills)
+
+Reference: option B in `docs/03-design/reference/chart-options.html` (hover the charts). Styles:
+`chart` in the UI kit. Built with Recharts (shadcn chart), styled as below.
+
+- **Series colours (monochrome, validated):** `--ink` primary, `--chart-2` comparison, hatch
+  (45° `--chart-2` stripes on `--card`) third, `--chart-3` the rest. These greys pass the dataviz
+  validator's colour-blind and normal-vision separation in light and dark (ΔE ≈ 25). The light
+  step is below 3:1 against the card, so identity is never by shade alone: always a legend for 2+
+  series, direct labels on up to 4, and a "View as table" option.
+- **Bars:** fat pills, 22px thick, fully rounded ends, 2px gaps between bars and segments; the
+  highlighted bar is `--ink`, others `--chart-2`/`--chart-3`.
+- **Lines:** 3px `--ink`, round joins, a 9px dot on every point with a 2px `--card` ring; target or
+  comparison lines are 2px `--chart-2`, dashed 6/5. The latest value is labelled at the line's end.
+- **Donut:** 34px-thick ring with 3px `--card` gaps between segments, total in the centre (22px/700)
+  with a `--mute` caption; legend beside it with values.
+- **Funnel:** stacked pills, 30px tall, width by value (minimum 18%), value inside right-aligned,
+  the last step (Won) `--ink` with white text, conversion from the previous step on the right.
+- **Progress vs target:** a 54px pill track (`--soft`) with stacked segments and a 2px `--ink`
+  quota marker at the end; legend underneath with the % of quota.
+- **Axes and grid:** dashed 2/4 `--line` grid, 11px `--mute` labels, one y-axis only (never two),
+  money in compact kwacha (K4.2M).
+- **Hover:** a black tooltip pill (14px radius) with the label in bold and exact values; line
+  charts add a faint vertical crosshair. Hit areas are wider than the marks.
+- **Card:** chart title 18px/600 with a `--mute` subtitle, optional hero number on the right
+  (28px/700) with a small change note.
+- Animations grow bars and lines once on load (300ms), none with reduced motion.
+
 ## Components (shadcn, restyled to the above)
 
 KpiCard (icon circle, big number, two-line label; one may be highlighted with a black icon and
 a ↗ link) · Card · DataTable (separated rounded `--soft` rows, checkbox column, ⋯ row menu,
 pill filters, black Export) · Badge(grade) · Pill(status/stage) · ScoreRing(0–100) ·
 FactorList(explanation) · RecommendationCard / NextBestAction row (avatar circle, title, action ·
-stage, grade pill) · BarChart (rounded thin bars, `--ink` vs `--bar2`, dashed grid, black tooltip
-pill) · KanbanBoard(dnd-kit) · Timeline · CommitteeMap · WhitespaceMatrix · InsightRow ·
+stage, grade pill) · Charts (bold pills, see Charts) · KanbanBoard(dnd-kit) · Timeline · CommitteeMap · WhitespaceMatrix · InsightRow ·
 ContractStatusStepper · SignaturePad.
 
 ## Micro-rules

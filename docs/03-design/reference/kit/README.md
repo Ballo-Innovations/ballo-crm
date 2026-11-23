@@ -50,7 +50,8 @@ files into the app. Instead:
   --ring: #0d0d0d; /* 2px focus ring */
   --radius: 1rem; /* 16px rows; use rounded-full for pills */
   --chart-1: #0d0d0d;
-  --chart-2: #d4d4d4; /* --bar2 */
+  --chart-2: #7a7a7a;
+  --chart-3: #c8c8c8;
   --sidebar: #ffffff;
   --sidebar-foreground: #0d0d0d;
   --sidebar-primary: #0d0d0d;
@@ -80,7 +81,8 @@ files into the app. Instead:
   --input: #2e2e2e;
   --ring: #f5f5f5;
   --chart-1: #f5f5f5;
-  --chart-2: #505050;
+  --chart-2: #9a9a9a;
+  --chart-3: #505050;
   --sidebar: #111111;
   --sidebar-foreground: #f5f5f5;
   --sidebar-primary: #f5f5f5;
