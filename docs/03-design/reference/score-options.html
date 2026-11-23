@@ -1,0 +1,1219 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Score Explanation Options</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Urbanist:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="kit/tokens.css" />
+    <link rel="stylesheet" href="kit/components.css" />
+    <style>
+      body {
+        padding: 40px 32px 80px;
+      }
+      .wrap {
+        max-width: 1300px;
+        margin: auto;
+      }
+      .page-hd {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-end;
+        gap: 16px;
+        flex-wrap: wrap;
+        margin-bottom: 24px;
+      }
+      .page-hd h1 {
+        font-size: 30px;
+        font-weight: 700;
+      }
+      .page-hd p {
+        color: var(--mute);
+        margin-top: 6px;
+        font-size: 15px;
+        max-width: 780px;
+        line-height: 1.5;
+      }
+      /* what-if controls (shared) */
+      .whatif {
+        background: var(--main);
+        border-radius: 28px;
+        padding: 20px;
+        margin-bottom: 32px;
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 18px;
+      }
+      .whatif h3 {
+        grid-column: 1/-1;
+        font-size: 17px;
+        font-weight: 600;
+      }
+      .whatif h3 small {
+        font-weight: 500;
+        color: var(--mute);
+        font-size: 13px;
+        margin-left: 8px;
+      }
+      .wi {
+        background: var(--card);
+        border-radius: 20px;
+        padding: 14px;
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        font-size: 14px;
+      }
+      .wi b {
+        font-size: 12px;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+        color: var(--mute);
+      }
+      .wi .tabs {
+        flex-wrap: wrap;
+      }
+      .wi .tab {
+        padding: 6px 11px;
+        font-size: 13px;
+      }
+      input[type="range"] {
+        width: 100%;
+        accent-color: var(--ink);
+      }
+      .opts {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 28px 20px;
+        max-width: 1000px;
+        margin: auto;
+      }
+      .oc.D {
+        grid-column: 1/-1;
+        max-width: 520px;
+        justify-self: center;
+        width: 100%;
+      }
+      .oc.D h2 .tag {
+        font-size: 12px;
+        font-weight: 600;
+        background: var(--ink);
+        color: var(--shell);
+        border-radius: 999px;
+        padding: 3px 10px;
+      }
+      .D .hero {
+        background: var(--ink);
+        color: var(--shell);
+        border-radius: 20px;
+        padding: 18px;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+      }
+      .D .hero .row1 {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+      .D .hero .num {
+        font-size: 40px;
+        font-weight: 700;
+        line-height: 1;
+      }
+      .D .hero .num small {
+        font-size: 16px;
+        opacity: 0.6;
+      }
+      .D .hero .pillg {
+        background: var(--shell);
+        color: var(--ink);
+        border-color: var(--shell);
+      }
+      .D .hero p {
+        font-size: 14px;
+        line-height: 1.55;
+        opacity: 0.9;
+      }
+      .D .sec-t {
+        font-size: 12px;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+        color: var(--mute);
+      }
+      .oc h2 {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        font-size: 20px;
+        font-weight: 600;
+        margin-bottom: 6px;
+      }
+      .badge {
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        background: var(--ink);
+        color: var(--shell);
+        display: grid;
+        place-items: center;
+        font-weight: 700;
+        font-size: 14px;
+        flex: none;
+      }
+      .oc p.d {
+        color: var(--mute);
+        font-size: 14px;
+        line-height: 1.5;
+        margin-bottom: 12px;
+        min-height: 84px;
+      }
+      .drw {
+        background: var(--card);
+        border-radius: 22px;
+        border: 1px solid var(--line);
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+      }
+      .dh {
+        display: flex;
+        gap: 12px;
+        align-items: center;
+        padding: 18px 18px 0;
+      }
+      .dh b {
+        display: block;
+        font-size: 16px;
+      }
+      .dh small {
+        color: var(--mute);
+        font-size: 13px;
+      }
+      .dt {
+        padding: 14px 18px 0;
+      }
+      .db {
+        padding: 16px 18px 18px;
+        display: flex;
+        flex-direction: column;
+        gap: 14px;
+      }
+      .pillg {
+        display: inline-flex;
+        align-items: center;
+        border-radius: 999px;
+        padding: 3px 10px;
+        font-size: 12px;
+        font-weight: 600;
+        border: 1px solid var(--line);
+        background: var(--soft);
+      }
+      .pillg.d {
+        background: var(--ink);
+        color: var(--shell);
+        border-color: var(--ink);
+      }
+      .chg {
+        font-size: 12px;
+        font-weight: 700;
+        border-radius: 999px;
+        padding: 2px 8px;
+        background: var(--soft);
+      }
+      .nba {
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+      }
+      .nba .t {
+        font-size: 12px;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+        color: var(--mute);
+      }
+      .nba button {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        border: 0;
+        background: var(--soft);
+        border-radius: 14px;
+        padding: 10px 12px;
+        font-size: 13px;
+        font-weight: 500;
+        text-align: left;
+      }
+      .nba button:hover {
+        background: var(--line);
+      }
+      .nba i {
+        width: 22px;
+        height: 22px;
+        border-radius: 50%;
+        background: var(--ink);
+        color: var(--shell);
+        display: grid;
+        place-items: center;
+        font-style: normal;
+        font-size: 11px;
+        flex: none;
+      }
+      .nba .lift {
+        margin-left: auto;
+        font-size: 12px;
+        font-weight: 700;
+        color: var(--mute);
+      }
+      /* A ring + factor list */
+      .A .top {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        background: var(--soft);
+        border-radius: 20px;
+        padding: 16px;
+      }
+      .ring {
+        width: 84px;
+        height: 84px;
+        border-radius: 50%;
+        display: grid;
+        place-items: center;
+        flex: none;
+        transition: background 0.4s;
+      }
+      .ring span {
+        width: 68px;
+        height: 68px;
+        border-radius: 50%;
+        background: var(--soft);
+        display: grid;
+        place-items: center;
+        font-size: 26px;
+        font-weight: 700;
+      }
+      .A .top .tx b {
+        display: block;
+        font-size: 16px;
+      }
+      .A .top .tx small {
+        display: block;
+        color: var(--mute);
+        font-size: 13px;
+        margin-top: 2px;
+      }
+      .fl {
+        display: flex;
+        flex-direction: column;
+      }
+      .fl .f {
+        display: grid;
+        grid-template-columns: 1fr 56px;
+        gap: 4px 10px;
+        padding: 9px 0;
+        border-bottom: 1px solid var(--line);
+        font-size: 13px;
+      }
+      .fl .f .v {
+        text-align: right;
+        font-weight: 700;
+        font-variant-numeric: tabular-nums;
+      }
+      .fl .f .bar {
+        grid-column: 1/-1;
+        height: 5px;
+        border-radius: 5px;
+        background: var(--line);
+        overflow: hidden;
+      }
+      .fl .f .bar i {
+        display: block;
+        height: 100%;
+        background: var(--ink);
+        border-radius: 5px;
+        transition: width 0.4s;
+      }
+      .fl .f.neg .bar i {
+        background: var(--bar2);
+      }
+      .fl .f .why {
+        color: var(--mute);
+      }
+      .fl .f.neg .v::after {
+        content: " ↓";
+        color: var(--danger);
+      }
+      .fl .tot {
+        display: flex;
+        justify-content: space-between;
+        padding: 10px 0 0;
+        font-size: 14px;
+        font-weight: 700;
+      }
+      .info {
+        font-size: 12px;
+        color: var(--mute);
+        line-height: 1.5;
+      }
+      /* B waterfall + grade scale */
+      .wf {
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+      }
+      .wf .s {
+        display: grid;
+        grid-template-columns: 92px 1fr 34px;
+        align-items: center;
+        gap: 8px;
+        font-size: 12px;
+      }
+      .wf .s .l {
+        color: var(--mute);
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+      .wf .s .track {
+        position: relative;
+        height: 22px;
+        background: var(--soft);
+        border-radius: 8px;
+      }
+      .wf .s .seg {
+        position: absolute;
+        top: 3px;
+        bottom: 3px;
+        border-radius: 6px;
+        background: var(--ink);
+        transition:
+          left 0.4s,
+          width 0.4s;
+      }
+      .wf .s.drop .seg {
+        background: repeating-linear-gradient(45deg, var(--bar2) 0 4px, var(--line) 4px 8px);
+      }
+      .wf .s.base .seg,
+      .wf .s.final .seg {
+        background: var(--ink);
+      }
+      .wf .s .n {
+        text-align: right;
+        font-weight: 700;
+        font-variant-numeric: tabular-nums;
+      }
+      .wf .s.final .l {
+        color: var(--ink);
+        font-weight: 700;
+      }
+      .scale {
+        position: relative;
+        margin-top: 4px;
+      }
+      .scale .bands {
+        display: grid;
+        grid-template-columns: 35fr 20fr 20fr 25fr;
+        gap: 3px;
+        height: 12px;
+      }
+      .scale .bands i {
+        border-radius: 4px;
+        background: var(--line);
+      }
+      .scale .bands i.on {
+        background: var(--ink);
+      }
+      .scale .lbls {
+        display: grid;
+        grid-template-columns: 35fr 20fr 20fr 25fr;
+        font-size: 11px;
+        color: var(--mute);
+        margin-top: 4px;
+      }
+      .scale .ptr {
+        position: absolute;
+        top: -8px;
+        width: 2px;
+        height: 28px;
+        background: var(--ink);
+        border-radius: 2px;
+        transition: left 0.4s;
+      }
+      .scale .ptr::after {
+        content: attr(data-v);
+        position: absolute;
+        top: -20px;
+        left: 50%;
+        transform: translateX(-50%);
+        font-size: 11px;
+        font-weight: 700;
+        background: var(--ink);
+        color: var(--shell);
+        border-radius: 999px;
+        padding: 1px 7px;
+      }
+      .B .head {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+      .B .big {
+        font-size: 34px;
+        font-weight: 700;
+        line-height: 1;
+      }
+      /* C plain-language */
+      .C .hero {
+        background: var(--ink);
+        color: var(--shell);
+        border-radius: 20px;
+        padding: 18px;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+      }
+      .C .hero .row1 {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+      .C .hero .num {
+        font-size: 40px;
+        font-weight: 700;
+        line-height: 1;
+      }
+      .C .hero .num small {
+        font-size: 16px;
+        opacity: 0.6;
+      }
+      .C .hero .pillg {
+        background: var(--shell);
+        color: var(--ink);
+        border-color: var(--shell);
+      }
+      .C .hero p {
+        font-size: 14px;
+        line-height: 1.55;
+        opacity: 0.9;
+      }
+      .C .hero p b {
+        font-weight: 700;
+      }
+      .C .two {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 10px;
+      }
+      .C .col {
+        background: var(--soft);
+        border-radius: 18px;
+        padding: 12px;
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+        font-size: 13px;
+      }
+      .C .col .t {
+        font-size: 12px;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+        color: var(--mute);
+        margin-bottom: 2px;
+      }
+      .C .col span {
+        display: flex;
+        gap: 6px;
+        align-items: flex-start;
+        line-height: 1.35;
+      }
+      .C .col span::before {
+        content: "+";
+        font-weight: 700;
+      }
+      .C .col.minus span::before {
+        content: "−";
+        color: var(--danger);
+      }
+      .C details {
+        font-size: 13px;
+        background: var(--soft);
+        border-radius: 16px;
+        padding: 10px 12px;
+      }
+      .C details summary {
+        cursor: pointer;
+        font-weight: 600;
+      }
+      .C code {
+        display: block;
+        margin-top: 8px;
+        font-size: 12px;
+        line-height: 1.6;
+        white-space: pre-wrap;
+        color: var(--mute);
+      }
+      .note {
+        background: var(--soft);
+        border-radius: 20px;
+        padding: 18px 20px;
+        font-size: 15px;
+        line-height: 1.6;
+        margin-top: 28px;
+      }
+      @media (max-width: 1100px) {
+        .opts {
+          grid-template-columns: 1fr;
+          max-width: 460px;
+          margin: auto;
+        }
+        .whatif {
+          grid-template-columns: 1fr 1fr;
+        }
+      }
+      @media (max-width: 600px) {
+        body {
+          padding: 20px 12px 60px;
+        }
+        .whatif {
+          grid-template-columns: 1fr;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <div class="page-hd">
+        <div>
+          <h1>Score explanation — 4 options</h1>
+          <p>
+            The drawer's <b>Score</b> tab for “Fibre backbone Lusaka–Ndola”. Scores are computed
+            live from the scoring spec, starting at the spec's worked example (<b>58 · Gold</b>).
+            Change the inputs below and watch each design explain the new score.
+          </p>
+        </div>
+        <div class="tabs tabs--segmented" id="thm">
+          <button class="tab" aria-selected="true" data-v="light">Light</button
+          ><button class="tab" aria-selected="false" data-v="dark">Dark</button>
+        </div>
+      </div>
+
+      <div class="whatif">
+        <h3>
+          What if…
+          <small
+            >these are the opportunity's real inputs; the three designs below update together</small
+          >
+        </h3>
+        <div class="wi">
+          <b>Stage</b>
+          <div class="tabs" data-w="stage">
+            <button class="tab" data-v="0.1">Qualify</button
+            ><button class="tab" data-v="0.25">Discover</button
+            ><button class="tab" data-v="0.5">Propose</button
+            ><button class="tab" data-v="0.75">Negotiate</button>
+          </div>
+        </div>
+        <div class="wi">
+          <b>Buying committee</b
+          ><label class="check"><input type="checkbox" data-r="eb" checked /> Economic buyer</label
+          ><label class="check"><input type="checkbox" data-r="ch" checked /> Champion</label
+          ><label class="check"><input type="checkbox" data-r="te" /> Technical</label
+          ><label class="check"><input type="checkbox" data-r="pr" /> Procurement</label>
+        </div>
+        <div class="wi">
+          <b>Engagement · <span id="ev">60</span>/100</b
+          ><input type="range" min="0" max="100" step="5" value="60" id="eng" /><b>Last activity</b>
+          <div class="tabs" data-w="rec">
+            <button class="tab" data-v="1">≤7d</button
+            ><button class="tab" data-v="0.8">8–14d</button
+            ><button class="tab" data-v="0.5">15–30d</button
+            ><button class="tab" data-v="0.2">30d+</button>
+          </div>
+        </div>
+        <div class="wi">
+          <b>Deal flags</b
+          ><label class="check"><input type="checkbox" id="bud" checked /> Budget confirmed</label
+          ><label class="check"><input type="checkbox" id="comp" /> Competitor present</label
+          ><label class="check"><input type="checkbox" id="risk" /> Account at risk</label
+          ><button class="btn btn--secondary btn--sm" id="reset" style="margin-top: auto">
+            Reset to worked example
+          </button>
+        </div>
+      </div>
+
+      <div class="opts">
+        <div class="oc A">
+          <h2><span class="badge">A</span>Ring + factor list</h2>
+          <p class="d">
+            A big score ring with the grade and weighted value, then every factor as a row with its
+            multiplier and a bar. Factors pulling the score down are grey with a red ↓. Next best
+            actions underneath show how much each would add.
+          </p>
+          <div class="drw">
+            <div class="dh">
+              <span class="avatar">KP</span>
+              <div>
+                <b>Fibre backbone Lusaka–Ndola</b><small>Kariba Power Co. · Opportunity</small>
+              </div>
+            </div>
+            <div class="dt tabs">
+              <button class="tab" aria-selected="false">Overview</button
+              ><button class="tab" aria-selected="true">Score</button
+              ><button class="tab" aria-selected="false">Activity</button>
+            </div>
+            <div class="db" id="A"></div>
+          </div>
+        </div>
+        <div class="oc B">
+          <h2><span class="badge">B</span>Waterfall + grade scale</h2>
+          <p class="d">
+            Shows how the score is built: it starts at the stage's 75 and each factor steps it down
+            (striped) or keeps it, ending at the final score. A Bronze → Platinum scale underneath
+            shows where it sits and how far to the next grade.
+          </p>
+          <div class="drw">
+            <div class="dh">
+              <span class="avatar">KP</span>
+              <div>
+                <b>Fibre backbone Lusaka–Ndola</b><small>Kariba Power Co. · Opportunity</small>
+              </div>
+            </div>
+            <div class="dt tabs">
+              <button class="tab" aria-selected="false">Overview</button
+              ><button class="tab" aria-selected="true">Score</button
+              ><button class="tab" aria-selected="false">Activity</button>
+            </div>
+            <div class="db" id="B"></div>
+          </div>
+        </div>
+        <div class="oc C">
+          <h2><span class="badge">C</span>Plain-language summary</h2>
+          <p class="d">
+            A black summary card writes the reason in a sentence, then two short columns: what's
+            helping and what's holding it back. The exact formula is one tap away for anyone who
+            wants to check the maths.
+          </p>
+          <div class="drw">
+            <div class="dh">
+              <span class="avatar">KP</span>
+              <div>
+                <b>Fibre backbone Lusaka–Ndola</b><small>Kariba Power Co. · Opportunity</small>
+              </div>
+            </div>
+            <div class="dt tabs">
+              <button class="tab" aria-selected="false">Overview</button
+              ><button class="tab" aria-selected="true">Score</button
+              ><button class="tab" aria-selected="false">Activity</button>
+            </div>
+            <div class="db" id="C"></div>
+          </div>
+        </div>
+        <div class="oc D">
+          <h2><span class="badge">D</span>B + C combined <span class="tag">Your pick</span></h2>
+          <p class="d">
+            C's black summary card on top (score, grade, the reason in one sentence, weighted
+            value), then B's waterfall showing where the points went, the grade scale with points to
+            the next grade, and the next best actions.
+          </p>
+          <div class="drw">
+            <div class="dh">
+              <span class="avatar">KP</span>
+              <div>
+                <b>Fibre backbone Lusaka–Ndola</b><small>Kariba Power Co. · Opportunity</small>
+              </div>
+            </div>
+            <div class="dt tabs">
+              <button class="tab" aria-selected="false">Overview</button
+              ><button class="tab" aria-selected="true">Score</button
+              ><button class="tab" aria-selected="false">Activity</button>
+            </div>
+            <div class="db" id="D"></div>
+          </div>
+        </div>
+      </div>
+      <div class="note">
+        <b>Same in every option:</b> numbers come from the scoring service's explanation payload
+        (never computed in the UI); every factor names its reason (“no Technical buyer”); next best
+        actions come from the recommender and open the right form; a change since yesterday shows as
+        a small “+4” chip; the grade pill and ring match everywhere else in the app.
+      </div>
+    </div>
+    <div class="toasts" id="toasts"></div>
+    <script>
+      var $ = function (s, r) {
+          return (r || document).querySelector(s);
+        },
+        $$ = function (s, r) {
+          return [].slice.call((r || document).querySelectorAll(s));
+        };
+      var AMOUNT = 6400000,
+        ST = { 0.1: "Qualify", 0.25: "Discover", 0.5: "Propose", 0.75: "Negotiate" },
+        RW = { eb: 0.4, ch: 0.3, te: 0.2, pr: 0.1 },
+        RN = { eb: "Economic buyer", ch: "Champion", te: "Technical", pr: "Procurement" },
+        RECN = {
+          1: "within 7 days",
+          0.8: "8–14 days ago",
+          0.5: "15–30 days ago",
+          0.2: "over 30 days ago",
+        };
+      var W;
+      function reset() {
+        W = {
+          stage: 0.75,
+          roles: { eb: 1, ch: 1, te: 0, pr: 0 },
+          e: 60,
+          rec: 1,
+          bud: true,
+          comp: false,
+          risk: false,
+        };
+        sync();
+      }
+      function calc(w) {
+        var c = 0;
+        for (var k in w.roles) if (w.roles[k]) c += RW[k];
+        c = Math.round(c * 10) / 10;
+        var fc = 0.6 + 0.4 * c,
+          fe = 0.7 + (0.3 * w.e) / 100,
+          h = w.risk ? 0.5 : 1,
+          k = w.comp ? 0.85 : 1,
+          b = w.bud ? 1 : 0.7,
+          base = 100 * w.stage;
+        var raw = base * fc * fe * w.rec * 1 * h * k * b,
+          score = Math.max(0, Math.min(100, Math.round(raw)));
+        var g =
+          score >= 75 && w.roles.eb && w.bud
+            ? "Platinum"
+            : score >= 55 && w.roles.ch
+              ? "Gold"
+              : score >= 35
+                ? "Silver"
+                : "Bronze";
+        if (g === "Platinum" && !(score >= 75)) g = "Gold";
+        var missing = Object.keys(RW)
+          .filter(function (r) {
+            return !w.roles[r];
+          })
+          .map(function (r) {
+            return RN[r];
+          });
+        var F = [
+          {
+            k: "stage",
+            l: "Stage: " + ST[w.stage],
+            v: w.stage,
+            why: "start at " + base,
+            base: true,
+          },
+          {
+            k: "committee",
+            l: "Committee coverage " + Math.round(c * 100) + "%",
+            v: fc,
+            why: missing.length ? "no " + missing.join(", ") + " buyer" : "full committee",
+          },
+          {
+            k: "engagement",
+            l: "Engagement " + w.e + "/100",
+            v: fe,
+            why:
+              w.e >= 60 ? "DC tour, 2 demos" : w.e >= 30 ? "a few meetings" : "little engagement",
+          },
+          { k: "recency", l: "Last activity", v: w.rec, why: RECN[w.rec] },
+          { k: "size", l: "Deal size fit", v: 1, why: "within sector range" },
+          {
+            k: "health",
+            l: "Account health",
+            v: h,
+            why: w.risk ? "account at risk" : "active account",
+          },
+          {
+            k: "competitor",
+            l: "Competitor",
+            v: k,
+            why: w.comp ? "competitor present" : "none known",
+          },
+          { k: "budget", l: "Budget", v: b, why: w.bud ? "confirmed" : "not confirmed" },
+        ];
+        var nba = [];
+        if (!w.roles.te) nba.push(["Add a technical stakeholder", { te: 1 }]);
+        if (!w.bud) nba.push(["Confirm the budget owner", "bud"]);
+        if (!w.roles.ch) nba.push(["Identify a champion", { ch: 1 }]);
+        if (w.e < 80) nba.push(["Book a DC tour", "dc"]);
+        if (w.rec < 1) nba.push(["Log a meeting this week", "rec"]);
+        nba = nba.slice(0, 3).map(function (n) {
+          var w2 = JSON.parse(JSON.stringify(w));
+          if (n[1] === "bud") w2.bud = true;
+          else if (n[1] === "dc") w2.e = Math.min(100, w2.e + 25);
+          else if (n[1] === "rec") w2.rec = 1;
+          else for (var r in n[1]) w2.roles[r] = 1;
+          return [n[0], calcScore(w2) - score, n[1]];
+        });
+        return {
+          score: score,
+          grade: g,
+          c: c,
+          base: base,
+          F: F,
+          wv: Math.round(AMOUNT * w.stage * (0.8 + (0.4 * score) / 100)),
+          nba: nba,
+        };
+      }
+      function calcScore(w) {
+        var c = 0;
+        for (var k in w.roles) if (w.roles[k]) c += RW[k];
+        return Math.max(
+          0,
+          Math.min(
+            100,
+            Math.round(
+              100 *
+                w.stage *
+                (0.6 + 0.4 * c) *
+                (0.7 + (0.3 * w.e) / 100) *
+                w.rec *
+                (w.risk ? 0.5 : 1) *
+                (w.comp ? 0.85 : 1) *
+                (w.bud ? 1 : 0.7),
+            ),
+          ),
+        );
+      }
+      function K(n) {
+        return "K" + n.toLocaleString("en-US");
+      }
+      function gp(g) {
+        return (
+          '<span class="pillg' +
+          (g === "Gold" || g === "Platinum" ? " d" : "") +
+          '">' +
+          g +
+          "</span>"
+        );
+      }
+      function nbaHTML(r) {
+        if (!r.nba.length) return "";
+        return (
+          '<div class="nba"><span class="t">Next best actions</span>' +
+          r.nba
+            .map(function (n, i) {
+              return (
+                '<button data-nba="' +
+                i +
+                '"><i>→</i>' +
+                n[0] +
+                '<span class="lift">' +
+                (n[1] > 0 ? "+" + n[1] : "±0") +
+                "</span></button>"
+              );
+            })
+            .join("") +
+          "</div>"
+        );
+      }
+      var prev = null;
+      function draw() {
+        var r = calc(W),
+          d = prev === null ? 0 : r.score - prev,
+          chg = d ? '<span class="chg">' + (d > 0 ? "+" : "") + d + "</span>" : "";
+        // A
+        $("#A").innerHTML =
+          '<div class="top"><div class="ring" style="background:conic-gradient(var(--ink) 0 ' +
+          r.score +
+          "%,var(--line) " +
+          r.score +
+          '% 100%)"><span>' +
+          r.score +
+          '</span></div><div class="tx"><b>' +
+          r.grade +
+          " · " +
+          r.score +
+          " / 100 " +
+          chg +
+          "</b><small>Weighted value " +
+          K(r.wv) +
+          "</small><small>of " +
+          K(AMOUNT) +
+          " at " +
+          Math.round(W.stage * 100) +
+          "% stage probability</small></div></div>" +
+          '<div class="fl">' +
+          r.F.map(function (f) {
+            var neg = !f.base && f.v < 1;
+            return (
+              '<div class="f' +
+              (neg ? " neg" : "") +
+              '"><span>' +
+              f.l +
+              ' <span class="why">· ' +
+              f.why +
+              '</span></span><span class="v">× ' +
+              f.v.toFixed(2) +
+              '</span><span class="bar"><i style="width:' +
+              f.v * 100 +
+              '%"></i></span></div>'
+            );
+          }).join("") +
+          '<div class="tot"><span>Score</span><span>' +
+          r.score +
+          "</span></div></div>" +
+          nbaHTML(r);
+        // B
+        var steps = [],
+          cur = r.base;
+        steps.push({ l: "Stage", from: 0, to: cur, cls: "base" });
+        r.F.slice(1).forEach(function (f) {
+          var nx = cur * f.v;
+          if (f.v < 1)
+            steps.push({
+              l: f.l.replace(/ \d.*$/, "").replace("Committee coverage", "Committee"),
+              from: nx,
+              to: cur,
+              cls: "drop",
+              n: -(cur - nx),
+            });
+          cur = nx;
+        });
+        steps.push({ l: "Score", from: 0, to: r.score, cls: "final" });
+        var next = {
+          Bronze: [35, "Silver"],
+          Silver: [55, "Gold"],
+          Gold: [75, "Platinum"],
+          Platinum: null,
+        }[r.grade];
+        $("#B").innerHTML =
+          '<div class="head"><div><div class="big">' +
+          r.score +
+          " " +
+          chg +
+          '</div><small style="color:var(--mute)">' +
+          (next
+            ? next[0] - r.score > 0
+              ? next[0] - r.score + " points to " + next[1]
+              : "needs " +
+                (next[1] === "Platinum" ? "economic buyer + budget" : "a champion") +
+                " for " +
+                next[1]
+            : "Top grade") +
+          "</small></div>" +
+          gp(r.grade) +
+          "</div>" +
+          '<div class="wf">' +
+          steps
+            .map(function (s) {
+              return (
+                '<div class="s ' +
+                s.cls +
+                '"><span class="l">' +
+                s.l +
+                '</span><span class="track"><span class="seg" style="left:' +
+                s.from +
+                "%;width:" +
+                Math.max(1, s.to - s.from) +
+                '%"></span></span><span class="n">' +
+                (s.cls === "drop" ? "−" + Math.abs(s.n).toFixed(0) : Math.round(s.to)) +
+                "</span></div>"
+              );
+            })
+            .join("") +
+          (steps.length === 2
+            ? '<div class="info">No factor is pulling the score down.</div>'
+            : "") +
+          "</div>" +
+          '<div class="scale"><span class="ptr" data-v="' +
+          r.score +
+          '" style="left:' +
+          r.score +
+          '%"></span><div class="bands">' +
+          ["Bronze", "Silver", "Gold", "Platinum"]
+            .map(function (g) {
+              return '<i class="' + (g === r.grade ? "on" : "") + '"></i>';
+            })
+            .join("") +
+          '</div><div class="lbls"><span>Bronze</span><span>Silver 35</span><span>Gold 55</span><span>Platinum 75</span></div></div>' +
+          '<div class="info">Weighted value ' +
+          K(r.wv) +
+          "</div>" +
+          nbaHTML(r);
+        // C
+        var helps = r.F.filter(function (f) {
+            return !f.base && f.v >= 1;
+          }).map(function (f) {
+            return (
+              f.l.replace("Last activity", "Active " + f.why) +
+              (f.k === "recency" ? "" : " — " + f.why)
+            );
+          }),
+          hurts = r.F.filter(function (f) {
+            return f.v < 1 && !f.base;
+          }).map(function (f) {
+            return f.l + " — " + f.why;
+          });
+        var worst = r.F.filter(function (f) {
+          return !f.base;
+        }).sort(function (a, b) {
+          return a.v - b.v;
+        })[0];
+        var sentence =
+          "It is in <b>" +
+          ST[W.stage] +
+          "</b>, which starts it at " +
+          r.base +
+          ". " +
+          (hurts.length
+            ? "It loses most on <b>" +
+              worst.l.toLowerCase() +
+              "</b> (" +
+              worst.why +
+              ")" +
+              (hurts.length > 1
+                ? " and " + (hurts.length - 1) + " other factor" + (hurts.length > 2 ? "s" : "")
+                : "") +
+              "."
+            : "Nothing is holding it back.");
+        $("#C").innerHTML =
+          '<div class="hero"><div class="row1"><span class="num">' +
+          r.score +
+          "<small> / 100</small> " +
+          (d
+            ? '<span class="chg" style="background:var(--shell);color:var(--ink)">' +
+              (d > 0 ? "+" : "") +
+              d +
+              "</span>"
+            : "") +
+          "</span>" +
+          gp(r.grade) +
+          "</div><p>" +
+          sentence +
+          '</p><p style="opacity:.65;font-size:13px">Weighted value ' +
+          K(r.wv) +
+          "</p></div>" +
+          '<div class="two"><div class="col"><span class="t">Helping</span>' +
+          (helps.length
+            ? helps
+                .slice(0, 4)
+                .map(function (x) {
+                  return "<span>" + x + "</span>";
+                })
+                .join("")
+            : "<span>—</span>") +
+          '</div><div class="col minus"><span class="t">Holding it back</span>' +
+          (hurts.length
+            ? hurts
+                .map(function (x) {
+                  return "<span>" + x + "</span>";
+                })
+                .join("")
+            : '<span style="color:var(--mute)">Nothing</span>') +
+          "</div></div>" +
+          nbaHTML(r) +
+          "<details><summary>How this is calculated</summary><code>" +
+          r.base +
+          " (stage) × " +
+          r.F.slice(1)
+            .map(function (f) {
+              return f.v.toFixed(2);
+            })
+            .join(" × ") +
+          " = " +
+          r.score +
+          "\nGrade: " +
+          r.grade +
+          " (Bronze <35 · Silver 35–54 · Gold 55–74 + champion · Platinum ≥75 + economic buyer + budget)</code></details>";
+        var dHero = $("#C .hero").outerHTML,
+          bw = $("#B .wf").outerHTML,
+          bs = $("#B .scale").outerHTML,
+          bn = $("#B .nba") ? $("#B .nba").outerHTML : "",
+          nxt = $("#B .head small").textContent;
+        $("#D").innerHTML =
+          dHero +
+          '<span class="sec-t">Where the points went</span>' +
+          bw +
+          '<span class="sec-t">Grade · ' +
+          nxt +
+          "</span>" +
+          bs +
+          bn;
+        prev = r.score;
+        window._r = r;
+      }
+      function sync() {
+        $$('[data-w="stage"] .tab').forEach(function (t) {
+          t.setAttribute("aria-selected", +t.dataset.v === W.stage);
+        });
+        $$('[data-w="rec"] .tab').forEach(function (t) {
+          t.setAttribute("aria-selected", +t.dataset.v === W.rec);
+        });
+        $$("[data-r]").forEach(function (i) {
+          i.checked = !!W.roles[i.dataset.r];
+        });
+        $("#eng").value = W.e;
+        $("#ev").textContent = W.e;
+        $("#bud").checked = W.bud;
+        $("#comp").checked = W.comp;
+        $("#risk").checked = W.risk;
+        draw();
+      }
+      function toast(m) {
+        var t = document.createElement("div");
+        t.className = "toast";
+        t.innerHTML = '<span class="toast__icon">✓</span><span>' + m + "</span>";
+        $("#toasts").appendChild(t);
+        setTimeout(function () {
+          t.remove();
+        }, 3000);
+      }
+      document.addEventListener("click", function (e) {
+        var t = e.target.closest("[data-w] .tab");
+        if (t) {
+          W[t.parentNode.dataset.w] = +t.dataset.v;
+          return sync();
+        }
+        if (e.target.id === "reset") {
+          prev = null;
+          return reset();
+        }
+        var n = e.target.closest("[data-nba]");
+        if (n) {
+          var a = window._r.nba[+n.dataset.nba];
+          if (a[2] === "bud") W.bud = true;
+          else if (a[2] === "dc") W.e = Math.min(100, W.e + 25);
+          else if (a[2] === "rec") W.rec = 1;
+          else for (var r in a[2]) W.roles[r] = 1;
+          toast("Done: " + a[0]);
+          sync();
+        }
+      });
+      document.addEventListener("change", function (e) {
+        var i = e.target;
+        if (i.dataset.r) {
+          W.roles[i.dataset.r] = i.checked ? 1 : 0;
+        }
+        if (i.id === "bud") W.bud = i.checked;
+        if (i.id === "comp") W.comp = i.checked;
+        if (i.id === "risk") W.risk = i.checked;
+        sync();
+      });
+      $("#eng").addEventListener("input", function () {
+        W.e = +this.value;
+        sync();
+      });
+      $$("#thm .tab").forEach(function (b) {
+        b.onclick = function () {
+          $$("#thm .tab").forEach(function (x) {
+            x.setAttribute("aria-selected", x === b);
+          });
+          document.documentElement.dataset.theme = b.dataset.v;
+        };
+      });
+      reset();
+    </script>
+  </body>
+</html>

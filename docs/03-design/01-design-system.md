@@ -322,6 +322,37 @@ Reference: option A in `docs/03-design/reference/command-options.html`. Styles a
   closes and returns focus. No results: "No results for “…”. Try a company, contact or
   action." `role="dialog"` with a combobox and listbox. On phones it opens full screen.
 
+## Score explanation (decided: summary card + waterfall)
+
+Reference: option D in `docs/03-design/reference/score-options.html` (use the what-if controls).
+Styles and markup: `score` in the UI kit. Shown in the drawer's **Score** tab; every number comes
+from the scoring service's explanation payload (`02-scoring-and-grading-spec.md`), never
+computed in the UI.
+
+1. **Summary card:** `--ink` card, 20px radius, 18px padding, `--shell` text. Score 40px/700
+   with "/ 100" at 16px and 60% opacity; the grade pill on the right (inverted: `--shell` fill,
+   `--ink` text). Below, one plain sentence built from the payload: the stage and its starting
+   points, then the factor costing the most and its reason ("It is in **Negotiate**, which starts
+   it at 75. It loses most on **committee coverage 70%** (no Technical, Procurement buyer) and 1
+   other factor."). If nothing pulls it down: "Nothing is holding it back." Weighted value
+   underneath at 13px, 65% opacity. A change since yesterday shows as a small "+4" chip.
+2. **Where the points went:** a waterfall. Rows of label (92px, `--mute`) · track (22px,
+   `--soft`, 8px radius) · points (right, 700, tabular). First row is the stage's starting
+   points as a solid `--ink` bar; each factor below 1.0 is a striped segment showing the points
+   it removed ("−9"); factors at 1.0 are left out; the last row is the final score in solid
+   `--ink` with a bold label.
+3. **Grade scale:** section title "Grade · 17 points to Platinum" (or the missing rule, e.g.
+   "needs economic buyer + budget for Platinum"; "Top grade" at Platinum). Four bands
+   (Bronze <35 · Silver 35–54 · Gold 55–74 · Platinum ≥75) sized to their ranges, 12px tall;
+   the current grade's band is `--ink`, others `--line`; a 2px marker with a black value pill
+   sits at the score.
+4. **Next best actions:** up to three `--soft` rows (14px radius) with a black arrow circle,
+   the action and the points it would add ("+5") on the right; clicking opens the right form.
+
+Section titles are 12px/600 uppercase `--mute`. Bars animate their width over 400ms (none with
+reduced motion). The waterfall has a text equivalent for screen readers ("Stage 75, committee
+minus 9, engagement minus 8, score 58").
+
 ## Components (shadcn, restyled to the above)
 
 KpiCard (icon circle, big number, two-line label; one may be highlighted with a black icon and

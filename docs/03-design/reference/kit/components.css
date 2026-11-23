@@ -1576,3 +1576,199 @@ svg {
     border-radius: 0;
   }
 }
+
+/* ---------- Score explanation (summary card + waterfall + grade scale) ---------- */
+.score {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+.score__title {
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--mute);
+}
+.score-card {
+  background: var(--ink);
+  color: var(--shell);
+  border-radius: 20px;
+  padding: 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.score-card__top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.score-card__num {
+  font-size: 40px;
+  font-weight: 700;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+}
+.score-card__num small {
+  font-size: 16px;
+  opacity: 0.6;
+}
+.score-card .pill {
+  background: var(--shell);
+  color: var(--ink);
+  border-color: var(--shell);
+  font-weight: 600;
+}
+.score-card__reason {
+  font-size: 14px;
+  line-height: 1.55;
+  opacity: 0.9;
+}
+.score-card__reason b {
+  font-weight: 700;
+}
+.score-card__value {
+  font-size: 13px;
+  opacity: 0.65;
+}
+.score-card__change {
+  font-size: 12px;
+  font-weight: 700;
+  border-radius: var(--r-pill);
+  padding: 2px 8px;
+  background: var(--shell);
+  color: var(--ink);
+  vertical-align: middle;
+}
+.waterfall {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.waterfall__row {
+  display: grid;
+  grid-template-columns: 92px 1fr 34px;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+}
+.waterfall__label {
+  color: var(--mute);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.waterfall__track {
+  position: relative;
+  height: 22px;
+  background: var(--soft);
+  border-radius: 8px;
+}
+.waterfall__bar {
+  position: absolute;
+  top: 3px;
+  bottom: 3px;
+  border-radius: 6px;
+  background: var(--ink);
+  transition:
+    left 400ms,
+    width 400ms;
+}
+.waterfall__row--drop .waterfall__bar {
+  background: repeating-linear-gradient(45deg, var(--bar2) 0 4px, var(--line) 4px 8px);
+}
+.waterfall__points {
+  text-align: right;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+.waterfall__row--total .waterfall__label {
+  color: var(--ink);
+  font-weight: 700;
+}
+.grade-scale {
+  position: relative;
+  margin-top: 18px;
+}
+.grade-scale__bands,
+.grade-scale__labels {
+  display: grid;
+  grid-template-columns: 35fr 20fr 20fr 25fr;
+  gap: 3px;
+}
+.grade-scale__bands {
+  height: 12px;
+}
+.grade-scale__bands > i {
+  border-radius: 4px;
+  background: var(--line);
+}
+.grade-scale__bands > i.is-current {
+  background: var(--ink);
+}
+.grade-scale__labels {
+  font-size: 11px;
+  color: var(--mute);
+  margin-top: 4px;
+}
+.grade-scale__marker {
+  position: absolute;
+  top: -8px;
+  width: 2px;
+  height: 28px;
+  background: var(--ink);
+  border-radius: 2px;
+  transition: left 400ms;
+}
+.grade-scale__marker::after {
+  content: attr(data-value);
+  position: absolute;
+  top: -20px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 11px;
+  font-weight: 700;
+  background: var(--ink);
+  color: var(--shell);
+  border-radius: var(--r-pill);
+  padding: 1px 7px;
+}
+.nba {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.nba__item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  border: 0;
+  background: var(--soft);
+  border-radius: 14px;
+  padding: 10px 12px;
+  font-size: 13px;
+  font-weight: 500;
+  text-align: left;
+  transition: background var(--t-fast);
+}
+.nba__item:hover {
+  background: var(--line);
+}
+.nba__icon {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: var(--ink);
+  color: var(--shell);
+  display: grid;
+  place-items: center;
+  font-size: 11px;
+  flex: none;
+}
+.nba__lift {
+  margin-left: auto;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--mute);
+}
