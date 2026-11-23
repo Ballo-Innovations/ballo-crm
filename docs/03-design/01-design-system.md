@@ -166,12 +166,17 @@ Reference: option A in `docs/03-design/reference/toast-options.html` (press the 
 
 ## Empty, loading and error states (decided)
 
-Reference: option D in `docs/03-design/reference/states-options.html` (use its state switch).
-Every list and page has all four.
+Reference: `docs/03-design/reference/page-states.html` (the consolidated page; switch between
+the five states). The options considered are in `states-options.html`. Every list and page has
+all five: loaded, loading, empty, no results, error.
 
-- **Loading:** skeletons in the exact shapes of the real content (KPI cards, rows, avatars,
-  pills) in `--line` / `--soft`, with a left-to-right shimmer (1.3s). Never a spinner for a
-  page or list. Buttons and the top bar stay usable.
+- **Loading:** the content area (KPI cards and rows) shows generic placeholder content blurred
+  (`blur(7px)`, greyscale, 50% opacity) with the black loader pill centred on top: a white
+  circle with a spinner and a short message ("Loading leads…"). The page header, search and
+  buttons stay sharp and usable. When the data arrives the pill fades and the content sharpens
+  into focus over 600ms. Show nothing for the first 300ms so fast loads never flash, reserve
+  the real layout so nothing jumps, and drop the motion when the user prefers reduced motion.
+  Spinners appear only inside the loader pill and in loading buttons, never on their own.
 - **Empty (first use):** the page never goes blank. Show 3–4 example rows behind the message,
   **blurred** (`blur(5px)`, greyscale, ~55% opacity, fading out downwards) so there is no
   readable text, only a hint of what will appear. Centred on top: title ("Your leads will
@@ -202,7 +207,7 @@ ContractStatusStepper · SignaturePad.
 
 - Every empty state has a CTA.
 - Every number with a computation has an ⓘ → drawer.
-- Loading = skeletons in the same rounded shapes, not spinners.
+- Loading = blurred placeholder content with the loader pill (see Page states).
 - Toast on every write, with undo where cheap.
 - Hover states on everything clickable (soft background or a 3px lift on cards).
 - Check every screen at desktop and 390px, in light and dark.
