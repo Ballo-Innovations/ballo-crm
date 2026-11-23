@@ -353,6 +353,32 @@ Section titles are 12px/600 uppercase `--mute`. Bars animate their width over 40
 reduced motion). The waterfall has a text equivalent for screen readers ("Stage 75, committee
 minus 9, engagement minus 8, score 58").
 
+## Activity timeline (decided: up next + weekly log)
+
+Reference: option F in `docs/03-design/reference/timeline-options-2.html`. Styles and markup:
+`activity` in the UI kit. Shown in the drawer's **Activity** tab (and on account pages).
+
+1. **Log box:** one `--soft` pill ("Log a note, call or meeting…") with a round black send
+   button (faded until there is text). On focus it gets the `--ink` outline and shows type pills
+   (Note · Call · Meeting) below. Enter logs it; the new row slides in at the top of "This
+   week" and a toast confirms (meetings also show their engagement points).
+2. **Up next card:** when a meeting is scheduled, a black card (22px radius, 16px padding) pins it
+   above everything: "UP NEXT" label (12px uppercase, 60% opacity), a countdown pill on the
+   right ("in 3 days", `--shell` fill), the title (18px/600), attendee faces (overlapping 26px
+   circles) and a white "Join · Thu 26, 10:00" button. Hidden when nothing is scheduled.
+3. **Engagement summary:** three `--soft` tiles (16px radius): meetings, emails and engagement
+   points earned ("+48"), numbers 20px/700 tabular, labels 12px `--mute`.
+4. **Weekly log:** groups titled This week · Last week · then by month (12px uppercase `--mute`).
+   Each row: 34px icon circle (`--soft`; black for score-moving events: stage changes, tours,
+   demos) · title (14px/600) over a one-line summary (12px `--mute`, ellipsis; stage changes read
+   "Score 41 → 58") · on the right the relative time and the points pill (black, "+25") when the
+   event adds engagement. Rows are 16px radius and turn `--soft` on hover, where quick actions
+   appear on the right (reply, edit, delete, as 28px circles). Clicking a row expands it in place.
+
+Newest first; full date on hover; stage and score changes are logged automatically; emails sync
+in; loads 20 at a time as you scroll. Empty: "No activity yet. Log the first call or meeting."
+with the log box focused.
+
 ## Components (shadcn, restyled to the above)
 
 KpiCard (icon circle, big number, two-line label; one may be highlighted with a black icon and
