@@ -537,6 +537,14 @@ FactorList(explanation) · RecommendationCard / NextBestAction row (avatar circl
 stage, grade pill) · Charts (bold pills, see Charts) · KanbanBoard(dnd-kit) · Timeline · CommitteeMap · WhitespaceMatrix · InsightRow ·
 ContractStatusStepper · SignaturePad.
 
+**Built so far (use these, don't rebuild them):** `AppShell` and `CommandPalette`
+(`src/components/shell/`); `notify` for every toast (`src/components/feedback/notify.tsx`,
+never sonner's `toast()` directly); `KpiCard`, `AppButton`, `Pill`, `GradeBadge`,
+`EntityAvatar`, `AvatarStack`, `DataTable`, `DockedSplit` + `DockedDrawer` + `useOpenParam`,
+and the page states `LoadingVeil`, `EmptyState`, `NoResults`, `ErrorState`
+(`src/components/shared/`); `formatZMW` and `formatZMWCompact` (`src/lib/money.ts`). All of
+them render on the `/kit` page.
+
 ## Micro-rules
 
 - Every empty state has a CTA.

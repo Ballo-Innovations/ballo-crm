@@ -3,42 +3,13 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import {
-  BarChart3,
-  Bell,
-  Building2,
-  CalendarDays,
-  ChevronLeft,
-  FileSignature,
-  Kanban,
-  LayoutDashboard,
-  Lightbulb,
-  Menu,
-  Plus,
-  Search,
-  Settings,
-  Target,
-  X,
-  type LucideIcon,
-} from "lucide-react";
-import { toast } from "sonner";
+import { Bell, ChevronLeft, LayoutDashboard, Menu, Plus, Search, X } from "lucide-react";
 
 import { ThemeToggle } from "@/components/shared/theme-toggle";
+import { CommandPalette } from "@/components/shell/command-palette";
+import { NAV_ICONS } from "@/components/shell/nav-icons";
 import { primaryNav, siteConfig } from "@/lib/site";
 import { cn } from "@/lib/utils";
-
-/** Icons live here (not in site.ts) so the nav config stays serialisable. */
-const NAV_ICONS: Record<string, LucideIcon> = {
-  "/dashboard": LayoutDashboard,
-  "/pipeline": Kanban,
-  "/accounts": Building2,
-  "/leads": Target,
-  "/forecast": BarChart3,
-  "/engagement": CalendarDays,
-  "/contracts": FileSignature,
-  "/intelligence": Lightbulb,
-  "/settings": Settings,
-};
 
 const COLLAPSE_KEY = "ballo:sidebar-collapsed";
 
@@ -52,6 +23,8 @@ export function AppShell({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const [collapsed, setCollapsed] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [searchOpen, setSearchOpen] = useState(false);
+  const openSearch = () => setSearchOpen(true);
 
   useEffect(() => {
     try {
@@ -74,7 +47,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
     const onKey = (e: KeyboardEvent) => {
       if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === "k") {
         e.preventDefault();
-        openSearch();
+        setSearchOpen((o) => !o);
       }
     };
     window.addEventListener("keydown", onKey);
@@ -225,7 +198,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
             <div className="ml-auto flex items-center gap-2">
               <button
                 type="button"
-                onClick={() => toast("Quick add is coming with the create forms")}
+                onClick={openSearch}
                 className="bg-ink text-shell hidden h-11 items-center gap-2 rounded-full pr-5 pl-1.5 text-sm font-semibold transition-transform active:scale-[0.97] sm:flex"
               >
                 <span className="bg-shell text-ink grid size-[34px] place-items-center rounded-full">
@@ -256,12 +229,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
           </main>
         </div>
       </div>
+      <CommandPalette open={searchOpen} onOpenChange={setSearchOpen} />
     </div>
   );
-}
-
-function openSearch() {
-  toast("Search (⌘K) is coming next", {
-    description: "The command palette is designed; building it is a follow-up ticket.",
-  });
 }
