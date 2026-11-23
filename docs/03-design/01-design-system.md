@@ -193,6 +193,33 @@ all five: loaded, loading, empty, no results, error.
 - **Copy:** say what the thing is and what to do next; no blame, no jargon, no raw error
   codes in the message.
 
+## Modals and confirm dialogs (decided: centred card)
+
+Reference: option A in `docs/03-design/reference/modal-options.html` (use the drawer buttons).
+
+- **When:** only for decisions that must be made before continuing: destructive actions (Mark
+  as lost, Delete), discarding unsaved changes, and app-wide confirmations (sign out). Viewing
+  and editing records always happens in the drawer, never in a modal.
+- **Look:** a `--card` card centred in the window, 440px wide (max: window minus 32px), 28px
+  radius, 24px padding, large soft shadow, over a 32% black scrim. Top to bottom: a 48px icon
+  circle (`--soft`, or red-tinted with a red icon for destructive actions), the title as one
+  question (20px/600), one line saying the consequence (14px `--mute`), any inputs, then the
+  actions. A round ✕ sits in the top right corner.
+- **Actions:** safe choice on the left as an outline pill (Cancel, Keep editing); the action on
+  the right named for what it does ("Mark as lost", "Delete", "Discard"), never "OK". Solid red
+  only for destructive actions, black otherwise. On phones the card spans the width minus 12px
+  each side and the buttons stack full width with the action on top.
+- **Inputs inside:** use the form styles. Mark as lost requires a reason (chips: Price, Chose a
+  competitor, No budget, Timing, No decision, Other) and takes an optional note; the action is
+  blocked with an inline error until a reason is picked. Permanent deletes require typing the
+  record's name; the Delete button stays disabled until it matches.
+- **Motion:** fades in and scales from 97% to 100% over 220ms; the scrim fades over 220ms.
+- **Behaviour:** focus moves into the dialog (first input, else Cancel) and returns to the
+  button that opened it; focus stays inside while open; Esc, ✕ and clicking the scrim cancel,
+  except while saving. The action shows a spinner and blocks repeat clicks, then the dialog
+  closes and a toast confirms (with Undo where the action can be reversed, e.g. Mark as lost).
+  `role="dialog"`, `aria-modal="true"`, labelled by the title.
+
 ## Components (shadcn, restyled to the above)
 
 KpiCard (icon circle, big number, two-line label; one may be highlighted with a black icon and
