@@ -395,6 +395,117 @@
       </section>
 
       <section class="sec">
+        <h2>Activity timeline</h2>
+        <p>
+          Drawer Activity tab: log box, up next card, engagement summary and the weekly log. Hover a
+          row for quick actions.
+        </p>
+        <div class="card activity" style="max-width: 460px">
+          <div class="log-box" id="logbox">
+            <div class="log-box__row">
+              <input id="login" placeholder="Log a note, call or meeting…" /><button
+                class="log-box__send"
+                aria-label="Log"
+                id="logsend"
+              >
+                ↑
+              </button>
+            </div>
+            <div class="log-box__types tabs">
+              <button class="tab" aria-selected="true">✎ Note</button
+              ><button class="tab" aria-selected="false">☏ Call</button
+              ><button class="tab" aria-selected="false">◷ Meeting</button>
+            </div>
+          </div>
+          <div class="up-next">
+            <div class="up-next__top">
+              <span class="up-next__label">Up next</span
+              ><span class="up-next__countdown">in 3 days</span>
+            </div>
+            <span class="up-next__title">Exec meeting · pricing and rollout</span>
+            <div class="up-next__foot">
+              <span class="faces"
+                ><span class="face">RP</span><span class="face">CM</span
+                ><span class="face">GM</span></span
+              ><button class="btn btn--sm">Join · Thu 26, 10:00</button>
+            </div>
+          </div>
+          <div class="activity__stats">
+            <div class="activity__stat"><b>2</b>meetings</div>
+            <div class="activity__stat"><b>1</b>email</div>
+            <div class="activity__stat"><b>+48</b>engagement</div>
+          </div>
+          <div class="activity__group" id="thisweek">
+            <span class="activity__group-title">This week</span>
+            <div class="event">
+              <span class="event__icon">✉</span
+              ><span class="event__text"
+                ><span class="event__title">Re: Revised quote v3</span
+                ><span class="event__summary"
+                  >Thanks George, the phased option works better for us.</span
+                ></span
+              ><span class="event__side">5h ago<span class="event__points">+3</span></span
+              ><span class="event__actions"
+                ><button aria-label="Reply">↩</button><button aria-label="Edit">✎</button
+                ><button aria-label="Delete">✕</button></span
+              >
+            </div>
+            <div class="event event--key">
+              <span class="event__icon">↗</span
+              ><span class="event__text"
+                ><span class="event__title">Propose → Negotiate</span
+                ><span class="event__summary">Score 41 → 58</span></span
+              ><span class="event__side">1d ago</span
+              ><span class="event__actions"
+                ><button aria-label="Reply">↩</button><button aria-label="Edit">✎</button
+                ><button aria-label="Delete">✕</button></span
+              >
+            </div>
+            <div class="event">
+              <span class="event__icon">☏</span
+              ><span class="event__text"
+                ><span class="event__title">Call with procurement · 14 min</span
+                ><span class="event__summary">They need our tax clearance certificate.</span></span
+              ><span class="event__side">1d ago</span
+              ><span class="event__actions"
+                ><button aria-label="Reply">↩</button><button aria-label="Edit">✎</button
+                ><button aria-label="Delete">✕</button></span
+              >
+            </div>
+          </div>
+          <div class="activity__group">
+            <span class="activity__group-title">Last week</span>
+            <div class="event event--key">
+              <span class="event__icon">⌂</span
+              ><span class="event__text"
+                ><span class="event__title">Data-centre tour</span
+                ><span class="event__summary"
+                  >4 attendees, including the technical lead.</span
+                ></span
+              ><span class="event__side">5d ago<span class="event__points">+25</span></span
+              ><span class="event__actions"
+                ><button aria-label="Reply">↩</button><button aria-label="Edit">✎</button
+                ><button aria-label="Delete">✕</button></span
+              >
+            </div>
+            <div class="event event--key">
+              <span class="event__icon">▶</span
+              ><span class="event__text"
+                ><span class="event__title">Network monitoring demo</span
+                ><span class="event__summary"
+                  >SLA dashboards. Operations team very positive.</span
+                ></span
+              ><span class="event__side">9d ago<span class="event__points">+20</span></span
+              ><span class="event__actions"
+                ><button aria-label="Reply">↩</button><button aria-label="Edit">✎</button
+                ><button aria-label="Delete">✕</button></span
+              >
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="sec">
         <h2>Page states</h2>
         <p>Loading, empty (first use), no results, error. Switch:</p>
         <div class="tabs tabs--segmented" role="tablist" id="states">
@@ -1041,6 +1152,47 @@
         },
         true,
       );
+
+      // activity log box
+      (function () {
+        var box = $("#logbox"),
+          input = $("#login");
+        input.addEventListener("input", function () {
+          box.classList.toggle("has-text", !!input.value.trim());
+        });
+        $$(".log-box__types .tab").forEach(function (t) {
+          t.addEventListener("mousedown", function (e) {
+            e.preventDefault();
+            $$(".log-box__types .tab").forEach(function (x) {
+              x.setAttribute("aria-selected", x === t);
+            });
+          });
+        });
+        function logIt() {
+          var v = input.value.trim();
+          if (!v) return input.focus();
+          var type = $('.log-box__types .tab[aria-selected="true"]').textContent.slice(2);
+          var row = document.createElement("div");
+          row.className = "event";
+          row.innerHTML =
+            '<span class="event__icon">' +
+            { Note: "✎", Call: "☏", Meeting: "◷" }[type] +
+            '</span><span class="event__text"><span class="event__title"></span><span class="event__summary"></span></span><span class="event__side">just now</span>';
+          row.querySelector(".event__title").textContent = type + " logged";
+          row.querySelector(".event__summary").textContent = v;
+          $("#thisweek .activity__group-title").after(row);
+          input.value = "";
+          box.classList.remove("has-text");
+          toast(type + " logged");
+        }
+        $("#logsend").addEventListener("click", logIt);
+        input.addEventListener("keydown", function (e) {
+          if (e.key === "Enter") {
+            e.preventDefault();
+            logIt();
+          }
+        });
+      })();
     </script>
   </body>
 </html>
