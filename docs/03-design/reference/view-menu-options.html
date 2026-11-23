@@ -1,0 +1,966 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>View Menu Options</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Urbanist:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="kit/tokens.css" />
+    <link rel="stylesheet" href="kit/components.css" />
+    <style>
+      body {
+        padding: 40px 32px 80px;
+      }
+      .wrap {
+        max-width: 1300px;
+        margin: auto;
+      }
+      .page-hd {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-end;
+        gap: 16px;
+        flex-wrap: wrap;
+        margin-bottom: 28px;
+      }
+      .page-hd h1 {
+        font-size: 30px;
+        font-weight: 700;
+      }
+      .page-hd p {
+        color: var(--mute);
+        margin-top: 6px;
+        font-size: 15px;
+        max-width: 760px;
+        line-height: 1.5;
+      }
+      .opt {
+        margin-bottom: 48px;
+      }
+      .opt-hd {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin-bottom: 6px;
+      }
+      .badge {
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        background: var(--ink);
+        color: var(--shell);
+        display: grid;
+        place-items: center;
+        font-weight: 700;
+        font-size: 15px;
+        flex: none;
+      }
+      .opt-hd h2 {
+        font-size: 22px;
+        font-weight: 600;
+      }
+      .opt-desc {
+        color: var(--mute);
+        font-size: 15px;
+        margin: 0 0 14px 48px;
+        line-height: 1.5;
+        max-width: 900px;
+      }
+      .frame {
+        background: var(--main);
+        border-radius: 28px;
+        padding: 18px;
+      }
+      .frame .card {
+        display: flex;
+        flex-direction: column;
+        gap: 14px;
+        min-height: 520px;
+      }
+      .bar {
+        display: flex;
+        gap: 8px;
+        align-items: center;
+        flex-wrap: wrap;
+      }
+      .search {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        background: var(--soft);
+        border-radius: 999px;
+        height: 40px;
+        padding: 0 14px;
+        color: var(--mute);
+        flex: 0 1 280px;
+        min-width: 180px;
+      }
+      .search input {
+        border: 0;
+        background: none;
+        outline: none;
+        flex: 1;
+        min-width: 0;
+        font-size: 14px;
+      }
+      .sp {
+        flex: 1;
+      }
+      .count {
+        font-size: 13px;
+        color: var(--mute);
+      }
+      .fbtn {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        height: 40px;
+        padding: 0 14px;
+        border: 0;
+        border-radius: 999px;
+        background: var(--soft);
+        font-size: 14px;
+        font-weight: 600;
+        transition: background 0.15s;
+      }
+      .fbtn:hover {
+        background: var(--line);
+      }
+      .fbtn.on {
+        background: var(--ink);
+        color: var(--shell);
+      }
+      .fbtn .lbl {
+        color: var(--mute);
+        font-weight: 500;
+      }
+      .fbtn.on .lbl {
+        color: color-mix(in srgb, var(--shell) 65%, transparent);
+      }
+      .fbtn .chev {
+        transition: transform 0.2s;
+      }
+      .fbtn.open .chev {
+        transform: rotate(180deg);
+      }
+      .anchor {
+        position: relative;
+      }
+      .menu {
+        position: absolute;
+        z-index: 20;
+        top: 48px;
+        left: 0;
+        background: var(--card);
+        border: 1px solid var(--line);
+        border-radius: 24px;
+        box-shadow: 0 24px 60px rgba(0, 0, 0, 0.16);
+        display: none;
+        padding: 8px;
+        animation: pin 0.18s ease;
+      }
+      .menu.on {
+        display: block;
+      }
+      @keyframes pin {
+        from {
+          opacity: 0;
+          transform: translateY(-4px) scale(0.98);
+        }
+      }
+      .list {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+      }
+      .list .row {
+        font-size: 14px;
+      }
+      .list .row b {
+        flex: 1;
+        font-weight: 600;
+      }
+      .list .row .m {
+        color: var(--mute);
+        width: 150px;
+      }
+      .mi {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        width: 100%;
+        border: 0;
+        background: none;
+        text-align: left;
+        padding: 10px 12px;
+        border-radius: 16px;
+        font-size: 14px;
+        font-weight: 500;
+        transition: background 0.12s;
+      }
+      .mi:hover,
+      .mi:focus-visible {
+        background: var(--soft);
+        outline: none;
+      }
+      .mi .n {
+        margin-left: auto;
+        font-size: 12px;
+        color: var(--mute);
+        font-variant-numeric: tabular-nums;
+      }
+      .sep {
+        height: 1px;
+        background: var(--line);
+        margin: 6px 8px;
+      }
+      .mh {
+        font-size: 11px;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.07em;
+        color: var(--mute);
+        padding: 8px 12px 4px;
+      }
+      .kbd {
+        font-size: 11px;
+        color: var(--mute);
+        border: 1px solid var(--line);
+        border-radius: 6px;
+        padding: 1px 6px;
+      }
+
+      /* V1 simple */
+      .V1 .menu {
+        width: 280px;
+      }
+      .V1 .mi .ck {
+        width: 18px;
+        display: grid;
+        place-items: center;
+        flex: none;
+      }
+      .V1 .mi.sel {
+        font-weight: 700;
+      }
+
+      /* V2 grouped with icon circles; selected = black pill row */
+      .V2 .menu {
+        width: 330px;
+      }
+      .V2 .mi .ic {
+        width: 34px;
+        height: 34px;
+        border-radius: 50%;
+        background: var(--soft);
+        display: grid;
+        place-items: center;
+        flex: none;
+        font-size: 14px;
+      }
+      .V2 .mi .tx {
+        display: flex;
+        flex-direction: column;
+        min-width: 0;
+      }
+      .V2 .mi .tx small {
+        font-size: 12px;
+        color: var(--mute);
+        font-weight: 400;
+      }
+      .V2 .mi.sel {
+        background: var(--ink);
+        color: var(--shell);
+      }
+      .V2 .mi.sel .ic {
+        background: var(--shell);
+        color: var(--ink);
+      }
+      .V2 .mi.sel small,
+      .V2 .mi.sel .n {
+        color: color-mix(in srgb, var(--shell) 65%, transparent);
+      }
+      .V2 .pin {
+        margin-left: 6px;
+        opacity: 0;
+        border: 0;
+        background: none;
+        font-size: 13px;
+        color: inherit;
+      }
+      .V2 .mi:hover .pin,
+      .V2 .pin.on {
+        opacity: 1;
+      }
+
+      /* V3 searchable with filter summaries + footer */
+      .V3 .menu {
+        width: 380px;
+        padding: 0;
+        overflow: hidden;
+      }
+      .V3 .msearch {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        margin: 10px;
+        background: var(--soft);
+        border-radius: 999px;
+        height: 40px;
+        padding: 0 14px;
+        color: var(--mute);
+      }
+      .V3 .msearch input {
+        border: 0;
+        background: none;
+        outline: none;
+        flex: 1;
+        font-size: 14px;
+      }
+      .V3 .mbody {
+        padding: 0 8px 8px;
+        max-height: 300px;
+        overflow: auto;
+      }
+      .V3 .mi {
+        align-items: flex-start;
+      }
+      .V3 .mi .tx {
+        display: flex;
+        flex-direction: column;
+        gap: 5px;
+        min-width: 0;
+        flex: 1;
+      }
+      .V3 .mi .sum {
+        display: flex;
+        gap: 4px;
+        flex-wrap: wrap;
+      }
+      .V3 .mi .sum span {
+        font-size: 11px;
+        font-weight: 500;
+        background: var(--soft);
+        border: 1px solid var(--line);
+        border-radius: 999px;
+        padding: 1px 8px;
+        color: var(--mute);
+      }
+      .V3 .mi.sel {
+        background: var(--soft);
+      }
+      .V3 .mi.sel .sum span {
+        background: var(--card);
+      }
+      .V3 .mi .ck {
+        width: 22px;
+        height: 22px;
+        border-radius: 50%;
+        flex: none;
+        border: 1.5px solid var(--bar2);
+        display: grid;
+        place-items: center;
+        margin-top: 1px;
+      }
+      .V3 .mi.sel .ck {
+        background: var(--ink);
+        border-color: var(--ink);
+        color: var(--shell);
+        font-size: 11px;
+      }
+      .V3 .mfoot {
+        display: flex;
+        gap: 8px;
+        padding: 10px;
+        border-top: 1px solid var(--line);
+      }
+      .V3 .mfoot .btn {
+        flex: 1;
+      }
+
+      /* V4 inline pills + overflow menu */
+      .V4 .menu {
+        width: 260px;
+        left: auto;
+        right: 0;
+      }
+      .V4 .vstrip {
+        display: flex;
+        gap: 6px;
+        align-items: center;
+        flex-wrap: wrap;
+      }
+
+      .note {
+        background: var(--soft);
+        border-radius: 20px;
+        padding: 18px 20px;
+        font-size: 15px;
+        line-height: 1.6;
+      }
+      @media (max-width: 820px) {
+        body {
+          padding: 20px 12px 60px;
+        }
+        .opt-desc {
+          margin-left: 0;
+        }
+        .menu {
+          position: fixed;
+          left: 8px !important;
+          right: 8px !important;
+          top: auto;
+          bottom: 8px;
+          width: auto !important;
+        }
+        .list .row .m {
+          display: none;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <div class="page-hd">
+        <div>
+          <h1>View menu — 4 options</h1>
+          <p>
+            The <b>View</b> dropdown switches between saved views (All deals, My deals, Closing this
+            month…). Each menu starts open: pick a view and the list changes; set a filter and “Save
+            as new view” appears. This menu style would also be used for the ⋯ row menu and the user
+            menu.
+          </p>
+        </div>
+        <div class="tabs tabs--segmented" id="thm">
+          <button class="tab" aria-selected="true" data-v="light">Light</button
+          ><button class="tab" aria-selected="false" data-v="dark">Dark</button>
+        </div>
+      </div>
+      <div id="opts"></div>
+      <div class="note">
+        <b>Same in every option:</b> ↑ ↓ move through items, Enter picks, Esc closes and returns
+        focus to the button; the current view is in the URL; changing filters on a saved view marks
+        it “edited” with Save / Save as new; team views are read-only for reps; on phones the menu
+        opens as a bottom sheet.
+      </div>
+    </div>
+    <div class="toasts" id="toasts"></div>
+    <script>
+      var $ = function (s, r) {
+          return (r || document).querySelector(s);
+        },
+        $$ = function (s, r) {
+          return [].slice.call((r || document).querySelectorAll(s));
+        };
+      var D = [
+        [
+          "Fibre backbone Lusaka–Ndola",
+          "Kariba Power Co.",
+          "Negotiate",
+          "Gold",
+          6400000,
+          "George M.",
+          "Dec",
+        ],
+        [
+          "Data-centre colocation",
+          "Zedcell Networks",
+          "Negotiate",
+          "Platinum",
+          8900000,
+          "George M.",
+          "Dec",
+        ],
+        [
+          "Tower lease — 40 sites",
+          "Nyali Mobile",
+          "Propose",
+          "Silver",
+          3150000,
+          "Chileshe B.",
+          "Jan",
+        ],
+        [
+          "SD-WAN branch rollout",
+          "Mutual Bank of Lusaka",
+          "Discover",
+          "Bronze",
+          1820000,
+          "George M.",
+          "Feb",
+        ],
+        [
+          "Managed Wi-Fi campus",
+          "Chalimbana University",
+          "Propose",
+          "Silver",
+          900000,
+          "Natasha L.",
+          "Jan",
+        ],
+        ["Dark fibre IRU", "Mwezi Fibre", "Negotiate", "Gold", 5100000, "Chileshe B.", "Dec"],
+        [
+          "Cold-chain IoT pilot",
+          "Kafue Valley Foods",
+          "Qualify",
+          "Bronze",
+          450000,
+          "Natasha L.",
+          "Mar",
+        ],
+        ["Branch connectivity", "Kalulu Retail", "Discover", "Bronze", 1200000, "George M.", "Feb"],
+        [
+          "Smart metering backhaul",
+          "Copperline Power",
+          "Qualify",
+          "Silver",
+          2600000,
+          "Chileshe B.",
+          "Mar",
+        ],
+      ];
+      var VIEWS = [
+        { id: "all", name: "All deals", icon: "▦", grp: "team", f: {}, sum: [] },
+        {
+          id: "mine",
+          name: "My deals",
+          icon: "☺",
+          grp: "mine",
+          f: { o: "George M." },
+          sum: ["Owner: me"],
+        },
+        {
+          id: "month",
+          name: "Closing this month",
+          icon: "◷",
+          grp: "mine",
+          f: { c: "Dec" },
+          sum: ["Close: Dec"],
+        },
+        {
+          id: "hot",
+          name: "Gold & Platinum",
+          icon: "★",
+          grp: "team",
+          f: { g: ["Gold", "Platinum"] },
+          sum: ["Grade: Gold, Platinum"],
+        },
+        {
+          id: "stuck",
+          name: "Negotiating",
+          icon: "↗",
+          grp: "team",
+          f: { s: "Negotiate" },
+          sum: ["Stage: Negotiate"],
+        },
+      ];
+      function kf(n) {
+        return n >= 1e6 ? "K" + (n / 1e6).toFixed(1) + "M" : "K" + Math.round(n / 1e3) + "K";
+      }
+      function ini(n) {
+        var w = n.split(" ");
+        return (w[0][0] + (w[1] ? w[1][0] : "")).toUpperCase();
+      }
+      function rows(v) {
+        return D.filter(function (d) {
+          var f = v.f;
+          if (f.o && d[5] !== f.o) return false;
+          if (f.c && d[6] !== f.c) return false;
+          if (f.g && f.g.indexOf(d[3]) < 0) return false;
+          if (f.s && d[2] !== f.s) return false;
+          return true;
+        });
+      }
+      function V(id) {
+        return VIEWS.filter(function (v) {
+          return v.id === id;
+        })[0];
+      }
+      var S = {};
+      function menuHTML(o, st) {
+        var cur = st.view,
+          edited = st.edited;
+        var save = edited
+          ? '<div class="sep"></div><button class="mi" data-a="save">＋ Save as new view</button><button class="mi" data-a="update">Update “' +
+            V(cur).name +
+            "”</button>"
+          : '<div class="sep"></div><button class="mi" data-a="manage">⚙ Manage views</button>';
+        if (o === "V1")
+          return (
+            '<div class="menu' +
+            (st.open ? " on" : "") +
+            '" role="menu">' +
+            VIEWS.map(function (v) {
+              return (
+                '<button class="mi' +
+                (v.id === cur ? " sel" : "") +
+                '" role="menuitemradio" aria-checked="' +
+                (v.id === cur) +
+                '" data-view="' +
+                v.id +
+                '"><span class="ck">' +
+                (v.id === cur ? "✓" : "") +
+                "</span>" +
+                v.name +
+                '<span class="n">' +
+                rows(v).length +
+                "</span></button>"
+              );
+            }).join("") +
+            save +
+            "</div>"
+          );
+        if (o === "V2") {
+          var g = function (k, t) {
+            return (
+              '<div class="mh">' +
+              t +
+              "</div>" +
+              VIEWS.filter(function (v) {
+                return v.grp === k;
+              })
+                .map(function (v) {
+                  return (
+                    '<button class="mi' +
+                    (v.id === cur ? " sel" : "") +
+                    '" role="menuitemradio" aria-checked="' +
+                    (v.id === cur) +
+                    '" data-view="' +
+                    v.id +
+                    '"><span class="ic">' +
+                    v.icon +
+                    '</span><span class="tx">' +
+                    v.name +
+                    "<small>" +
+                    (v.sum.length ? v.sum.join(" · ") : "No filters") +
+                    '</small></span><span class="n">' +
+                    rows(v).length +
+                    "</span>" +
+                    (k === "mine"
+                      ? '<span class="pin' +
+                        (st.pins[v.id] ? " on" : "") +
+                        '" data-pin="' +
+                        v.id +
+                        '" title="Pin">' +
+                        (st.pins[v.id] ? "★" : "☆") +
+                        "</span>"
+                      : "") +
+                    "</button>"
+                  );
+                })
+                .join("")
+            );
+          };
+          return (
+            '<div class="menu' +
+            (st.open ? " on" : "") +
+            '" role="menu">' +
+            g("mine", "My views") +
+            '<div class="sep"></div>' +
+            g("team", "Team views") +
+            save +
+            "</div>"
+          );
+        }
+        if (o === "V3") {
+          var q = (st.q || "").toLowerCase();
+          var items = VIEWS.filter(function (v) {
+            return v.name.toLowerCase().indexOf(q) >= 0;
+          });
+          return (
+            '<div class="menu' +
+            (st.open ? " on" : "") +
+            '" role="menu"><label class="msearch">⌕<input data-mq placeholder="Find a view" value="' +
+            (st.q || "") +
+            '"></label><div class="mbody">' +
+            (items.length
+              ? items
+                  .map(function (v) {
+                    return (
+                      '<button class="mi' +
+                      (v.id === cur ? " sel" : "") +
+                      '" role="menuitemradio" aria-checked="' +
+                      (v.id === cur) +
+                      '" data-view="' +
+                      v.id +
+                      '"><span class="ck">' +
+                      (v.id === cur ? "✓" : "") +
+                      '</span><span class="tx"><b style="font-weight:600">' +
+                      v.name +
+                      '</b><span class="sum">' +
+                      (v.sum.length
+                        ? v.sum
+                            .map(function (s) {
+                              return "<span>" + s + "</span>";
+                            })
+                            .join("")
+                        : "<span>No filters</span>") +
+                      '</span></span><span class="n">' +
+                      rows(v).length +
+                      "</span></button>"
+                    );
+                  })
+                  .join("")
+              : '<div class="mh" style="text-transform:none;letter-spacing:0;padding:16px 12px">No views match “' +
+                st.q +
+                "”</div>") +
+            '</div><div class="mfoot"><button class="btn btn--secondary btn--sm" data-a="manage">Manage</button><button class="btn btn--primary btn--sm" data-a="save"' +
+            (edited ? "" : " disabled") +
+            ">Save as new view</button></div></div>"
+          );
+        }
+        return (
+          '<div class="menu' +
+          (st.open ? " on" : "") +
+          '" role="menu"><div class="mh">More views</div>' +
+          VIEWS.slice(3)
+            .map(function (v) {
+              return (
+                '<button class="mi' +
+                (v.id === cur ? " sel" : "") +
+                '" data-view="' +
+                v.id +
+                '">' +
+                (v.id === cur ? "✓ " : "") +
+                v.name +
+                '<span class="n">' +
+                rows(v).length +
+                "</span></button>"
+              );
+            })
+            .join("") +
+          save +
+          "</div>"
+        );
+      }
+      function render(o) {
+        var st = S[o],
+          v = V(st.view),
+          el = $('.opt[data-o="' + o + '"] .card'),
+          r = rows(v),
+          bar;
+        var trig =
+          '<span class="anchor"><button class="fbtn' +
+          (st.open ? " open" : "") +
+          '" data-a="toggle" aria-haspopup="menu" aria-expanded="' +
+          st.open +
+          '"><span class="lbl">View:</span> ' +
+          v.name +
+          (st.edited ? ' <span class="lbl">(edited)</span>' : "") +
+          ' <span class="chev">⌄</span></button>' +
+          menuHTML(o, st) +
+          "</span>";
+        if (o === "V4") {
+          var more = VIEWS.slice(3).some(function (x) {
+            return x.id === st.view;
+          });
+          trig =
+            '<div class="vstrip tabs" role="tablist">' +
+            VIEWS.slice(0, 3)
+              .map(function (x) {
+                return (
+                  '<button class="tab" role="tab" aria-selected="' +
+                  (x.id === st.view) +
+                  '" data-view="' +
+                  x.id +
+                  '">' +
+                  x.name +
+                  ' <span class="tab__count">' +
+                  rows(x).length +
+                  "</span></button>"
+                );
+              })
+              .join("") +
+            '<span class="anchor"><button class="fbtn' +
+            (more ? " on" : "") +
+            (st.open ? " open" : "") +
+            '" data-a="toggle">' +
+            (more ? v.name : "More") +
+            ' <span class="chev">⌄</span></button>' +
+            menuHTML(o, st) +
+            "</span></div>";
+        }
+        bar =
+          '<div class="bar">' +
+          trig +
+          '<label class="search">⌕<input placeholder="Search opportunities"></label><button class="fbtn' +
+          (st.edited ? " on" : "") +
+          '" data-a="filter">⚲ Filters' +
+          (st.edited
+            ? ' <span class="tab__count" style="background:var(--shell);color:var(--ink)">1</span>'
+            : "") +
+          '</button><span class="sp"></span><span class="count">' +
+          r.length +
+          " of " +
+          D.length +
+          "</span></div>";
+        el.innerHTML =
+          bar +
+          '<div class="list">' +
+          r
+            .map(function (d) {
+              return (
+                '<div class="row"><span class="avatar">' +
+                ini(d[1]) +
+                "</span><b>" +
+                d[0] +
+                '</b><span class="m">' +
+                d[1] +
+                '</span><span class="pill' +
+                (d[3] === "Gold" || d[3] === "Platinum" ? " pill--strong" : "") +
+                '">' +
+                d[3] +
+                '</span><span class="money" style="width:64px">' +
+                kf(d[4]) +
+                "</span></div>"
+              );
+            })
+            .join("") +
+          "</div>";
+        if (st.focusQ) {
+          var i = $("[data-mq]", el);
+          if (i) {
+            i.focus();
+            i.setSelectionRange(i.value.length, i.value.length);
+          }
+          st.focusQ = false;
+        }
+      }
+      var DESC = {
+        V1: [
+          "Simple list",
+          "A clean list: a tick on the current view, the result count on the right, then Manage views (or Save / Update when you have changed filters). Plain and fast.",
+        ],
+        V2: [
+          "Grouped with icons",
+          "“My views” and “Team views” groups. Each item has an icon circle, the filters it applies as a subtitle, and a count; the current view is a black pill row with a white icon circle, like the nav. Pin your favourites with ☆.",
+        ],
+        V3: [
+          "Searchable with filter tags",
+          "A search box on top, each view shows its filters as small tags, a round tick for the current one, and a footer with Manage and Save as new view. Best once people collect many views.",
+        ],
+        V4: [
+          "Pills + More",
+          "No dropdown for the common views: the first three are pill tabs right in the bar, and the rest sit in a small “More” menu. Fastest to switch, takes more width.",
+        ],
+      };
+      var h = "";
+      ["V1", "V2", "V3", "V4"].forEach(function (o) {
+        S[o] = { view: "all", open: o !== "V4", edited: false, pins: { mine: true }, q: "" };
+        h +=
+          '<section class="opt ' +
+          o +
+          '" data-o="' +
+          o +
+          '"><div class="opt-hd"><div class="badge">' +
+          o +
+          "</div><h2>" +
+          DESC[o][0] +
+          '</h2></div><p class="opt-desc">' +
+          DESC[o][1] +
+          '</p><div class="frame"><div class="card"></div></div></section>';
+      });
+      $("#opts").innerHTML = h;
+      ["V1", "V2", "V3", "V4"].forEach(render);
+      function toast(m) {
+        var t = document.createElement("div");
+        t.className = "toast";
+        t.innerHTML = '<span class="toast__icon">✓</span><span>' + m + "</span>";
+        $("#toasts").appendChild(t);
+        setTimeout(function () {
+          t.remove();
+        }, 3000);
+      }
+      document.addEventListener("click", function (e) {
+        var op = e.target.closest(".opt");
+        Object.keys(S).forEach(function (o) {
+          if (S[o].open && (!op || op.dataset.o !== o)) {
+            S[o].open = false;
+            render(o);
+          }
+        });
+        if (!op) return;
+        var o = op.dataset.o,
+          st = S[o],
+          t;
+        if ((t = e.target.closest("[data-pin]"))) {
+          e.stopPropagation();
+          st.pins[t.dataset.pin] = !st.pins[t.dataset.pin];
+          return render(o);
+        }
+        if ((t = e.target.closest("[data-view]"))) {
+          st.view = t.dataset.view;
+          st.edited = false;
+          st.open = false;
+          render(o);
+          return;
+        }
+        if (e.target.closest("[data-mq]")) return;
+        if ((t = e.target.closest("[data-a]"))) {
+          var a = t.dataset.a;
+          if (a === "toggle") st.open = !st.open;
+          if (a === "filter") {
+            st.edited = !st.edited;
+            st.open = o !== "V4" || st.open;
+          }
+          if (a === "save") {
+            st.edited = false;
+            st.open = false;
+            toast("View saved · “My filter”");
+          }
+          if (a === "update") {
+            st.edited = false;
+            st.open = false;
+            toast("“" + V(st.view).name + "” updated");
+          }
+          if (a === "manage") {
+            st.open = false;
+            toast("Would open Manage views in the drawer");
+          }
+          return render(o);
+        }
+        if (st.open && !e.target.closest(".menu")) {
+          st.open = false;
+          render(o);
+        }
+      });
+      document.addEventListener("input", function (e) {
+        var i = e.target.closest("[data-mq]");
+        if (!i) return;
+        S.V3.q = i.value;
+        S.V3.focusQ = true;
+        render("V3");
+      });
+      document.addEventListener("keydown", function (e) {
+        var m = e.target.closest(".menu");
+        if (e.key === "Escape") {
+          Object.keys(S).forEach(function (o) {
+            if (S[o].open) {
+              S[o].open = false;
+              render(o);
+            }
+          });
+          return;
+        }
+        if (m && (e.key === "ArrowDown" || e.key === "ArrowUp")) {
+          e.preventDefault();
+          var it = $$(".mi:not([disabled])", m),
+            i = it.indexOf(document.activeElement);
+          i = e.key === "ArrowDown" ? (i + 1) % it.length : (i - 1 + it.length) % it.length;
+          it[i].focus();
+        }
+      });
+      $$("#thm .tab").forEach(function (b) {
+        b.onclick = function () {
+          $$("#thm .tab").forEach(function (x) {
+            x.setAttribute("aria-selected", x === b);
+          });
+          document.documentElement.dataset.theme = b.dataset.v;
+        };
+      });
+    </script>
+  </body>
+</html>
