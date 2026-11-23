@@ -245,6 +245,30 @@ Reference: option B in `docs/03-design/reference/tabs-options.html` (click the t
   `role="tab"` with `aria-selected` and roving tabindex. On phones a row scrolls sideways
   rather than wrapping. Never more than 6 options in a row; content swaps with a short fade.
 
+## Pipeline board (decided: compact cards)
+
+Reference: option A in `docs/03-design/reference/kanban-options.html` (drag the cards). Styles
+and markup: `kanban` in the UI kit.
+
+- **Columns** are the scoring stages: Qualify · Discover · Propose · Negotiate. Each column is a
+  22px-radius area tinted `--card` at 35% on the grey panel, 240px minimum width, 12px gaps.
+- **Column header:** stage name (15px/600) with the count in a small white pill; on the right
+  the total and weighted total (`K3.0M · w K305K`, 12px `--mute`, tabular numbers). Under it a
+  4px bar showing the stage's share of the whole pipeline value (`--ink` on `--line`).
+- **Card:** `--card`, 18px radius, 12px × 14px padding: opportunity name (14px/600), account
+  (12px `--mute`), then the grade pill on the left and the value (14px/700, `formatZMW`
+  compact) on the right. Hover lifts 2px with a soft shadow. Clicking opens the drawer.
+- **Dragging:** the card being dragged fades to 35%; the target column shows a 2px dashed
+  `--ink` outline. On drop, totals update and a toast says "Moved to Propose" with Undo.
+  Keyboard: focus a card and press ← → to move it a stage (dnd-kit keyboard sensor), announced
+  to screen readers.
+- **Won and Lost** are not columns: close a deal from the drawer, or by dropping on a Won/Lost
+  zone that appears at the bottom of the board while dragging. Both confirm first; Lost needs a
+  reason (see Modals).
+- **Add opportunity:** a dashed pill at the foot of each column that opens the create form in
+  the drawer with the stage preset.
+- **Phone:** columns are 82% wide and snap one at a time; swipe between stages.
+
 ## Components (shadcn, restyled to the above)
 
 KpiCard (icon circle, big number, two-line label; one may be highlighted with a black icon and

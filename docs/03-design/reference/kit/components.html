@@ -276,6 +276,15 @@
       </section>
 
       <section class="sec">
+        <h2>Pipeline board</h2>
+        <p>
+          Compact cards. Drag a card to another stage (or focus it and press the arrow keys); totals
+          update and a toast offers Undo.
+        </p>
+        <div class="kanban" id="kanban"></div>
+      </section>
+
+      <section class="sec">
         <h2>Page states</h2>
         <p>Loading, empty (first use), no results, error. Switch:</p>
         <div class="tabs tabs--segmented" role="tablist" id="states">
@@ -457,6 +466,122 @@
             '<div class="state" role="alert"><div class="illo illo--error"><i></i><i></i><i></i><span class="illo__badge">!</span></div><div class="state__title">Couldn’t load leads</div><p class="state__text">The server didn’t respond. Your data is safe — try again in a moment.</p><div class="state__actions"><button class="btn btn--primary">Retry</button><button class="btn btn--ghost">Contact support</button></div></div>';
       }
       showState("loading");
+
+      // pipeline board
+      var ST = [
+        ["Qualify", 0.1],
+        ["Discover", 0.25],
+        ["Propose", 0.5],
+        ["Negotiate", 0.75],
+      ];
+      var DEALS = [
+        ["Cold-chain IoT pilot", "Kafue Valley Foods", 450000, "Bronze · 22", 0],
+        ["Smart metering backhaul", "Copperline Power", 2600000, "Silver · 44", 0],
+        ["SD-WAN branch rollout", "Mutual Bank of Lusaka", 1820000, "Bronze · 28", 1],
+        ["Tower lease — 40 sites", "Nyali Mobile", 3150000, "Silver · 47", 2],
+        ["Fibre backbone Lusaka–Ndola", "Kariba Power Co.", 6400000, "Gold · 58", 3],
+        ["Data-centre colocation", "Zedcell Networks", 8900000, "Platinum · 81", 3],
+      ];
+      function kf(n) {
+        return n >= 1e6 ? "K" + (n / 1e6).toFixed(1) + "M" : "K" + Math.round(n / 1e3) + "K";
+      }
+      function drawBoard() {
+        var grand = DEALS.reduce(function (a, d) {
+          return a + d[2];
+        }, 0);
+        $("#kanban").innerHTML = ST.map(function (st, si) {
+          var it = DEALS.map(function (d, i) {
+            return [d, i];
+          }).filter(function (x) {
+            return x[0][4] === si;
+          });
+          var tot = it.reduce(function (a, x) {
+            return a + x[0][2];
+          }, 0);
+          return (
+            '<div class="kanban__col" data-s="' +
+            si +
+            '"><div class="kanban__head"><span><span class="kanban__stage">' +
+            st[0] +
+            '</span><span class="kanban__count">' +
+            it.length +
+            '</span></span><span class="kanban__totals">' +
+            kf(tot) +
+            " · w " +
+            kf(tot * st[1]) +
+            '</span></div><div class="kanban__share"><i style="width:' +
+            (tot / grand) * 100 +
+            '%"></i></div><div class="kanban__cards">' +
+            it
+              .map(function (x) {
+                var d = x[0],
+                  strong = /Gold|Platinum/.test(d[3]);
+                return (
+                  '<div class="deal" draggable="true" tabindex="0" data-i="' +
+                  x[1] +
+                  '"><span class="deal__name">' +
+                  d[0] +
+                  '</span><span class="deal__account">' +
+                  d[1] +
+                  '</span><div class="deal__foot"><span class="pill' +
+                  (strong ? " pill--strong" : "") +
+                  '">' +
+                  d[3] +
+                  '</span><span class="deal__value">' +
+                  kf(d[2]) +
+                  "</span></div></div>"
+                );
+              })
+              .join("") +
+            '</div><button class="kanban__add">+ Add opportunity</button></div>'
+          );
+        }).join("");
+      }
+      function moveDeal(i, to) {
+        if (to === DEALS[i][4] || to < 0 || to > 3) return;
+        DEALS[i][4] = to;
+        drawBoard();
+        toast("Moved to " + ST[to][0], true);
+        var c = $('.deal[data-i="' + i + '"]');
+        if (c) c.focus();
+      }
+      var dragI = null;
+      document.addEventListener("dragstart", function (e) {
+        var c = e.target.closest(".deal");
+        if (!c) return;
+        dragI = +c.dataset.i;
+        c.classList.add("is-dragging");
+        e.dataTransfer.setData("text/plain", "x");
+      });
+      document.addEventListener("dragend", function () {
+        $$(".is-over, .is-dragging").forEach(function (x) {
+          x.classList.toggle("is-over", false);
+          x.classList.toggle("is-dragging", false);
+        });
+      });
+      document.addEventListener("dragover", function (e) {
+        var c = e.target.closest(".kanban__col");
+        if (!c || dragI === null) return;
+        e.preventDefault();
+        $$(".kanban__col").forEach(function (x) {
+          x.classList.toggle("is-over", x === c);
+        });
+      });
+      document.addEventListener("drop", function (e) {
+        var c = e.target.closest(".kanban__col");
+        if (!c || dragI === null) return;
+        e.preventDefault();
+        moveDeal(dragI, +c.dataset.s);
+        dragI = null;
+      });
+      document.addEventListener("keydown", function (e) {
+        var c = e.target.closest(".deal");
+        if (!c) return;
+        var i = +c.dataset.i;
+        if (e.key === "ArrowRight") moveDeal(i, DEALS[i][4] + 1);
+        if (e.key === "ArrowLeft") moveDeal(i, DEALS[i][4] - 1);
+      });
+      drawBoard();
     </script>
   </body>
 </html>
