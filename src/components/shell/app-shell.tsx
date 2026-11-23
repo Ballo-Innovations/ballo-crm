@@ -16,7 +16,7 @@ import {
   Menu,
   Plus,
   Search,
-  ShieldCheck,
+  Settings,
   Target,
   X,
   type LucideIcon,
@@ -32,12 +32,12 @@ const NAV_ICONS: Record<string, LucideIcon> = {
   "/dashboard": LayoutDashboard,
   "/pipeline": Kanban,
   "/accounts": Building2,
-  "/abm": Target,
-  "/vsi": BarChart3,
+  "/leads": Target,
+  "/forecast": BarChart3,
   "/engagement": CalendarDays,
   "/contracts": FileSignature,
-  "/insights": Lightbulb,
-  "/admin": ShieldCheck,
+  "/intelligence": Lightbulb,
+  "/settings": Settings,
 };
 
 const COLLAPSE_KEY = "ballo:sidebar-collapsed";

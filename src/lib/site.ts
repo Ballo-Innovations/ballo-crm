@@ -16,8 +16,9 @@ export type NavItem = {
 };
 
 /**
- * Module names mirror the challenge's own vocabulary on purpose
- * (docs/00-executive/02-judging-strategy-platinum.md, tactic 1).
+ * Nav order and names follow docs/03-design/01-design-system.md "Layout".
+ * Challenge terms (ABM, VSI, CIMS) live inside these modules: ABM in Accounts,
+ * VSI in Forecast, CIMS in Settings.
  */
 export const primaryNav: NavItem[] = [
   {
@@ -30,30 +31,32 @@ export const primaryNav: NavItem[] = [
   {
     title: "Pipeline",
     href: "/pipeline",
-    epic: "E1, E4",
+    epic: "E4",
     spec: "docs/03-design/02-wireframes.md",
-    summary: "Leads, opportunity Kanban with weighted totals, score drawer and Focus List.",
+    summary: "Opportunity Kanban with weighted totals, score drawer and Focus List.",
   },
   {
     title: "Accounts",
     href: "/accounts",
-    epic: "E2",
+    epic: "E2, E3",
     spec: "docs/03-design/02-wireframes.md",
-    summary: "Account list and Account 360: contacts, services, timeline, contracts.",
+    summary:
+      "Account list and Account 360: contacts, services, timeline, contracts, plus ABM (strategic accounts, buying committee, account plan).",
   },
   {
-    title: "ABM",
-    href: "/abm",
-    epic: "E3",
+    title: "Leads",
+    href: "/leads",
+    epic: "E1",
     spec: "docs/03-design/02-wireframes.md",
-    summary: "Strategic accounts, buying committee map, account plan and playbook.",
+    summary: "Lead capture, qualification and grading, and conversion to opportunities.",
   },
   {
-    title: "VSI",
-    href: "/vsi",
+    title: "Forecast",
+    href: "/forecast",
     epic: "E5, E6",
     spec: "docs/01-product/03-vsi-and-dashboards-spec.md",
-    summary: "Vertical Sales Index: sectors ranked by ARR and growth, drilldown, whitespace.",
+    summary:
+      "Weighted forecast and the Vertical Sales Index: sectors ranked by ARR and growth, drilldown, whitespace.",
   },
   {
     title: "Engagement",
@@ -70,17 +73,17 @@ export const primaryNav: NavItem[] = [
     summary: "Templates, PDF generation, e-signature and renewals.",
   },
   {
-    title: "Insights",
-    href: "/insights",
+    title: "Intelligence",
+    href: "/intelligence",
     epic: "E5",
     spec: "docs/01-product/04-cross-sell-recommender-spec.md",
     summary: "Automated insights feed and cross-sell recommendations.",
   },
   {
-    title: "CIMS / Admin",
-    href: "/admin",
+    title: "Settings",
+    href: "/settings",
     epic: "E8, E9",
     spec: "docs/02-architecture/05-security-rbac-audit.md",
-    summary: "Users and roles, audit log, API keys, integrations log, data protection.",
+    summary: "CIMS admin: users and roles, audit log, API keys, integrations log, data protection.",
   },
 ];
