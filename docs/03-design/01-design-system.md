@@ -269,6 +269,34 @@ and markup: `kanban` in the UI kit.
   the drawer with the stage preset.
 - **Phone:** columns are 82% wide and snap one at a time; swipe between stages.
 
+## Filter bar and menus (decided)
+
+References: option B in `docs/03-design/reference/filter-options.html` (layout and Filters
+panel) and option V1 in `view-menu-options.html` (the View menu). Styles and markup: `filterbar`
+and `menu` in the UI kit.
+
+- **Layout (one row above every list):** View menu trigger · search pill · Filters pill · space ·
+  result count ("6 of 9", 13px `--mute`). Active filters show as a second row of black chips
+  ("Grade: Gold ✕"), one chip per value, ending with a "Clear all" text link.
+- **Filters pill:** `--soft` pill with a filter icon; when anything is set it turns black with a
+  white count pill. It opens a **panel** (24px radius, `--card`, soft shadow) with one column per
+  filter (Stage, Grade, Owner, Close month), each a short checklist using the kit checkbox.
+  Filters apply live. Values combine with OR within a filter and AND across filters.
+- **View menu trigger:** `--soft` pill reading "View: All deals ⌄" ("View:" in `--mute`); shows
+  "(edited)" after the filters of a saved view change.
+- **Menus (decided: simple list)** — used for the View menu, the ⋯ row menu and the user menu:
+  a `--card` popover, 24px radius, 8px padding, 1px `--line` border, soft shadow, about 280px
+  wide, opening 8px below its trigger with a short fade and scale. Items are full-width rows
+  (10px × 12px, 16px radius, 14px/500) that turn `--soft` on hover or keyboard focus. The
+  selected item gets a ✓ in a fixed 18px column on the left and bold text; counts sit right
+  aligned in `--mute`. A 1px divider separates the actions at the bottom: "Manage views", or
+  when edited, "Save as new view" and "Update “…”". Destructive items are red text.
+- **Behaviour:** ↑ ↓ move between items, Enter picks, Esc closes and returns focus to the
+  trigger; clicking outside closes. `role="menu"` with `menuitemradio` for views. The current
+  view and the filters live in the URL so a list can be shared. Saved views are per user, plus
+  read-only team views. On phones menus and the Filters panel open as bottom sheets.
+- **No results** uses the illustrated state with "Clear all filters".
+
 ## Components (shadcn, restyled to the above)
 
 KpiCard (icon circle, big number, two-line label; one may be highlighted with a black icon and

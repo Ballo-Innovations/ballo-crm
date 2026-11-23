@@ -285,6 +285,34 @@
       </section>
 
       <section class="sec">
+        <h2>Filter bar and menus</h2>
+        <p>
+          View menu (simple list), search, Filters pill with a panel, and chips for what is set.
+          Menus use the same style everywhere.
+        </p>
+        <div class="card" style="display: flex; flex-direction: column; gap: 14px">
+          <div class="filterbar">
+            <span style="position: relative">
+              <button class="pill-btn" data-fopen="view" aria-haspopup="menu">
+                <span class="pill-btn__label">View:</span> <span id="vname">All deals</span> ⌄
+              </button>
+              <div class="popover menu" data-fpop="view" role="menu" id="vmenu"></div>
+            </span>
+            <label class="search-pill">⌕<input placeholder="Search opportunities" /></label>
+            <span style="position: relative">
+              <button class="pill-btn" data-fopen="filters" id="fbtn">⚲ Filters</button>
+              <div class="popover filter-panel" data-fpop="filters">
+                <div class="filter-panel__grid" id="fgrid"></div>
+              </div>
+            </span>
+            <span class="filterbar__count" id="fcount"></span>
+          </div>
+          <div class="filterbar__chips" id="fchips"></div>
+          <div class="rows" id="frows"></div>
+        </div>
+      </section>
+
+      <section class="sec">
         <h2>Page states</h2>
         <p>Loading, empty (first use), no results, error. Switch:</p>
         <div class="tabs tabs--segmented" role="tablist" id="states">
@@ -582,6 +610,198 @@
         if (e.key === "ArrowLeft") moveDeal(i, DEALS[i][4] - 1);
       });
       drawBoard();
+
+      // filter bar + menu
+      var FD = [
+        ["Fibre backbone Lusaka–Ndola", "Negotiate", "Gold", "George M.", "K6.4M"],
+        ["Data-centre colocation", "Negotiate", "Platinum", "George M.", "K8.9M"],
+        ["Tower lease — 40 sites", "Propose", "Silver", "Chileshe B.", "K3.2M"],
+        ["SD-WAN branch rollout", "Discover", "Bronze", "George M.", "K1.8M"],
+        ["Managed Wi-Fi campus", "Propose", "Silver", "Natasha L.", "K0.9M"],
+        ["Smart metering backhaul", "Qualify", "Silver", "Chileshe B.", "K2.6M"],
+      ];
+      var FF = {
+        Stage: ["Qualify", "Discover", "Propose", "Negotiate"],
+        Grade: ["Platinum", "Gold", "Silver"],
+        Owner: ["George M.", "Chileshe B.", "Natasha L."],
+      };
+      var FI = { Stage: 1, Grade: 2, Owner: 3 };
+      var FV = [
+        ["All deals", {}],
+        ["My deals", { Owner: ["George M."] }],
+        ["Gold & Platinum", { Grade: ["Gold", "Platinum"] }],
+        ["Negotiating", { Stage: ["Negotiate"] }],
+      ];
+      var fst = { view: 0, f: {} };
+      function fMatch(f) {
+        return FD.filter(function (d) {
+          for (var k in f) {
+            if (f[k].length && f[k].indexOf(d[FI[k]]) < 0) return false;
+          }
+          return true;
+        });
+      }
+      function fSame(a, b) {
+        return JSON.stringify(a) === JSON.stringify(b);
+      }
+      function fDraw() {
+        var edited = !fSame(fst.f, FV[fst.view][1]);
+        $("#vname").textContent = FV[fst.view][0] + (edited ? " (edited)" : "");
+        $("#vmenu").innerHTML =
+          FV.map(function (v, i) {
+            var on = i === fst.view;
+            return (
+              '<button class="menu__item" role="menuitemradio" aria-checked="' +
+              on +
+              '" data-fview="' +
+              i +
+              '"><span class="menu__check">' +
+              (on ? "✓" : "") +
+              "</span>" +
+              v[0] +
+              '<span class="menu__count">' +
+              fMatch(v[1]).length +
+              "</span></button>"
+            );
+          }).join("") +
+          '<div class="menu__divider"></div>' +
+          (edited
+            ? '<button class="menu__item" data-fsave><span class="menu__check">＋</span>Save as new view</button>'
+            : '<button class="menu__item"><span class="menu__check">⚙</span>Manage views</button>');
+        $("#fgrid").innerHTML = Object.keys(FF)
+          .map(function (k) {
+            return (
+              '<div><div class="filter-panel__title">' +
+              k +
+              "</div>" +
+              FF[k]
+                .map(function (v) {
+                  return (
+                    '<label class="check"><input type="checkbox" data-ff="' +
+                    k +
+                    "|" +
+                    v +
+                    '"' +
+                    ((fst.f[k] || []).indexOf(v) >= 0 ? " checked" : "") +
+                    "> " +
+                    v +
+                    "</label>"
+                  );
+                })
+                .join("") +
+              "</div>"
+            );
+          })
+          .join("");
+        var n = Object.keys(fst.f).reduce(function (a, k) {
+            return a + fst.f[k].length;
+          }, 0),
+          b = $("#fbtn");
+        b.classList.toggle("is-set", n > 0);
+        b.innerHTML = "⚲ Filters" + (n ? ' <span class="pill-btn__count">' + n + "</span>" : "");
+        var chips = [];
+        Object.keys(fst.f).forEach(function (k) {
+          fst.f[k].forEach(function (v) {
+            chips.push(
+              '<span class="chip">' +
+                k +
+                ": " +
+                v +
+                '<button class="toast__close" style="width:18px;height:18px" data-fchip="' +
+                k +
+                "|" +
+                v +
+                '" aria-label="Remove">✕</button></span>',
+            );
+          });
+        });
+        $("#fchips").innerHTML = chips.length
+          ? chips.join("") + '<button class="filterbar__clear" data-fclear>Clear all</button>'
+          : "";
+        var r = fMatch(fst.f);
+        $("#fcount").textContent = r.length + " of " + FD.length;
+        $("#frows").innerHTML = r
+          .map(function (d) {
+            return (
+              '<div class="row"><b style="flex:1">' +
+              d[0] +
+              '</b><span style="color:var(--mute);width:90px">' +
+              d[1] +
+              '</span><span class="pill' +
+              (/Gold|Platinum/.test(d[2]) ? " pill--strong" : "") +
+              '">' +
+              d[2] +
+              '</span><span class="money" style="width:60px">' +
+              d[4] +
+              "</span></div>"
+            );
+          })
+          .join("");
+      }
+      document.addEventListener("click", function (e) {
+        var t;
+        if (!e.target.closest(".popover") && !e.target.closest("[data-fopen]"))
+          $$(".popover.is-open").forEach(function (p) {
+            p.classList.toggle("is-open", false);
+          });
+        if ((t = e.target.closest("[data-fopen]"))) {
+          var p = $('[data-fpop="' + t.dataset.fopen + '"]'),
+            was = p.classList.contains("is-open");
+          $$(".popover.is-open").forEach(function (x) {
+            x.classList.toggle("is-open", false);
+          });
+          p.classList.toggle("is-open", !was);
+          var first = p.querySelector(".menu__item");
+          if (first && !was) first.focus();
+        }
+        if ((t = e.target.closest("[data-fview]"))) {
+          fst.view = +t.dataset.fview;
+          fst.f = JSON.parse(JSON.stringify(FV[fst.view][1]));
+          $('[data-fpop="view"]').classList.toggle("is-open", false);
+          fDraw();
+        }
+        if ((t = e.target.closest("[data-fchip]"))) {
+          var kv = t.dataset.fchip.split("|");
+          fst.f[kv[0]] = fst.f[kv[0]].filter(function (v) {
+            return v !== kv[1];
+          });
+          if (!fst.f[kv[0]].length) delete fst.f[kv[0]];
+          fDraw();
+        }
+        if (e.target.closest("[data-fclear]")) {
+          fst.f = {};
+          fst.view = 0;
+          fDraw();
+        }
+        if (e.target.closest("[data-fsave]")) {
+          $('[data-fpop="view"]').classList.toggle("is-open", false);
+          toast("View saved");
+        }
+      });
+      document.addEventListener("change", function (e) {
+        var i = e.target.closest("[data-ff]");
+        if (!i) return;
+        var kv = i.dataset.ff.split("|");
+        fst.f[kv[0]] = fst.f[kv[0]] || [];
+        if (i.checked) fst.f[kv[0]].push(kv[1]);
+        else
+          fst.f[kv[0]] = fst.f[kv[0]].filter(function (v) {
+            return v !== kv[1];
+          });
+        if (!fst.f[kv[0]].length) delete fst.f[kv[0]];
+        fDraw();
+        $('[data-fpop="filters"]').classList.add("is-open");
+      });
+      document.addEventListener("keydown", function (e) {
+        var m = e.target.closest(".menu");
+        if (!m || (e.key !== "ArrowDown" && e.key !== "ArrowUp")) return;
+        e.preventDefault();
+        var it = $$(".menu__item", m),
+          i = it.indexOf(document.activeElement);
+        i = e.key === "ArrowDown" ? (i + 1) % it.length : (i - 1 + it.length) % it.length;
+        it[i].focus();
+      });
+      fDraw();
     </script>
   </body>
 </html>
