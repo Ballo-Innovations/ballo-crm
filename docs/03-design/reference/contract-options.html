@@ -1,0 +1,955 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Contract Options</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Urbanist:wght@400;500;600;700;800&family=Caveat:wght@600&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="kit/tokens.css" />
+    <link rel="stylesheet" href="kit/components.css" />
+    <style>
+      body {
+        padding: 40px 32px 80px;
+      }
+      .wrap {
+        max-width: 1360px;
+        margin: auto;
+      }
+      .page-hd {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-end;
+        gap: 16px;
+        flex-wrap: wrap;
+        margin-bottom: 28px;
+      }
+      .page-hd h1 {
+        font-size: 30px;
+        font-weight: 700;
+      }
+      .page-hd p {
+        color: var(--mute);
+        margin-top: 6px;
+        font-size: 15px;
+        max-width: 800px;
+        line-height: 1.5;
+      }
+      .opt {
+        margin-bottom: 48px;
+      }
+      .opt-hd {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin-bottom: 6px;
+      }
+      .badge {
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        background: var(--ink);
+        color: var(--shell);
+        display: grid;
+        place-items: center;
+        font-weight: 700;
+        font-size: 15px;
+        flex: none;
+      }
+      .opt-hd h2 {
+        font-size: 22px;
+        font-weight: 600;
+      }
+      .opt-desc {
+        color: var(--mute);
+        font-size: 15px;
+        margin: 0 0 14px 48px;
+        line-height: 1.5;
+        max-width: 900px;
+      }
+      .stage {
+        background: var(--main);
+        border-radius: 28px;
+        padding: 18px;
+      }
+      .ccard {
+        background: var(--card);
+        border-radius: 26px;
+        padding: 24px;
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+      }
+      .chead {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        flex-wrap: wrap;
+      }
+      .doc {
+        width: 46px;
+        height: 56px;
+        border-radius: 10px;
+        background: var(--soft);
+        position: relative;
+        flex: none;
+      }
+      .doc::before {
+        content: "";
+        position: absolute;
+        left: 10px;
+        right: 10px;
+        top: 14px;
+        height: 3px;
+        border-radius: 2px;
+        background: var(--bar2);
+        box-shadow:
+          0 8px 0 var(--bar2),
+          0 16px 0 var(--bar2),
+          0 24px 0 var(--line);
+      }
+      .chead .tx {
+        flex: 1;
+        min-width: 200px;
+      }
+      .chead b {
+        display: block;
+        font-size: 18px;
+        font-weight: 600;
+      }
+      .chead small {
+        color: var(--mute);
+        font-size: 13px;
+      }
+      .money {
+        font-size: 22px;
+        font-weight: 700;
+      }
+      .meta-row {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 10px;
+      }
+      .meta-row div {
+        background: var(--soft);
+        border-radius: 16px;
+        padding: 10px 12px;
+        font-size: 12px;
+        color: var(--mute);
+      }
+      .meta-row b {
+        display: block;
+        font-size: 14px;
+        color: var(--ink);
+        margin-top: 2px;
+      }
+      .actions {
+        display: flex;
+        justify-content: space-between;
+        gap: 10px;
+        flex-wrap: wrap;
+        align-items: center;
+      }
+      .hint {
+        font-size: 13px;
+        color: var(--mute);
+      }
+      /* signature pad (shared) */
+      .sig {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+      }
+      .sig .modes {
+        display: flex;
+        gap: 6px;
+      }
+      .sig .modes .tab {
+        padding: 6px 12px;
+        font-size: 13px;
+      }
+      .pad {
+        position: relative;
+        height: 170px;
+        border-radius: 20px;
+        background: var(--soft);
+        overflow: hidden;
+        touch-action: none;
+      }
+      .pad canvas {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        cursor: crosshair;
+      }
+      .pad .line {
+        position: absolute;
+        left: 24px;
+        right: 24px;
+        bottom: 42px;
+        border-bottom: 1.5px dashed var(--bar2);
+        pointer-events: none;
+      }
+      .pad .x {
+        position: absolute;
+        left: 24px;
+        bottom: 48px;
+        font-size: 20px;
+        color: var(--bar2);
+        pointer-events: none;
+      }
+      .pad .ph {
+        position: absolute;
+        inset: 0;
+        display: grid;
+        place-items: center;
+        color: var(--mute);
+        font-size: 14px;
+        pointer-events: none;
+        transition: opacity 0.2s;
+      }
+      .pad.inked .ph {
+        opacity: 0;
+      }
+      .pad .clr {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        border: 0;
+        background: var(--card);
+        border-radius: 999px;
+        padding: 5px 12px;
+        font-size: 12px;
+        font-weight: 600;
+        display: none;
+      }
+      .pad.inked .clr {
+        display: block;
+      }
+      .typed {
+        display: none;
+        flex-direction: column;
+        gap: 10px;
+      }
+      .typed .preview {
+        height: 110px;
+        border-radius: 20px;
+        background: var(--soft);
+        display: grid;
+        place-items: center;
+        font-family: Caveat, cursive;
+        font-size: 44px;
+        color: var(--ink);
+      }
+      .sig.typing .pad {
+        display: none;
+      }
+      .sig.typing .typed {
+        display: flex;
+      }
+      .consent {
+        font-size: 12px;
+        color: var(--mute);
+        line-height: 1.5;
+      }
+      .signed-img {
+        height: 70px;
+        max-width: 220px;
+        object-fit: contain;
+        filter: var(--sigf, none);
+      }
+      :root[data-theme="dark"] {
+        --sigf: invert(1);
+      }
+      .signedbox {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        background: var(--soft);
+        border-radius: 18px;
+        padding: 12px 14px;
+      }
+      .signedbox .tx {
+        font-size: 13px;
+        color: var(--mute);
+      }
+      .signedbox .tx b {
+        display: block;
+        color: var(--ink);
+        font-size: 14px;
+      }
+      .audit {
+        font-size: 12px;
+        color: var(--mute);
+        display: flex;
+        gap: 6px;
+        flex-wrap: wrap;
+      }
+      .audit span {
+        background: var(--soft);
+        border-radius: 999px;
+        padding: 3px 10px;
+      }
+
+      /* ===== A horizontal stepper ===== */
+      .A .steps {
+        display: grid;
+        grid-template-columns: repeat(5, 1fr);
+        position: relative;
+      }
+      .A .step {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 8px;
+        position: relative;
+        text-align: center;
+      }
+      .A .step::before {
+        content: "";
+        position: absolute;
+        top: 17px;
+        right: 50%;
+        width: 100%;
+        height: 3px;
+        background: var(--line);
+        z-index: 0;
+      }
+      .A .step:first-child::before {
+        display: none;
+      }
+      .A .step.done::before,
+      .A .step.cur::before {
+        background: var(--ink);
+      }
+      .A .dot {
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        background: var(--card);
+        border: 2px solid var(--line);
+        display: grid;
+        place-items: center;
+        font-size: 14px;
+        font-weight: 700;
+        color: var(--mute);
+        position: relative;
+        z-index: 1;
+        transition: all 0.25s;
+      }
+      .A .step.done .dot {
+        background: var(--ink);
+        border-color: var(--ink);
+        color: var(--shell);
+      }
+      .A .step.cur .dot {
+        border-color: var(--ink);
+        color: var(--ink);
+        box-shadow: 0 0 0 5px color-mix(in srgb, var(--ink) 12%, transparent);
+      }
+      .A .step b {
+        font-size: 13px;
+        font-weight: 600;
+      }
+      .A .step:not(.done):not(.cur) b {
+        color: var(--mute);
+      }
+      .A .step small {
+        font-size: 11px;
+        color: var(--mute);
+        min-height: 14px;
+      }
+
+      /* ===== B vertical checklist ===== */
+      .B .grid2 {
+        display: grid;
+        grid-template-columns: 300px 1fr;
+        gap: 18px;
+        align-items: start;
+      }
+      .B .vlist {
+        background: var(--soft);
+        border-radius: 22px;
+        padding: 8px;
+        display: flex;
+        flex-direction: column;
+      }
+      .B .vs {
+        display: grid;
+        grid-template-columns: 30px 1fr;
+        gap: 12px;
+        padding: 10px;
+        border-radius: 16px;
+        position: relative;
+      }
+      .B .vs::after {
+        content: "";
+        position: absolute;
+        left: 24px;
+        top: 42px;
+        bottom: -10px;
+        width: 2px;
+        background: var(--line);
+      }
+      .B .vs:last-child::after {
+        display: none;
+      }
+      .B .vs.done::after {
+        background: var(--ink);
+      }
+      .B .vs .ck {
+        width: 30px;
+        height: 30px;
+        border-radius: 50%;
+        border: 2px solid var(--bar2);
+        background: var(--card);
+        display: grid;
+        place-items: center;
+        font-size: 13px;
+        font-weight: 700;
+        position: relative;
+        z-index: 1;
+      }
+      .B .vs.done .ck {
+        background: var(--ink);
+        border-color: var(--ink);
+        color: var(--shell);
+      }
+      .B .vs.cur {
+        background: var(--card);
+      }
+      .B .vs.cur .ck {
+        border-color: var(--ink);
+      }
+      .B .vs b {
+        font-size: 14px;
+        font-weight: 600;
+        display: block;
+      }
+      .B .vs:not(.done):not(.cur) b {
+        color: var(--mute);
+      }
+      .B .vs small {
+        font-size: 12px;
+        color: var(--mute);
+      }
+      .B .right {
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+      }
+
+      /* ===== C segmented progress + black status card ===== */
+      .C .seg {
+        display: grid;
+        grid-template-columns: repeat(5, 1fr);
+        gap: 6px;
+      }
+      .C .seg div {
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+      }
+      .C .seg i {
+        height: 8px;
+        border-radius: 999px;
+        background: var(--line);
+        overflow: hidden;
+        position: relative;
+      }
+      .C .seg .done i {
+        background: var(--ink);
+      }
+      .C .seg .cur i::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        width: 45%;
+        background: var(--ink);
+        border-radius: 999px;
+        animation: pulse 1.6s ease-in-out infinite;
+      }
+      @keyframes pulse {
+        50% {
+          width: 70%;
+        }
+      }
+      .C .seg span {
+        font-size: 12px;
+        font-weight: 600;
+        color: var(--mute);
+      }
+      .C .seg .done span,
+      .C .seg .cur span {
+        color: var(--ink);
+      }
+      .C .status {
+        background: var(--ink);
+        color: var(--shell);
+        border-radius: 22px;
+        padding: 18px 20px;
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        flex-wrap: wrap;
+      }
+      .C .status .big {
+        width: 52px;
+        height: 52px;
+        border-radius: 50%;
+        background: var(--shell);
+        color: var(--ink);
+        display: grid;
+        place-items: center;
+        font-size: 20px;
+        flex: none;
+      }
+      .C .status .tx {
+        flex: 1;
+        min-width: 200px;
+      }
+      .C .status small {
+        font-size: 12px;
+        font-weight: 600;
+        letter-spacing: 0.07em;
+        text-transform: uppercase;
+        opacity: 0.6;
+      }
+      .C .status b {
+        display: block;
+        font-size: 20px;
+        font-weight: 600;
+        margin: 2px 0;
+      }
+      .C .status p {
+        font-size: 13px;
+        opacity: 0.75;
+      }
+      .C .status .btn {
+        background: var(--shell);
+        color: var(--ink);
+      }
+      .C .status .btn .btn__circle {
+        background: var(--ink);
+        color: var(--shell);
+      }
+      .note {
+        background: var(--soft);
+        border-radius: 20px;
+        padding: 18px 20px;
+        font-size: 15px;
+        line-height: 1.6;
+      }
+      @media (max-width: 900px) {
+        body {
+          padding: 20px 12px 60px;
+        }
+        .opt-desc {
+          margin-left: 0;
+        }
+        .meta-row {
+          grid-template-columns: 1fr 1fr;
+        }
+        .B .grid2 {
+          grid-template-columns: 1fr;
+        }
+        .A .step small {
+          display: none;
+        }
+        .A .step b {
+          font-size: 11px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <div class="page-hd">
+        <div>
+          <h1>Contract stepper + signature — 3 options</h1>
+          <p>
+            A contract for <b>Kariba Power Co.</b> Press <b>Next step</b> to move it along. At
+            <b>Sign</b>, draw a signature with your mouse or finger (or switch to Type); Sign turns
+            on once there is a signature. <b>Reset</b> starts over.
+          </p>
+        </div>
+        <div class="tabs tabs--segmented" id="thm">
+          <button class="tab" aria-selected="true" data-v="light">Light</button
+          ><button class="tab" aria-selected="false" data-v="dark">Dark</button>
+        </div>
+      </div>
+      <div id="opts"></div>
+      <div class="note">
+        <b>Same in every option:</b> steps are Draft → Sent → Viewed → Signed → Active; each records
+        who and when (the audit trail); signing needs a drawn or typed signature plus the consent
+        line; the signed PDF is stamped with the signature, name, time and IP; a declined or expired
+        contract shows the step in red with a reason; the signer can sign from a phone (the pad
+        fills the width).
+      </div>
+    </div>
+    <div class="toasts" id="toasts"></div>
+    <script>
+      var $ = function (s, r) {
+          return (r || document).querySelector(s);
+        },
+        $$ = function (s, r) {
+          return [].slice.call((r || document).querySelectorAll(s));
+        };
+      var STEPS = [
+        ["Draft", "Prepared by George M.", "✎"],
+        ["Sent", "To Ruth Phiri (CFO)", "✉"],
+        ["Viewed", "Opened 2 times", "◉"],
+        ["Signed", "Awaiting signature", "✍"],
+        ["Active", "Starts 1 Dec 2026", "✓"],
+      ];
+      var STAMP = ["20 Nov, 09:12", "21 Nov, 14:30", "22 Nov, 08:05", "", ""];
+      var NEXT = ["Send for signature", "Mark as viewed", "Sign contract", "Activate contract"];
+      var STATUS = [
+        [
+          "Draft",
+          "Ready to send",
+          "Check the terms, then send it to Ruth Phiri for signature.",
+          "✎",
+        ],
+        [
+          "Sent",
+          "Waiting for Ruth to open it",
+          "Sent yesterday at 14:30. We will remind her in 2 days.",
+          "✉",
+        ],
+        [
+          "Viewed",
+          "Ruth has opened it twice",
+          "Last viewed today at 08:05. Ready for signature.",
+          "◉",
+        ],
+        [
+          "Signing",
+          "Sign the contract",
+          "Draw or type your signature below to sign on behalf of Kariba Power Co.",
+          "✍",
+        ],
+        [
+          "Active",
+          "Contract is active",
+          "Signed 23 Nov. Service starts 1 Dec 2026; renewal 30 Nov 2029.",
+          "✓",
+        ],
+      ];
+      var S = {};
+      var DESC = {
+        A: [
+          "Horizontal stepper",
+          "Five numbered circles joined by a line across the top of the contract card. Done steps fill black with a tick, the current one has a soft ring, and each shows when it happened. The signature pad opens inside the card at the signing step.",
+        ],
+        B: [
+          "Vertical checklist",
+          "The steps run down a grey panel on the left like a checklist, each with who and when, and the line fills black as it progresses. The contract and the signature pad sit on the right. Best for the audit trail.",
+        ],
+        C: [
+          "Progress bar + status card",
+          "A slim five-part progress bar (the current part pulses), then a black status card that says in plain words what is happening and the one next action, like the score card. The signature pad sits under it.",
+        ],
+      };
+      function sigHTML(o) {
+        return (
+          '<div class="sig" data-sig="' +
+          o +
+          '"><div class="modes tabs"><button class="tab" aria-selected="true" data-mode="draw">✍ Draw</button><button class="tab" aria-selected="false" data-mode="type">Aa Type</button></div><div class="pad"><canvas></canvas><span class="line"></span><span class="x">×</span><span class="ph">Sign here with your mouse or finger</span><button class="clr" data-clear>Clear</button></div><div class="typed"><div class="field is-up" style="padding-top:22px"><label class="field__label">Full name</label><div class="field__control"><input data-typed placeholder="Ruth Phiri"></div></div><div class="preview" data-preview>&nbsp;</div></div><p class="consent">By signing, I agree this electronic signature is the legal equivalent of my handwritten signature on behalf of Kariba Power Co.</p></div>'
+        );
+      }
+      function signedHTML(st) {
+        return (
+          '<div class="signedbox">' +
+          (st.img
+            ? '<img class="signed-img" src="' + st.img + '" alt="Signature">'
+            : '<span style="font-family:Caveat,cursive;font-size:36px">' + st.typed + "</span>") +
+          '<div class="tx"><b>Signed by Ruth Phiri</b>23 Nov 2026, 10:42 · IP 41.72.x.x</div></div>'
+        );
+      }
+      function metaHTML() {
+        return '<div class="meta-row"><div>Term<b>36 months</b></div><div>Start<b>1 Dec 2026</b></div><div>Billing<b>Monthly</b></div><div>Owner<b>George M.</b></div></div>';
+      }
+      function headHTML() {
+        return '<div class="chead"><span class="doc"></span><div class="tx"><b>Managed Fibre Services Agreement</b><small>Kariba Power Co. · CTR-2026-014 · from “Fibre backbone Lusaka–Ndola”</small></div><span class="money">K6,400,000</span></div>';
+      }
+      function actHTML(o, st) {
+        var c = st.step;
+        if (c >= 4)
+          return '<div class="actions"><div class="audit"><span>Draft 20 Nov</span><span>Sent 21 Nov</span><span>Viewed 22 Nov</span><span>Signed 23 Nov</span></div><button class="btn btn--secondary btn--sm" data-reset>Reset</button></div>';
+        var label = NEXT[c],
+          dis = c === 3 && !st.ready;
+        return (
+          '<div class="actions"><button class="btn btn--ghost btn--sm" data-reset>Reset</button><span style="display:flex;gap:10px;align-items:center">' +
+          (c === 3
+            ? '<span class="hint">' +
+              (st.ready ? "Ready to sign" : "Add a signature to continue") +
+              "</span>"
+            : "") +
+          '<button class="btn btn--hero" data-next' +
+          (dis ? " disabled" : "") +
+          '><span class="btn__circle">' +
+          (c === 3 ? "✍" : "→") +
+          "</span>" +
+          label +
+          "</button></span></div>"
+        );
+      }
+      function render(o) {
+        var st = S[o],
+          c = st.step,
+          el = $('.opt[data-o="' + o + '"] .ccard'),
+          h = "",
+          state = function (i) {
+            return i < c || (c === 4 && i === 4) ? "done" : i === c ? "cur" : "";
+          };
+        var sigPart = c === 3 ? sigHTML(o) : c === 4 ? signedHTML(st) : "";
+        if (o === "A")
+          h =
+            headHTML() +
+            '<div class="steps">' +
+            STEPS.map(function (s, i) {
+              var d = state(i);
+              return (
+                '<div class="step ' +
+                d +
+                '"><span class="dot">' +
+                (d === "done" ? "✓" : i + 1) +
+                "</span><b>" +
+                s[0] +
+                "</b><small>" +
+                (d === "done" ? STAMP[i] || "23 Nov, 10:42" : d === "cur" ? "Now" : "") +
+                "</small></div>"
+              );
+            }).join("") +
+            "</div>" +
+            metaHTML() +
+            sigPart +
+            actHTML(o, st);
+        if (o === "B")
+          h =
+            '<div class="grid2"><div class="vlist">' +
+            STEPS.map(function (s, i) {
+              var d = state(i);
+              return (
+                '<div class="vs ' +
+                d +
+                '"><span class="ck">' +
+                (d === "done" ? "✓" : i + 1) +
+                "</span><div><b>" +
+                s[0] +
+                "</b><small>" +
+                (d === "done"
+                  ? i === 3
+                    ? "Ruth Phiri · 23 Nov, 10:42"
+                    : s[1] + " · " + (STAMP[i] || "23 Nov")
+                  : d === "cur"
+                    ? i === 3
+                      ? "Waiting for your signature"
+                      : s[1]
+                    : "—") +
+                "</small></div></div>"
+              );
+            }).join("") +
+            '</div><div class="right">' +
+            headHTML() +
+            metaHTML() +
+            sigPart +
+            actHTML(o, st) +
+            "</div></div>";
+        if (o === "C") {
+          var s = STATUS[c];
+          h =
+            headHTML() +
+            '<div class="seg">' +
+            STEPS.map(function (x, i) {
+              return '<div class="' + state(i) + '"><i></i><span>' + x[0] + "</span></div>";
+            }).join("") +
+            '</div><div class="status"><span class="big">' +
+            s[3] +
+            '</span><div class="tx"><small>' +
+            s[0] +
+            "</small><b>" +
+            s[1] +
+            "</b><p>" +
+            s[2] +
+            "</p></div>" +
+            (c < 3
+              ? '<button class="btn btn--hero" data-next><span class="btn__circle">→</span>' +
+                NEXT[c] +
+                "</button>"
+              : "") +
+            "</div>" +
+            sigPart +
+            (c === 3
+              ? actHTML(o, st)
+              : c === 4
+                ? actHTML(o, st)
+                : '<div class="actions"><button class="btn btn--ghost btn--sm" data-reset>Reset</button>' +
+                  metaHTML().replace("meta-row", 'meta-row" style="flex:1') +
+                  "</div>");
+        }
+        el.innerHTML = h;
+        if (c === 3) initPad(o);
+      }
+      function initPad(o) {
+        var st = S[o],
+          box = $('[data-sig="' + o + '"]'),
+          pad = $(".pad", box),
+          cv = $("canvas", pad),
+          r = pad.getBoundingClientRect(),
+          dpr = window.devicePixelRatio || 1;
+        cv.width = r.width * dpr;
+        cv.height = r.height * dpr;
+        var ctx = cv.getContext("2d");
+        ctx.scale(dpr, dpr);
+        ctx.lineCap = "round";
+        ctx.lineJoin = "round";
+        var ink =
+            getComputedStyle(document.documentElement).getPropertyValue("--ink").trim() ||
+            "#0d0d0d",
+          drawing = false,
+          last = null,
+          moved = 0;
+        function pt(e) {
+          var b = cv.getBoundingClientRect();
+          return { x: e.clientX - b.left, y: e.clientY - b.top, t: Date.now() };
+        }
+        cv.onpointerdown = function (e) {
+          drawing = true;
+          last = pt(e);
+          cv.setPointerCapture(e.pointerId);
+        };
+        cv.onpointermove = function (e) {
+          if (!drawing) return;
+          var p = pt(e),
+            d = Math.hypot(p.x - last.x, p.y - last.y),
+            v = d / Math.max(1, p.t - last.t);
+          ctx.strokeStyle = ink;
+          ctx.lineWidth = Math.max(1.4, 3.2 - v * 1.2);
+          ctx.beginPath();
+          ctx.moveTo(last.x, last.y);
+          ctx.lineTo(p.x, p.y);
+          ctx.stroke();
+          moved += d;
+          last = p;
+          if (moved > 40 && !st.ready) {
+            st.ready = true;
+            st.mode = "draw";
+            pad.classList.add("inked");
+            refreshAct(o);
+          }
+        };
+        cv.onpointerup = cv.onpointercancel = function () {
+          drawing = false;
+        };
+        st.clear = function () {
+          ctx.clearRect(0, 0, cv.width, cv.height);
+          moved = 0;
+          st.ready = false;
+          pad.classList.remove("inked");
+          refreshAct(o);
+        };
+        st.canvas = cv;
+      }
+      function refreshAct(o) {
+        var st = S[o],
+          a = $('.opt[data-o="' + o + '"] .actions');
+        if (!a) return;
+        var tmp = document.createElement("div");
+        tmp.innerHTML = actHTML(o, st);
+        a.replaceWith(tmp.firstChild);
+      }
+      function toast(m) {
+        var t = document.createElement("div");
+        t.className = "toast";
+        t.innerHTML = '<span class="toast__icon">✓</span><span>' + m + "</span>";
+        $("#toasts").appendChild(t);
+        setTimeout(function () {
+          t.remove();
+        }, 3000);
+      }
+      var h = "";
+      ["A", "B", "C"].forEach(function (o) {
+        S[o] = { step: 1, ready: false, mode: "draw", typed: "" };
+        h +=
+          '<section class="opt ' +
+          o +
+          '" data-o="' +
+          o +
+          '"><div class="opt-hd"><div class="badge">' +
+          o +
+          "</div><h2>" +
+          DESC[o][0] +
+          '</h2></div><p class="opt-desc">' +
+          DESC[o][1] +
+          '</p><div class="stage"><div class="ccard"></div></div></section>';
+      });
+      $("#opts").innerHTML = h;
+      ["A", "B", "C"].forEach(render);
+      document.addEventListener("click", function (e) {
+        var op = e.target.closest(".opt");
+        if (!op) return;
+        var o = op.dataset.o,
+          st = S[o],
+          t;
+        if (e.target.closest("[data-reset]")) {
+          S[o] = { step: 0, ready: false, mode: "draw", typed: "" };
+          return render(o);
+        }
+        if (e.target.closest("[data-clear]")) {
+          st.clear();
+          return;
+        }
+        if ((t = e.target.closest("[data-mode]"))) {
+          var box = t.closest(".sig");
+          $$("[data-mode]", box).forEach(function (b) {
+            b.setAttribute("aria-selected", b === t);
+          });
+          st.mode = t.dataset.mode;
+          box.classList.toggle("typing", st.mode === "type");
+          if (st.mode === "type") {
+            st.ready = !!st.typed;
+            $("[data-typed]", box).focus();
+          } else {
+            st.ready = $(".pad", box).classList.contains("inked");
+          }
+          refreshAct(o);
+          return;
+        }
+        if ((t = e.target.closest("[data-next]")) && !t.disabled) {
+          if (st.step === 3) {
+            st.img = st.mode === "draw" ? st.canvas.toDataURL() : null;
+            toast("Contract signed · moved to Signed");
+          } else toast(STEPS[st.step + 1][0] + " · logged to the audit trail");
+          st.step = Math.min(4, st.step + (st.step === 3 ? 1 : 1));
+          if (st.step === 4 && !st.signedOnce) {
+            st.signedOnce = true;
+          }
+          render(o);
+        }
+      });
+      document.addEventListener("input", function (e) {
+        if (!e.target.matches("[data-typed]")) return;
+        var op = e.target.closest(".opt"),
+          o = op.dataset.o,
+          st = S[o];
+        st.typed = e.target.value.trim();
+        $("[data-preview]", op).textContent = st.typed || " ";
+        st.ready = !!st.typed;
+        refreshAct(o);
+      });
+      $$("#thm .tab").forEach(function (b) {
+        b.onclick = function () {
+          $$("#thm .tab").forEach(function (x) {
+            x.setAttribute("aria-selected", x === b);
+          });
+          document.documentElement.dataset.theme = b.dataset.v;
+        };
+      });
+    </script>
+  </body>
+</html>

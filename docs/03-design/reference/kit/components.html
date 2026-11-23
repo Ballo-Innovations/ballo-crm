@@ -506,6 +506,64 @@
       </section>
 
       <section class="sec">
+        <h2>Contract progress and signature</h2>
+        <p>
+          Progress bar, black status card with the one next action, details and the signature pad.
+          Draw a signature; Sign turns on once there is one.
+        </p>
+        <div class="card contract">
+          <div class="contract__head">
+            <span class="contract__doc"></span>
+            <div>
+              <span class="contract__title">Managed Fibre Services Agreement</span
+              ><span class="contract__sub">Kariba Power Co. · CTR-2026-014</span>
+            </div>
+            <span class="contract__value">K6,400,000</span>
+          </div>
+          <div class="progress" id="cprog">
+            <div class="progress__step is-done"><span class="progress__bar"></span>Draft</div>
+            <div class="progress__step is-done"><span class="progress__bar"></span>Sent</div>
+            <div class="progress__step is-done"><span class="progress__bar"></span>Viewed</div>
+            <div class="progress__step is-current"><span class="progress__bar"></span>Signed</div>
+            <div class="progress__step"><span class="progress__bar"></span>Active</div>
+          </div>
+          <div class="status-card">
+            <span class="status-card__icon">✍</span>
+            <div class="status-card__text">
+              <span class="status-card__label">Signing</span
+              ><span class="status-card__title">Sign the contract</span
+              ><span class="status-card__context"
+                >Draw your signature below to sign on behalf of Kariba Power Co.</span
+              >
+            </div>
+          </div>
+          <div class="detail-tiles">
+            <div>Term<b>36 months</b></div>
+            <div>Start<b>1 Dec 2026</b></div>
+            <div>Billing<b>Monthly</b></div>
+            <div>Owner<b>George M.</b></div>
+          </div>
+          <div class="signature" id="csig">
+            <div class="signature__pad" id="cpad">
+              <canvas></canvas><span class="signature__line"></span
+              ><span class="signature__x">×</span
+              ><span class="signature__placeholder">Sign here with your mouse or finger</span
+              ><button class="signature__clear" id="cclear">Clear</button>
+            </div>
+            <p class="signature__consent">
+              By signing, I agree this electronic signature is the legal equivalent of my
+              handwritten signature.
+            </p>
+            <div style="display: flex; justify-content: flex-end">
+              <button class="btn btn--hero" id="csign" disabled>
+                <span class="btn__circle">✍</span>Sign contract
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="sec">
         <h2>Page states</h2>
         <p>Loading, empty (first use), no results, error. Switch:</p>
         <div class="tabs tabs--segmented" role="tablist" id="states">
@@ -1191,6 +1249,79 @@
             e.preventDefault();
             logIt();
           }
+        });
+      })();
+
+      // signature pad
+      (function () {
+        var pad = $("#cpad"),
+          cv = pad.querySelector("canvas"),
+          btn = $("#csign"),
+          ctx,
+          last = null,
+          down = false,
+          moved = 0;
+        function size() {
+          var r = pad.getBoundingClientRect(),
+            d = window.devicePixelRatio || 1;
+          cv.width = r.width * d;
+          cv.height = r.height * d;
+          ctx = cv.getContext("2d");
+          ctx.scale(d, d);
+          ctx.lineCap = "round";
+          ctx.lineJoin = "round";
+        }
+        size();
+        function pt(e) {
+          var b = cv.getBoundingClientRect();
+          return { x: e.clientX - b.left, y: e.clientY - b.top, t: Date.now() };
+        }
+        cv.addEventListener("pointerdown", function (e) {
+          down = true;
+          last = pt(e);
+          cv.setPointerCapture(e.pointerId);
+        });
+        cv.addEventListener("pointermove", function (e) {
+          if (!down) return;
+          var p = pt(e),
+            d = Math.hypot(p.x - last.x, p.y - last.y),
+            v = d / Math.max(1, p.t - last.t);
+          ctx.strokeStyle = getComputedStyle(document.documentElement)
+            .getPropertyValue("--ink")
+            .trim();
+          ctx.lineWidth = Math.max(1.4, 3.2 - v * 1.2);
+          ctx.beginPath();
+          ctx.moveTo(last.x, last.y);
+          ctx.lineTo(p.x, p.y);
+          ctx.stroke();
+          moved += d;
+          last = p;
+          if (moved > 40) {
+            pad.classList.add("is-inked");
+            btn.disabled = false;
+          }
+        });
+        ["pointerup", "pointercancel"].forEach(function (n) {
+          cv.addEventListener(n, function () {
+            down = false;
+          });
+        });
+        $("#cclear").addEventListener("click", function () {
+          ctx.clearRect(0, 0, cv.width, cv.height);
+          moved = 0;
+          pad.classList.remove("is-inked");
+          btn.disabled = true;
+        });
+        btn.addEventListener("click", function () {
+          var img = cv.toDataURL();
+          $("#csig").innerHTML =
+            '<div class="signed"><img alt="Signature" src="' +
+            img +
+            '"><div><b>Signed by Ruth Phiri</b>23 Nov 2026, 10:42 · IP 41.72.x.x</div></div><div class="audit-trail"><span>Draft 20 Nov</span><span>Sent 21 Nov</span><span>Viewed 22 Nov</span><span>Signed 23 Nov</span></div>';
+          var s = $$("#cprog .progress__step");
+          s[3].className = "progress__step is-done";
+          s[4].className = "progress__step is-current";
+          toast("Contract signed");
         });
       })();
     </script>

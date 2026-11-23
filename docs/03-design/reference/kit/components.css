@@ -2013,3 +2013,281 @@ svg {
   background: var(--card);
   font-size: 12px;
 }
+
+/* ---------- Contract progress + status card ---------- */
+.contract {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+.contract__head {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  flex-wrap: wrap;
+}
+.contract__doc {
+  width: 46px;
+  height: 56px;
+  border-radius: 10px;
+  background: var(--soft);
+  position: relative;
+  flex: none;
+}
+.contract__doc::before {
+  content: "";
+  position: absolute;
+  left: 10px;
+  right: 10px;
+  top: 14px;
+  height: 3px;
+  border-radius: 2px;
+  background: var(--bar2);
+  box-shadow:
+    0 8px 0 var(--bar2),
+    0 16px 0 var(--bar2),
+    0 24px 0 var(--line);
+}
+.contract__title {
+  display: block;
+  font-size: 18px;
+  font-weight: 600;
+}
+.contract__sub {
+  font-size: 13px;
+  color: var(--mute);
+}
+.contract__value {
+  margin-left: auto;
+  font-size: 22px;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+.progress {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 6px;
+}
+.progress__step {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--mute);
+}
+.progress__bar {
+  position: relative;
+  height: 8px;
+  border-radius: var(--r-pill);
+  background: var(--line);
+  overflow: hidden;
+}
+.progress__step.is-done,
+.progress__step.is-current {
+  color: var(--ink);
+}
+.progress__step.is-done .progress__bar {
+  background: var(--ink);
+}
+.progress__step.is-current .progress__bar::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  width: 45%;
+  background: var(--ink);
+  border-radius: var(--r-pill);
+  animation: progress-pulse 1.6s ease-in-out infinite;
+}
+.progress__step.is-failed {
+  color: var(--danger);
+}
+.progress__step.is-failed .progress__bar {
+  background: var(--danger);
+}
+@keyframes progress-pulse {
+  50% {
+    width: 70%;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .progress__step.is-current .progress__bar::after {
+    animation: none;
+  }
+}
+.status-card {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+  background: var(--ink);
+  color: var(--shell);
+  border-radius: 22px;
+  padding: 18px 20px;
+}
+.status-card__icon {
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  background: var(--shell);
+  color: var(--ink);
+  display: grid;
+  place-items: center;
+  font-size: 20px;
+  flex: none;
+}
+.status-card__text {
+  flex: 1;
+  min-width: 200px;
+}
+.status-card__label {
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  opacity: 0.6;
+}
+.status-card__title {
+  display: block;
+  font-size: 20px;
+  font-weight: 600;
+  margin: 2px 0;
+}
+.status-card__context {
+  font-size: 13px;
+  opacity: 0.75;
+}
+.status-card .btn--hero {
+  background: var(--shell);
+  color: var(--ink);
+}
+.status-card .btn--hero .btn__circle {
+  background: var(--ink);
+  color: var(--shell);
+}
+.detail-tiles {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+}
+.detail-tiles > div {
+  background: var(--soft);
+  border-radius: var(--r-row);
+  padding: 10px 12px;
+  font-size: 12px;
+  color: var(--mute);
+}
+.detail-tiles b {
+  display: block;
+  font-size: 14px;
+  color: var(--ink);
+  margin-top: 2px;
+}
+@media (max-width: 720px) {
+  .detail-tiles {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+/* ---------- Signature pad ---------- */
+.signature {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.signature__pad {
+  position: relative;
+  height: 170px;
+  border-radius: 20px;
+  background: var(--soft);
+  overflow: hidden;
+  touch-action: none;
+}
+.signature__pad canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  cursor: crosshair;
+}
+.signature__line {
+  position: absolute;
+  left: 24px;
+  right: 24px;
+  bottom: 42px;
+  border-bottom: 1.5px dashed var(--bar2);
+  pointer-events: none;
+}
+.signature__x {
+  position: absolute;
+  left: 24px;
+  bottom: 48px;
+  font-size: 20px;
+  color: var(--bar2);
+  pointer-events: none;
+}
+.signature__placeholder {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  color: var(--mute);
+  font-size: 14px;
+  pointer-events: none;
+  transition: opacity 200ms;
+}
+.signature__pad.is-inked .signature__placeholder {
+  opacity: 0;
+}
+.signature__clear {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  display: none;
+  border: 0;
+  background: var(--card);
+  border-radius: var(--r-pill);
+  padding: 5px 12px;
+  font-size: 12px;
+  font-weight: 600;
+}
+.signature__pad.is-inked .signature__clear {
+  display: block;
+}
+.signature__consent {
+  font-size: 12px;
+  color: var(--mute);
+  line-height: 1.5;
+}
+.signed {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  background: var(--soft);
+  border-radius: 18px;
+  padding: 12px 14px;
+  font-size: 13px;
+  color: var(--mute);
+}
+.signed b {
+  display: block;
+  color: var(--ink);
+  font-size: 14px;
+}
+.signed img {
+  height: 70px;
+  max-width: 220px;
+  object-fit: contain;
+}
+.audit-trail {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+  font-size: 12px;
+  color: var(--mute);
+}
+.audit-trail span {
+  background: var(--soft);
+  border-radius: var(--r-pill);
+  padding: 3px 10px;
+}
