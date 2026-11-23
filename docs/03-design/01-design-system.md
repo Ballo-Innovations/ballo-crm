@@ -4,6 +4,10 @@
 the screenshots beside it. When this doc and the reference disagree, the reference wins; raise it
 so the doc gets fixed. Every new screen must look like it belongs next to that dashboard.
 
+**Code:** the UI kit in `docs/03-design/reference/kit/` holds the decided designs as CSS
+(`tokens.css`, `components.css`), a live showcase (`components.html`) and the mapping to the
+app's shadcn variables (`README.md`). Coding agents build from the kit.
+
 ## Principles
 
 Monochrome, soft and calm. Black, white and greys do the work; colour is rare and always means
