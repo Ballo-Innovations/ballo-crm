@@ -33,13 +33,13 @@ export function EntityAvatar({
       className={cn(
         "bg-soft text-ink relative grid shrink-0 place-items-center rounded-full font-bold",
         SIZES[size],
-        logoUrl && "bg-card p-[16%] shadow-[0_0_0_1px_var(--line)]",
+        logoUrl && "bg-card shadow-[0_0_0_1px_var(--line)]",
         className,
       )}
     >
       {logoUrl ? (
         // eslint-disable-next-line @next/next/no-img-element -- tiny logos, any origin
-        <img src={logoUrl} alt="" className="size-full object-contain grayscale" />
+        <img src={logoUrl} alt="" className="size-[68%] object-contain grayscale" />
       ) : (
         <span aria-hidden>{initials(name)}</span>
       )}
@@ -64,14 +64,14 @@ export function AvatarStack({ names, size = 32 }: { names: string[]; size?: 24 |
           key={n + i}
           name={n}
           size={size}
-          className={cn("shadow-[0_0_0_2px_var(--card)]", i > 0 && "-ml-2")}
+          className={cn("shadow-[0_0_0_2px_var(--card)]", i > 0 && "-ml-1.5")}
         />
       ))}
       {rest > 0 && (
         <span
           aria-hidden
           className={cn(
-            "bg-ink text-shell -ml-2 grid place-items-center rounded-full font-bold shadow-[0_0_0_2px_var(--card)]",
+            "bg-ink text-shell -ml-1.5 grid place-items-center rounded-full font-bold shadow-[0_0_0_2px_var(--card)]",
             SIZES[size],
           )}
         >
