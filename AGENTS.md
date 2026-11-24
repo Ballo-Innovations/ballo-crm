@@ -55,7 +55,10 @@ adding anything that is not on it.
 - Every mutating server action: `requireRole([...])` → zod parse → `withAudit(...)`.
 - Money is integer ngwee; format with `formatZMW`. Dates UTC in DB; display Africa/Lusaka.
 - Enums come from Prisma; never string-literal a stage/grade/role.
-- UI: shadcn components only, styled to the monochrome design in `docs/03-design/01-design-system.md`.
+- UI: the monochrome design in `docs/03-design/01-design-system.md`. Use the built components
+  first (list below); `src/components/ui/` holds shadcn primitives (dialog, select, popover,
+  tabs, tooltip, inputs…) as bases to style to the kit, and `ui/button` and `ui/card` are for
+  the marketing site only.
   Build from the UI kit in `docs/03-design/reference/kit/` (tokens, component CSS, live
   showcase and the shadcn variable mapping in its README); the `*-options.html` pages contain
   rejected designs and are background only. Detail views open in the right Drawer, not a new

@@ -18,9 +18,12 @@ The written rules (when to use what, copy, accessibility) stay in
 The app is Next.js with Tailwind 4 and shadcn/ui (`src/app/globals.css`). Do not import these CSS
 files into the app. Instead:
 
-1. **Theme:** set the shadcn variables in `globals.css` to the kit tokens (below), and load
-   Urbanist with `next/font/google` as `--font-sans`.
-2. **Components:** use the shadcn component, then match the kit with Tailwind classes. The kit's
+1. **Theme:** done. `globals.css` maps the kit tokens to shadcn variables and adds the
+   design-system names as Tailwind colours (`bg-shell`, `bg-main`, `bg-soft`, `text-mute`,
+   `text-ink`, `border-line`, `rounded-card`, `ease-ballo`…); Urbanist is `--font-sans`.
+2. **Components:** first use the built React components (listed in the design system under
+   "Built so far" and shown on the app's `/kit` page). For anything not built yet, start from a
+   shadcn primitive in `src/components/ui/` and match the kit with Tailwind classes. The kit's
    class names (`btn--hero`, `field__label`, `drawer`) are a shared vocabulary for what each
    piece looks like, not classes to ship.
 3. **Icons:** lucide-react, 17px, stroke 2. The showcase uses text glyphs only to stay
