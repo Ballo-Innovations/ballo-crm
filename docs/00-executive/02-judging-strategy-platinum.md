@@ -14,7 +14,7 @@ Hackathon rubrics almost always weight: problem fit, completeness, innovation, t
 
 ## Tactics
 
-1. **Name modules exactly as the challenge does.** Nav: Pipeline · Accounts · ABM · VSI · Engagement · Contracts · CIMS · Insights · Admin.
+1. **Use the challenge's own words where judges look.** The nav follows the design system (Dashboard · Pipeline · Accounts · Leads · Forecast · Engagement · Contracts · Intelligence · Settings), and the challenge's terms are the visible tab and section titles inside it: **ABM** tab in Accounts, **VSI** section in Forecast, **CIMS** heading in Settings, **Insights** feed in Intelligence. Say them out loud in the demo.
 2. **Show the inputs behind every number.** Every score, grade and recommendation opens an explanation panel.
 3. **Let judges touch it.** Seeded demo URL + credentials on the last slide.
 4. **Pre-empt "it's just a CRM".** Open the pitch on the Insights feed, not the pipeline.

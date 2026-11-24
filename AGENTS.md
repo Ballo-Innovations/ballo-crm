@@ -60,6 +60,12 @@ adding anything that is not on it.
   showcase and the shadcn variable mapping in its README); the `*-options.html` pages contain
   rejected designs and are background only. Detail views open in the right Drawer, not a new
   page.
+- Reuse the built components before writing new ones (all shown on `/kit`): `AppShell`,
+  `CommandPalette`, `KpiCard`, `AppButton`, `Pill`, `GradeBadge`, `EntityAvatar`, `DataTable`,
+  `DockedDrawer` + `useOpenParam`, and the page states in `src/components/shared/page-states.tsx`.
+  Toasts only through `notify` (`src/components/feedback/notify.tsx`). Compact money with
+  `formatZMWCompact`. App routes: `/dashboard /pipeline /accounts /leads /forecast /engagement
+/contracts /intelligence /settings` (`src/lib/site.ts`).
 - Loading, empty, error states are mandatory on every list/page.
 - No `any`. No console.log in committed code.
 
