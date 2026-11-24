@@ -1,0 +1,97 @@
+/*
+ * BalloCRM design tokens — the single source of truth for colour, type, shape and motion.
+ * Decided in docs/03-design/01-design-system.md. Light is the default; dark applies with
+ * prefers-color-scheme or the .dark / [data-theme="dark"] class (the app uses .dark).
+ */
+:root {
+  /* colour */
+  --shell: #ffffff; /* app background, sidebar */
+  --main: #ececec; /* the rounded content panel */
+  --card: #ffffff; /* cards, drawer, modal, controls on the panel */
+  --ink: #0d0d0d; /* text, active nav, primary buttons, primary series */
+  --mute: #6b6b6b; /* secondary text, axis labels */
+  --soft: #f3f3f3; /* icon circles, rows, neutral pills, fields */
+  --line: #e4e4e4; /* borders, grid lines, row hover */
+  --bar2: #d4d4d4; /* unchecked controls, quiet fills (charts use --chart-2/3) */
+  --danger: #dc2626; /* at-risk, lost, destructive only */
+  --chart-2: #7a7a7a; /* chart comparison series (validated grey ramp) */
+  --chart-3: #c8c8c8; /* chart third series */
+  --scrim: rgb(0 0 0 / 0.32);
+
+  /* type */
+  --font: "Urbanist", ui-sans-serif, system-ui, sans-serif;
+  --fs-label: 12px;
+  --fs-small: 13px;
+  --fs-body: 15px;
+  --fs-card-title: 22px;
+  --fs-kpi: 24px;
+  --fs-page-title: 26px;
+
+  /* shape */
+  --r-panel: 32px;
+  --r-card: 28px;
+  --r-kpi: 26px;
+  --r-drawer: 22px;
+  --r-row: 16px;
+  --r-pill: 999px;
+
+  /* spacing */
+  --gap-panel: 16px; /* gap between window edge and the content panel */
+  --pad-card: 26px;
+  --pad-card-phone: 18px;
+  --gap-cards: 22px;
+
+  /* sizes */
+  --h-btn-sm: 34px;
+  --h-btn: 44px;
+  --h-btn-lg: 52px;
+  --h-field: 50px;
+  --w-sidebar: 248px;
+  --w-sidebar-mini: 84px;
+  --w-drawer: 400px;
+  --w-modal: 440px;
+
+  /* motion */
+  --ease: cubic-bezier(0.2, 0.8, 0.2, 1);
+  --t-fast: 150ms;
+  --t-base: 220ms;
+  --t-slow: 300ms;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]):not(.light) {
+    --shell: #111111;
+    --main: #1b1b1b;
+    --card: #242424;
+    --ink: #f5f5f5;
+    --mute: #9a9a9a;
+    --soft: #2e2e2e;
+    --line: #3a3a3a;
+    --bar2: #505050;
+    --danger: #f87171;
+    --chart-2: #9a9a9a;
+    --chart-3: #505050;
+  }
+}
+:root[data-theme="dark"],
+.dark {
+  --shell: #111111;
+  --main: #1b1b1b;
+  --card: #242424;
+  --ink: #f5f5f5;
+  --mute: #9a9a9a;
+  --soft: #2e2e2e;
+  --line: #3a3a3a;
+  --bar2: #505050;
+  --danger: #f87171;
+  --chart-2: #9a9a9a;
+  --chart-3: #505050;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --t-fast: 0ms;
+    --t-base: 0ms;
+    --t-slow: 0ms;
+  }
+}

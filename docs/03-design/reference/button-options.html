@@ -1,0 +1,732 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Button Options</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Urbanist:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --shell: #fff;
+        --main: #ececec;
+        --card: #fff;
+        --ink: #0d0d0d;
+        --mute: #6b6b6b;
+        --soft: #f3f3f3;
+        --line: #e4e4e4;
+        --bar2: #d4d4d4;
+        --danger: #dc2626;
+      }
+      :root[data-theme="dark"] {
+        --shell: #111;
+        --main: #1b1b1b;
+        --card: #242424;
+        --ink: #f5f5f5;
+        --mute: #9a9a9a;
+        --soft: #2e2e2e;
+        --line: #3a3a3a;
+        --bar2: #505050;
+        --danger: #f87171;
+      }
+      * {
+        box-sizing: border-box;
+        margin: 0;
+      }
+      body {
+        background: var(--shell);
+        color: var(--ink);
+        font-family: Urbanist, system-ui, sans-serif;
+        -webkit-font-smoothing: antialiased;
+        padding: 40px 32px 80px;
+      }
+      button {
+        font: inherit;
+        color: inherit;
+        cursor: pointer;
+      }
+      svg {
+        width: 16px;
+        height: 16px;
+        flex: none;
+      }
+      .wrap {
+        max-width: 1360px;
+        margin: auto;
+      }
+      .page-hd {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-end;
+        gap: 16px;
+        flex-wrap: wrap;
+        margin-bottom: 28px;
+      }
+      .page-hd h1 {
+        font-size: 30px;
+        font-weight: 700;
+      }
+      .page-hd p {
+        color: var(--mute);
+        margin-top: 6px;
+        font-size: 15px;
+        max-width: 700px;
+        line-height: 1.5;
+      }
+      .seg {
+        display: inline-flex;
+        background: var(--soft);
+        border-radius: 30px;
+        padding: 4px;
+        gap: 2px;
+      }
+      .seg button {
+        border: 0;
+        background: none;
+        padding: 8px 16px;
+        border-radius: 24px;
+        font-size: 14px;
+        font-weight: 500;
+      }
+      .seg button.on {
+        background: var(--ink);
+        color: var(--shell);
+      }
+      .opt {
+        background: var(--main);
+        border-radius: 32px;
+        padding: 24px;
+        margin-bottom: 24px;
+      }
+      .opt-hd {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin-bottom: 6px;
+      }
+      .badge {
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        background: var(--ink);
+        color: var(--shell);
+        display: grid;
+        place-items: center;
+        font-weight: 700;
+        font-size: 16px;
+        flex: none;
+      }
+      .opt-hd h2 {
+        font-size: 22px;
+        font-weight: 600;
+      }
+      .opt-desc {
+        color: var(--mute);
+        font-size: 15px;
+        margin: 0 0 18px 48px;
+        line-height: 1.5;
+      }
+      .cols {
+        display: grid;
+        grid-template-columns: 1.2fr 1fr;
+        gap: 18px;
+      }
+      .card {
+        background: var(--card);
+        border-radius: 24px;
+        padding: 22px;
+      }
+      .card h3 {
+        font-size: 13px;
+        font-weight: 600;
+        color: var(--mute);
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+        margin: 0 0 12px;
+      }
+      .card h3:not(:first-child) {
+        margin-top: 22px;
+      }
+      .line {
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+        align-items: center;
+      }
+      .cap {
+        font-size: 12px;
+        color: var(--mute);
+        margin-top: 6px;
+      }
+
+      /* ---------- base button ---------- */
+      .b {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        border: 1.5px solid transparent;
+        font-weight: 600;
+        white-space: nowrap;
+        position: relative;
+        transition:
+          background 0.15s,
+          color 0.15s,
+          border-color 0.15s,
+          transform 0.1s,
+          opacity 0.15s;
+        height: 44px;
+        padding: 0 20px;
+        font-size: 14px;
+      }
+      .b:active:not(:disabled) {
+        transform: scale(0.97);
+      }
+      .b:focus-visible {
+        outline: 2px solid var(--ink);
+        outline-offset: 3px;
+      }
+      .b:disabled {
+        opacity: 0.4;
+        cursor: not-allowed;
+      }
+      .b.sm {
+        height: 34px;
+        padding: 0 14px;
+        font-size: 13px;
+      }
+      .b.lg {
+        height: 52px;
+        padding: 0 26px;
+        font-size: 15px;
+      }
+      .b.pri {
+        background: var(--ink);
+        color: var(--shell);
+      }
+      .b.pri:hover:not(:disabled) {
+        background: color-mix(in srgb, var(--ink) 82%, var(--shell));
+      }
+      .b.sec {
+        background: transparent;
+        border-color: var(--ink);
+      }
+      .b.sec:hover:not(:disabled) {
+        background: var(--soft);
+      }
+      .b.ter {
+        background: var(--soft);
+      }
+      .b.ter:hover:not(:disabled) {
+        background: var(--line);
+      }
+      .b.gho {
+        background: transparent;
+      }
+      .b.gho:hover:not(:disabled) {
+        background: var(--soft);
+      }
+      .b.dan {
+        background: var(--danger);
+        color: #fff;
+      }
+      .b.dan:hover:not(:disabled) {
+        background: color-mix(in srgb, var(--danger) 85%, #000);
+      }
+      .b.dan-o {
+        border-color: color-mix(in srgb, var(--danger) 45%, transparent);
+        color: var(--danger);
+        background: transparent;
+      }
+      .b.dan-o:hover:not(:disabled) {
+        background: color-mix(in srgb, var(--danger) 8%, transparent);
+      }
+      .b.ic {
+        width: 44px;
+        padding: 0;
+      }
+      .b.ic.sm {
+        width: 34px;
+      }
+      .b.ic.lg {
+        width: 52px;
+      }
+      .b .spin {
+        width: 16px;
+        height: 16px;
+        border-radius: 50%;
+        border: 2px solid currentColor;
+        border-right-color: transparent;
+        animation: sp 0.7s linear infinite;
+        display: none;
+      }
+      .b.busy .spin {
+        display: block;
+      }
+      .b.busy .ico {
+        display: none;
+      }
+      .b.busy {
+        pointer-events: none;
+      }
+      @keyframes sp {
+        to {
+          transform: rotate(360deg);
+        }
+      }
+      .b .dot {
+        position: absolute;
+        top: 8px;
+        right: 9px;
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: var(--ink);
+        border: 2px solid var(--card);
+      }
+      .grp {
+        display: inline-flex;
+      }
+
+      /* ---------- A pill ---------- */
+      .A .b {
+        border-radius: 999px;
+      }
+      .A .grp .b {
+        border-radius: 0;
+      }
+      .A .grp .b:first-child {
+        border-radius: 999px 0 0 999px;
+      }
+      .A .grp .b:last-child {
+        border-radius: 0 999px 999px 0;
+        border-left: 1px solid color-mix(in srgb, var(--shell) 30%, transparent);
+        padding: 0 14px;
+      }
+
+      /* ---------- B rounded rect ---------- */
+      .B .b {
+        border-radius: 14px;
+      }
+      .B .b.sm {
+        border-radius: 11px;
+      }
+      .B .b.lg {
+        border-radius: 16px;
+      }
+      .B .b.ic {
+        border-radius: 50%;
+      }
+      .B .grp .b {
+        border-radius: 0;
+      }
+      .B .grp .b:first-child {
+        border-radius: 14px 0 0 14px;
+      }
+      .B .grp .b:last-child {
+        border-radius: 0 14px 14px 0;
+        border-left: 1px solid color-mix(in srgb, var(--shell) 30%, transparent);
+        padding: 0 14px;
+      }
+
+      /* ---------- C pill + icon circle ---------- */
+      .C .b {
+        border-radius: 999px;
+      }
+      :is(.C, .D) .b.hasc {
+        padding-left: 5px;
+      }
+      :is(.C, .D) .b.hasc.sm {
+        padding-left: 4px;
+      }
+      .C .b.hasc.lg {
+        padding-left: 6px;
+      }
+      :is(.C, .D) .b .circ {
+        width: 34px;
+        height: 34px;
+        border-radius: 50%;
+        display: grid;
+        place-items: center;
+        flex: none;
+        transition: transform 0.2s;
+      }
+      :is(.C, .D) .b.sm .circ {
+        width: 26px;
+        height: 26px;
+      }
+      .C .b.lg .circ {
+        width: 40px;
+        height: 40px;
+      }
+      :is(.C, .D) .b.pri .circ {
+        background: var(--shell);
+        color: var(--ink);
+      }
+      :is(.C, .D) .b.sec .circ,
+      .C .b.gho .circ,
+      .C .b.ter .circ {
+        background: var(--ink);
+        color: var(--shell);
+      }
+      :is(.C, .D) .b.ter .circ {
+        background: var(--card);
+        color: var(--ink);
+      }
+      :is(.C, .D) .b.dan .circ {
+        background: #fff;
+        color: var(--danger);
+      }
+      :is(.C, .D) .b.dan-o .circ {
+        background: color-mix(in srgb, var(--danger) 12%, transparent);
+        color: var(--danger);
+      }
+      :is(.C, .D) .b:hover:not(:disabled) .circ {
+        transform: rotate(-12deg) scale(1.05);
+      }
+      :is(.C, .D) .b .circ .spin {
+        display: none;
+      }
+      .C .b.busy .circ .spin {
+        display: block;
+      }
+      .C .b.busy .circ .ico {
+        display: none;
+      }
+      .C .grp .b {
+        border-radius: 0;
+      }
+      .C .grp .b:first-child {
+        border-radius: 999px 0 0 999px;
+      }
+      .C .grp .b:last-child {
+        border-radius: 0 999px 999px 0;
+        border-left: 1px solid color-mix(in srgb, var(--shell) 30%, transparent);
+        padding: 0 14px;
+      }
+
+      /* ---------- D combo ---------- */
+      .D {
+        outline: 2px solid var(--ink);
+        outline-offset: -2px;
+      }
+      .D .b {
+        border-radius: 999px;
+      }
+      .D .grp .b {
+        border-radius: 0;
+      }
+      .D .grp .b:first-child {
+        border-radius: 999px 0 0 999px;
+      }
+      .D .grp .b:last-child {
+        border-radius: 0 999px 999px 0;
+        border-left: 1px solid color-mix(in srgb, var(--shell) 30%, transparent);
+        padding: 0 14px;
+      }
+      .tag {
+        font-size: 12px;
+        font-weight: 600;
+        background: var(--ink);
+        color: var(--shell);
+        border-radius: 20px;
+        padding: 3px 10px;
+        margin-left: 4px;
+      }
+      /* ---------- contexts ---------- */
+      .ctx {
+        background: var(--main);
+        border-radius: 20px;
+        padding: 14px;
+      }
+      .ctx + .ctx {
+        margin-top: 12px;
+      }
+      .ctx-hd {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 10px;
+        flex-wrap: wrap;
+      }
+      .ctx-hd b {
+        font-size: 17px;
+      }
+      .drawer {
+        background: var(--card);
+        border-radius: 18px;
+        overflow: hidden;
+      }
+      .drawer .body {
+        padding: 16px;
+        font-size: 14px;
+        color: var(--mute);
+      }
+      .drawer .ft {
+        display: flex;
+        justify-content: space-between;
+        gap: 10px;
+        padding: 12px 16px;
+        border-top: 1px solid var(--line);
+      }
+      .empty {
+        background: var(--card);
+        border-radius: 18px;
+        padding: 22px;
+        text-align: center;
+      }
+      .empty .ec {
+        width: 46px;
+        height: 46px;
+        border-radius: 50%;
+        background: var(--soft);
+        display: grid;
+        place-items: center;
+        margin: 0 auto 10px;
+      }
+      .empty p {
+        color: var(--mute);
+        font-size: 14px;
+        margin-bottom: 14px;
+      }
+      .toast {
+        position: fixed;
+        left: 50%;
+        bottom: 24px;
+        transform: translate(-50%, 120px);
+        opacity: 0;
+        background: var(--ink);
+        color: var(--shell);
+        padding: 12px 18px;
+        border-radius: 30px;
+        font-size: 14px;
+        transition: all 0.3s;
+        z-index: 50;
+      }
+      .toast.on {
+        transform: translate(-50%, 0);
+        opacity: 1;
+      }
+      @media (max-width: 1000px) {
+        .cols {
+          grid-template-columns: 1fr;
+        }
+        .opt-desc {
+          margin-left: 0;
+        }
+      }
+      @media (max-width: 720px) {
+        body {
+          padding: 20px 12px 60px;
+        }
+        .opt {
+          padding: 14px;
+          border-radius: 24px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <div class="page-hd">
+        <div>
+          <h1>Buttons — 4 options</h1>
+          <p>
+            Same set of buttons in three shapes, shown on their own and in real places (table
+            header, drawer footer, empty state). Hover, press and click — action buttons show a
+            loading spinner, then a toast.
+          </p>
+        </div>
+        <div class="seg" id="thm">
+          <button class="on" data-v="light">Light</button><button data-v="dark">Dark</button>
+        </div>
+      </div>
+      <div id="opts"></div>
+    </div>
+    <div class="toast" id="toast"></div>
+    <script>
+      var P = {
+        plus: '<path d="M12 5v14M5 12h14"/>',
+        up: '<path d="M12 15V4M7 9l5-5 5 5M5 20h14"/>',
+        arrow: '<path d="M7 17L17 7M9 7h8v8"/>',
+        trash: '<path d="M4 7h16M9 7V4h6v3M6 7l1 13h10l1-13"/>',
+        bell: '<path d="M6 16V11a6 6 0 0 1 12 0v5l2 2H4zM10 21h4"/>',
+        dots: '<circle cx="5" cy="12" r="1.6"/><circle cx="12" cy="12" r="1.6"/><circle cx="19" cy="12" r="1.6"/>',
+        filter: '<path d="M4 6h16M7 12h10M10 18h4"/>',
+        x: '<path d="M6 6l12 12M18 6L6 18"/>',
+        chev: '<path d="M6 9l6 6 6-6"/>',
+        check: '<path d="M4 12l5 5L20 6"/>',
+        ban: '<circle cx="12" cy="12" r="8"/><path d="M6.5 6.5l11 11"/>',
+        edit: '<path d="M4 20h4L19 9l-4-4L4 16zM14 6l4 4"/>',
+      };
+      function ic(k) {
+        return (
+          '<svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">' +
+          P[k] +
+          "</svg>"
+        );
+      }
+      var SP = '<span class="spin"></span>';
+      /* btn(kind,label,icon,opts) ; in C the icon goes in a circle on the left */
+      function btn(o, kind, label, icon, x) {
+        x = x || {};
+        var cls = "b " + kind + (x.size ? " " + x.size : "") + (label ? "" : " ic");
+        var act = x.act ? ' data-act="' + x.act + '"' : "";
+        var dis = x.dis ? " disabled" : "";
+        var t = label ? "" : ' aria-label="' + (x.al || icon) + '" title="' + (x.al || icon) + '"';
+        if ((o === "C" || (o === "D" && x.hero)) && label && icon && !x.trail) {
+          return (
+            '<button class="' +
+            cls +
+            ' hasc"' +
+            act +
+            dis +
+            t +
+            '><span class="circ">' +
+            ic(icon) +
+            SP +
+            "</span>" +
+            label +
+            "</button>"
+          );
+        }
+        var i = icon ? ic(icon) + SP : SP;
+        return (
+          '<button class="' +
+          cls +
+          '"' +
+          act +
+          dis +
+          t +
+          ">" +
+          (x.trail ? label + i : (icon ? i : SP) + (label || "")) +
+          (x.dot ? '<span class="dot"></span>' : "") +
+          "</button>"
+        );
+      }
+      var desc = {
+        A: [
+          "Pill",
+          "Fully rounded, like the fields, chips and nav pills. Softest and most consistent with what we have chosen so far.",
+        ],
+        B: [
+          "Rounded rectangle",
+          '14px corners — what the dashboard mockup uses today. A little firmer; reads as a "button" at a glance. Icon buttons stay round.',
+        ],
+        D: [
+          "A + C combined",
+          "Pill buttons everywhere (A), plus the icon-circle style (C) for the one hero action on a screen — Quick add, Add lead, Create, Advance stage. Everything else stays a plain pill, so the signature look stays special.",
+        ],
+        C: [
+          "Pill with icon circle",
+          "Pills where the icon sits in its own circle, exactly like the active sidebar item. The most distinctive and on-brand; the icon circle tilts on hover.",
+        ],
+      };
+      var h = "";
+      ["D", "A", "B", "C"].forEach(function (o) {
+        h +=
+          '<section class="opt ' +
+          o +
+          '"><div class="opt-hd"><div class="badge">' +
+          o +
+          "</div><h2>" +
+          desc[o][0] +
+          '</h2></div><p class="opt-desc">' +
+          desc[o][1] +
+          '</p><div class="cols"><div class="card">' +
+          '<h3>Variants</h3><div class="line">' +
+          (o === "D" ? btn(o, "pri", "Hero", "plus", { act: "save", hero: 1 }) : "") +
+          btn(o, "pri", "Primary", "plus", { act: "save" }) +
+          btn(o, "sec", "Secondary", "up", { act: "save" }) +
+          btn(o, "ter", "Tertiary", "filter") +
+          btn(o, "gho", "Ghost", "edit") +
+          "</div>" +
+          '<div class="cap">Primary: one per area (Create, Save, Advance) · Secondary: Export, Cancel · Tertiary: filters, toggles on white · Ghost: inline, low emphasis</div>' +
+          '<h3>Destructive</h3><div class="line">' +
+          btn(o, "dan", "Delete account", "trash", { act: "del" }) +
+          btn(o, "dan-o", "Mark as lost", "ban", { act: "del" }) +
+          "</div>" +
+          '<div class="cap">Solid red only inside a confirm dialog; the outlined red version starts the action.</div>' +
+          '<h3>Sizes</h3><div class="line">' +
+          btn(o, "pri", "Small", "plus", { size: "sm" }) +
+          btn(o, "pri", "Medium", "plus") +
+          btn(o, "pri", "Large", "plus", { size: "lg" }) +
+          "</div>" +
+          '<div class="cap">34 · 44 · 52px tall. Medium is the default; large for phone footers and empty states.</div>' +
+          '<h3>Icon buttons</h3><div class="line">' +
+          btn(o, "ter", "", "bell", { al: "Notifications", dot: 1 }) +
+          btn(o, "ter", "", "dots", { al: "More" }) +
+          btn(o, "gho", "", "x", { al: "Close" }) +
+          btn(o, "pri", "", "plus", { al: "Quick add" }) +
+          btn(o, "ter", "", "dots", { al: "More", size: "sm" }) +
+          "</div>" +
+          '<h3>States</h3><div class="line">' +
+          btn(o, "pri", "Saving…", "check", { x: 1 }).replace('class="b pri', 'class="b pri busy') +
+          btn(o, "pri", "Disabled", "check", { dis: 1 }) +
+          btn(o, "sec", "Disabled", "up", { dis: 1 }) +
+          '<span class="grp">' +
+          btn(o, "pri", "Advance stage", "arrow", { act: "save" }) +
+          btn(o, "pri", "", "chev", { al: "More stages" }) +
+          "</span></div>" +
+          '<div class="cap">Loading keeps the width and swaps the icon for a spinner · Split button for a main action with alternatives</div>' +
+          "</div><div>" +
+          '<div class="ctx"><div class="ctx-hd"><b>Opportunities</b><div class="line">' +
+          btn(o, "sec", "Stage", "chev", { trail: 1, size: "sm" }) +
+          btn(o, "pri", "Export", "up", { act: "save", size: "sm", trail: o !== "C" }) +
+          "</div></div></div>" +
+          '<div class="ctx"><div class="drawer"><div class="body">Drawer footer — Fibre backbone Lusaka–Ndola</div><div class="ft">' +
+          btn(o, "dan-o", "Mark as lost", "ban", { act: "del" }) +
+          btn(o, "pri", "Advance stage", "arrow", { act: "save", hero: 1 }) +
+          "</div></div></div>" +
+          '<div class="ctx"><div class="empty"><div class="ec">' +
+          ic("plus") +
+          "</div><p>No leads yet. Add your first one to start the pipeline.</p>" +
+          btn(o, "pri", "Add lead", "plus", { act: "save", size: "lg", hero: 1 }) +
+          "</div></div>" +
+          '<div class="ctx"><div class="ctx-hd"><div class="line">' +
+          btn(o, "pri", "Quick add", "plus", { hero: 1 }) +
+          btn(o, "ter", "", "bell", { al: "Notifications", dot: 1 }) +
+          '</div><span style="font-size:13px;color:var(--mute)">Top bar</span></div></div>' +
+          "</div></div></section>";
+      });
+      document.getElementById("opts").innerHTML = h;
+      function toast(m) {
+        var t = document.getElementById("toast");
+        t.textContent = m;
+        t.classList.add("on");
+        clearTimeout(t._t);
+        t._t = setTimeout(function () {
+          t.classList.remove("on");
+        }, 2200);
+      }
+      document.addEventListener("click", function (e) {
+        var b = e.target.closest(".b[data-act]");
+        if (!b) return;
+        if (b.dataset.act === "del") {
+          toast("Would open a confirm dialog");
+          return;
+        }
+        var w = b.offsetWidth;
+        b.style.width = w + "px";
+        b.classList.add("busy");
+        setTimeout(function () {
+          b.classList.remove("busy");
+          b.style.width = "";
+          toast("Saved");
+        }, 1000);
+      });
+      var g = document.getElementById("thm");
+      g.querySelectorAll("button").forEach(function (b) {
+        b.onclick = function () {
+          g.querySelectorAll("button").forEach(function (x) {
+            x.classList.remove("on");
+          });
+          b.classList.add("on");
+          document.documentElement.dataset.theme = b.dataset.v;
+        };
+      });
+    </script>
+  </body>
+</html>

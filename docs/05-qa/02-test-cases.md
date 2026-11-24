@@ -51,7 +51,7 @@
 - [ ] TC-63 Reused token rejected
 - [ ] TC-64 Renewals page lists contracts ending within 90d; matching insight exists
 
-## CIMS / Admin
+## Settings (CIMS admin)
 
 - [ ] TC-70 Audit log shows CREATE/UPDATE with before/after diff for TC-11
 - [ ] TC-71 Export account JSON contains contacts, opps, contracts

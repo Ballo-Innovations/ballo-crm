@@ -42,7 +42,7 @@ Weighted value is the scoring spec's `weighted_value`.
 
 Pipeline by stage (count, value, weighted), conversion funnel, stale deals (>14d), grade distribution, rep leaderboard.
 
-## Sector drilldown (`/vsi/[sector]`)
+## Sector drilldown (`/forecast/vsi/[sector]`)
 
 Accounts in sector, ARR trend, product mix, top opportunities, whitespace matrix for the sector.
 

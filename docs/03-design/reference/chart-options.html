@@ -1,0 +1,758 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Chart Options</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Urbanist:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="kit/tokens.css" />
+    <link rel="stylesheet" href="kit/components.css" />
+    <style>
+      :root {
+        --c2: #7a7a7a;
+        --c3: #c8c8c8;
+      }
+      :root[data-theme="dark"] {
+        --c2: #9a9a9a;
+        --c3: #505050;
+      }
+      @media (prefers-color-scheme: dark) {
+        :root:not([data-theme="light"]) {
+          --c2: #9a9a9a;
+          --c3: #505050;
+        }
+      }
+      body {
+        padding: 40px 32px 80px;
+      }
+      .wrap {
+        max-width: 1360px;
+        margin: auto;
+      }
+      .page-hd {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-end;
+        gap: 16px;
+        flex-wrap: wrap;
+        margin-bottom: 28px;
+      }
+      .page-hd h1 {
+        font-size: 30px;
+        font-weight: 700;
+      }
+      .page-hd p {
+        color: var(--mute);
+        margin-top: 6px;
+        font-size: 15px;
+        max-width: 800px;
+        line-height: 1.5;
+      }
+      .opt {
+        margin-bottom: 48px;
+      }
+      .opt-hd {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin-bottom: 6px;
+      }
+      .badge {
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        background: var(--ink);
+        color: var(--shell);
+        display: grid;
+        place-items: center;
+        font-weight: 700;
+        font-size: 15px;
+        flex: none;
+      }
+      .opt-hd h2 {
+        font-size: 22px;
+        font-weight: 600;
+      }
+      .opt-desc {
+        color: var(--mute);
+        font-size: 15px;
+        margin: 0 0 14px 48px;
+        line-height: 1.5;
+        max-width: 900px;
+      }
+      .stage {
+        background: var(--main);
+        border-radius: 28px;
+        padding: 18px;
+        display: grid;
+        grid-template-columns: 1.5fr 1fr;
+        gap: 16px;
+      }
+      .ch {
+        background: var(--card);
+        border-radius: 26px;
+        padding: 22px;
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        min-width: 0;
+        position: relative;
+      }
+      .ch .hd {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        gap: 10px;
+        flex-wrap: wrap;
+      }
+      .ch .t {
+        font-size: 18px;
+        font-weight: 600;
+      }
+      .ch .sub {
+        font-size: 13px;
+        color: var(--mute);
+        margin-top: 2px;
+      }
+      .ch .hero {
+        font-size: 28px;
+        font-weight: 700;
+        font-variant-numeric: tabular-nums;
+      }
+      .ch .hero small {
+        font-size: 13px;
+        font-weight: 600;
+        color: var(--mute);
+        margin-left: 6px;
+      }
+      .legend {
+        display: flex;
+        gap: 14px;
+        flex-wrap: wrap;
+        font-size: 12px;
+        color: var(--mute);
+      }
+      .legend span {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+      }
+      .legend i {
+        width: 12px;
+        height: 12px;
+        border-radius: 4px;
+        display: inline-block;
+      }
+      svg.c {
+        width: 100%;
+        height: auto;
+        display: block;
+        overflow: visible;
+      }
+      svg text {
+        font-family: var(--font);
+        font-size: 11px;
+        fill: var(--mute);
+      }
+      .tip {
+        position: absolute;
+        pointer-events: none;
+        background: var(--ink);
+        color: var(--shell);
+        border-radius: 14px;
+        padding: 8px 12px;
+        font-size: 12px;
+        line-height: 1.5;
+        opacity: 0;
+        transition: opacity 0.12s;
+        white-space: nowrap;
+        z-index: 5;
+        box-shadow: 0 10px 24px rgba(0, 0, 0, 0.18);
+      }
+      .tip b {
+        font-size: 14px;
+      }
+      .tip.on {
+        opacity: 1;
+      }
+      .span2 {
+        grid-column: 1/-1;
+      }
+      .tbl {
+        font-size: 12px;
+        color: var(--mute);
+      }
+      .note {
+        background: var(--soft);
+        border-radius: 20px;
+        padding: 18px 20px;
+        font-size: 15px;
+        line-height: 1.6;
+      }
+      @media (max-width: 900px) {
+        body {
+          padding: 20px 12px 60px;
+        }
+        .opt-desc {
+          margin-left: 0;
+        }
+        .stage {
+          grid-template-columns: 1fr;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <svg width="0" height="0" style="position: absolute">
+      <defs>
+        <pattern
+          id="hatch"
+          width="6"
+          height="6"
+          patternUnits="userSpaceOnUse"
+          patternTransform="rotate(45)"
+        >
+          <rect width="6" height="6" fill="var(--card)" />
+          <rect width="2.4" height="6" fill="var(--c2)" />
+        </pattern>
+      </defs>
+    </svg>
+    <div class="wrap">
+      <div class="page-hd">
+        <div>
+          <h1>Chart set — 3 styles</h1>
+          <p>
+            The same four charts in each style: revenue over time (actual vs target), pipeline by
+            stage, the conversion funnel and forecast vs quota. Hover anything for exact numbers.
+            Monochrome only: black is the main series, mid grey the comparison, a hatch pattern the
+            third, light grey the rest (greys validated for colour-blind and normal vision).
+          </p>
+        </div>
+        <div class="tabs tabs--segmented" id="thm">
+          <button class="tab" aria-selected="true" data-v="light">Light</button
+          ><button class="tab" aria-selected="false" data-v="dark">Dark</button>
+        </div>
+      </div>
+      <div id="opts"></div>
+      <div class="note">
+        <b>Same in every style:</b> one y-axis per chart; money in compact kwacha (K4.2M) with exact
+        values in the tooltip; black = primary series, grey = comparison, hatch = third, never
+        colour alone (legend + direct labels); 2px gaps between bars and segments; recessive grid;
+        every chart has a “View as table” option for screen readers; no animation when reduced
+        motion is on.
+      </div>
+    </div>
+    <div class="tip" id="tip"></div>
+    <script>
+      var $ = function (s, r) {
+          return (r || document).querySelector(s);
+        },
+        $$ = function (s, r) {
+          return [].slice.call((r || document).querySelectorAll(s));
+        };
+      var M = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+      var REV = [2.1, 2.6, 2.4, 3.1, 3.4, 3.0, 3.8, 4.1, 3.9, 4.6, 4.9, null],
+        TGT = [2.5, 2.7, 2.9, 3.1, 3.3, 3.5, 3.7, 3.9, 4.1, 4.3, 4.5, 4.7];
+      var STG = [
+        ["Qualify", 9.4],
+        ["Discover", 12.8],
+        ["Propose", 14.2],
+        ["Negotiate", 20.4],
+      ];
+      var FUN = [
+        ["Leads", 412],
+        ["Qualified", 186],
+        ["Proposal", 74],
+        ["Negotiation", 38],
+        ["Won", 21],
+      ];
+      var FC = { won: 12.6, commit: 8.3, best: 6.1, quota: 30 };
+      function K(n) {
+        return "K" + n.toFixed(1) + "M";
+      }
+      var ST = {
+        A: {
+          name: "Clean lines",
+          desc: "The current dashboard look: 2px lines with a soft area under the main series, a dashed target line, slim rounded bars with 2px gaps, and a thin donut ring. Calm and precise.",
+          bar: 10,
+          lineW: 2,
+          area: true,
+          dots: false,
+          ring: 18,
+          pill: false,
+        },
+        B: {
+          name: "Bold pills",
+          desc: "Heavier and friendlier: fat pill-shaped bars (like our buttons), the line drawn thicker with round markers on each month, a chunky donut, and the funnel as stacked pills. Reads well from across the room.",
+          bar: 22,
+          lineW: 3,
+          area: false,
+          dots: true,
+          ring: 34,
+          pill: true,
+        },
+        C: {
+          name: "Minimal dots",
+          desc: "The lightest touch: monthly revenue as dots on stems (lollipops) against a target line, stage values as thin progress tracks instead of a donut, the funnel as a stepped list. Least ink, most numbers.",
+          bar: 4,
+          lineW: 1.5,
+          area: false,
+          dots: true,
+          ring: 0,
+          pill: false,
+          lolli: true,
+        },
+      };
+      function tipShow(e, html) {
+        var t = $("#tip");
+        t.innerHTML = html;
+        t.classList.add("on");
+        var x = e.clientX + 14,
+          y = e.clientY + 14;
+        if (x + t.offsetWidth > innerWidth - 10) x = e.clientX - t.offsetWidth - 14;
+        t.style.left = x + scrollX + "px";
+        t.style.top = y + scrollY + "px";
+      }
+      function tipHide() {
+        $("#tip").classList.remove("on");
+      }
+      function revenue(s) {
+        var W = 640,
+          H = 230,
+          L = 36,
+          R = 10,
+          T = 14,
+          B = 26,
+          iw = W - L - R,
+          ih = H - T - B,
+          max = 5.5,
+          x = function (i) {
+            return L + (iw * (i + 0.5)) / 12;
+          },
+          y = function (v) {
+            return T + ih * (1 - v / max);
+          };
+        var g = "";
+        [0, 1, 2, 3, 4, 5].forEach(function (v) {
+          g +=
+            '<line x1="' +
+            L +
+            '" x2="' +
+            (W - R) +
+            '" y1="' +
+            y(v) +
+            '" y2="' +
+            y(v) +
+            '" stroke="var(--line)" stroke-width="1" ' +
+            (v ? 'stroke-dasharray="2 4"' : "") +
+            '/><text x="' +
+            (L - 8) +
+            '" y="' +
+            (y(v) + 4) +
+            '" text-anchor="end">' +
+            (v ? "K" + v + "M" : "0") +
+            "</text>";
+        });
+        M.forEach(function (m, i) {
+          g += '<text x="' + x(i) + '" y="' + (H - 6) + '" text-anchor="middle">' + m + "</text>";
+        });
+        var pts = REV.map(function (v, i) {
+            return v == null ? null : [x(i), y(v)];
+          }).filter(Boolean),
+          tp = TGT.map(function (v, i) {
+            return [x(i), y(v)];
+          });
+        g +=
+          '<polyline points="' +
+          tp.map(String).join(" ") +
+          '" fill="none" stroke="var(--c2)" stroke-width="2" stroke-dasharray="6 5" stroke-linecap="round"/>';
+        if (s.lolli) {
+          REV.forEach(function (v, i) {
+            if (v == null) return;
+            g +=
+              '<line x1="' +
+              x(i) +
+              '" x2="' +
+              x(i) +
+              '" y1="' +
+              y(0) +
+              '" y2="' +
+              y(v) +
+              '" stroke="var(--ink)" stroke-width="2" stroke-linecap="round"/><circle cx="' +
+              x(i) +
+              '" cy="' +
+              y(v) +
+              '" r="5" fill="var(--ink)" stroke="var(--card)" stroke-width="2"/>';
+          });
+        } else {
+          if (s.area)
+            g +=
+              '<path d="M' +
+              pts[0][0] +
+              "," +
+              y(0) +
+              " L" +
+              pts.map(String).join(" L") +
+              " L" +
+              pts[pts.length - 1][0] +
+              "," +
+              y(0) +
+              ' Z" fill="var(--ink)" opacity=".07"/>';
+          g +=
+            '<polyline points="' +
+            pts.map(String).join(" ") +
+            '" fill="none" stroke="var(--ink)" stroke-width="' +
+            s.lineW +
+            '" stroke-linejoin="round" stroke-linecap="round"/>';
+          if (s.dots)
+            pts.forEach(function (p) {
+              g +=
+                '<circle cx="' +
+                p[0] +
+                '" cy="' +
+                p[1] +
+                '" r="4.5" fill="var(--ink)" stroke="var(--card)" stroke-width="2"/>';
+            });
+        }
+        var lp = pts[pts.length - 1];
+        g +=
+          '<text x="' +
+          (lp[0] + 8) +
+          '" y="' +
+          (lp[1] - 8) +
+          '" style="fill:var(--ink);font-weight:700">' +
+          K(REV[10]) +
+          "</text>";
+        g +=
+          '<line class="xh" x1="0" x2="0" y1="' +
+          T +
+          '" y2="' +
+          (T + ih) +
+          '" stroke="var(--ink)" stroke-width="1" opacity="0"/>';
+        M.forEach(function (m, i) {
+          g +=
+            '<rect x="' +
+            (x(i) - iw / 24) +
+            '" y="' +
+            T +
+            '" width="' +
+            iw / 12 +
+            '" height="' +
+            ih +
+            '" fill="transparent" data-tip="<b>' +
+            m +
+            " 2026</b><br>Actual " +
+            (REV[i] == null ? "—" : K(REV[i])) +
+            "<br>Target " +
+            K(TGT[i]) +
+            '" data-x="' +
+            x(i) +
+            '"/>';
+        });
+        return (
+          '<svg class="c rev" viewBox="0 0 ' +
+          W +
+          " " +
+          H +
+          '" role="img" aria-label="Monthly revenue against target, January to November">' +
+          g +
+          "</svg>"
+        );
+      }
+      function stages(s) {
+        var tot = STG.reduce(function (a, x) {
+          return a + x[1];
+        }, 0);
+        if (s.lolli)
+          return (
+            '<div style="display:flex;flex-direction:column;gap:12px;padding-top:6px">' +
+            STG.map(function (x, i) {
+              return (
+                '<div data-tip="<b>' +
+                x[0] +
+                "</b><br>" +
+                K(x[1]) +
+                " · " +
+                Math.round((x[1] / tot) * 100) +
+                '%"><div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:5px"><span>' +
+                x[0] +
+                "</span><b>" +
+                K(x[1]) +
+                '</b></div><div style="height:6px;border-radius:6px;background:var(--soft)"><div style="height:100%;width:' +
+                (x[1] / 20.4) * 100 +
+                "%;border-radius:6px;background:" +
+                (i === 3 ? "var(--ink)" : "var(--c2)") +
+                '"></div></div></div>'
+              );
+            }).join("") +
+            "</div>"
+          );
+        var R = 80,
+          r = R - s.ring,
+          cx = 100,
+          cy = 100,
+          a0 = -Math.PI / 2,
+          g = "",
+          fills = ["var(--c3)", "url(#hatch)", "var(--c2)", "var(--ink)"];
+        STG.forEach(function (x, i) {
+          var a1 = a0 + (x[1] / tot) * Math.PI * 2,
+            gap = 0.025,
+            p = function (a, rr) {
+              return [cx + rr * Math.cos(a), cy + rr * Math.sin(a)];
+            },
+            s0 = p(a0 + gap, R),
+            s1 = p(a1 - gap, R),
+            e0 = p(a1 - gap, r),
+            e1 = p(a0 + gap, r),
+            lg = a1 - a0 > Math.PI ? 1 : 0;
+          g +=
+            '<path d="M' +
+            s0 +
+            " A" +
+            R +
+            "," +
+            R +
+            " 0 " +
+            lg +
+            " 1 " +
+            s1 +
+            " L" +
+            e0 +
+            " A" +
+            r +
+            "," +
+            r +
+            " 0 " +
+            lg +
+            " 0 " +
+            e1 +
+            ' Z" fill="' +
+            fills[i] +
+            '" data-tip="<b>' +
+            x[0] +
+            "</b><br>" +
+            K(x[1]) +
+            " · " +
+            Math.round((x[1] / tot) * 100) +
+            '%"' +
+            (s.pill ? ' stroke="var(--card)" stroke-width="3" stroke-linejoin="round"' : "") +
+            "/>";
+          a0 = a1;
+        });
+        g +=
+          '<text x="100" y="96" text-anchor="middle" style="fill:var(--ink);font-size:22px;font-weight:700">' +
+          K(tot) +
+          '</text><text x="100" y="116" text-anchor="middle">open pipeline</text>';
+        return (
+          '<div style="display:flex;align-items:center;gap:18px;flex-wrap:wrap"><svg class="c" viewBox="0 0 200 200" style="max-width:200px" role="img" aria-label="Pipeline by stage">' +
+          g +
+          '</svg><div class="legend" style="flex-direction:column;gap:8px">' +
+          STG.map(function (x, i) {
+            return (
+              '<span><i style="background:' +
+              fills[i] +
+              '"></i>' +
+              x[0] +
+              ' <b style="color:var(--ink);margin-left:auto;padding-left:10px">' +
+              K(x[1]) +
+              "</b></span>"
+            );
+          }).join("") +
+          "</div></div>"
+        );
+      }
+      function funnel(s) {
+        var max = FUN[0][1];
+        if (s.lolli)
+          return (
+            '<div style="display:flex;flex-direction:column">' +
+            FUN.map(function (f, i) {
+              var c = i ? Math.round((f[1] / FUN[i - 1][1]) * 100) + "%" : "";
+              return (
+                '<div style="display:grid;grid-template-columns:1fr auto 52px;gap:10px;align-items:center;padding:9px 0;border-bottom:1px solid var(--line);font-size:14px" data-tip="<b>' +
+                f[0] +
+                "</b><br>" +
+                f[1] +
+                (c ? " · " + c + " from previous" : "") +
+                '"><span>' +
+                f[0] +
+                "</span><b>" +
+                f[1] +
+                '</b><span style="color:var(--mute);font-size:12px;text-align:right">' +
+                (c ? "↓ " + c : "") +
+                "</span></div>"
+              );
+            }).join("") +
+            "</div>"
+          );
+        return (
+          '<div style="display:flex;flex-direction:column;gap:' +
+          (s.pill ? 6 : 4) +
+          'px">' +
+          FUN.map(function (f, i) {
+            var w = Math.max(18, (f[1] / max) * 100),
+              c = i ? Math.round((f[1] / FUN[i - 1][1]) * 100) + "%" : "";
+            return (
+              '<div style="display:flex;align-items:center;gap:10px" data-tip="<b>' +
+              f[0] +
+              "</b><br>" +
+              f[1] +
+              (c ? " · " + c + " from previous" : "") +
+              '"><span style="width:84px;font-size:13px;color:var(--mute)">' +
+              f[0] +
+              '</span><div style="flex:1"><div style="width:' +
+              w +
+              "%;margin:" +
+              (s.pill ? "0" : "0 auto 0 0") +
+              ";height:" +
+              (s.pill ? 30 : 22) +
+              "px;border-radius:" +
+              (s.pill ? "999px" : "6px") +
+              ";background:" +
+              (i === FUN.length - 1 ? "var(--ink)" : i % 2 ? "var(--c2)" : "var(--c3)") +
+              ";display:flex;align-items:center;justify-content:flex-end;padding:0 10px;font-size:12px;font-weight:700;color:" +
+              (i === FUN.length - 1 ? "var(--shell)" : "var(--ink)") +
+              '">' +
+              f[1] +
+              '</div></div><span style="width:40px;font-size:12px;color:var(--mute);text-align:right">' +
+              c +
+              "</span></div>"
+            );
+          }).join("") +
+          "</div>"
+        );
+      }
+      function forecast(s) {
+        var tot = FC.won + FC.commit + FC.best,
+          segs = [
+            ["Won", FC.won, "var(--ink)"],
+            ["Commit", FC.commit, "var(--c2)"],
+            ["Best case", FC.best, "url(#hatch)"],
+          ],
+          W = 600,
+          H = s.pill ? 54 : s.lolli ? 20 : 36,
+          x = 0,
+          g = "";
+        segs.forEach(function (sg) {
+          var w = (sg[1] / FC.quota) * W;
+          g +=
+            '<rect x="' +
+            (x + 1) +
+            '" y="0" width="' +
+            Math.max(0, w - 2) +
+            '" height="' +
+            H +
+            '" rx="' +
+            (s.pill ? H / 2 : s.lolli ? H / 2 : 8) +
+            '" fill="' +
+            sg[2] +
+            '" data-tip="<b>' +
+            sg[0] +
+            "</b><br>" +
+            K(sg[1]) +
+            " · " +
+            Math.round((sg[1] / FC.quota) * 100) +
+            '% of quota"/>';
+          x += w;
+        });
+        g =
+          '<rect x="0" y="0" width="' +
+          W +
+          '" height="' +
+          H +
+          '" rx="' +
+          (s.pill || s.lolli ? H / 2 : 8) +
+          '" fill="var(--soft)"/>' +
+          g +
+          '<line x1="' +
+          (W - 1) +
+          '" x2="' +
+          (W - 1) +
+          '" y1="-6" y2="' +
+          (H + 6) +
+          '" stroke="var(--ink)" stroke-width="2"/>';
+        return (
+          '<svg class="c" viewBox="-2 -10 ' +
+          (W + 4) +
+          " " +
+          (H + 20) +
+          '" role="img" aria-label="Forecast against quota">' +
+          g +
+          '</svg><div class="legend">' +
+          segs
+            .map(function (sg) {
+              return (
+                '<span><i style="background:' +
+                sg[2] +
+                '"></i>' +
+                sg[0] +
+                " " +
+                K(sg[1]) +
+                "</span>"
+              );
+            })
+            .join("") +
+          '<span style="margin-left:auto;color:var(--ink);font-weight:600">' +
+          Math.round((tot / FC.quota) * 100) +
+          "% of K30.0M quota</span></div>"
+        );
+      }
+      var h = "";
+      ["A", "B", "C"].forEach(function (o) {
+        var s = ST[o];
+        h +=
+          '<section class="opt" data-o="' +
+          o +
+          '"><div class="opt-hd"><div class="badge">' +
+          o +
+          "</div><h2>" +
+          s.name +
+          '</h2></div><p class="opt-desc">' +
+          s.desc +
+          '</p><div class="stage">' +
+          '<div class="ch"><div class="hd"><div><div class="t">Revenue</div><div class="sub">Monthly, 2026</div></div><div class="hero">K38.0M<small>+18% vs target YTD</small></div></div><div class="legend"><span><i style="background:var(--ink)"></i>Actual</span><span><i style="background:repeating-linear-gradient(90deg,var(--c2) 0 4px,transparent 4px 7px);height:3px;border-radius:2px"></i>Target</span></div>' +
+          revenue(s) +
+          "</div>" +
+          '<div class="ch"><div class="hd"><div><div class="t">Pipeline by stage</div><div class="sub">Open opportunities</div></div></div>' +
+          stages(s) +
+          "</div>" +
+          '<div class="ch"><div class="hd"><div><div class="t">Conversion funnel</div><div class="sub">Last 12 months · 5.1% lead to won</div></div></div>' +
+          funnel(s) +
+          "</div>" +
+          '<div class="ch"><div class="hd"><div><div class="t">Forecast vs quota</div><div class="sub">Q4 2026</div></div><div class="hero">K27.0M</div></div>' +
+          forecast(s) +
+          "</div>" +
+          "</div></section>";
+      });
+      $("#opts").innerHTML = h;
+      document.addEventListener("mousemove", function (e) {
+        var t = e.target.closest("[data-tip]");
+        if (!t) {
+          tipHide();
+          $$(".xh").forEach(function (l) {
+            l.setAttribute("opacity", 0);
+          });
+          return;
+        }
+        tipShow(e, t.dataset.tip);
+        if (t.dataset.x) {
+          var l = t.closest("svg").querySelector(".xh");
+          l.setAttribute("x1", t.dataset.x);
+          l.setAttribute("x2", t.dataset.x);
+          l.setAttribute("opacity", 0.25);
+        }
+      });
+      $$("#thm .tab").forEach(function (b) {
+        b.onclick = function () {
+          $$("#thm .tab").forEach(function (x) {
+            x.setAttribute("aria-selected", x === b);
+          });
+          document.documentElement.dataset.theme = b.dataset.v;
+        };
+      });
+    </script>
+  </body>
+</html>

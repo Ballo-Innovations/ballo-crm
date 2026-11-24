@@ -1,0 +1,1259 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>BalloCRM Dashboard Concept</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Urbanist:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --shell: #fff;
+        --main: #ececec;
+        --card: #fff;
+        --ink: #0d0d0d;
+        --mute: #6b6b6b;
+        --soft: #f3f3f3;
+        --line: #e4e4e4;
+        --bar2: #d4d4d4;
+      }
+      @media (prefers-color-scheme: dark) {
+        :root:not([data-theme="light"]) {
+          --shell: #111;
+          --main: #1b1b1b;
+          --card: #242424;
+          --ink: #f5f5f5;
+          --mute: #9a9a9a;
+          --soft: #2e2e2e;
+          --line: #333;
+          --bar2: #505050;
+        }
+      }
+      :root[data-theme="dark"] {
+        --shell: #111;
+        --main: #1b1b1b;
+        --card: #242424;
+        --ink: #f5f5f5;
+        --mute: #9a9a9a;
+        --soft: #2e2e2e;
+        --line: #333;
+        --bar2: #505050;
+      }
+      * {
+        box-sizing: border-box;
+        margin: 0;
+      }
+      html,
+      body {
+        height: 100%;
+      }
+      body {
+        background: var(--shell);
+        font-family: Urbanist, system-ui, sans-serif;
+        color: var(--ink);
+        -webkit-font-smoothing: antialiased;
+        overflow: hidden;
+      }
+      button {
+        font-family: inherit;
+        color: inherit;
+        cursor: pointer;
+      }
+      svg {
+        width: 17px;
+        height: 17px;
+        flex: none;
+      }
+      .shell {
+        height: 100vh;
+        display: grid;
+        grid-template-columns: auto 1fr;
+      }
+
+      /* Sidebar */
+      aside {
+        width: 248px;
+        padding: 24px 18px;
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+        transition: width 0.25s ease;
+        overflow: hidden;
+      }
+      .brand {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin: 0 4px 32px;
+        gap: 8px;
+      }
+      .logo {
+        font-size: 24px;
+        font-weight: 700;
+        display: flex;
+        gap: 10px;
+        align-items: center;
+        white-space: nowrap;
+      }
+      .logo svg {
+        width: 30px;
+        height: 30px;
+      }
+      .collapse {
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        border: 0;
+        background: var(--soft);
+        display: grid;
+        place-items: center;
+        flex: none;
+      }
+      .collapse svg {
+        width: 15px;
+        height: 15px;
+        transition: transform 0.25s;
+      }
+      #nav {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+      }
+      .nav {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        padding: 6px;
+        border-radius: 40px;
+        font-size: 15px;
+        cursor: pointer;
+        white-space: nowrap;
+        transition: background 0.15s;
+      }
+      .nav:not(.on):hover {
+        background: var(--soft);
+      }
+      .nav i {
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        background: var(--soft);
+        display: grid;
+        place-items: center;
+        flex: none;
+      }
+      .nav.on {
+        background: var(--ink);
+        color: var(--shell);
+      }
+      .nav.on i {
+        background: var(--shell);
+        color: var(--ink);
+      }
+      .me {
+        margin-top: auto;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 10px 6px;
+        white-space: nowrap;
+      }
+      .av {
+        width: 44px;
+        height: 44px;
+        border-radius: 50%;
+        background: var(--soft);
+        display: grid;
+        place-items: center;
+        font-weight: 700;
+        position: relative;
+        flex: none;
+      }
+      .av b {
+        position: absolute;
+        top: -4px;
+        right: -6px;
+        background: var(--ink);
+        color: var(--shell);
+        font-size: 10px;
+        padding: 1px 6px;
+        border-radius: 10px;
+      }
+      .me strong {
+        display: block;
+        font-size: 15px;
+      }
+      .me small {
+        color: var(--mute);
+        font-size: 12px;
+      }
+      .shell.mini aside {
+        width: 84px;
+      }
+      .shell.mini .label,
+      .shell.mini .logo span,
+      .shell.mini .me .who {
+        display: none;
+      }
+      .shell.mini .brand {
+        flex-direction: column;
+        margin-bottom: 24px;
+      }
+      .shell.mini .collapse svg {
+        transform: rotate(180deg);
+      }
+      .shell.mini .nav {
+        justify-content: center;
+      }
+
+      /* Right column */
+      .right {
+        display: flex;
+        flex-direction: column;
+        min-width: 0;
+        min-height: 0;
+        padding: 16px 16px 16px 0;
+      }
+      .panel {
+        flex: 1;
+        min-height: 0;
+        display: flex;
+        flex-direction: column;
+        background: var(--main);
+        border-radius: 32px;
+        overflow: hidden;
+      }
+      .top {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 22px 28px 6px;
+      }
+      .search {
+        flex: 1;
+        max-width: 520px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        background: var(--card);
+        border-radius: 16px;
+        padding: 0 14px;
+        height: 44px;
+        color: var(--mute);
+      }
+      .search input {
+        flex: 1;
+        border: 0;
+        background: none;
+        font: inherit;
+        font-size: 15px;
+        color: var(--ink);
+        outline: none;
+        min-width: 0;
+      }
+      kbd {
+        font: 500 12px Urbanist;
+        border: 1px solid var(--line);
+        background: var(--soft);
+        border-radius: 6px;
+        padding: 2px 6px;
+      }
+      .sp {
+        flex: 1;
+      }
+      .icb {
+        width: 44px;
+        height: 44px;
+        border-radius: 50%;
+        border: 0;
+        background: var(--card);
+        display: grid;
+        place-items: center;
+        position: relative;
+        flex: none;
+      }
+      .icb .dot {
+        position: absolute;
+        top: 10px;
+        right: 11px;
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: var(--ink);
+        border: 2px solid var(--card);
+      }
+      .add {
+        height: 44px;
+        border: 0;
+        border-radius: 16px;
+        background: var(--ink);
+        color: var(--shell);
+        padding: 0 18px;
+        font-size: 14px;
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        flex: none;
+      }
+      .user {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        background: var(--card);
+        border: 0;
+        border-radius: 24px;
+        padding: 4px 12px 4px 4px;
+        font-size: 14px;
+        font-weight: 500;
+        flex: none;
+      }
+      .user .av {
+        width: 36px;
+        height: 36px;
+        font-size: 13px;
+        background: var(--ink);
+        color: var(--shell);
+      }
+
+      /* Scrolling panel */
+      main {
+        flex: 1;
+        min-height: 0;
+        overflow-y: auto;
+        padding: 22px 28px 28px;
+        display: flex;
+        flex-direction: column;
+        gap: 22px;
+        scrollbar-width: thin;
+      }
+      .stats {
+        display: grid;
+        grid-template-columns: 1.2fr repeat(6, 1fr);
+        gap: 16px;
+        padding-bottom: 8px;
+      }
+      .intro h1 {
+        font-size: 26px;
+        font-weight: 600;
+        margin-bottom: 12px;
+      }
+      .intro p {
+        color: var(--mute);
+        font-size: 15px;
+        line-height: 1.5;
+      }
+      .stat {
+        background: var(--card);
+        border-radius: 26px;
+        padding: 22px 8px;
+        text-align: center;
+        position: relative;
+        transition:
+          transform 0.2s,
+          box-shadow 0.2s;
+        cursor: pointer;
+      }
+      .stat:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 12px 24px rgba(0, 0, 0, 0.07);
+      }
+      .stat .ic {
+        width: 46px;
+        height: 46px;
+        border-radius: 50%;
+        background: var(--soft);
+        display: grid;
+        place-items: center;
+        margin: 0 auto 14px;
+        font-weight: 700;
+      }
+      .stat.hl .ic {
+        background: var(--ink);
+        color: var(--shell);
+      }
+      .stat strong {
+        font-size: 24px;
+        display: block;
+      }
+      .stat span {
+        color: var(--mute);
+        font-size: 13px;
+      }
+      .stat .go {
+        position: absolute;
+        bottom: -12px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 30px;
+        height: 30px;
+        border-radius: 50%;
+        background: var(--card);
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
+        display: grid;
+        place-items: center;
+      }
+      .stat .go svg {
+        width: 13px;
+        height: 13px;
+      }
+      .row {
+        display: grid;
+        grid-template-columns: 1.55fr 1fr;
+        gap: 22px;
+      }
+      .card {
+        background: var(--card);
+        border-radius: 28px;
+        padding: 26px;
+        min-width: 0;
+      }
+      .hd {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 20px;
+        gap: 12px;
+        flex-wrap: wrap;
+      }
+      .hd h2 {
+        font-size: 22px;
+        font-weight: 600;
+      }
+      .leg {
+        display: flex;
+        gap: 16px;
+        font-size: 13px;
+        color: var(--mute);
+      }
+      .leg i {
+        display: inline-block;
+        width: 9px;
+        height: 9px;
+        border-radius: 50%;
+        margin-right: 6px;
+      }
+      .chart {
+        display: grid;
+        grid-template-columns: 34px 1fr;
+        height: 260px;
+      }
+      .ya {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        font-size: 12px;
+        color: var(--mute);
+        padding-bottom: 24px;
+      }
+      .plot {
+        position: relative;
+        display: grid;
+        grid-template-columns: repeat(12, 1fr);
+        align-items: end;
+        padding-bottom: 24px;
+        background: repeating-linear-gradient(to bottom, var(--line) 0 1px, transparent 1px 25%);
+      }
+      .m {
+        display: flex;
+        justify-content: center;
+        gap: 4px;
+        align-items: end;
+        height: 100%;
+        position: relative;
+      }
+      .m em {
+        width: 7px;
+        border-radius: 6px;
+        background: var(--ink);
+        transition: opacity 0.15s;
+      }
+      .m em + em {
+        background: var(--bar2);
+      }
+      .m:hover em {
+        opacity: 0.7;
+      }
+      .m label {
+        position: absolute;
+        bottom: -22px;
+        font-size: 12px;
+        color: var(--mute);
+      }
+      .tip {
+        position: absolute;
+        background: var(--ink);
+        color: var(--shell);
+        font-size: 13px;
+        padding: 6px 12px;
+        border-radius: 14px;
+        transform: translate(-50%, -130%);
+        white-space: nowrap;
+      }
+      .list {
+        display: flex;
+        flex-direction: column;
+        gap: 18px;
+      }
+      .it {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+      }
+      .lg {
+        width: 44px;
+        height: 44px;
+        border-radius: 50%;
+        background: var(--soft);
+        display: grid;
+        place-items: center;
+        font-weight: 700;
+        font-size: 13px;
+        flex: none;
+      }
+      .it .tx {
+        flex: 1;
+        min-width: 0;
+      }
+      .it b {
+        display: block;
+        font-size: 15px;
+        font-weight: 600;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+      .it small {
+        color: var(--mute);
+        font-size: 13px;
+      }
+      .pill {
+        border: 1px solid var(--line);
+        background: var(--soft);
+        border-radius: 20px;
+        padding: 5px 12px;
+        font-size: 12px;
+        white-space: nowrap;
+      }
+      .pill.d {
+        background: var(--ink);
+        color: var(--shell);
+        border-color: var(--ink);
+      }
+      .btn {
+        border: 1px solid var(--ink);
+        border-radius: 14px;
+        padding: 10px 18px;
+        font-size: 14px;
+        font-weight: 500;
+        background: none;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+      }
+      .btn.d {
+        background: var(--ink);
+        color: var(--shell);
+      }
+      .btn svg {
+        width: 15px;
+        height: 15px;
+      }
+      .tw {
+        overflow-x: auto;
+      }
+      .tbl {
+        width: 100%;
+        border-collapse: separate;
+        border-spacing: 0 8px;
+        font-size: 15px;
+        min-width: 760px;
+      }
+      .tbl th {
+        text-align: left;
+        font-weight: 500;
+        color: var(--mute);
+        padding: 6px 14px;
+      }
+      .tbl td {
+        background: var(--soft);
+        padding: 14px;
+        transition: background 0.15s;
+        white-space: nowrap;
+      }
+      .tbl tr:hover td {
+        background: var(--line);
+      }
+      .tbl td:first-child {
+        border-radius: 16px 0 0 16px;
+      }
+      .tbl td:last-child {
+        border-radius: 0 16px 16px 0;
+        text-align: right;
+      }
+      .cb {
+        width: 18px;
+        height: 18px;
+        border: 1.5px solid var(--bar2);
+        border-radius: 5px;
+        display: inline-block;
+        vertical-align: middle;
+      }
+
+      @media (max-width: 1200px) {
+        .stats {
+          grid-template-columns: repeat(3, 1fr);
+        }
+        .intro {
+          grid-column: 1/-1;
+        }
+        .row {
+          grid-template-columns: 1fr;
+        }
+      }
+      .menu,
+      .scrim,
+      .close {
+        display: none;
+      }
+      @media (max-width: 720px) {
+        .right {
+          padding: 8px;
+        }
+        .panel {
+          border-radius: 24px;
+        }
+        /* slide-in drawer */
+        aside {
+          position: fixed;
+          inset: 0 auto 0 0;
+          z-index: 30;
+          width: 280px;
+          background: var(--shell);
+          transform: translateX(-100%);
+          transition: transform 0.28s ease;
+          box-shadow: 0 0 40px rgba(0, 0, 0, 0.2);
+        }
+        .shell.open aside {
+          transform: none;
+        }
+        .scrim {
+          display: block;
+          position: fixed;
+          inset: 0;
+          z-index: 20;
+          background: rgba(0, 0, 0, 0.35);
+          opacity: 0;
+          pointer-events: none;
+          transition: opacity 0.28s;
+        }
+        .shell.open .scrim {
+          opacity: 1;
+          pointer-events: auto;
+        }
+        .collapse {
+          display: none;
+        }
+        .close {
+          display: grid;
+        }
+        .shell.mini aside {
+          width: 280px;
+        }
+        .shell.mini .label,
+        .shell.mini .logo span,
+        .shell.mini .me .who {
+          display: revert;
+        }
+        .shell.mini .nav {
+          justify-content: flex-start;
+        }
+        .nav {
+          padding: 8px;
+          font-size: 16px;
+        }
+        /* top bar */
+        .top {
+          flex-wrap: wrap;
+          gap: 8px;
+          padding: 12px 12px 4px;
+        }
+        .menu {
+          display: grid;
+        }
+        .mlogo {
+          display: flex !important;
+        }
+        .search {
+          order: 9;
+          flex-basis: 100%;
+          max-width: none;
+          height: 46px;
+        }
+        .sp {
+          flex: 1;
+        }
+        .icb {
+          width: 40px;
+          height: 40px;
+        }
+        .add {
+          width: 40px;
+          height: 40px;
+          padding: 0;
+          justify-content: center;
+          border-radius: 50%;
+        }
+        .add span,
+        .user span:not(.av),
+        .user svg,
+        kbd,
+        .icb.theme {
+          display: none;
+        }
+        .user {
+          padding: 2px;
+          border-radius: 50%;
+        }
+        /* content */
+        main {
+          padding: 12px 12px 20px;
+          gap: 14px;
+        }
+        .intro h1 {
+          font-size: 22px;
+          margin-bottom: 4px;
+        }
+        .intro p br {
+          display: none;
+        }
+        .stats {
+          grid-template-columns: repeat(2, 1fr);
+          gap: 10px;
+          padding-bottom: 12px;
+        }
+        .stat {
+          border-radius: 22px;
+          padding: 16px 8px;
+        }
+        .stat .ic {
+          width: 40px;
+          height: 40px;
+          margin-bottom: 10px;
+        }
+        .stat strong {
+          font-size: 21px;
+        }
+        .stat span {
+          font-size: 12px;
+        }
+        .card {
+          border-radius: 22px;
+          padding: 18px;
+        }
+        .hd {
+          margin-bottom: 14px;
+        }
+        .hd h2 {
+          font-size: 19px;
+        }
+        .leg {
+          font-size: 12px;
+          gap: 12px;
+        }
+        .chart {
+          height: 210px;
+          grid-template-columns: 28px 1fr;
+        }
+        .m em {
+          width: 4px;
+          gap: 2px;
+        }
+        .m label {
+          font-size: 10px;
+        }
+        .tip {
+          font-size: 11px;
+          padding: 4px 8px;
+        }
+        .it {
+          gap: 12px;
+        }
+        .lg {
+          width: 40px;
+          height: 40px;
+        }
+        .it b {
+          font-size: 14px;
+        }
+        .it small {
+          font-size: 12px;
+        }
+        /* table becomes cards */
+        .tbl {
+          min-width: 0;
+          border-spacing: 0;
+        }
+        .tbl thead {
+          display: none;
+        }
+        .tbl tr {
+          display: grid;
+          grid-template-columns: 1fr auto;
+          gap: 6px 12px;
+          background: var(--soft);
+          border-radius: 18px;
+          padding: 14px 16px;
+          margin-bottom: 10px;
+        }
+        .tbl td {
+          background: none !important;
+          padding: 0;
+          border-radius: 0 !important;
+          white-space: normal;
+        }
+        .tbl td:nth-child(1),
+        .tbl td:nth-child(8) {
+          display: none;
+        }
+        .tbl td:nth-child(2) {
+          font-weight: 600;
+          grid-column: 1;
+        }
+        .tbl td:nth-child(6) {
+          grid-column: 2;
+          grid-row: 1;
+          font-weight: 600;
+          text-align: right;
+        }
+        .tbl td:nth-child(3) {
+          color: var(--mute);
+          font-size: 13px;
+          grid-column: 1;
+        }
+        .tbl td:nth-child(7) {
+          color: var(--mute);
+          font-size: 12px;
+          grid-column: 2;
+          grid-row: 2;
+          text-align: right;
+        }
+        .tbl td:nth-child(4),
+        .tbl td:nth-child(5) {
+          grid-column: auto;
+          display: inline-block;
+        }
+        .tbl td:nth-child(4) {
+          grid-column: 1;
+          justify-self: start;
+        }
+        .tbl td:nth-child(5) {
+          grid-column: 2;
+          justify-self: end;
+        }
+        .hd .btn {
+          padding: 8px 12px;
+          font-size: 13px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="shell" id="shell">
+      <aside>
+        <div class="brand">
+          <div class="logo">
+            <svg viewBox="0 0 30 30">
+              <circle cx="15" cy="15" r="13" fill="none" stroke="currentColor" stroke-width="3" />
+              <path d="M15 6l4 9-4 9-4-9z" fill="currentColor" /></svg
+            ><span>BalloCRM</span>
+          </div>
+          <button
+            class="collapse"
+            title="Collapse sidebar"
+            onclick="document.getElementById('shell').classList.toggle('mini')"
+          >
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2.2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <path d="M15 6l-6 6 6 6" />
+            </svg>
+          </button>
+          <button
+            class="close collapse"
+            title="Close menu"
+            onclick="document.getElementById('shell').classList.remove('open')"
+          >
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2.2"
+              stroke-linecap="round"
+            >
+              <path d="M6 6l12 12M18 6L6 18" />
+            </svg>
+          </button>
+        </div>
+        <nav id="nav"></nav>
+        <div class="me">
+          <div class="av">GM<b>5</b></div>
+          <div class="who"><strong>George M.</strong><small>Account Manager · Infratel</small></div>
+        </div>
+      </aside>
+
+      <div class="scrim" onclick="document.getElementById('shell').classList.remove('open')"></div>
+      <div class="right">
+        <div class="panel">
+          <header class="top">
+            <button
+              class="icb menu"
+              title="Open menu"
+              onclick="document.getElementById('shell').classList.add('open')"
+            >
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+              >
+                <path d="M4 7h16M4 12h16M4 17h10" />
+              </svg>
+            </button>
+            <div class="logo mlogo" style="display: none; font-size: 20px">
+              <svg viewBox="0 0 30 30" style="width: 26px; height: 26px">
+                <circle cx="15" cy="15" r="13" fill="none" stroke="currentColor" stroke-width="3" />
+                <path d="M15 6l4 9-4 9-4-9z" fill="currentColor" /></svg
+              >BalloCRM
+            </div>
+            <label class="search"
+              ><svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+              >
+                <circle cx="11" cy="11" r="7" />
+                <path d="M20 20l-4-4" /></svg
+              ><input placeholder="Search accounts, leads, opportunities…" /><kbd>⌘K</kbd></label
+            >
+            <div class="sp"></div>
+            <button class="add">
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2.4"
+                stroke-linecap="round"
+              >
+                <path d="M12 5v14M5 12h14" /></svg
+              ><span>Quick add</span>
+            </button>
+            <button class="icb" title="Notifications">
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <path d="M6 16V11a6 6 0 0 1 12 0v5l2 2H4zM10 21h4" /></svg
+              ><span class="dot"></span>
+            </button>
+            <button
+              class="icb theme"
+              title="Toggle theme"
+              onclick="
+                var r = document.documentElement,
+                  d =
+                    r.dataset.theme ||
+                    (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+                r.dataset.theme = d === 'dark' ? 'light' : 'dark';
+              "
+            >
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="8" />
+                <path d="M12 4a8 8 0 0 1 0 16z" fill="currentColor" />
+              </svg>
+            </button>
+            <button class="user">
+              <span class="av">GM</span><span>George</span
+              ><svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+              >
+                <path d="M6 9l6 6 6-6" />
+              </svg>
+            </button>
+          </header>
+
+          <main>
+            <section class="stats">
+              <div class="intro">
+                <h1>Quick Stats</h1>
+                <p>Your pipeline for <br />this quarter.</p>
+              </div>
+              <div class="stat">
+                <div class="ic" data-i="target"></div>
+                <strong>142</strong><span>Open<br />Opportunities</span>
+              </div>
+              <div class="stat">
+                <div class="ic" data-i="building"></div>
+                <strong>68</strong><span>Active<br />Accounts</span>
+              </div>
+              <div class="stat hl">
+                <div class="ic">K</div>
+                <strong>K48.2M</strong><span>Weighted<br />Pipeline</span>
+                <div class="go" data-i="arrow"></div>
+              </div>
+              <div class="stat">
+                <div class="ic" data-i="check"></div>
+                <strong>K12.6M</strong><span>Won<br />this Quarter</span>
+              </div>
+              <div class="stat">
+                <div class="ic" data-i="star"></div>
+                <strong>23</strong><span>Gold &amp;<br />Platinum</span>
+              </div>
+              <div class="stat">
+                <div class="ic" data-i="warn"></div>
+                <strong>9</strong><span>At-risk<br />Deals</span>
+              </div>
+            </section>
+
+            <section class="row">
+              <div class="card">
+                <div class="hd">
+                  <h2>Revenue</h2>
+                  <div class="leg">
+                    <span><i style="background: var(--ink)"></i>Won (ZMW)</span
+                    ><span><i style="background: var(--bar2)"></i>Weighted pipeline</span>
+                  </div>
+                </div>
+                <div class="chart">
+                  <div class="ya">
+                    <span>8M</span><span>6M</span><span>4M</span><span>2M</span><span>0</span>
+                  </div>
+                  <div class="plot" id="plot"></div>
+                </div>
+              </div>
+              <div class="card">
+                <div class="hd">
+                  <h2>Next Best Actions</h2>
+                  <span class="pill">⋯</span>
+                </div>
+                <div class="list">
+                  <div class="it">
+                    <div class="lg">KP</div>
+                    <div class="tx">
+                      <b>Kariba Power Co. — Fibre backbone</b
+                      ><small>Book exec meeting · Negotiate</small>
+                    </div>
+                    <span class="pill d">Gold 58</span>
+                  </div>
+                  <div class="it">
+                    <div class="lg">NM</div>
+                    <div class="tx">
+                      <b>Nyali Mobile — Tower lease</b><small>Send revised quote · Propose</small>
+                    </div>
+                    <span class="pill">Silver 47</span>
+                  </div>
+                  <div class="it">
+                    <div class="lg">MB</div>
+                    <div class="tx">
+                      <b>Mutual Bank of Lusaka — SD-WAN rollout</b
+                      ><small>Identify champion · Discover</small>
+                    </div>
+                    <span class="pill">Bronze 28</span>
+                  </div>
+                  <div class="it">
+                    <div class="lg">ZC</div>
+                    <div class="tx">
+                      <b>Zedcell — Colocation renewal</b><small>Confirm budget · Negotiate</small>
+                    </div>
+                    <span class="pill d">Platinum 81</span>
+                  </div>
+                </div>
+              </div>
+            </section>
+
+            <section class="card">
+              <div class="hd">
+                <h2>Opportunities</h2>
+                <div style="display: flex; gap: 12px">
+                  <button class="btn">
+                    Stage
+                    <svg
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                    >
+                      <path d="M6 9l6 6 6-6" />
+                    </svg></button
+                  ><button class="btn d">
+                    Export
+                    <svg
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    >
+                      <path d="M12 15V4M7 9l5-5 5 5M5 20h14" />
+                    </svg>
+                  </button>
+                </div>
+              </div>
+              <div class="tw">
+                <table class="tbl">
+                  <thead>
+                    <tr>
+                      <th></th>
+                      <th>Opportunity</th>
+                      <th>Account</th>
+                      <th>Stage</th>
+                      <th>Grade</th>
+                      <th>Value</th>
+                      <th>Updated</th>
+                      <th></th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td><span class="cb"></span></td>
+                      <td>Fibre backbone Lusaka–Ndola</td>
+                      <td>Kariba Power Co.</td>
+                      <td><span class="pill">Negotiate</span></td>
+                      <td><span class="pill d">Gold · 58</span></td>
+                      <td>K6,400,000</td>
+                      <td>21 Nov 09:20</td>
+                      <td>⋯</td>
+                    </tr>
+                    <tr>
+                      <td><span class="cb"></span></td>
+                      <td>Tower lease — 40 sites</td>
+                      <td>Nyali Mobile</td>
+                      <td><span class="pill">Propose</span></td>
+                      <td><span class="pill">Silver · 47</span></td>
+                      <td>K3,150,000</td>
+                      <td>20 Nov 14:05</td>
+                      <td>⋯</td>
+                    </tr>
+                    <tr>
+                      <td><span class="cb"></span></td>
+                      <td>SD-WAN branch rollout</td>
+                      <td>Mutual Bank of Lusaka</td>
+                      <td><span class="pill">Discover</span></td>
+                      <td><span class="pill">Bronze · 28</span></td>
+                      <td>K1,820,000</td>
+                      <td>18 Nov 11:40</td>
+                      <td>⋯</td>
+                    </tr>
+                    <tr>
+                      <td><span class="cb"></span></td>
+                      <td>Data-centre colocation</td>
+                      <td>Zedcell Networks</td>
+                      <td><span class="pill">Negotiate</span></td>
+                      <td><span class="pill d">Platinum · 81</span></td>
+                      <td>K8,900,000</td>
+                      <td>17 Nov 16:30</td>
+                      <td>⋯</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </section>
+          </main>
+        </div>
+      </div>
+    </div>
+    <script>
+      var I = {
+        home: '<path d="M3 11l9-7 9 7v9a1 1 0 0 1-1 1h-5v-6h-6v6H4a1 1 0 0 1-1-1z"/>',
+        pipe: '<path d="M4 5h4v14H4zM10 5h4v9h-4zM16 5h4v5h-4z"/>',
+        target: '<circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="3"/>',
+        building: '<path d="M4 21V5l8-2v18M12 9h8v12M7 8h2M7 12h2M7 16h2M15 13h2M15 17h2"/>',
+        trend: '<path d="M3 17l6-6 4 4 8-8M15 7h6v6"/>',
+        chat: '<path d="M4 5h16v11H8l-4 4z"/>',
+        doc: '<path d="M6 3h9l4 4v14H6zM9 12h7M9 16h5"/>',
+        spark: '<path d="M12 3l2.5 6.5L21 12l-6.5 2.5L12 21l-2.5-6.5L3 12l6.5-2.5z"/>',
+        gear: '<circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M5 5l2 2M17 17l2 2M5 19l2-2M17 7l2-2"/>',
+        check: '<path d="M4 12l5 5L20 6"/>',
+        star: '<path d="M12 3l2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.9 1-6.1L3.2 9.5l6.1-.9z"/>',
+        warn: '<path d="M12 3l10 18H2zM12 10v5M12 18v.5"/>',
+        arrow: '<path d="M7 17L17 7M9 7h8v8"/>',
+      };
+      function svg(k) {
+        return (
+          '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">' +
+          I[k] +
+          "</svg>"
+        );
+      }
+      document.querySelectorAll("[data-i]").forEach(function (e) {
+        e.innerHTML = svg(e.dataset.i);
+      });
+      var items = [
+          ["Dashboard", "home"],
+          ["Pipeline", "pipe"],
+          ["Accounts", "building"],
+          ["Leads", "target"],
+          ["Forecast", "trend"],
+          ["Engagement", "chat"],
+          ["Contracts", "doc"],
+          ["Intelligence", "spark"],
+          ["Settings", "gear"],
+        ],
+        nav = document.getElementById("nav");
+      items.forEach(function (x, i) {
+        var d = document.createElement("div");
+        d.className = "nav" + (i === 0 ? " on" : "");
+        d.title = x[0];
+        d.innerHTML = "<i>" + svg(x[1]) + '</i><span class="label">' + x[0] + "</span>";
+        d.onclick = function () {
+          nav.querySelectorAll(".nav").forEach(function (n) {
+            n.classList.remove("on");
+          });
+          d.classList.add("on");
+          document.getElementById("shell").classList.remove("open");
+        };
+        nav.appendChild(d);
+      });
+      var won = [3.1, 7.6, 3.4, 4.9, 4.6, 7.6, 3.4, 4.6, 3.1, 7.6, 3.4, 4.9],
+        pipe = [1.9, 3.4, 4.9, 5.6, 3.6, 4.9, 1.9, 6.4, 1.9, 3.4, 4.9, 5.6],
+        mo = "Jan Feb Mar Apr May Jun Jul Aug Sep Oct Nov Dec".split(" "),
+        p = document.getElementById("plot");
+      mo.forEach(function (m, i) {
+        var d = document.createElement("div");
+        d.className = "m";
+        d.innerHTML =
+          '<em style="height:' +
+          (won[i] / 8) * 100 +
+          '%"></em><em style="height:' +
+          (pipe[i] / 8) * 100 +
+          '%"></em><label>' +
+          m +
+          "</label>";
+        if (i === 7)
+          d.innerHTML +=
+            '<div class="tip" style="left:62%;bottom:' + (pipe[i] / 8) * 100 + '%">K6.4M</div>';
+        p.appendChild(d);
+      });
+    </script>
+  </body>
+</html>

@@ -1,0 +1,1541 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>BalloCRM UI Kit</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Urbanist:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="tokens.css" />
+    <link rel="stylesheet" href="components.css" />
+    <style>
+      /* page layout for this showcase only — not part of the kit */
+      .kit {
+        max-width: 1180px;
+        margin: auto;
+        padding: 40px 24px 120px;
+        display: flex;
+        flex-direction: column;
+        gap: 28px;
+      }
+      .kit h1 {
+        font-size: 30px;
+        font-weight: 700;
+      }
+      .kit > header p {
+        color: var(--mute);
+        margin-top: 6px;
+        max-width: 720px;
+        line-height: 1.5;
+      }
+      .sec {
+        background: var(--main);
+        border-radius: var(--r-panel);
+        padding: 24px;
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+      }
+      .sec > h2 {
+        font-size: 20px;
+        font-weight: 600;
+      }
+      .sec > p {
+        color: var(--mute);
+        font-size: 14px;
+        margin-top: -10px;
+      }
+      .line {
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+        align-items: center;
+      }
+      .grid4 {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 16px;
+      }
+      .grid2 {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 16px;
+      }
+      .demo-app {
+        position: relative;
+        min-height: 380px;
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+      }
+      @media (max-width: 820px) {
+        .grid4 {
+          grid-template-columns: 1fr 1fr;
+        }
+        .grid2 {
+          grid-template-columns: 1fr;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main class="kit">
+      <header
+        style="
+          display: flex;
+          justify-content: space-between;
+          align-items: flex-end;
+          gap: 16px;
+          flex-wrap: wrap;
+        "
+      >
+        <div>
+          <h1>BalloCRM UI kit</h1>
+          <p>
+            Every decided component, built only from <code>tokens.css</code> and
+            <code>components.css</code>. Copy markup and class names from here; the options pages
+            next door are background only. Everything below works.
+          </p>
+        </div>
+        <div class="tabs tabs--segmented" role="tablist" id="theme">
+          <button class="tab" role="tab" aria-selected="true" data-v="light">Light</button
+          ><button class="tab" role="tab" aria-selected="false" data-v="dark">Dark</button>
+        </div>
+      </header>
+
+      <section class="sec">
+        <h2>Buttons</h2>
+        <p>
+          Pills. Hero (icon circle) at most once per area; solid red only inside a confirm dialog.
+        </p>
+        <div class="line">
+          <button class="btn btn--hero" data-toast="Lead created">
+            <span class="btn__circle">＋</span>Add lead
+          </button>
+          <button class="btn btn--primary" data-busy>Save</button>
+          <button class="btn btn--secondary">Cancel</button>
+          <button class="btn btn--tertiary">Filter</button>
+          <button class="btn btn--ghost">Edit</button>
+          <button class="btn btn--danger-outline" data-modal>Mark as lost</button>
+          <button class="btn btn--primary" disabled>Disabled</button>
+          <button class="btn btn--icon" aria-label="Notifications">
+            🔔<span class="btn__dot"></span>
+          </button>
+        </div>
+        <div class="line">
+          <button class="btn btn--hero btn--sm"><span class="btn__circle">＋</span>Small</button
+          ><button class="btn btn--hero"><span class="btn__circle">＋</span>Medium</button
+          ><button class="btn btn--hero btn--lg"><span class="btn__circle">＋</span>Large</button>
+        </div>
+      </section>
+
+      <section class="sec">
+        <h2>Tabs and segmented controls</h2>
+        <p>Pills everywhere; the selected one turns black.</p>
+        <div class="tabs" role="tablist">
+          <button class="tab" role="tab" aria-selected="true">
+            All accounts <span class="tab__count">68</span></button
+          ><button class="tab" role="tab" aria-selected="false">
+            Target accounts <span class="tab__count">12</span>
+          </button>
+        </div>
+        <div class="tabs tabs--segmented" role="tablist">
+          <button class="tab" role="tab" aria-selected="false">7D</button
+          ><button class="tab" role="tab" aria-selected="false">30D</button
+          ><button class="tab" role="tab" aria-selected="true">QTR</button
+          ><button class="tab" role="tab" aria-selected="false">YTD</button>
+        </div>
+      </section>
+
+      <section class="sec">
+        <h2>KPI cards, pills and grades</h2>
+        <div class="grid4">
+          <div class="kpi">
+            <div class="kpi__icon">◎</div>
+            <span class="kpi__value">142</span><span class="kpi__label">Open opportunities</span>
+          </div>
+          <div class="kpi kpi--highlight">
+            <div class="kpi__icon">K</div>
+            <span class="kpi__value">K48.2M</span><span class="kpi__label">Weighted pipeline</span>
+          </div>
+          <div class="kpi">
+            <div class="kpi__icon">✓</div>
+            <span class="kpi__value">K12.6M</span><span class="kpi__label">Won this quarter</span>
+          </div>
+          <div class="kpi">
+            <div class="kpi__icon">!</div>
+            <span class="kpi__value">9</span><span class="kpi__label">At-risk deals</span>
+          </div>
+        </div>
+        <div class="line">
+          <span class="pill">Negotiate</span><span class="pill grade--platinum">Platinum · 81</span
+          ><span class="pill grade--gold">Gold · 58</span
+          ><span class="pill grade--silver">Silver · 47</span
+          ><span class="pill grade--bronze">Bronze · 28</span
+          ><span class="chip"
+            >Search: Kafue
+            <button class="toast__close" style="width: 18px; height: 18px">✕</button></span
+          >
+        </div>
+      </section>
+
+      <section class="sec">
+        <h2>Form fields</h2>
+        <p>
+          Pill fields; the label floats up and out on focus or when filled. Prefix, select and date
+          fields keep it up.
+        </p>
+        <div class="grid2">
+          <div class="field" data-field>
+            <label class="field__label" for="f1">Company</label>
+            <div class="field__control">
+              <input id="f1" placeholder="e.g. Kafue Valley Foods" />
+            </div>
+            <span class="field__help">Searches existing accounts as you type</span>
+          </div>
+          <div class="field is-up">
+            <label class="field__label" for="f2">Estimated value</label>
+            <div class="field__control">
+              <span class="field__prefix">K</span
+              ><input id="f2" inputmode="numeric" placeholder="0" data-money />
+            </div>
+          </div>
+          <div class="field is-invalid" data-field>
+            <label class="field__label" for="f3">Contact name</label>
+            <div class="field__control"><input id="f3" /></div>
+            <span class="field__error">ⓘ Required</span>
+          </div>
+          <div class="field is-up">
+            <label class="field__label" for="f4">Source</label>
+            <div class="field__control">
+              <select id="f4">
+                <option>Choose…</option>
+                <option>Referral</option>
+                <option>Event</option>
+              </select>
+            </div>
+          </div>
+        </div>
+        <div class="line">
+          <label class="check"><input type="checkbox" checked /> Strategic account (Tier 1)</label
+          ><label class="check"
+            >Notify owner <input class="switch" type="checkbox" checked
+          /></label>
+        </div>
+      </section>
+
+      <section class="sec">
+        <h2>List with docked drawer</h2>
+        <p>Click a row; the drawer docks beside the list. Close with ✕ or Esc.</p>
+        <div class="split">
+          <div class="split__list rows" id="list">
+            <div class="row" data-row="Fibre backbone Lusaka–Ndola|Kariba Power Co.">
+              <span class="avatar">KP</span><b style="flex: 1">Fibre backbone Lusaka–Ndola</b
+              ><span class="pill grade--gold">Gold · 58</span><span class="money">K6.4M</span>
+            </div>
+            <div class="row" data-row="Tower lease — 40 sites|Nyali Mobile">
+              <span class="avatar">NM</span><b style="flex: 1">Tower lease — 40 sites</b
+              ><span class="pill grade--silver">Silver · 47</span><span class="money">K3.2M</span>
+            </div>
+            <div class="row" data-row="Data-centre colocation|Zedcell Networks">
+              <span class="avatar">ZC</span><b style="flex: 1">Data-centre colocation</b
+              ><span class="pill grade--platinum">Platinum · 81</span
+              ><span class="money">K8.9M</span>
+            </div>
+          </div>
+          <aside class="drawer" id="drawer" role="region" aria-label="Details">
+            <div class="drawer__head">
+              <span class="avatar">KP</span>
+              <div style="flex: 1">
+                <div class="drawer__title" id="dt">—</div>
+                <div class="drawer__subtitle" id="ds">—</div>
+              </div>
+              <button class="btn btn--icon btn--sm" aria-label="Close" data-close>✕</button>
+            </div>
+            <div class="drawer__tabs tabs" role="tablist">
+              <button class="tab" role="tab" aria-selected="true">Overview</button
+              ><button class="tab" role="tab" aria-selected="false">Score</button
+              ><button class="tab" role="tab" aria-selected="false">
+                Activity <span class="tab__count">3</span>
+              </button>
+            </div>
+            <div class="drawer__body">
+              <div class="row">Stage <b style="margin-left: auto">Negotiate</b></div>
+              <div class="row">Owner <b style="margin-left: auto">George M.</b></div>
+            </div>
+            <div class="drawer__foot">
+              <button class="btn btn--danger-outline btn--sm" data-modal>Mark as lost</button
+              ><button class="btn btn--hero btn--sm" data-toast="Moved to Closed Won" data-undo>
+                <span class="btn__circle">↗</span>Advance stage
+              </button>
+            </div>
+          </aside>
+        </div>
+      </section>
+
+      <section class="sec">
+        <h2>Pipeline board</h2>
+        <p>
+          Compact cards. Drag a card to another stage (or focus it and press the arrow keys); totals
+          update and a toast offers Undo.
+        </p>
+        <div class="kanban" id="kanban"></div>
+      </section>
+
+      <section class="sec">
+        <h2>Filter bar and menus</h2>
+        <p>
+          View menu (simple list), search, Filters pill with a panel, and chips for what is set.
+          Menus use the same style everywhere.
+        </p>
+        <div class="card" style="display: flex; flex-direction: column; gap: 14px">
+          <div class="filterbar">
+            <span style="position: relative">
+              <button class="pill-btn" data-fopen="view" aria-haspopup="menu">
+                <span class="pill-btn__label">View:</span> <span id="vname">All deals</span> ⌄
+              </button>
+              <div class="popover menu" data-fpop="view" role="menu" id="vmenu"></div>
+            </span>
+            <label class="search-pill">⌕<input placeholder="Search opportunities" /></label>
+            <span style="position: relative">
+              <button class="pill-btn" data-fopen="filters" id="fbtn">⚲ Filters</button>
+              <div class="popover filter-panel" data-fpop="filters">
+                <div class="filter-panel__grid" id="fgrid"></div>
+              </div>
+            </span>
+            <span class="filterbar__count" id="fcount"></span>
+          </div>
+          <div class="filterbar__chips" id="fchips"></div>
+          <div class="rows" id="frows"></div>
+        </div>
+      </section>
+
+      <section class="sec">
+        <h2>Command palette</h2>
+        <p>Press ⌘K / Ctrl K (or the button), type “fib”, “nyali” or “new”, use ↑ ↓ and Enter.</p>
+        <div class="line">
+          <button class="btn btn--secondary" data-palette>
+            ⌕ Search <span class="kbd">⌘K</span>
+          </button>
+        </div>
+      </section>
+
+      <section class="sec">
+        <h2>Score explanation</h2>
+        <p>
+          Drawer Score tab: summary card, where the points went, grade scale and next best actions
+          (the scoring spec's worked example, 58 · Gold).
+        </p>
+        <div class="card score" style="max-width: 460px">
+          <div class="score-card">
+            <div class="score-card__top">
+              <span class="score-card__num"
+                >58<small> / 100</small> <span class="score-card__change">+4</span></span
+              ><span class="pill">Gold</span>
+            </div>
+            <p class="score-card__reason">
+              It is in <b>Negotiate</b>, which starts it at 75. It loses most on
+              <b>committee coverage 70%</b> (no Technical, Procurement buyer) and 1 other factor.
+            </p>
+            <span class="score-card__value">Weighted value K4,953,600</span>
+          </div>
+          <span class="score__title">Where the points went</span>
+          <div
+            class="waterfall"
+            role="img"
+            aria-label="Stage 75, committee minus 9, engagement minus 8, score 58"
+          >
+            <div class="waterfall__row">
+              <span class="waterfall__label">Stage</span
+              ><span class="waterfall__track"
+                ><span class="waterfall__bar" style="left: 0; width: 75%"></span></span
+              ><span class="waterfall__points">75</span>
+            </div>
+            <div class="waterfall__row waterfall__row--drop">
+              <span class="waterfall__label">Committee</span
+              ><span class="waterfall__track"
+                ><span class="waterfall__bar" style="left: 66%; width: 9%"></span></span
+              ><span class="waterfall__points">−9</span>
+            </div>
+            <div class="waterfall__row waterfall__row--drop">
+              <span class="waterfall__label">Engagement</span
+              ><span class="waterfall__track"
+                ><span class="waterfall__bar" style="left: 58%; width: 8%"></span></span
+              ><span class="waterfall__points">−8</span>
+            </div>
+            <div class="waterfall__row waterfall__row--total">
+              <span class="waterfall__label">Score</span
+              ><span class="waterfall__track"
+                ><span class="waterfall__bar" style="left: 0; width: 58%"></span></span
+              ><span class="waterfall__points">58</span>
+            </div>
+          </div>
+          <span class="score__title">Grade · 17 points to Platinum</span>
+          <div class="grade-scale">
+            <span class="grade-scale__marker" data-value="58" style="left: 58%"></span>
+            <div class="grade-scale__bands"><i></i><i></i><i class="is-current"></i><i></i></div>
+            <div class="grade-scale__labels">
+              <span>Bronze</span><span>Silver 35</span><span>Gold 55</span><span>Platinum 75</span>
+            </div>
+          </div>
+          <div class="nba">
+            <span class="score__title">Next best actions</span>
+            <button class="nba__item" data-toast="Add a technical stakeholder">
+              <span class="nba__icon">→</span>Add a technical stakeholder<span class="nba__lift"
+                >+5</span
+              >
+            </button>
+            <button class="nba__item" data-toast="Book a DC tour">
+              <span class="nba__icon">→</span>Book a DC tour<span class="nba__lift">+5</span>
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <section class="sec">
+        <h2>Activity timeline</h2>
+        <p>
+          Drawer Activity tab: log box, up next card, engagement summary and the weekly log. Hover a
+          row for quick actions.
+        </p>
+        <div class="card activity" style="max-width: 460px">
+          <div class="log-box" id="logbox">
+            <div class="log-box__row">
+              <input id="login" placeholder="Log a note, call or meeting…" /><button
+                class="log-box__send"
+                aria-label="Log"
+                id="logsend"
+              >
+                ↑
+              </button>
+            </div>
+            <div class="log-box__types tabs">
+              <button class="tab" aria-selected="true">✎ Note</button
+              ><button class="tab" aria-selected="false">☏ Call</button
+              ><button class="tab" aria-selected="false">◷ Meeting</button>
+            </div>
+          </div>
+          <div class="up-next">
+            <div class="up-next__top">
+              <span class="up-next__label">Up next</span
+              ><span class="up-next__countdown">in 3 days</span>
+            </div>
+            <span class="up-next__title">Exec meeting · pricing and rollout</span>
+            <div class="up-next__foot">
+              <span class="faces"
+                ><span class="face">RP</span><span class="face">CM</span
+                ><span class="face">GM</span></span
+              ><button class="btn btn--sm">Join · Thu 26, 10:00</button>
+            </div>
+          </div>
+          <div class="activity__stats">
+            <div class="activity__stat"><b>2</b>meetings</div>
+            <div class="activity__stat"><b>1</b>email</div>
+            <div class="activity__stat"><b>+48</b>engagement</div>
+          </div>
+          <div class="activity__group" id="thisweek">
+            <span class="activity__group-title">This week</span>
+            <div class="event">
+              <span class="event__icon">✉</span
+              ><span class="event__text"
+                ><span class="event__title">Re: Revised quote v3</span
+                ><span class="event__summary"
+                  >Thanks George, the phased option works better for us.</span
+                ></span
+              ><span class="event__side">5h ago<span class="event__points">+3</span></span
+              ><span class="event__actions"
+                ><button aria-label="Reply">↩</button><button aria-label="Edit">✎</button
+                ><button aria-label="Delete">✕</button></span
+              >
+            </div>
+            <div class="event event--key">
+              <span class="event__icon">↗</span
+              ><span class="event__text"
+                ><span class="event__title">Propose → Negotiate</span
+                ><span class="event__summary">Score 41 → 58</span></span
+              ><span class="event__side">1d ago</span
+              ><span class="event__actions"
+                ><button aria-label="Reply">↩</button><button aria-label="Edit">✎</button
+                ><button aria-label="Delete">✕</button></span
+              >
+            </div>
+            <div class="event">
+              <span class="event__icon">☏</span
+              ><span class="event__text"
+                ><span class="event__title">Call with procurement · 14 min</span
+                ><span class="event__summary">They need our tax clearance certificate.</span></span
+              ><span class="event__side">1d ago</span
+              ><span class="event__actions"
+                ><button aria-label="Reply">↩</button><button aria-label="Edit">✎</button
+                ><button aria-label="Delete">✕</button></span
+              >
+            </div>
+          </div>
+          <div class="activity__group">
+            <span class="activity__group-title">Last week</span>
+            <div class="event event--key">
+              <span class="event__icon">⌂</span
+              ><span class="event__text"
+                ><span class="event__title">Data-centre tour</span
+                ><span class="event__summary"
+                  >4 attendees, including the technical lead.</span
+                ></span
+              ><span class="event__side">5d ago<span class="event__points">+25</span></span
+              ><span class="event__actions"
+                ><button aria-label="Reply">↩</button><button aria-label="Edit">✎</button
+                ><button aria-label="Delete">✕</button></span
+              >
+            </div>
+            <div class="event event--key">
+              <span class="event__icon">▶</span
+              ><span class="event__text"
+                ><span class="event__title">Network monitoring demo</span
+                ><span class="event__summary"
+                  >SLA dashboards. Operations team very positive.</span
+                ></span
+              ><span class="event__side">9d ago<span class="event__points">+20</span></span
+              ><span class="event__actions"
+                ><button aria-label="Reply">↩</button><button aria-label="Edit">✎</button
+                ><button aria-label="Delete">✕</button></span
+              >
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="sec">
+        <h2>Contract progress and signature</h2>
+        <p>
+          Progress bar, black status card with the one next action, details and the signature pad.
+          Draw a signature; Sign turns on once there is one.
+        </p>
+        <div class="card contract">
+          <div class="contract__head">
+            <span class="contract__doc"></span>
+            <div>
+              <span class="contract__title">Managed Fibre Services Agreement</span
+              ><span class="contract__sub">Kariba Power Co. · CTR-2026-014</span>
+            </div>
+            <span class="contract__value">K6,400,000</span>
+          </div>
+          <div class="progress" id="cprog">
+            <div class="progress__step is-done"><span class="progress__bar"></span>Draft</div>
+            <div class="progress__step is-done"><span class="progress__bar"></span>Sent</div>
+            <div class="progress__step is-done"><span class="progress__bar"></span>Viewed</div>
+            <div class="progress__step is-current"><span class="progress__bar"></span>Signed</div>
+            <div class="progress__step"><span class="progress__bar"></span>Active</div>
+          </div>
+          <div class="status-card">
+            <span class="status-card__icon">✍</span>
+            <div class="status-card__text">
+              <span class="status-card__label">Signing</span
+              ><span class="status-card__title">Sign the contract</span
+              ><span class="status-card__context"
+                >Draw your signature below to sign on behalf of Kariba Power Co.</span
+              >
+            </div>
+          </div>
+          <div class="detail-tiles">
+            <div>Term<b>36 months</b></div>
+            <div>Start<b>1 Dec 2026</b></div>
+            <div>Billing<b>Monthly</b></div>
+            <div>Owner<b>George M.</b></div>
+          </div>
+          <div class="signature" id="csig">
+            <div class="signature__pad" id="cpad">
+              <canvas></canvas><span class="signature__line"></span
+              ><span class="signature__x">×</span
+              ><span class="signature__placeholder">Sign here with your mouse or finger</span
+              ><button class="signature__clear" id="cclear">Clear</button>
+            </div>
+            <p class="signature__consent">
+              By signing, I agree this electronic signature is the legal equivalent of my
+              handwritten signature.
+            </p>
+            <div style="display: flex; justify-content: flex-end">
+              <button class="btn btn--hero" id="csign" disabled>
+                <span class="btn__circle">✍</span>Sign contract
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="sec">
+        <h2>Charts</h2>
+        <p>
+          Bold pills: fat rounded bars, pill funnel and quota track, black tooltip on hover. Series
+          greys come from <code>--ink</code>, <code>--chart-2</code>, hatch, <code>--chart-3</code>.
+        </p>
+        <div class="grid2">
+          <div class="card chart-card">
+            <div class="chart-card__head">
+              <div>
+                <div class="chart-card__title">Revenue</div>
+                <div class="chart-card__sub">Last 6 months</div>
+              </div>
+              <div class="chart-card__hero">K24.3M<small>+18%</small></div>
+            </div>
+            <div class="chart-bars" role="img" aria-label="Monthly revenue June to November">
+              <div class="chart-bars__col" data-ctip="<b>Jun 2026</b><br>K3.0M">
+                <span class="chart-bars__bar" style="height: 60%"></span>Jun
+              </div>
+              <div class="chart-bars__col" data-ctip="<b>Jul 2026</b><br>K3.8M">
+                <span class="chart-bars__bar" style="height: 76%"></span>Jul
+              </div>
+              <div class="chart-bars__col" data-ctip="<b>Aug 2026</b><br>K4.1M">
+                <span class="chart-bars__bar" style="height: 82%"></span>Aug
+              </div>
+              <div class="chart-bars__col" data-ctip="<b>Sep 2026</b><br>K3.9M">
+                <span class="chart-bars__bar" style="height: 78%"></span>Sep
+              </div>
+              <div class="chart-bars__col" data-ctip="<b>Oct 2026</b><br>K4.6M">
+                <span class="chart-bars__bar" style="height: 92%"></span>Oct
+              </div>
+              <div class="chart-bars__col" data-ctip="<b>Nov 2026</b><br>K4.9M">
+                <span class="chart-bars__bar is-primary" style="height: 98%"></span>Nov
+              </div>
+            </div>
+          </div>
+          <div class="card chart-card">
+            <div class="chart-card__head">
+              <div>
+                <div class="chart-card__title">Conversion funnel</div>
+                <div class="chart-card__sub">Last 12 months · 5.1% lead to won</div>
+              </div>
+            </div>
+            <div class="chart-funnel">
+              <div class="chart-funnel__row" data-ctip="<b>Leads</b><br>412">
+                <span class="chart-funnel__label">Leads</span
+                ><span class="chart-funnel__track"
+                  ><span class="chart-funnel__bar" style="width: 100%">412</span></span
+                ><span class="chart-funnel__rate"></span>
+              </div>
+              <div
+                class="chart-funnel__row"
+                data-ctip="<b>Qualified</b><br>186 · 45% from previous"
+              >
+                <span class="chart-funnel__label">Qualified</span
+                ><span class="chart-funnel__track"
+                  ><span class="chart-funnel__bar" style="width: 45%">186</span></span
+                ><span class="chart-funnel__rate">45%</span>
+              </div>
+              <div class="chart-funnel__row" data-ctip="<b>Proposal</b><br>74 · 40% from previous">
+                <span class="chart-funnel__label">Proposal</span
+                ><span class="chart-funnel__track"
+                  ><span class="chart-funnel__bar" style="width: 18%">74</span></span
+                ><span class="chart-funnel__rate">40%</span>
+              </div>
+              <div
+                class="chart-funnel__row"
+                data-ctip="<b>Negotiation</b><br>38 · 51% from previous"
+              >
+                <span class="chart-funnel__label">Negotiation</span
+                ><span class="chart-funnel__track"
+                  ><span class="chart-funnel__bar" style="width: 9%">38</span></span
+                ><span class="chart-funnel__rate">51%</span>
+              </div>
+              <div class="chart-funnel__row" data-ctip="<b>Won</b><br>21 · 55% from previous">
+                <span class="chart-funnel__label">Won</span
+                ><span class="chart-funnel__track"
+                  ><span class="chart-funnel__bar" style="width: 5%">21</span></span
+                ><span class="chart-funnel__rate">55%</span>
+              </div>
+            </div>
+          </div>
+          <div class="card chart-card" style="grid-column: 1 / -1">
+            <div class="chart-card__head">
+              <div>
+                <div class="chart-card__title">Forecast vs quota</div>
+                <div class="chart-card__sub">Q4 2026</div>
+              </div>
+              <div class="chart-card__hero">K27.0M</div>
+            </div>
+            <div
+              class="chart-quota"
+              role="img"
+              aria-label="Won 12.6M, commit 8.3M, best case 6.1M of 30M quota"
+            >
+              <i
+                style="width: 42%; background: var(--ink)"
+                data-ctip="<b>Won</b><br>K12.6M · 42%"
+              ></i
+              ><i
+                style="width: 28%; background: var(--chart-2)"
+                data-ctip="<b>Commit</b><br>K8.3M · 28%"
+              ></i
+              ><i
+                class="chart-hatch"
+                style="width: 20%"
+                data-ctip="<b>Best case</b><br>K6.1M · 20%"
+              ></i>
+            </div>
+            <div class="chart-legend">
+              <span><i style="background: var(--ink)"></i>Won K12.6M</span
+              ><span><i style="background: var(--chart-2)"></i>Commit K8.3M</span
+              ><span><i class="chart-hatch"></i>Best case K6.1M</span
+              ><span style="margin-left: auto; color: var(--ink); font-weight: 600"
+                >90% of K30.0M quota</span
+              >
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="sec">
+        <h2>Avatars and logos</h2>
+        <p>
+          Grey circles for everyone, people and companies alike (a company logo sits in monochrome in
+          a white circle). Stacks show 3, then +N.
+        </p>
+        <div class="card" style="display: flex; flex-direction: column; gap: 16px">
+          <div class="line">
+            <span class="avatar avatar--sm" aria-label="Ruth Phiri" title="Ruth Phiri">RP</span>
+            <span class="avatar avatar--md" aria-label="Ruth Phiri" title="Ruth Phiri"
+              >RP<span class="avatar__online"></span
+            ></span>
+            <span class="avatar" aria-label="Ruth Phiri" title="Ruth Phiri"
+              >RP<span class="avatar__online"></span
+            ></span>
+            <span class="avatar avatar--lg" aria-label="Ruth Phiri" title="Ruth Phiri">RP</span>
+            <span
+              class="avatar avatar--org avatar--sm"
+              aria-label="Kariba Power Co."
+              title="Kariba Power Co."
+              >KP</span
+            >
+            <span
+              class="avatar avatar--org avatar--md"
+              aria-label="Kariba Power Co."
+              title="Kariba Power Co."
+              >KP</span
+            >
+            <span class="avatar avatar--org" aria-label="Kariba Power Co." title="Kariba Power Co."
+              >KP</span
+            >
+            <span
+              class="avatar avatar--org avatar--lg"
+              aria-label="Kariba Power Co."
+              title="Kariba Power Co."
+              >KP</span
+            >
+            <span
+              class="avatar avatar--org avatar--logo avatar--lg"
+              aria-label="Nyali Mobile"
+              title="Nyali Mobile"
+              ><svg viewBox="0 0 40 40">
+                <circle cx="20" cy="20" r="14" fill="none" stroke="currentColor" stroke-width="4" />
+                <path d="M13 24l7-12 7 12z" fill="currentColor" /></svg
+            ></span>
+          </div>
+          <div class="line">
+            <span class="avatar-stack"
+              ><span class="avatar avatar--md">RP</span><span class="avatar avatar--md">CM</span
+              ><span class="avatar avatar--md">GM</span
+              ><span class="avatar avatar--md avatar--more">+2</span></span
+            >
+            <span class="avatar-stack"
+              ><span class="avatar avatar--org avatar--md">KP</span
+              ><span class="avatar avatar--org avatar--md">NM</span
+              ><span class="avatar avatar--org avatar--md">ZN</span></span
+            >
+          </div>
+          <div class="rows">
+            <div class="row">
+              <span class="avatar avatar--org">KP</span><b style="flex: 1">Kariba Power Co.</b
+              ><span style="color: var(--mute)">Tier 1 · Energy</span>
+            </div>
+            <div class="row">
+              <span class="avatar">RP</span><b style="flex: 1">Ruth Phiri</b
+              ><span style="color: var(--mute)">CFO · Kariba Power Co.</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="sec">
+        <h2>Page states</h2>
+        <p>Loading, empty (first use), no results, error. Switch:</p>
+        <div class="tabs tabs--segmented" role="tablist" id="states">
+          <button class="tab" role="tab" aria-selected="true" data-s="loading">Loading</button
+          ><button class="tab" role="tab" aria-selected="false" data-s="empty">Empty</button
+          ><button class="tab" role="tab" aria-selected="false" data-s="nores">No results</button
+          ><button class="tab" role="tab" aria-selected="false" data-s="error">Error</button>
+        </div>
+        <div class="card demo-app" id="state"></div>
+      </section>
+    </main>
+
+    <div class="scrim" id="scrim"></div>
+    <div class="modal" id="modal" role="dialog" aria-modal="true" aria-labelledby="mt">
+      <button class="modal__close" aria-label="Close" data-cancel>✕</button>
+      <div class="modal__icon modal__icon--danger">⊘</div>
+      <div>
+        <div class="modal__title" id="mt">Mark this opportunity as lost?</div>
+        <p class="modal__text">It moves to Closed Lost and leaves the forecast.</p>
+      </div>
+      <div class="tabs" role="group" aria-label="Reason">
+        <button class="tab" aria-selected="false" data-reason>Price</button
+        ><button class="tab" aria-selected="false" data-reason>Chose a competitor</button
+        ><button class="tab" aria-selected="false" data-reason>No budget</button>
+      </div>
+      <div class="modal__actions">
+        <button class="btn btn--secondary" data-cancel>Cancel</button
+        ><button class="btn btn--danger" id="lost" disabled>Mark as lost</button>
+      </div>
+    </div>
+    <div class="scrim" id="pscrim"></div>
+    <div class="palette" id="palette" role="dialog" aria-label="Command palette">
+      <div class="palette__input">
+        ⌕<input
+          id="pq"
+          placeholder="Search or type a command…"
+          role="combobox"
+          aria-expanded="true"
+          aria-controls="pres"
+        /><span class="kbd">esc</span>
+      </div>
+      <div class="palette__results" id="pres" role="listbox"></div>
+      <div class="palette__foot">
+        <span><span class="kbd">↑↓</span> move</span><span><span class="kbd">↵</span> open</span
+        ><span><span class="kbd">esc</span> close</span>
+      </div>
+    </div>
+    <div class="toasts" id="toasts" role="region" aria-label="Notifications"></div>
+
+    <script>
+      var $ = function (s, r) {
+          return (r || document).querySelector(s);
+        },
+        $$ = function (s, r) {
+          return [].slice.call((r || document).querySelectorAll(s));
+        };
+      function toast(msg, undo) {
+        var t = document.createElement("div");
+        t.className = "toast";
+        t.setAttribute("role", "status");
+        t.innerHTML =
+          '<span class="toast__icon">✓</span><span>' +
+          msg +
+          "</span>" +
+          (undo ? '<button class="toast__action">Undo</button>' : "") +
+          '<button class="toast__close" aria-label="Dismiss">✕</button>';
+        $("#toasts").appendChild(t);
+        var all = $$("#toasts .toast");
+        if (all.length > 3) all[0].remove();
+        t.onclick = function (e) {
+          if (e.target.closest("button")) t.remove();
+        };
+        setTimeout(
+          function () {
+            t.remove();
+          },
+          undo ? 6000 : 4000,
+        );
+      }
+      // tabs: select within a tablist
+      document.addEventListener("click", function (e) {
+        var tab = e.target.closest(".tab");
+        if (!tab) return;
+        var list = tab.parentElement;
+        if (tab.hasAttribute("data-reason")) {
+          $$(".tab", list).forEach(function (x) {
+            x.setAttribute("aria-selected", x === tab);
+          });
+          $("#lost").disabled = false;
+          return;
+        }
+        $$(".tab", list).forEach(function (x) {
+          x.setAttribute("aria-selected", x === tab);
+        });
+        if (list.id === "theme") document.documentElement.dataset.theme = tab.dataset.v;
+        if (list.id === "states") showState(tab.dataset.s);
+      });
+      // buttons
+      document.addEventListener("click", function (e) {
+        var b = e.target.closest("[data-toast]");
+        if (b) toast(b.dataset.toast, b.hasAttribute("data-undo"));
+        var busy = e.target.closest("[data-busy]");
+        if (busy) {
+          var w = busy.offsetWidth,
+            txt = busy.textContent;
+          busy.style.width = w + "px";
+          busy.classList.add("is-busy");
+          busy.innerHTML = '<span class="spinner"></span>';
+          setTimeout(function () {
+            busy.classList.remove("is-busy");
+            busy.textContent = txt;
+            busy.style.width = "";
+            toast("Saved");
+          }, 900);
+        }
+        if (e.target.closest("[data-modal]")) openModal();
+        if (e.target.closest("[data-cancel]") || e.target.id === "scrim") closeModal();
+        if (e.target.id === "lost") {
+          closeModal();
+          toast("Marked as lost", true);
+        }
+        var row = e.target.closest("[data-row]");
+        if (row) {
+          $$(".row", $("#list")).forEach(function (r) {
+            r.classList.toggle("is-open", r === row);
+          });
+          var p = row.dataset.row.split("|");
+          $("#dt").textContent = p[0];
+          $("#ds").textContent = p[1] + " · Opportunity";
+          $("#drawer").classList.add("is-open");
+        }
+        if (e.target.closest("[data-close]")) {
+          $("#drawer").classList.remove("is-open");
+          $$(".row", $("#list")).forEach(function (r) {
+            r.classList.remove("is-open");
+          });
+        }
+      });
+      var opener;
+      function openModal() {
+        opener = document.activeElement;
+        $$("[data-reason]").forEach(function (x) {
+          x.setAttribute("aria-selected", false);
+        });
+        $("#lost").disabled = true;
+        $("#scrim").classList.add("is-open");
+        $("#modal").classList.add("is-open");
+        $("[data-reason]").focus();
+      }
+      function closeModal() {
+        $("#scrim").classList.remove("is-open");
+        $("#modal").classList.remove("is-open");
+        if (opener) opener.focus();
+      }
+      document.addEventListener("keydown", function (e) {
+        if (e.key !== "Escape") return;
+        if ($("#modal").classList.contains("is-open")) closeModal();
+        else $("#drawer").classList.remove("is-open");
+      });
+      // floating labels + money
+      $$("[data-field] input").forEach(function (i) {
+        i.addEventListener("input", function () {
+          i.closest(".field").classList.toggle("is-up", !!i.value);
+        });
+      });
+      $("[data-money]").addEventListener("input", function () {
+        var d = this.value.replace(/\D/g, "").replace(/^0+/, "");
+        this.value = d ? (+d).toLocaleString("en-US") : "";
+      });
+      // page states
+      var ROWS =
+        '<div class="rows"><div class="row"><span class="avatar">KV</span><b style="flex:1">Kafue Valley Foods</b><span class="money">K1.2M</span></div><div class="row"><span class="avatar">CP</span><b style="flex:1">Copperline Power</b><span class="money">K3.4M</span></div><div class="row"><span class="avatar">KR</span><b style="flex:1">Kalulu Retail</b><span class="money">K0.8M</span></div></div>';
+      var HEAD =
+        '<div class="card__head" style="margin:0"><span class="card__title">Leads</span><button class="btn btn--hero btn--sm"><span class="btn__circle">＋</span>Add lead</button></div>';
+      function showState(s) {
+        var el = $("#state");
+        if (s === "loading")
+          el.innerHTML =
+            HEAD +
+            '<div class="is-blurred">' +
+            ROWS +
+            '</div><div class="loader-veil"><div class="loader" role="status"><span class="loader__circle"><span class="spinner"></span></span>Loading leads…</div></div>';
+        if (s === "empty")
+          el.innerHTML =
+            HEAD +
+            '<div class="ghost">' +
+            ROWS +
+            '<div class="ghost__over"><div class="ghost__message"><div class="state__title">Your leads will appear here</div><p class="state__text">Add your first lead or import a list.</p><div class="state__actions"><button class="btn btn--hero"><span class="btn__circle">＋</span>Add lead</button><button class="btn btn--secondary">Import CSV</button></div></div></div></div>';
+        if (s === "nores")
+          el.innerHTML =
+            HEAD +
+            '<div class="state"><div class="illo"><i></i><i></i><i></i><span class="illo__badge">⌕</span></div><div class="state__title">No leads match “Kafue Gorge”</div><p class="state__text">Check the spelling or try a company or contact name.</p><button class="btn btn--secondary">Clear search</button></div>';
+        if (s === "error")
+          el.innerHTML =
+            HEAD +
+            '<div class="state" role="alert"><div class="illo illo--error"><i></i><i></i><i></i><span class="illo__badge">!</span></div><div class="state__title">Couldn’t load leads</div><p class="state__text">The server didn’t respond. Your data is safe — try again in a moment.</p><div class="state__actions"><button class="btn btn--primary">Retry</button><button class="btn btn--ghost">Contact support</button></div></div>';
+      }
+      showState("loading");
+
+      // pipeline board
+      var ST = [
+        ["Qualify", 0.1],
+        ["Discover", 0.25],
+        ["Propose", 0.5],
+        ["Negotiate", 0.75],
+      ];
+      var DEALS = [
+        ["Cold-chain IoT pilot", "Kafue Valley Foods", 450000, "Bronze · 22", 0],
+        ["Smart metering backhaul", "Copperline Power", 2600000, "Silver · 44", 0],
+        ["SD-WAN branch rollout", "Mutual Bank of Lusaka", 1820000, "Bronze · 28", 1],
+        ["Tower lease — 40 sites", "Nyali Mobile", 3150000, "Silver · 47", 2],
+        ["Fibre backbone Lusaka–Ndola", "Kariba Power Co.", 6400000, "Gold · 58", 3],
+        ["Data-centre colocation", "Zedcell Networks", 8900000, "Platinum · 81", 3],
+      ];
+      function kf(n) {
+        return n >= 1e6 ? "K" + (n / 1e6).toFixed(1) + "M" : "K" + Math.round(n / 1e3) + "K";
+      }
+      function drawBoard() {
+        var grand = DEALS.reduce(function (a, d) {
+          return a + d[2];
+        }, 0);
+        $("#kanban").innerHTML = ST.map(function (st, si) {
+          var it = DEALS.map(function (d, i) {
+            return [d, i];
+          }).filter(function (x) {
+            return x[0][4] === si;
+          });
+          var tot = it.reduce(function (a, x) {
+            return a + x[0][2];
+          }, 0);
+          return (
+            '<div class="kanban__col" data-s="' +
+            si +
+            '"><div class="kanban__head"><span><span class="kanban__stage">' +
+            st[0] +
+            '</span><span class="kanban__count">' +
+            it.length +
+            '</span></span><span class="kanban__totals">' +
+            kf(tot) +
+            " · w " +
+            kf(tot * st[1]) +
+            '</span></div><div class="kanban__share"><i style="width:' +
+            (tot / grand) * 100 +
+            '%"></i></div><div class="kanban__cards">' +
+            it
+              .map(function (x) {
+                var d = x[0],
+                  strong = /Gold|Platinum/.test(d[3]);
+                return (
+                  '<div class="deal" draggable="true" tabindex="0" data-i="' +
+                  x[1] +
+                  '"><span class="deal__name">' +
+                  d[0] +
+                  '</span><span class="deal__account">' +
+                  d[1] +
+                  '</span><div class="deal__foot"><span class="pill' +
+                  (strong ? " pill--strong" : "") +
+                  '">' +
+                  d[3] +
+                  '</span><span class="deal__value">' +
+                  kf(d[2]) +
+                  "</span></div></div>"
+                );
+              })
+              .join("") +
+            '</div><button class="kanban__add">+ Add opportunity</button></div>'
+          );
+        }).join("");
+      }
+      function moveDeal(i, to) {
+        if (to === DEALS[i][4] || to < 0 || to > 3) return;
+        DEALS[i][4] = to;
+        drawBoard();
+        toast("Moved to " + ST[to][0], true);
+        var c = $('.deal[data-i="' + i + '"]');
+        if (c) c.focus();
+      }
+      var dragI = null;
+      document.addEventListener("dragstart", function (e) {
+        var c = e.target.closest(".deal");
+        if (!c) return;
+        dragI = +c.dataset.i;
+        c.classList.add("is-dragging");
+        e.dataTransfer.setData("text/plain", "x");
+      });
+      document.addEventListener("dragend", function () {
+        $$(".is-over, .is-dragging").forEach(function (x) {
+          x.classList.toggle("is-over", false);
+          x.classList.toggle("is-dragging", false);
+        });
+      });
+      document.addEventListener("dragover", function (e) {
+        var c = e.target.closest(".kanban__col");
+        if (!c || dragI === null) return;
+        e.preventDefault();
+        $$(".kanban__col").forEach(function (x) {
+          x.classList.toggle("is-over", x === c);
+        });
+      });
+      document.addEventListener("drop", function (e) {
+        var c = e.target.closest(".kanban__col");
+        if (!c || dragI === null) return;
+        e.preventDefault();
+        moveDeal(dragI, +c.dataset.s);
+        dragI = null;
+      });
+      document.addEventListener("keydown", function (e) {
+        var c = e.target.closest(".deal");
+        if (!c) return;
+        var i = +c.dataset.i;
+        if (e.key === "ArrowRight") moveDeal(i, DEALS[i][4] + 1);
+        if (e.key === "ArrowLeft") moveDeal(i, DEALS[i][4] - 1);
+      });
+      drawBoard();
+
+      // filter bar + menu
+      var FD = [
+        ["Fibre backbone Lusaka–Ndola", "Negotiate", "Gold", "George M.", "K6.4M"],
+        ["Data-centre colocation", "Negotiate", "Platinum", "George M.", "K8.9M"],
+        ["Tower lease — 40 sites", "Propose", "Silver", "Chileshe B.", "K3.2M"],
+        ["SD-WAN branch rollout", "Discover", "Bronze", "George M.", "K1.8M"],
+        ["Managed Wi-Fi campus", "Propose", "Silver", "Natasha L.", "K0.9M"],
+        ["Smart metering backhaul", "Qualify", "Silver", "Chileshe B.", "K2.6M"],
+      ];
+      var FF = {
+        Stage: ["Qualify", "Discover", "Propose", "Negotiate"],
+        Grade: ["Platinum", "Gold", "Silver"],
+        Owner: ["George M.", "Chileshe B.", "Natasha L."],
+      };
+      var FI = { Stage: 1, Grade: 2, Owner: 3 };
+      var FV = [
+        ["All deals", {}],
+        ["My deals", { Owner: ["George M."] }],
+        ["Gold & Platinum", { Grade: ["Gold", "Platinum"] }],
+        ["Negotiating", { Stage: ["Negotiate"] }],
+      ];
+      var fst = { view: 0, f: {} };
+      function fMatch(f) {
+        return FD.filter(function (d) {
+          for (var k in f) {
+            if (f[k].length && f[k].indexOf(d[FI[k]]) < 0) return false;
+          }
+          return true;
+        });
+      }
+      function fSame(a, b) {
+        return JSON.stringify(a) === JSON.stringify(b);
+      }
+      function fDraw() {
+        var edited = !fSame(fst.f, FV[fst.view][1]);
+        $("#vname").textContent = FV[fst.view][0] + (edited ? " (edited)" : "");
+        $("#vmenu").innerHTML =
+          FV.map(function (v, i) {
+            var on = i === fst.view;
+            return (
+              '<button class="menu__item" role="menuitemradio" aria-checked="' +
+              on +
+              '" data-fview="' +
+              i +
+              '"><span class="menu__check">' +
+              (on ? "✓" : "") +
+              "</span>" +
+              v[0] +
+              '<span class="menu__count">' +
+              fMatch(v[1]).length +
+              "</span></button>"
+            );
+          }).join("") +
+          '<div class="menu__divider"></div>' +
+          (edited
+            ? '<button class="menu__item" data-fsave><span class="menu__check">＋</span>Save as new view</button>'
+            : '<button class="menu__item"><span class="menu__check">⚙</span>Manage views</button>');
+        $("#fgrid").innerHTML = Object.keys(FF)
+          .map(function (k) {
+            return (
+              '<div><div class="filter-panel__title">' +
+              k +
+              "</div>" +
+              FF[k]
+                .map(function (v) {
+                  return (
+                    '<label class="check"><input type="checkbox" data-ff="' +
+                    k +
+                    "|" +
+                    v +
+                    '"' +
+                    ((fst.f[k] || []).indexOf(v) >= 0 ? " checked" : "") +
+                    "> " +
+                    v +
+                    "</label>"
+                  );
+                })
+                .join("") +
+              "</div>"
+            );
+          })
+          .join("");
+        var n = Object.keys(fst.f).reduce(function (a, k) {
+            return a + fst.f[k].length;
+          }, 0),
+          b = $("#fbtn");
+        b.classList.toggle("is-set", n > 0);
+        b.innerHTML = "⚲ Filters" + (n ? ' <span class="pill-btn__count">' + n + "</span>" : "");
+        var chips = [];
+        Object.keys(fst.f).forEach(function (k) {
+          fst.f[k].forEach(function (v) {
+            chips.push(
+              '<span class="chip">' +
+                k +
+                ": " +
+                v +
+                '<button class="toast__close" style="width:18px;height:18px" data-fchip="' +
+                k +
+                "|" +
+                v +
+                '" aria-label="Remove">✕</button></span>',
+            );
+          });
+        });
+        $("#fchips").innerHTML = chips.length
+          ? chips.join("") + '<button class="filterbar__clear" data-fclear>Clear all</button>'
+          : "";
+        var r = fMatch(fst.f);
+        $("#fcount").textContent = r.length + " of " + FD.length;
+        $("#frows").innerHTML = r
+          .map(function (d) {
+            return (
+              '<div class="row"><b style="flex:1">' +
+              d[0] +
+              '</b><span style="color:var(--mute);width:90px">' +
+              d[1] +
+              '</span><span class="pill' +
+              (/Gold|Platinum/.test(d[2]) ? " pill--strong" : "") +
+              '">' +
+              d[2] +
+              '</span><span class="money" style="width:60px">' +
+              d[4] +
+              "</span></div>"
+            );
+          })
+          .join("");
+      }
+      document.addEventListener("click", function (e) {
+        var t;
+        if (!e.target.closest(".popover") && !e.target.closest("[data-fopen]"))
+          $$(".popover.is-open").forEach(function (p) {
+            p.classList.toggle("is-open", false);
+          });
+        if ((t = e.target.closest("[data-fopen]"))) {
+          var p = $('[data-fpop="' + t.dataset.fopen + '"]'),
+            was = p.classList.contains("is-open");
+          $$(".popover.is-open").forEach(function (x) {
+            x.classList.toggle("is-open", false);
+          });
+          p.classList.toggle("is-open", !was);
+          var first = p.querySelector(".menu__item");
+          if (first && !was) first.focus();
+        }
+        if ((t = e.target.closest("[data-fview]"))) {
+          fst.view = +t.dataset.fview;
+          fst.f = JSON.parse(JSON.stringify(FV[fst.view][1]));
+          $('[data-fpop="view"]').classList.toggle("is-open", false);
+          fDraw();
+        }
+        if ((t = e.target.closest("[data-fchip]"))) {
+          var kv = t.dataset.fchip.split("|");
+          fst.f[kv[0]] = fst.f[kv[0]].filter(function (v) {
+            return v !== kv[1];
+          });
+          if (!fst.f[kv[0]].length) delete fst.f[kv[0]];
+          fDraw();
+        }
+        if (e.target.closest("[data-fclear]")) {
+          fst.f = {};
+          fst.view = 0;
+          fDraw();
+        }
+        if (e.target.closest("[data-fsave]")) {
+          $('[data-fpop="view"]').classList.toggle("is-open", false);
+          toast("View saved");
+        }
+      });
+      document.addEventListener("change", function (e) {
+        var i = e.target.closest("[data-ff]");
+        if (!i) return;
+        var kv = i.dataset.ff.split("|");
+        fst.f[kv[0]] = fst.f[kv[0]] || [];
+        if (i.checked) fst.f[kv[0]].push(kv[1]);
+        else
+          fst.f[kv[0]] = fst.f[kv[0]].filter(function (v) {
+            return v !== kv[1];
+          });
+        if (!fst.f[kv[0]].length) delete fst.f[kv[0]];
+        fDraw();
+        $('[data-fpop="filters"]').classList.add("is-open");
+      });
+      document.addEventListener("keydown", function (e) {
+        var m = e.target.closest(".menu");
+        if (!m || (e.key !== "ArrowDown" && e.key !== "ArrowUp")) return;
+        e.preventDefault();
+        var it = $$(".menu__item", m),
+          i = it.indexOf(document.activeElement);
+        i = e.key === "ArrowDown" ? (i + 1) % it.length : (i - 1 + it.length) % it.length;
+        it[i].focus();
+      });
+      fDraw();
+
+      // command palette
+      var PI = [
+        { g: "Actions", ic: "＋", t: "New lead", s: "Create a lead", m: "N L" },
+        { g: "Actions", ic: "＋", t: "New opportunity", s: "Create an opportunity", m: "N O" },
+        { g: "Actions", ic: "↗", t: "Go to Pipeline", s: "Board of open deals", m: "G P" },
+        {
+          g: "Opportunities",
+          ic: "KP",
+          t: "Fibre backbone Lusaka–Ndola",
+          s: "Kariba Power Co. · Negotiate",
+          m: "K6.4M · Gold 58",
+        },
+        {
+          g: "Opportunities",
+          ic: "MF",
+          t: "Dark fibre IRU",
+          s: "Mwezi Fibre · Negotiate",
+          m: "K5.1M · Gold 61",
+        },
+        { g: "Accounts", ic: "NM", t: "Nyali Mobile", s: "Tier 2 · Telecom", m: "2 open deals" },
+        { g: "Leads", ic: "KV", t: "Kafue Valley Foods", s: "Referral · Mwila Banda", m: "K1.2M" },
+      ];
+      var pst = { q: "", sel: 0, list: [], opener: null };
+      function pResults(q) {
+        q = q.trim().toLowerCase();
+        if (!q) return [PI[3], PI[5], PI[0], PI[1], PI[2]];
+        return PI.filter(function (x) {
+          return (x.t + " " + x.s).toLowerCase().indexOf(q) >= 0;
+        });
+      }
+      function pMark(t, q) {
+        q = q.trim();
+        if (!q) return t;
+        var i = t.toLowerCase().indexOf(q.toLowerCase());
+        return i < 0
+          ? t
+          : t.slice(0, i) + "<mark>" + t.slice(i, i + q.length) + "</mark>" + t.slice(i + q.length);
+      }
+      function pDraw() {
+        var r = (pst.list = pResults(pst.q)),
+          h = "",
+          last = "";
+        if (!r.length) {
+          $("#pres").innerHTML =
+            '<div class="palette__empty">No results for “' +
+            pst.q +
+            "”. Try a company, contact or action.</div>";
+          return;
+        }
+        r.forEach(function (x, i) {
+          var g = pst.q.trim() ? x.g : i < 2 ? "Recent" : "Quick actions";
+          if (g !== last) {
+            h += '<div class="palette__group">' + g + "</div>";
+            last = g;
+          }
+          h +=
+            '<button class="palette__item" role="option" aria-selected="' +
+            (i === pst.sel) +
+            '" data-pi="' +
+            i +
+            '"><span class="palette__icon">' +
+            x.ic +
+            '</span><span class="palette__text"><span class="palette__title">' +
+            pMark(x.t, pst.q) +
+            '</span><span class="palette__sub">' +
+            x.s +
+            '</span></span><span class="palette__meta">' +
+            x.m +
+            "</span></button>";
+        });
+        $("#pres").innerHTML = h;
+        var s = $('.palette__item[aria-selected="true"]');
+        if (s) s.scrollIntoView({ block: "nearest" });
+      }
+      function pOpen() {
+        pst.opener = document.activeElement;
+        pst.q = "";
+        pst.sel = 0;
+        $("#pq").value = "";
+        pDraw();
+        $("#palette").classList.add("is-open");
+        $("#pscrim").classList.add("is-open");
+        setTimeout(function () {
+          $("#pq").focus();
+        }, 30);
+      }
+      function pClose() {
+        $("#palette").classList.remove("is-open");
+        $("#pscrim").classList.remove("is-open");
+        if (pst.opener) pst.opener.focus();
+      }
+      function pRun() {
+        var x = pst.list[pst.sel];
+        if (!x) return;
+        pClose();
+        toast(x.g === "Actions" ? x.t : "Opening " + x.t);
+      }
+      function pIsOpen() {
+        return $("#palette").classList.contains("is-open");
+      }
+      $("#pq").addEventListener("input", function () {
+        pst.q = this.value;
+        pst.sel = 0;
+        pDraw();
+      });
+      document.addEventListener("click", function (e) {
+        if (e.target.closest("[data-palette]")) return pOpen();
+        if (e.target.id === "pscrim") return pClose();
+        var it = e.target.closest("[data-pi]");
+        if (it) {
+          pst.sel = +it.dataset.pi;
+          pRun();
+        }
+      });
+      document.addEventListener(
+        "keydown",
+        function (e) {
+          if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === "k") {
+            e.preventDefault();
+            return pIsOpen() ? pClose() : pOpen();
+          }
+          if (!pIsOpen()) return;
+          var n = pst.list.length;
+          if (e.key === "Escape") {
+            e.stopPropagation();
+            pClose();
+          }
+          if ((e.key === "ArrowDown" || e.key === "ArrowUp") && n) {
+            e.preventDefault();
+            pst.sel = e.key === "ArrowDown" ? (pst.sel + 1) % n : (pst.sel - 1 + n) % n;
+            pDraw();
+          }
+          if (e.key === "Enter") {
+            e.preventDefault();
+            pRun();
+          }
+        },
+        true,
+      );
+
+      // activity log box
+      (function () {
+        var box = $("#logbox"),
+          input = $("#login");
+        input.addEventListener("input", function () {
+          box.classList.toggle("has-text", !!input.value.trim());
+        });
+        $$(".log-box__types .tab").forEach(function (t) {
+          t.addEventListener("mousedown", function (e) {
+            e.preventDefault();
+            $$(".log-box__types .tab").forEach(function (x) {
+              x.setAttribute("aria-selected", x === t);
+            });
+          });
+        });
+        function logIt() {
+          var v = input.value.trim();
+          if (!v) return input.focus();
+          var type = $('.log-box__types .tab[aria-selected="true"]').textContent.slice(2);
+          var row = document.createElement("div");
+          row.className = "event";
+          row.innerHTML =
+            '<span class="event__icon">' +
+            { Note: "✎", Call: "☏", Meeting: "◷" }[type] +
+            '</span><span class="event__text"><span class="event__title"></span><span class="event__summary"></span></span><span class="event__side">just now</span>';
+          row.querySelector(".event__title").textContent = type + " logged";
+          row.querySelector(".event__summary").textContent = v;
+          $("#thisweek .activity__group-title").after(row);
+          input.value = "";
+          box.classList.remove("has-text");
+          toast(type + " logged");
+        }
+        $("#logsend").addEventListener("click", logIt);
+        input.addEventListener("keydown", function (e) {
+          if (e.key === "Enter") {
+            e.preventDefault();
+            logIt();
+          }
+        });
+      })();
+
+      // signature pad
+      (function () {
+        var pad = $("#cpad"),
+          cv = pad.querySelector("canvas"),
+          btn = $("#csign"),
+          ctx,
+          last = null,
+          down = false,
+          moved = 0;
+        function size() {
+          var r = pad.getBoundingClientRect(),
+            d = window.devicePixelRatio || 1;
+          cv.width = r.width * d;
+          cv.height = r.height * d;
+          ctx = cv.getContext("2d");
+          ctx.scale(d, d);
+          ctx.lineCap = "round";
+          ctx.lineJoin = "round";
+        }
+        size();
+        function pt(e) {
+          var b = cv.getBoundingClientRect();
+          return { x: e.clientX - b.left, y: e.clientY - b.top, t: Date.now() };
+        }
+        cv.addEventListener("pointerdown", function (e) {
+          down = true;
+          last = pt(e);
+          cv.setPointerCapture(e.pointerId);
+        });
+        cv.addEventListener("pointermove", function (e) {
+          if (!down) return;
+          var p = pt(e),
+            d = Math.hypot(p.x - last.x, p.y - last.y),
+            v = d / Math.max(1, p.t - last.t);
+          ctx.strokeStyle = getComputedStyle(document.documentElement)
+            .getPropertyValue("--ink")
+            .trim();
+          ctx.lineWidth = Math.max(1.4, 3.2 - v * 1.2);
+          ctx.beginPath();
+          ctx.moveTo(last.x, last.y);
+          ctx.lineTo(p.x, p.y);
+          ctx.stroke();
+          moved += d;
+          last = p;
+          if (moved > 40) {
+            pad.classList.add("is-inked");
+            btn.disabled = false;
+          }
+        });
+        ["pointerup", "pointercancel"].forEach(function (n) {
+          cv.addEventListener(n, function () {
+            down = false;
+          });
+        });
+        $("#cclear").addEventListener("click", function () {
+          ctx.clearRect(0, 0, cv.width, cv.height);
+          moved = 0;
+          pad.classList.remove("is-inked");
+          btn.disabled = true;
+        });
+        btn.addEventListener("click", function () {
+          var img = cv.toDataURL();
+          $("#csig").innerHTML =
+            '<div class="signed"><img alt="Signature" src="' +
+            img +
+            '"><div><b>Signed by Ruth Phiri</b>23 Nov 2026, 10:42 · IP 41.72.x.x</div></div><div class="audit-trail"><span>Draft 20 Nov</span><span>Sent 21 Nov</span><span>Viewed 22 Nov</span><span>Signed 23 Nov</span></div>';
+          var s = $$("#cprog .progress__step");
+          s[3].className = "progress__step is-done";
+          s[4].className = "progress__step is-current";
+          toast("Contract signed");
+        });
+      })();
+
+      // chart tooltips
+      (function () {
+        var tip = document.createElement("div");
+        tip.className = "chart-tooltip";
+        document.body.appendChild(tip);
+        document.addEventListener("mousemove", function (e) {
+          var t = e.target.closest("[data-ctip]");
+          if (!t) {
+            tip.classList.remove("is-on");
+            return;
+          }
+          tip.innerHTML = t.dataset.ctip;
+          tip.classList.add("is-on");
+          var x = e.clientX + 14;
+          if (x + tip.offsetWidth > innerWidth - 10) x = e.clientX - tip.offsetWidth - 14;
+          tip.style.left = x + "px";
+          tip.style.top = e.clientY + 14 + "px";
+        });
+      })();
+    </script>
+  </body>
+</html>

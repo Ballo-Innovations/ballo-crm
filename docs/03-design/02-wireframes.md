@@ -1,5 +1,9 @@
 # Wireframes (text) — build these, nothing else
 
+Routes follow the nav in `01-design-system.md`: Dashboard · Pipeline · Accounts · Leads ·
+Forecast · Engagement · Contracts · Intelligence · Settings. The challenge's terms stay visible
+inside them: ABM is a tab in Accounts, VSI a section of Forecast, CIMS the admin in Settings.
+
 ## /dashboard (Executive)
 
 ```
@@ -22,8 +26,8 @@
 [Filters: owner, grade, sector]  [Focus List ▸]            [+ Opportunity]
 QUALIFY (12 · K1.2m · w K120k) | DISCOVER | PROPOSE | NEGOTIATE | WON | LOST
 +----------------------------+
-| Zanaco — DRaaS   [GOLD] 62 |
-| K 350,000 · close 12 Dec   |
+| Nyali — DRaaS    [GOLD] 62 |
+| K350,000 · close 12 Dec    |
 | ●●●○ committee · 3d ago    |
 +----------------------------+
 Card click → Drawer: summary, ScoreRing, FactorList, next best actions, committee, timeline, [Change stage]
@@ -41,13 +45,17 @@ Tabs: Overview | Contacts & Committee | Services | Opportunities | Timeline | Co
 Overview: profile card · ARR · open pipeline · top 3 recommendations (cards with % and reasons) · recent timeline · renewal alerts
 ```
 
-## /abm
+## /accounts?tab=abm (ABM tab)
 
 Strategic accounts table (Tier 1/2) → account → Buying Committee map (roles as columns, contacts as chips with stance colour) + Account Plan editor + Playbook checklist.
 
-## /vsi and /vsi/[sector]
+## /forecast (VSI section) and /forecast/vsi/[sector]
 
 Ranked sector table + bar chart; drilldown: ARR trend line, product mix donut, top opps, Whitespace matrix (accounts × products: ✓ owned / ★ recommended % / –).
+
+## /leads
+
+Leads table (source, company, contact, grade pill, owner, age) with filters + [Add lead] hero; row → Drawer with score explanation and [Convert to opportunity].
 
 ## /engagement
 
@@ -61,10 +69,10 @@ Table (title, account, status stepper, value, end date, renewal chip) · [New fr
 
 Contract PDF preview + SignaturePad + [Sign]. Success state.
 
-## /insights
+## /intelligence
 
-Full feed with filters by severity/type; dismiss.
+Insights feed with filters by severity/type; dismiss. Cross-sell recommendations across accounts.
 
-## /admin
+## /settings (CIMS admin)
 
 Tabs: Users & Roles · Audit log · API keys · Integrations (live log) · Data protection (export/erase, policy).

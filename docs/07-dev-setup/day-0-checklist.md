@@ -26,8 +26,9 @@ must decide. About 2 hours per person, most of it reading.
 
 ## Team decisions before the first ticket
 
-- [ ] Who is Dev A, Dev B and Dev C ([01-team-and-roles.md](../04-delivery/01-team-and-roles.md));
-      tickets are assigned by that letter
+- [x] Dev A is George, Dev B is Benard, Dev C is Chisowa
+      ([01-team-and-roles.md](../04-delivery/01-team-and-roles.md)); tickets are assigned by that
+      letter
 - [ ] Where tickets are tracked: the CSV in this repo, or Switchboard
 - [ ] Stand-up time, and who owns the cut list
 - [ ] Book the dry-run judge (friend or mentor) for week 3, day 4

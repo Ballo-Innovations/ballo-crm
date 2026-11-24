@@ -55,8 +55,20 @@ adding anything that is not on it.
 - Every mutating server action: `requireRole([...])` → zod parse → `withAudit(...)`.
 - Money is integer ngwee; format with `formatZMW`. Dates UTC in DB; display Africa/Lusaka.
 - Enums come from Prisma; never string-literal a stage/grade/role.
-- UI: shadcn components only; dark theme tokens from `docs/03-design/01-design-system.md`; detail
-  views open in the right Drawer, not a new page.
+- UI: the monochrome design in `docs/03-design/01-design-system.md`. Use the built components
+  first (list below); `src/components/ui/` holds shadcn primitives (dialog, select, popover,
+  tabs, tooltip, inputs…) as bases to style to the kit, and `ui/button` and `ui/card` are for
+  the marketing site only.
+  Build from the UI kit in `docs/03-design/reference/kit/` (tokens, component CSS, live
+  showcase and the shadcn variable mapping in its README); the `*-options.html` pages contain
+  rejected designs and are background only. Detail views open in the right Drawer, not a new
+  page.
+- Reuse the built components before writing new ones (all shown on `/kit`): `AppShell`,
+  `CommandPalette`, `KpiCard`, `AppButton`, `Pill`, `GradeBadge`, `EntityAvatar`, `DataTable`,
+  `DockedDrawer` + `useOpenParam`, and the page states in `src/components/shared/page-states.tsx`.
+  Toasts only through `notify` (`src/components/feedback/notify.tsx`). Compact money with
+  `formatZMWCompact`. App routes: `/dashboard /pipeline /accounts /leads /forecast /engagement
+/contracts /intelligence /settings` (`src/lib/site.ts`).
 - Loading, empty, error states are mandatory on every list/page.
 - No `any`. No console.log in committed code.
 

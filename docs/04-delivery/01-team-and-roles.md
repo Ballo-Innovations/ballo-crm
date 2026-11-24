@@ -1,5 +1,8 @@
 # Team & Roles (3 devs)
 
+**Dev A is George, Dev B is Benard, Dev C is Chisowa.** The `Assignee` column in
+`03-tickets.csv` uses these letters.
+
 |                     | Dev A — Tech Lead / Core                                         | Dev B — Intelligence & Data                                           | Dev C — Workflows & Integrations                                                            |
 | ------------------- | ---------------------------------------------------------------- | --------------------------------------------------------------------- | ------------------------------------------------------------------------------------------- |
 | **Owns**            | Repo, CI, auth, RBAC, audit, Pipeline, Accounts, CIMS, seed data | Scoring, grading, recommender, insights, LLM, dashboards, VSI, charts | ABM, Engagement, Contracts (PDF + e-sign), integrations adapters + mock service, deployment |
