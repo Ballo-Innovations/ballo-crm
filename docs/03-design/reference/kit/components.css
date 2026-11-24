@@ -1714,9 +1714,9 @@ svg {
 }
 .grade-scale__marker {
   position: absolute;
-  top: -8px;
+  top: 0;
   width: 2px;
-  height: 28px;
+  height: 12px;
   background: var(--ink);
   border-radius: 2px;
   transition: left 400ms;
@@ -2410,7 +2410,7 @@ svg {
 }
 .chart-funnel__bar {
   height: 30px;
-  min-width: 18%;
+  min-width: max(18%, 46px);
   border-radius: var(--r-pill);
   background: var(--chart-3);
   display: flex;
@@ -2420,10 +2420,7 @@ svg {
   font-size: 12px;
   font-weight: 700;
 }
-.chart-funnel__row:nth-child(even) .chart-funnel__bar {
-  background: var(--chart-2);
-  color: var(--shell);
-}
+/* funnel stages are one series; only the outcome (Won) is picked out */
 .chart-funnel__row:last-child .chart-funnel__bar {
   background: var(--ink);
   color: var(--shell);
@@ -2472,12 +2469,13 @@ svg {
 .avatar--logo {
   background: var(--card);
   box-shadow: 0 0 0 1px var(--line);
-  padding: 16%;
 }
+/* % padding would resolve against the parent's width, so size the logo itself */
 .avatar--logo img,
 .avatar--logo svg {
-  width: 100%;
-  height: 100%;
+  display: block;
+  width: 68%;
+  height: 68%;
   object-fit: contain;
   filter: grayscale(1);
 }
@@ -2503,7 +2501,7 @@ svg {
   box-shadow: 0 0 0 2px var(--card);
 }
 .avatar-stack > .avatar + .avatar {
-  margin-left: -10px;
+  margin-left: -6px;
 }
 .avatar--more {
   background: var(--ink);

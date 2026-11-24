@@ -425,7 +425,7 @@ Reference: option B in `docs/03-design/reference/chart-options.html` (hover the 
   comparison lines are 2px `--chart-2`, dashed 6/5. The latest value is labelled at the line's end.
 - **Donut:** 34px-thick ring with 3px `--card` gaps between segments, total in the centre (22px/700)
   with a `--mute` caption; legend beside it with values.
-- **Funnel:** stacked pills, 30px tall, width by value (minimum 18%), value inside right-aligned,
+- **Funnel:** stacked pills, 30px tall, width by value (minimum 18% and 46px, so the value fits), value inside right-aligned,
   the last step (Won) `--ink` with white text, conversion from the previous step on the right.
 - **Progress vs target:** a 54px pill track (`--soft`) with stacked segments and a 2px `--ink`
   quota marker at the end; legend underneath with the % of quota.
@@ -445,14 +445,14 @@ kit.
 - **Everyone** (contacts, users and accounts): circles, `--soft` fill, `--ink` initials. People and
   companies look the same on purpose; the name or row next to the avatar says which it is.
 - **Logos:** an uploaded company logo shown in monochrome (grayscale) in a `--card` circle with a
-  1px `--line` ring and 16% padding.
+  1px `--line` ring, the logo at 68% of the circle.
 - **Initials:** first letters of the first two words ("Kariba Power Co." → KP, "Ruth Phiri" → RP),
   700 weight at 38% of the size.
 - **Sizes:** 24 (inline, stacks in tables) · 32 (lists, stacks) · 40 (cards) · 48–56 (drawer and
   page headers).
 - **Online:** a black dot (28% of the size, min 8px) with a 2px `--card` ring, bottom right; users
   only.
-- **Stacks:** overlap by 10px with a 2px `--card` ring; at most 3, then a black "+N" circle.
+- **Stacks:** overlap by 6px with a 2px `--card` ring; at most 3, then a black "+N" circle.
 - Every avatar has the full name as its accessible label and tooltip. Inside a row on `--soft`,
   circles switch to `--card` so they stay visible.
 
