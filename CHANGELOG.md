@@ -9,6 +9,8 @@ under `[Unreleased]` in the relevant section (Added / Changed / Fixed / Removed)
 
 ### Added
 
+- E0-03: initial Prisma migration (`prisma/migrations/20261125000000_init`) for schema v1, 20 tables
+  and 12 enums, plus a test that every model and enum has its migration.
 - `docs/01-product/00-goals-and-success-metrics.md`: the Challenge 2 problem statement, seven
   goals with metrics, a project scorecard and a capability-to-ticket coverage table. Tickets gained
   a `Goal` column; forecast definitions added to the dashboards spec.
