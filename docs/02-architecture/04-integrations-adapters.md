@@ -67,10 +67,21 @@ Africa's Talking and Resend options. Owner: Dev C (Chisowa).
 deployed, in `/var/apps/ballocrm-<env>/deploy/.env` on the host and in the Vercel project's
 environment variables. Never in the repo, chat, tickets or PR descriptions.
 
-**To confirm with BalloAds before E9-08 starts** (record the answers here):
+**What we know** (from the BalloAds backend README, checked Nov 2026):
 
-1. Which channels the API covers (SMS, email, WhatsApp) and the sender IDs and domains for Infratel.
-2. Auth scheme (header name and format) and rate limits.
-3. Send endpoints and response shape, including the message id and status values.
-4. Webhook events (delivery, failure, reply), payload shape and signature method.
-5. A sandbox or test mode, so dev and stage never message real customers.
+| Item          | Value                                                                                       |
+| ------------- | ------------------------------------------------------------------------------------------- |
+| Base URL      | prod `https://app-api.balloads.com`, staging `https://app-api-staging.balloads.com`, dev `https://app-api-dev.balloads.com`. Keys are per environment: a key only works on the host that issued it. |
+| Auth          | header `x-api-key: <key>`                                                                    |
+| Keys          | `ba_live_...` sends for real; `ba_test_...` sends with a ` [TRIAL]` suffix. Use a test key for dev and stage. |
+| SMS           | `POST /v1/messaging/sms/send` with `{ "message": "...", "recipients": ["097..."] }`. Sender ID is the company's own; it cannot be set per message. |
+| Email         | `POST /v1/messaging/email/send` with one of `templateId`, `htmlBody` or `message`, plus optional `variables`. |
+| Credits       | Charged only for successful dispatches; failures are logged and free. Optional per-key rate limit. |
+| Errors        | `401 {"error":"Invalid API key."}`; `400` problem JSON with `detail` (for example "At least one recipient is required.") |
+
+**Still to confirm with BalloAds before E9-08 starts** (record the answers here):
+
+1. Success response shape for SMS and email (message id and status values).
+2. Whether delivery receipts and replies are pushed to a webhook, and its payload and signature
+   method. If there is no webhook, E9-08 polls for status instead.
+3. A `ba_test_` key for the BalloCRM dev and stage environments.

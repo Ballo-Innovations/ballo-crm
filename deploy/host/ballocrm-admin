@@ -40,7 +40,8 @@ S3_BUCKET=contracts
 
 AUTH_SECRET=$(openssl rand -hex 32)
 
-ANTHROPIC_API_KEY=
+BRUTUS_API_URL=
+BRUTUS_API_KEY=
 
 INTEGRATION_MODE=mock
 INTEGRATIONS_URL=http://mock-integrations:4100
