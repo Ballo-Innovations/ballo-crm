@@ -2,16 +2,19 @@ import "server-only";
 
 import type { Role } from "@prisma/client";
 
+import { auth } from "@/auth";
+
+import { sessionUserFromToken } from "./auth-session";
 import { AppError } from "./errors";
 
 export type SessionUser = { id: string; email: string; name: string; role: Role };
 
-/**
- * Current signed-in user, or null.
- * TODO(E0-04): implement with Auth.js (credentials login, session, role claim).
- */
+/** Current signed-in user from the Auth.js session (role included), or null. */
 export async function getSessionUser(): Promise<SessionUser | null> {
-  return null;
+  const session = await auth();
+  if (!session?.user) return null;
+  const { id, role, email, name } = session.user as Record<string, unknown>;
+  return sessionUserFromToken({ uid: id, role, email, name });
 }
 
 /**
