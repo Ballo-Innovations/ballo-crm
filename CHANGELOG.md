@@ -9,6 +9,9 @@ under `[Unreleased]` in the relevant section (Added / Changed / Fixed / Removed)
 
 ### Added
 
+- E0-10: seed v0 - the 8 demo users from the seed spec (password `Compass!2026`, demo only), the
+  product catalogue and 5 fictional accounts with subscriptions. `pnpm db:seed` and
+  `pnpm db:seed --reset` give the same result however often they run.
 - E0-04: sign in with email and password (Auth.js credentials, bcrypt, JWT session in an
   httpOnly cookie), the role in the session, sign out from the sidebar, and every route behind
   login except the landing page, `/login`, health, `/sign/*`, `/openapi.json` and webhooks
