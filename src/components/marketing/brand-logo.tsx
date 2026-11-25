@@ -9,7 +9,7 @@ import { siteConfig } from "@/lib/site";
 
 /**
  * BalloCRM brand lockup: the app-icon mark plus the wordmark. The mark is the
- * real logo asset — a self-contained rounded tile, so it reads correctly on
+ * real logo asset, a self-contained rounded tile, so it reads correctly on
  * any background. Dark mode swaps to a dedicated asset (public/brand-icon-dark.png)
  * once mounted, to avoid a hydration mismatch on the theme-dependent src.
  */

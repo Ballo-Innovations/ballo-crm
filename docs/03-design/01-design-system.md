@@ -1,4 +1,4 @@
-# Design System — BalloCRM
+# Design System - BalloCRM
 
 **Reference build:** `docs/03-design/reference/dashboard-concept.html` (open it in a browser) and
 the screenshots beside it. When this doc and the reference disagree, the reference wins; raise it
@@ -195,8 +195,8 @@ all five: loaded, loading, empty, no results, error.
   "No leads match", a line naming the search, and a Clear search button. The active search or
   filter also shows as a removable black chip above the list.
 - **Error:** the illustrated style with a red-tinted card and a red ⓘ badge, title "Couldn't
-  load leads", a reassuring line ("Your data is safe — try again in a moment"), a black Retry
-  button and a ghost Contact support button. KPI values show "—".
+  load leads", a reassuring line ("Your data is safe - try again in a moment"), a black Retry
+  button and a ghost Contact support button. KPI values show "-".
 - **Copy:** say what the thing is and what to do next; no blame, no jargon, no raw error
   codes in the message.
 
@@ -287,7 +287,7 @@ and `menu` in the UI kit.
   Filters apply live. Values combine with OR within a filter and AND across filters.
 - **View menu trigger:** `--soft` pill reading "View: All deals ⌄" ("View:" in `--mute`); shows
   "(edited)" after the filters of a saved view change.
-- **Menus (decided: simple list)** — used for the View menu, the ⋯ row menu and the user menu:
+- **Menus (decided: simple list)** - used for the View menu, the ⋯ row menu and the user menu:
   a `--card` popover, 24px radius, 8px padding, 1px `--line` border, soft shadow, about 280px
   wide, opening 8px below its trigger with a short fade and scale. Items are full-width rows
   (10px × 12px, 16px radius, 14px/500) that turn `--soft` on hover or keyboard focus. The

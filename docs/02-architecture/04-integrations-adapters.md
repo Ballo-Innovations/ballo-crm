@@ -25,14 +25,14 @@ Resolved by `getAdapter('sms')` reading `INTEGRATION_MODE=mock|live`. Every call
 
 ## Mock integrations service (`mock-integrations/`, Express, port 4100)
 
-| Endpoint                                                                                                           | Behaviour                                                                           |
-| ------------------------------------------------------------------------------------------------------------------ | ----------------------------------------------------------------------------------- |
-| POST /sms                                                                                                          | returns QUEUED, 2s later POSTs delivery receipt to app webhook                      |
-| POST /telephony/call                                                                                               | returns callId; emits CALL event with random 1–6 min duration                       |
-| POST /erp/orders                                                                                                   | returns `ERP-xxxx`; echoes line items                                               |
-| POST /espf/accounts                                                                                                | returns `ESPF-xxxx`; GET /espf/accounts/:id returns status cycling ACTIVE/SUSPENDED |
-| POST /email/send                                                                                                   | logs; returns messageId                                                             |
-| Mock UI page `/settings/integrations` shows last 20 IntegrationLog rows live (polling) — this is what we show judges. |
+| Endpoint                                                                                                              | Behaviour                                                                           |
+| --------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------- |
+| POST /sms                                                                                                             | returns QUEUED, 2s later POSTs delivery receipt to app webhook                      |
+| POST /telephony/call                                                                                                  | returns callId; emits CALL event with random 1–6 min duration                       |
+| POST /erp/orders                                                                                                      | returns `ERP-xxxx`; echoes line items                                               |
+| POST /espf/accounts                                                                                                   | returns `ESPF-xxxx`; GET /espf/accounts/:id returns status cycling ACTIVE/SUSPENDED |
+| POST /email/send                                                                                                      | logs; returns messageId                                                             |
+| Mock UI page `/settings/integrations` shows last 20 IntegrationLog rows live (polling) - this is what we show judges. |
 
 ## eSPF (internal, unknown)
 
@@ -57,11 +57,11 @@ Africa's Talking and Resend options. Owner: Dev C (Chisowa).
 - **Mock parity:** `mock-integrations` mirrors the BalloAds request and response shapes, so
   switching modes changes no calling code.
 
-| Variable                  | Purpose                                     |
-| ------------------------- | ------------------------------------------- |
-| `BALLOADS_API_URL`        | Base URL of the BalloAds API                |
-| `BALLOADS_API_KEY`        | API key, sent on every request              |
-| `BALLOADS_WEBHOOK_SECRET` | Verifies inbound webhooks from BalloAds     |
+| Variable                  | Purpose                                 |
+| ------------------------- | --------------------------------------- |
+| `BALLOADS_API_URL`        | Base URL of the BalloAds API            |
+| `BALLOADS_API_KEY`        | API key, sent on every request          |
+| `BALLOADS_WEBHOOK_SECRET` | Verifies inbound webhooks from BalloAds |
 
 **Where the key lives:** local, in your own `.env` (copied from the team's private access doc);
 deployed, in `/var/apps/ballocrm-<env>/deploy/.env` on the host and in the Vercel project's
@@ -69,15 +69,15 @@ environment variables. Never in the repo, chat, tickets or PR descriptions.
 
 **What we know** (from the BalloAds backend README, checked Nov 2026):
 
-| Item          | Value                                                                                       |
-| ------------- | ------------------------------------------------------------------------------------------- |
-| Base URL      | prod `https://app-api.balloads.com`, staging `https://app-api-staging.balloads.com`, dev `https://app-api-dev.balloads.com`. Keys are per environment: a key only works on the host that issued it. |
-| Auth          | header `x-api-key: <key>`                                                                    |
-| Keys          | `ba_live_...` sends for real; `ba_test_...` sends with a ` [TRIAL]` suffix. Use a test key for dev and stage. |
-| SMS           | `POST /v1/messaging/sms/send` with `{ "message": "...", "recipients": ["097..."] }`. Sender ID is the company's own; it cannot be set per message. |
-| Email         | `POST /v1/messaging/email/send` with one of `templateId`, `htmlBody` or `message`, plus optional `variables`. |
-| Credits       | Charged only for successful dispatches; failures are logged and free. Optional per-key rate limit. |
-| Errors        | `401 {"error":"Invalid API key."}`; `400` problem JSON with `detail` (for example "At least one recipient is required.") |
+| Item     | Value                                                                                                                                                                                               |
+| -------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Base URL | prod `https://app-api.balloads.com`, staging `https://app-api-staging.balloads.com`, dev `https://app-api-dev.balloads.com`. Keys are per environment: a key only works on the host that issued it. |
+| Auth     | header `x-api-key: <key>`                                                                                                                                                                           |
+| Keys     | `ba_live_...` sends for real; `ba_test_...` sends with a ` [TRIAL]` suffix. Use a test key for dev and stage.                                                                                       |
+| SMS      | `POST /v1/messaging/sms/send` with `{ "message": "...", "recipients": ["097..."] }`. Sender ID is the company's own; it cannot be set per message.                                                  |
+| Email    | `POST /v1/messaging/email/send` with one of `templateId`, `htmlBody` or `message`, plus optional `variables`.                                                                                       |
+| Credits  | Charged only for successful dispatches; failures are logged and free. Optional per-key rate limit.                                                                                                  |
+| Errors   | `401 {"error":"Invalid API key."}`; `400` problem JSON with `detail` (for example "At least one recipient is required.")                                                                            |
 
 **Still to confirm with BalloAds before E9-08 starts** (record the answers here):
 

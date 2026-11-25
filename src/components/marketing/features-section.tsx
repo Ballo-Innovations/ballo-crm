@@ -56,7 +56,7 @@ export function FeaturesSection() {
               Everything commercial teams need, <GradientText>in one system</GradientText>
             </>
           }
-          description="Generic CRMs take months to configure for a B2B commercial workflow — and none of them talk natively to your messaging platform. BalloCRM is built for it from the ground up."
+          description="Generic CRMs take months to configure for a B2B commercial workflow, and none of them talk natively to your messaging platform. BalloCRM is built for it from the ground up."
         />
 
         <div className="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">

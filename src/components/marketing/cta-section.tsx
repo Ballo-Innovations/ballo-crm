@@ -26,7 +26,7 @@ export function CtaSection() {
               Retire the spreadsheets. Run revenue from one source of truth.
             </h2>
             <p className="max-w-xl text-lg text-pretty text-white/75">
-              Bring accounts, pipeline, contracts, messaging, and AI intelligence together — and
+              Bring accounts, pipeline, contracts, messaging, and AI intelligence together, and
               give every revenue role the same trustworthy view.
             </p>
             <div className="mt-2 flex flex-col gap-3 sm:flex-row">

@@ -72,6 +72,8 @@ adding anything that is not on it.
 /contracts /intelligence /settings` (`src/lib/site.ts`).
 - Loading, empty, error states are mandatory on every list/page.
 - No `any`. No console.log in committed code.
+- Never use em dashes (the long dash) anywhere: code, comments, UI copy, docs, commit messages
+  or PR descriptions. Use a comma, colon, full stop or a spaced hyphen (" - ") instead.
 
 ## Testing
 

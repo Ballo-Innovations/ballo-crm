@@ -42,7 +42,7 @@ Rank open opportunities by `priority = weightedValue × urgency` where urgency =
 
 Generated nightly (and on seed) by rules:
 
-- "Mining sector pipeline up 32% QoQ — 3 Gold+ deals in Negotiate."
+- "Mining sector pipeline up 32% QoQ - 3 Gold+ deals in Negotiate."
 - "4 Platinum deals have no activity in 10+ days."
 - "Zanaco contract renews in 42 days; DRAAS recommendation 74%."
 - "DC tour attendees convert 2.1× more often this quarter."

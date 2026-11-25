@@ -16,7 +16,7 @@
 
 ## Scoring & grading
 
-- [ ] TC-20 Spec worked example seeded as "Zanaco — DRaaS" shows 58 / GOLD
+- [ ] TC-20 Spec worked example seeded as "Zanaco - DRaaS" shows 58 / GOLD
 - [ ] TC-21 Add Technical buyer → score rises; drawer factor updates
 - [ ] TC-22 Set budgetConfirmed + economic buyer engaged on ≥75 score → PLATINUM
 - [ ] TC-23 Opportunity with no activity >30d shows downgraded grade after nightly job (or manual run)

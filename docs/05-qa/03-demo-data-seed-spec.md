@@ -6,7 +6,7 @@ Realism sells. All names are fictional-but-plausible; do **not** use real compan
 
 admin@compass.zm (ADMIN) · chanda@ (MANAGER) · mutale@, bwalya@, nkandu@, lombe@ (REP) · thandiwe@ (MARKETING) · legal@ (LEGAL). Password `Compass!2026` for all (demo only).
 
-## Accounts (60) — by sector
+## Accounts (60): by sector
 
 | Sector                                                                                                                                   | Count | Example names (fictional)                                       | Tier 1 |
 | ---------------------------------------------------------------------------------------------------------------------------------------- | ----- | --------------------------------------------------------------- | ------ |
@@ -20,18 +20,18 @@ admin@compass.zm (ADMIN) · chanda@ (MANAGER) · mutale@, bwalya@, nkandu@, lomb
 | Education/Health                                                                                                                         | 5     | UNZA ICT, Levy Mwanawasa Hospital, Cavendish College            | 0      |
 | Lifecycle mix: 35 ACTIVE, 10 ONBOARDING, 10 PROSPECT, 4 AT_RISK, 1 CHURNED. Cities: Lusaka, Kitwe, Ndola, Solwezi, Livingstone, Chipata. |
 
-## Contacts (180) — 3 per account avg; Zambian names (Mutale, Chanda, Bwalya, Mwila, Nkonde, Chileshe, Zulu, Phiri, Banda, Tembo, Mwanza, Sakala); titles CIO, CFO, Head of IT, Procurement Manager, Operations Director.
+## Contacts (180): 3 per account avg; Zambian names (Mutale, Chanda, Bwalya, Mwila, Nkonde, Chileshe, Zulu, Phiri, Banda, Tembo, Mwanza, Sakala); titles CIO, CFO, Head of IT, Procurement Manager, Operations Director.
 
-## Subscriptions (110) — ensure patterns the rules need: ≥12 accounts COLO-without-DRAAS, ≥10 CLOUD-without-BACKUP, ≥8 Banking/Gov FIB-without-MSEC, ≥6 multi-site FIB-without-MPLS.
+## Subscriptions (110): ensure patterns the rules need: ≥12 accounts COLO-without-DRAAS, ≥10 CLOUD-without-BACKUP, ≥8 Banking/Gov FIB-without-MSEC, ≥6 multi-site FIB-without-MPLS.
 
-## Opportunities (150) — stage mix 40/35/35/25/10 won/5 lost; amounts K40k–K2.4m; close dates spread over next 2 quarters; 15% competitorPresent; 40% budgetConfirmed. Must include:
+## Opportunities (150): stage mix 40/35/35/25/10 won/5 lost; amounts K40k–K2.4m; close dates spread over next 2 quarters; 15% competitorPresent; 40% budgetConfirmed. Must include:
 
-- "Zambezi Commercial Bank — DRaaS" matching the spec worked example (58/GOLD).
+- "Zambezi Commercial Bank - DRaaS" matching the spec worked example (58/GOLD).
 - ≥4 PLATINUM, ≥4 stale Platinum (for insight), ≥10 GOLD.
 
-## Engagement events (600) — over last 12 months; 25 DC tours, 60 demos, 40 events, rest meetings/calls/emails; tour attendees' deals have higher win rate (seed this bias so the chart tells a story).
+## Engagement events (600): over last 12 months; 25 DC tours, 60 demos, 40 events, rest meetings/calls/emails; tour attendees' deals have higher win rate (seed this bias so the chart tells a story).
 
-## Contracts (25) — 15 ACTIVE, 5 SIGNED, 3 SENT, 2 DRAFT; 6 ending within 90 days.
+## Contracts (25): 15 ACTIVE, 5 SIGNED, 3 SENT, 2 DRAFT; 6 ending within 90 days.
 
 ## Pre-generated: recommendations (top 3 per active account), insights (~40), AI narratives cached.
 

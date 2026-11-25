@@ -48,7 +48,7 @@ export function ModulesSection() {
               The full commercial workflow, <GradientText>module by module</GradientText>
             </>
           }
-          description="One data model, one navigation, one login. Each module shares the same accounts, contacts, and activity feed — so nothing has to be re-entered or reconciled."
+          description="One data model, one navigation, one login. Each module shares the same accounts, contacts, and activity feed, so nothing has to be re-entered or reconciled."
         />
 
         <div className="mt-12 grid divide-y overflow-hidden rounded-xl border sm:grid-cols-2 sm:divide-x lg:grid-cols-3">

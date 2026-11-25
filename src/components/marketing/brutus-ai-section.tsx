@@ -42,7 +42,7 @@ export function BrutusAiSection() {
               Commercial intelligence <GradientText>built into the workflow</GradientText>
             </>
           }
-          description="Brutus AI runs as asynchronous jobs across your commercial data, turning accounts, pipeline, and health signals into structured recommendations — the intelligence layer reps and managers actually use, because it lives where they already work."
+          description="Brutus AI runs as asynchronous jobs across your commercial data, turning accounts, pipeline, and health signals into structured recommendations: the intelligence layer reps and managers actually use, because it lives where they already work."
         />
 
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
