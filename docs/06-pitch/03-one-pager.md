@@ -6,7 +6,7 @@
 
 **Coverage:** All Challenge 2 capability areas implemented; external integrations (email, SMS, telephony, ERP, eSPF) delivered as a documented adapter layer with a live mock service.
 
-**Tech:** Next.js 15 · TypeScript · PostgreSQL/Prisma · MinIO · Anthropic API (narratives, cached) · Docker Compose · GitHub Actions. Tests: unit + Playwright.
+**Tech:** Next.js 15 · TypeScript · PostgreSQL/Prisma · MinIO · Brutus AI hub (narratives, cached) · Docker Compose · GitHub Actions. Tests: unit + Playwright.
 
 **Try it:** <demo URL> · chanda@compass.zm / Compass!2026 (Manager) · Repo: <link>
 

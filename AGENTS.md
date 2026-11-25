@@ -97,8 +97,9 @@ Implement exactly per spec. The worked example (Negotiate, committee 0.7, engage
 
 ## LLM
 
-Server-only via `src/lib/llm.ts`. Every call cached in `AiArtifact`. If `ANTHROPIC_API_KEY` is
-missing, return the template fallback - never throw.
+Server-only via `src/lib/llm.ts`, which calls Brutus, the Ballo AI hub (`BRUTUS_API_URL`,
+`BRUTUS_API_KEY`). Every call cached in `AiArtifact`. If `BRUTUS_API_KEY` is missing or Brutus
+fails or times out, return the template fallback - never throw.
 
 ## Reference repos (read-only inspiration)
 

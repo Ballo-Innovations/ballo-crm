@@ -9,7 +9,7 @@
 - **Jobs:** Simple in-process scheduler (node-cron) for nightly recompute; BullMQ + Redis only if time allows
 - **Files:** MinIO (S3-compatible) for contract PDFs
 - **PDF:** @react-pdf/renderer (contracts), pdf-lib (signature stamping)
-- **LLM:** Anthropic API from server only; outputs cached in `AiArtifact`
+- **LLM:** Brutus (Ballo AI hub, `POST /brutus/v1/tasks`) from server only; outputs cached in `AiArtifact`
 - **Infra:** docker-compose (app, postgres, minio, mock-integrations); deployed with Docker Compose behind Traefik on our own hosts, three environments (dev, stage, prod) - see ADR-004
 
 ## Diagram
@@ -31,7 +31,7 @@ flowchart LR
   end
   DB[(PostgreSQL)]
   S3[(MinIO)]
-  LLM[Anthropic API]
+  LLM[Brutus AI hub]
   MOCK[Mock Integrations svc<br/>eSPF · ERP · SMS · Telephony]
   MAIL[Inbound email webhook]
   UI --> SA --> AUTH --> AUD --> DB
