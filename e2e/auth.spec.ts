@@ -2,8 +2,8 @@ import { expect, test, type Page } from "@playwright/test";
 
 // E0-04: login, logout, role in the session, protected routes redirect.
 // Signs in as the admin that the seed creates (E0-10); override with E2E_EMAIL / E2E_PASSWORD.
-const email = process.env.E2E_EMAIL ?? "admin@ballocrm.test";
-const password = process.env.E2E_PASSWORD ?? "ballocrm-demo";
+const email = process.env.E2E_EMAIL ?? "admin@compass.zm";
+const password = process.env.E2E_PASSWORD ?? "Compass!2026";
 
 async function fillAndSubmit(page: Page, withPassword: string) {
   await page.getByLabel("Work email").fill(email);
