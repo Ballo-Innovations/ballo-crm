@@ -35,6 +35,22 @@ describe("seed users", () => {
   });
 });
 
+describe("seed teams (rep row filter, E0-05)", () => {
+  it("put the 4 reps in two teams of two, and nobody else in a team", () => {
+    const users = seedUsers();
+    const teams = new Map<string, number>();
+    for (const user of users) {
+      if (user.role === "REP") {
+        expect(user.teamId).toBeTruthy();
+        teams.set(user.teamId as string, (teams.get(user.teamId as string) ?? 0) + 1);
+      } else {
+        expect(user.teamId).toBeNull();
+      }
+    }
+    expect([...teams.values()]).toEqual([2, 2]);
+  });
+});
+
 describe("seed products", () => {
   const products = seedProducts();
 

@@ -10,6 +10,7 @@ const george = {
   email: "george@ballo.test",
   name: "George M.",
   role: "ADMIN" as const,
+  teamId: "lusaka" as string | null,
   password: "$2b$10$hash",
 };
 
@@ -30,6 +31,7 @@ describe("authorizeCredentials", () => {
       email: "george@ballo.test",
       name: "George M.",
       role: "ADMIN",
+      teamId: "lusaka",
     });
     expect(d.verifyPassword).toHaveBeenCalledWith("secret", "$2b$10$hash");
   });
@@ -75,8 +77,11 @@ describe("ROLES", () => {
 
 describe("role claim", () => {
   it("puts the user's id and role on the token at sign-in", () => {
-    const token = withUserClaims({ sub: "usr_1" }, { id: "usr_1", role: "MANAGER" });
-    expect(token).toMatchObject({ uid: "usr_1", role: "MANAGER" });
+    const token = withUserClaims(
+      { sub: "usr_1" },
+      { id: "usr_1", role: "MANAGER", teamId: "copperbelt" },
+    );
+    expect(token).toMatchObject({ uid: "usr_1", role: "MANAGER", teamId: "copperbelt" });
   });
 
   it("leaves the token alone on later requests (no user passed)", () => {
@@ -86,8 +91,20 @@ describe("role claim", () => {
 
   it("reads the session user, role included, back from the token", () => {
     expect(
-      sessionUserFromToken({ uid: "usr_1", role: "LEGAL", email: "l@ballo.test", name: "Lee" }),
-    ).toEqual({ id: "usr_1", email: "l@ballo.test", name: "Lee", role: "LEGAL" });
+      sessionUserFromToken({
+        uid: "usr_1",
+        role: "LEGAL",
+        teamId: "lusaka",
+        email: "l@ballo.test",
+        name: "Lee",
+      }),
+    ).toEqual({ id: "usr_1", email: "l@ballo.test", name: "Lee", role: "LEGAL", teamId: "lusaka" });
+  });
+
+  it("reads a missing team as no team (null)", () => {
+    expect(
+      sessionUserFromToken({ uid: "usr_1", role: "REP", email: "r@b.test", name: "R" }),
+    ).toMatchObject({ teamId: null });
   });
 
   it.each([
