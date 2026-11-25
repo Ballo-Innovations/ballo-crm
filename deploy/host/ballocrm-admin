@@ -51,6 +51,10 @@ BALLOADS_API_URL=
 BALLOADS_API_KEY=
 BALLOADS_WEBHOOK_SECRET=
 ENV
+      if [ "$env" = dev ]; then
+        # Teammates tunnel to these from their laptops (add-user grants exactly these two ports).
+        printf '\nDB_PUBLISH=127.0.0.1:15432:5432\nS3_PUBLISH=127.0.0.1:19000:9000\n' >> "$dir/.env"
+      fi
       chmod 600 "$dir/.env"
       echo "created $dir/.env with generated secrets"
     fi
@@ -78,7 +82,11 @@ ENV
     chown root:root "$home"
     chmod 755 "$home"
     install -d -o root -g root -m 0755 "$home/.ssh"
-    printf 'restrict,pty,command="/usr/local/bin/ballocrm-ssh" %s\n' "$key" > "$home/.ssh/authorized_keys"
+    # Teammates may also open an SSH tunnel to the dev database and file storage, and nothing else.
+    # The pipeline account (ci) gets no tunnel.
+    tunnel=''
+    [ "$name" = ci ] || tunnel='port-forwarding,permitopen="127.0.0.1:15432",permitopen="127.0.0.1:19000",'
+    printf 'restrict,pty,%scommand="/usr/local/bin/ballocrm-ssh" %s\n' "$tunnel" "$key" > "$home/.ssh/authorized_keys"
     chown root:root "$home/.ssh/authorized_keys"
     chmod 644 "$home/.ssh/authorized_keys"
     echo "$user can now run: ssh $user@<host> <env> <action>"
