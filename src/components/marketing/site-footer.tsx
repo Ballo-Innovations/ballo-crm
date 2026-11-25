@@ -4,73 +4,37 @@ import { siteConfig } from "@/lib/site";
 
 import { BrandLogo } from "./brand-logo";
 
-const footerNav: { heading: string; links: { label: string; href: string }[] }[] = [
-  {
-    heading: "Platform",
-    links: [
-      { label: "Accounts & contacts", href: "#modules" },
-      { label: "Pipelines", href: "#modules" },
-      { label: "Contracts", href: "#modules" },
-      { label: "Analytics", href: "#modules" },
-    ],
-  },
-  {
-    heading: "Intelligence",
-    links: [
-      { label: "Brutus AI", href: "#brutus-ai" },
-      { label: "Account health", href: "#platform" },
-      { label: "Cross-sell signals", href: "#platform" },
-      { label: "BalloAds integration", href: "#platform" },
-    ],
-  },
-  {
-    heading: "Company",
-    links: [
-      { label: "Vision", href: "#platform" },
-      { label: "Who it's for", href: "#personas" },
-      { label: "Sign in", href: "/login" },
-      { label: "Get started", href: "/dashboard" },
-    ],
-  },
+const links = [
+  { label: "Platform", href: "#platform" },
+  { label: "Grading", href: "#grading" },
+  { label: "Modules", href: "#modules" },
+  { label: "Who it's for", href: "#personas" },
+  { label: "Sign in", href: "/login" },
 ];
 
 export function SiteFooter() {
   return (
-    <footer className="border-t">
-      <div className="mx-auto grid w-full max-w-6xl gap-10 px-6 py-14 md:grid-cols-[1.5fr_repeat(3,1fr)]">
-        <div className="flex flex-col gap-3">
+    <footer className="mx-auto w-full max-w-[1400px] px-4 pt-10 pb-8 md:px-6">
+      <div className="flex flex-col gap-6 md:flex-row md:items-center md:justify-between">
+        <div className="flex flex-col gap-2">
           <BrandLogo />
-          <p className="text-muted-foreground max-w-xs text-sm">{siteConfig.tagline}.</p>
+          <p className="text-mute max-w-sm text-sm">{siteConfig.tagline}.</p>
         </div>
-
-        {footerNav.map((group) => (
-          <div key={group.heading} className="flex flex-col gap-3">
-            <h3 className="text-sm font-medium">{group.heading}</h3>
-            <ul className="flex flex-col gap-2">
-              {group.links.map((link) => (
-                <li key={link.label}>
-                  <Link
-                    href={link.href}
-                    className="text-muted-foreground hover:text-foreground text-sm transition-colors"
-                  >
-                    {link.label}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </div>
-        ))}
+        <nav aria-label="Footer" className="flex flex-wrap gap-1">
+          {links.map((l) => (
+            <Link
+              key={l.label}
+              href={l.href}
+              className="text-mute hover:bg-soft hover:text-ink rounded-full px-3.5 py-2 text-sm transition-colors"
+            >
+              {l.label}
+            </Link>
+          ))}
+        </nav>
       </div>
-
-      <div className="border-t">
-        <div className="text-muted-foreground mx-auto flex w-full max-w-6xl flex-col items-center justify-between gap-2 px-6 py-6 text-xs sm:flex-row">
-          <p>
-            © 2026 {siteConfig.name}. Built for the iHub Innovation Hackathon - Commercial
-            Operations Automation.
-          </p>
-          <p>A native BalloAds &amp; Brutus AI platform.</p>
-        </div>
-      </div>
+      <p className="text-mute border-line mt-8 border-t pt-6 text-xs">
+        © 2026 {siteConfig.name}. Built for the iHub Hackathon 2026.
+      </p>
     </footer>
   );
 }

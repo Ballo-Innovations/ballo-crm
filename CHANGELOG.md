@@ -7,6 +7,14 @@ under `[Unreleased]` in the relevant section (Added / Changed / Fixed / Removed)
 
 ## [Unreleased]
 
+### Changed
+
+- Landing page redesigned in the app's own monochrome look: white shell, grey rounded panels,
+  white cards, the app's buttons and "b" mark. The hero preview is built from `KpiCard`,
+  `GradeBadge` and `EntityAvatar`; a new Grading section shows the spec's worked example
+  (Gold · 58) with its factors; the Modules section is generated from `primaryNav`. Gradients,
+  glows and the blue accent are gone. Playwright spec in `e2e/landing.spec.ts`.
+
 ### Added
 
 - E0-05: role-based access. The security doc's permission matrix is one table in

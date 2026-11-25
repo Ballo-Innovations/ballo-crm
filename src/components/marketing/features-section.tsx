@@ -1,81 +1,84 @@
-import { Activity, Database, MessageSquareShare, Sparkles, Target, TrendingUp } from "lucide-react";
+import {
+  BarChart3,
+  Database,
+  FileSignature,
+  Gauge,
+  Lightbulb,
+  ShieldCheck,
+  type LucideIcon,
+} from "lucide-react";
 
-import { Card, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { cn } from "@/lib/utils";
 
-import { GradientText } from "./gradient-text";
-import { SectionIntro } from "./section-intro";
+import { Panel, SectionIntro } from "./section-intro";
 
-const features = [
+const features: { icon: LucideIcon; title: string; description: string; highlight?: boolean }[] = [
   {
     icon: Database,
-    title: "Single source of truth",
+    title: "One customer view",
     description:
-      "Accounts, contacts, pipelines, and contracts live in one system instead of a dozen spreadsheets that never agree. Everyone works from the same numbers.",
+      "Accounts, contacts, services, contracts and every touchpoint on one timeline. Everyone works from the same numbers.",
   },
   {
-    icon: Activity,
-    title: "Account health signals",
+    icon: Gauge,
+    title: "Explainable deal grades",
     description:
-      "Delivery status, payment reliability, and activity recency flow from BalloAds into every account view - churn risk surfaces on a dashboard, not in a hallway conversation.",
+      "Every opportunity gets a 0-100 score and a Bronze to Platinum grade, with the factors behind it one click away.",
+    highlight: true,
   },
   {
-    icon: Target,
-    title: "Structured qualification",
+    icon: BarChart3,
+    title: "Vertical Sales Index",
     description:
-      "Promote deals through the pipeline on BANT/MEDDIC-style criteria, not gut feel. Forecasts become defensible instead of a spreadsheet built the night before the board meeting.",
+      "Revenue ranked by sector with growth trends, so leadership sees where the business is really moving.",
   },
   {
-    icon: MessageSquareShare,
-    title: "Native BalloAds messaging",
+    icon: Lightbulb,
+    title: "Cross-sell recommendations",
     description:
-      "Trigger onboarding sequences and renewal nudges without leaving the CRM. Every touchpoint calls BalloAds directly and logs back as a CRM activity - no second tool to operate.",
+      "Rules read what each account already buys and how it engages, then suggest the next service with the reason spelled out.",
   },
   {
-    icon: Sparkles,
-    title: "Brutus AI intelligence",
+    icon: FileSignature,
+    title: "Contracts that close",
     description:
-      "Qualification scoring, next-best-action, summarization, and cross-sell/upsell detection run as background AI jobs - structured recommendations where you already work.",
+      "Generate a contract from a won deal, send it for e-signature and see renewals coming months ahead.",
   },
   {
-    icon: TrendingUp,
-    title: "Commercial analytics",
+    icon: ShieldCheck,
+    title: "Roles and a full audit trail",
     description:
-      "Pipeline velocity, win rate, forecast, and account-health distribution by vertical - roll-up reporting without waiting on a manually assembled export.",
+      "Each role sees what it needs, and every change is logged with who made it and when.",
   },
 ];
 
 export function FeaturesSection() {
   return (
-    <section id="platform" className="border-t">
-      <div className="mx-auto w-full max-w-6xl px-6 py-20 md:py-24">
-        <SectionIntro
-          align="left"
-          eyebrow="The platform"
-          title={
-            <>
-              Everything commercial teams need, <GradientText>in one system</GradientText>
-            </>
-          }
-          description="Generic CRMs take months to configure for a B2B commercial workflow, and none of them talk natively to your messaging platform. BalloCRM is built for it from the ground up."
-        />
-
-        <div className="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {features.map(({ icon: Icon, title, description }) => (
-            <Card
-              key={title}
-              className="hover:border-brand/40 hover:shadow-brand/5 transition-all hover:shadow-lg"
+    <Panel id="platform">
+      <SectionIntro
+        eyebrow="The platform"
+        title="Everything a commercial team needs, in one system"
+        description="Built for B2B selling: long deals, buying committees, many services per account and contracts that renew."
+      />
+      <div className="mt-8 grid gap-3 sm:grid-cols-2 md:mt-12 md:gap-4 lg:grid-cols-3">
+        {features.map(({ icon: Icon, title, description, highlight }) => (
+          <div
+            key={title}
+            className="bg-card rounded-card ease-ballo flex flex-col gap-3 p-[22px] transition-[transform,box-shadow] duration-200 hover:-translate-y-[3px] hover:shadow-[0_12px_24px_rgb(0_0_0/0.07)] md:p-[26px]"
+          >
+            <span
+              className={cn(
+                "grid size-[46px] place-items-center rounded-full",
+                highlight ? "bg-ink text-shell" : "bg-soft",
+              )}
             >
-              <CardHeader>
-                <div className="from-brand/15 to-primary/10 text-primary ring-brand/20 mb-3 flex size-10 items-center justify-center rounded-xl bg-gradient-to-br ring-1">
-                  <Icon className="size-5" />
-                </div>
-                <CardTitle className="text-base">{title}</CardTitle>
-                <CardDescription className="text-pretty">{description}</CardDescription>
-              </CardHeader>
-            </Card>
-          ))}
-        </div>
+              <Icon className="size-[18px]" />
+            </span>
+            <h3 className="text-lg font-semibold">{title}</h3>
+            <p className="text-mute text-[15px] text-pretty">{description}</p>
+          </div>
+        ))}
       </div>
-    </section>
+    </Panel>
   );
 }

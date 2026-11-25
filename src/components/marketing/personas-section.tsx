@@ -1,70 +1,58 @@
-import { GradientText } from "./gradient-text";
-import { SectionIntro } from "./section-intro";
+import { EntityAvatar } from "@/components/shared/entity-avatar";
+
+import { Panel, SectionIntro } from "./section-intro";
 
 const personas = [
   {
-    role: "Enterprise Account Managers",
+    role: "Account managers",
     outcome:
-      "Keep a portfolio of accounts healthy and growing - see health scores, contract renewals, and touchpoint history in one place.",
+      "See every account's services, contracts, contacts and touchpoints in one place, and know which renewals are coming.",
   },
   {
-    role: "VP of Sales",
+    role: "Sales reps",
     outcome:
-      "Trust the pipeline number you report to the board. Forecast, win rate, and velocity by vertical, without a one-off request to RevOps.",
+      "Move deals on a drag-and-drop pipeline and get a short list of the deals to work today, with the reason for each.",
   },
   {
-    role: "RevOps / Sales Ops Analysts",
+    role: "Sales managers",
     outcome:
-      "Configure qualification scoring and vertical indexing once, org-wide. Clean, consistent data with an audit trail on every override.",
+      "Trust the forecast. Weighted pipeline, win rate and grades by rep and sector, without building a spreadsheet.",
   },
   {
-    role: "Customer Success Leads",
+    role: "Marketing",
     outcome:
-      "Catch at-risk accounts before renewal using health signals from BalloAds, and trigger re-engagement without leaving the CRM.",
+      "Run account-based plans on strategic accounts and see which tours, demos and events move deals forward.",
   },
   {
-    role: "Sales Representatives",
-    outcome:
-      "Log activity and move pipeline with low friction, and get next-best-action recommendations on the deals that matter.",
+    role: "Legal",
+    outcome: "Draft contracts from templates, track signatures and keep every version on record.",
   },
   {
     role: "Executives",
     outcome:
-      "Roll-up commercial analytics and account-health distribution at a glance - the picture, without the manual assembly.",
+      "The whole commercial picture at a glance: revenue by sector, at-risk deals and the insights that matter this week.",
   },
 ];
 
 export function PersonasSection() {
   return (
-    <section id="personas" className="border-t">
-      <div className="mx-auto w-full max-w-6xl px-6 py-20 md:py-24">
-        <SectionIntro
-          align="left"
-          eyebrow="Who it's for"
-          title={
-            <>
-              Built for everyone who owns <GradientText>commercial relationships</GradientText>
-            </>
-          }
-          description="From the rep logging today's call to the VP reporting to the board: one platform, each role served by the same connected data."
-        />
-
-        <div className="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {personas.map((p) => (
-            <div
-              key={p.role}
-              className="bg-background hover:border-brand/40 relative flex flex-col gap-2 overflow-hidden rounded-xl border p-6 transition-colors"
-            >
-              <span
-                aria-hidden
-                className="from-brand to-primary absolute inset-x-0 top-0 h-0.5 bg-gradient-to-r"
-              />
-              <h3 className="font-medium">{p.role}</h3>
-              <p className="text-muted-foreground text-sm text-pretty">{p.outcome}</p>
+    <Panel id="personas">
+      <SectionIntro
+        eyebrow="Who it's for"
+        title="Built for everyone who owns a customer relationship"
+        description="Each role gets its own view of the same connected data."
+      />
+      <div className="mt-8 grid gap-3 sm:grid-cols-2 md:mt-12 md:gap-4 lg:grid-cols-3">
+        {personas.map((p) => (
+          <div key={p.role} className="bg-card rounded-card flex flex-col gap-3 p-[22px]">
+            <div className="flex items-center gap-3">
+              <EntityAvatar name={p.role} />
+              <h3 className="text-lg font-semibold">{p.role}</h3>
             </div>
-          ))}
-        </div>
+            <p className="text-mute text-[15px] text-pretty">{p.outcome}</p>
+          </div>
+        ))}
       </div>
-    </section>
+    </Panel>
   );
 }

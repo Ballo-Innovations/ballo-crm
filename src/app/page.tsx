@@ -1,41 +1,36 @@
 import type { Metadata } from "next";
 
-import { siteConfig } from "@/lib/site";
-import { SiteHeader } from "@/components/marketing/site-header";
-import { SiteFooter } from "@/components/marketing/site-footer";
-import { HeroSection } from "@/components/marketing/hero-section";
-import { ShowcaseSection } from "@/components/marketing/showcase-section";
-import { ProblemSection } from "@/components/marketing/problem-section";
-import { FeaturesSection } from "@/components/marketing/features-section";
-import { ModulesSection } from "@/components/marketing/modules-section";
-import { BrutusAiSection } from "@/components/marketing/brutus-ai-section";
-import { PersonasSection } from "@/components/marketing/personas-section";
 import { CtaSection } from "@/components/marketing/cta-section";
-import { PageBackdrop } from "@/components/marketing/page-backdrop";
+import { FeaturesSection } from "@/components/marketing/features-section";
+import { GradingSection } from "@/components/marketing/grading-section";
+import { HeroSection } from "@/components/marketing/hero-section";
+import { ModulesSection } from "@/components/marketing/modules-section";
+import { PersonasSection } from "@/components/marketing/personas-section";
+import { ProblemSection } from "@/components/marketing/problem-section";
+import { SiteFooter } from "@/components/marketing/site-footer";
+import { SiteHeader } from "@/components/marketing/site-header";
+import { siteConfig } from "@/lib/site";
 
 export const metadata: Metadata = {
-  title: `${siteConfig.name} - ${siteConfig.tagline}`,
+  title: { absolute: `${siteConfig.name} - ${siteConfig.tagline}` },
   description: siteConfig.description,
 };
 
+/** Marketing page in the app's own look: white shell, grey rounded panels, white cards. */
 export default function Home() {
   return (
-    <>
+    <div className="bg-shell text-ink flex min-h-dvh flex-col">
       <SiteHeader />
-      <div className="relative flex flex-1 flex-col overflow-hidden">
-        <PageBackdrop />
-        <main className="flex flex-col">
-          <HeroSection />
-          <ShowcaseSection />
-          <ProblemSection />
-          <FeaturesSection />
-          <ModulesSection />
-          <BrutusAiSection />
-          <PersonasSection />
-          <CtaSection />
-        </main>
-        <SiteFooter />
-      </div>
-    </>
+      <main className="mx-auto flex w-full max-w-[1400px] flex-col gap-3 px-2 md:gap-4 md:px-4">
+        <HeroSection />
+        <ProblemSection />
+        <FeaturesSection />
+        <GradingSection />
+        <ModulesSection />
+        <PersonasSection />
+        <CtaSection />
+      </main>
+      <SiteFooter />
+    </div>
   );
 }
