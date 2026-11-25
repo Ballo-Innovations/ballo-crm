@@ -169,6 +169,46 @@ Things to know:
   (the forced SSH command), `ballocrm.sudoers` and `ballocrm-admin`. A change to them is installed
   by a host admin, not by the pipeline.
 
+### Using dev data from your laptop (SSH tunnel)
+
+Your account may open a tunnel to the **dev** database and file storage, and to nothing else
+(stage and prod are never reachable this way). Add this to `~/.ssh/config` next to the `crm` host:
+
+```
+Host crm-tunnel
+  HostName <vm-ip>
+  User crm-<name>
+  IdentityFile ~/.ssh/<your key>
+  IdentitiesOnly yes
+  ExitOnForwardFailure yes
+  LocalForward 15432 127.0.0.1:15432
+  LocalForward 19000 127.0.0.1:19000
+```
+
+Run `ssh -N crm-tunnel` and leave it open, then in your `.env`:
+
+```
+DATABASE_URL=postgresql://ballocrm:<dev POSTGRES_PASSWORD>@localhost:15432/ballocrm
+S3_ENDPOINT=http://localhost:19000
+S3_ACCESS_KEY=ballocrm
+S3_SECRET_KEY=<dev MINIO_ROOT_PASSWORD>
+S3_BUCKET=contracts
+```
+
+The passwords are in the team's private access doc. Everyone shares this data, so:
+
+- Never run `prisma migrate dev`, `prisma db push` or `db:seed --reset` through the tunnel.
+  Create a migration with `prisma migrate dev --create-only` against a local database
+  (`docker compose up db`), ship it in your PR, and the deploy applies it.
+- Test destructive changes (deleting, bulk edits) locally first.
+- If dev data gets into a bad state, ask before resetting it: `ssh crm dev seed --reset`.
+
+To go back to fully local, start `docker compose up` and use the values in `.env.example`.
+
+How it is set up: `DB_PUBLISH` and `S3_PUBLISH` in dev's server `.env` publish the two services
+on the host's loopback only, and `ballocrm-admin add-user` grants `port-forwarding` with
+`permitopen` for exactly those two ports.
+
 ### Giving and removing access (host admin)
 
 A teammate sends their **public** key (`~/.ssh/id_ed25519.pub`). As root on the host:

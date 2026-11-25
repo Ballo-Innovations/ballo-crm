@@ -83,7 +83,10 @@ adding anything that is not on it.
 - Deploys happen through `.github/workflows/deploy.yml` only. Do not SSH to a host, run the
   Deploy workflow or change `deploy/` unless the developer asks for exactly that in this session.
 - Deployed databases only get `prisma migrate deploy`. Never run `db:seed --reset` or
-  `prisma migrate dev` against anything but a local database.
+  `prisma migrate dev` against anything but a local database. A laptop may point at the shared
+  dev database through the SSH tunnel (runbook, "Using dev data from your laptop"); then it is
+  read and write for app use only: create migrations with `prisma migrate dev --create-only`
+  against a local database, ship them in a PR, and let the deploy apply them.
 - Never read, print or commit `.env` files or secrets. New variables go in `.env.example`,
   `deploy/.env.example` and `src/lib/env.ts` together.
 - `GET /api/v1/health` must stay public.
