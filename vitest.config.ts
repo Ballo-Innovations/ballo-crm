@@ -8,5 +8,8 @@ export default defineConfig({
   test: {
     environment: "node",
     include: ["src/**/*.test.ts", "prisma/**/*.test.ts"],
+    // next-auth imports "next/server" without an extension, which Node's ESM loader rejects;
+    // letting Vite process it resolves the import.
+    server: { deps: { inline: ["next-auth"] } },
   },
 });

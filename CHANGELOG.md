@@ -9,6 +9,10 @@ under `[Unreleased]` in the relevant section (Added / Changed / Fixed / Removed)
 
 ### Added
 
+- E0-04: sign in with email and password (Auth.js credentials, bcrypt, JWT session in an
+  httpOnly cookie), the role in the session, sign out from the sidebar, and every route behind
+  login except the landing page, `/login`, health, `/sign/*`, `/openapi.json` and webhooks
+  (pages redirect to `/login`, the API answers 401). New shared `PillField` form field.
 - E0-03: initial Prisma migration (`prisma/migrations/20261125000000_init`) for schema v1, 20 tables
   and 12 enums, plus a test that every model and enum has its migration.
 - `docs/01-product/00-goals-and-success-metrics.md`: the Challenge 2 problem statement, seven

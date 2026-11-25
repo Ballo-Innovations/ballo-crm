@@ -3,15 +3,29 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Bell, ChevronLeft, LayoutDashboard, Menu, Plus, Search, X } from "lucide-react";
+import { Bell, ChevronLeft, LayoutDashboard, LogOut, Menu, Plus, Search, X } from "lucide-react";
 
+import { signOutAction } from "@/app/login/actions";
 import { ThemeToggle } from "@/components/shared/theme-toggle";
 import { CommandPalette } from "@/components/shell/command-palette";
 import { NAV_ICONS } from "@/components/shell/nav-icons";
+import type { Role } from "@/lib/auth-session";
 import { primaryNav, siteConfig } from "@/lib/site";
+import { initials } from "@/lib/text";
 import { cn } from "@/lib/utils";
 
 const COLLAPSE_KEY = "ballo:sidebar-collapsed";
+
+const ROLE_LABEL: Record<Role, string> = {
+  ADMIN: "Admin",
+  MANAGER: "Sales manager",
+  REP: "Sales rep",
+  MARKETING: "Marketing",
+  LEGAL: "Legal",
+  READONLY: "Read only",
+};
+
+export type ShellUser = { name: string; role: Role };
 
 /**
  * App shell per docs/03-design/01-design-system.md "Layout":
@@ -19,7 +33,7 @@ const COLLAPSE_KEY = "ballo:sidebar-collapsed";
  * panel that scrolls inside itself, and a top bar pinned inside the panel.
  * On phones the sidebar becomes a slide-in drawer with a scrim.
  */
-export function AppShell({ children }: { children: React.ReactNode }) {
+export function AppShell({ user, children }: { user: ShellUser; children: React.ReactNode }) {
   const pathname = usePathname();
   const [collapsed, setCollapsed] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -159,14 +173,32 @@ export function AppShell({ children }: { children: React.ReactNode }) {
           })}
         </nav>
 
-        <div className="mt-auto flex items-center gap-3 px-1.5 py-2.5">
-          <span className="bg-soft grid size-9 shrink-0 place-items-center rounded-full text-xs font-bold">
-            GM
+        <div
+          className={cn(
+            "mt-auto flex items-center gap-3 px-1.5 py-2.5",
+            collapsed && "md:flex-col md:gap-2",
+          )}
+        >
+          <span
+            aria-hidden
+            className="bg-soft grid size-9 shrink-0 place-items-center rounded-full text-xs font-bold"
+          >
+            {initials(user.name)}
           </span>
-          <span className={cn("min-w-0 leading-tight", collapsed && "md:hidden")}>
-            <span className="block truncate text-sm font-semibold">George M.</span>
-            <span className="text-mute block truncate text-xs">Sales lead</span>
+          <span className={cn("min-w-0 flex-1 leading-tight", collapsed && "md:hidden")}>
+            <span className="block truncate text-sm font-semibold">{user.name}</span>
+            <span className="text-mute block truncate text-xs">{ROLE_LABEL[user.role]}</span>
           </span>
+          <form action={signOutAction}>
+            <button
+              type="submit"
+              aria-label="Sign out"
+              title="Sign out"
+              className="hover:bg-soft grid size-9 shrink-0 place-items-center rounded-full transition-colors"
+            >
+              <LogOut className="size-4" />
+            </button>
+          </form>
         </div>
       </aside>
 
