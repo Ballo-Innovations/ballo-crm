@@ -7,11 +7,15 @@
  * TODO(E10-01): seed v1 per docs/05-qa/03-demo-data-seed-spec.md.
  */
 import { Prisma, PrismaClient } from "@prisma/client";
+import bcrypt from "bcryptjs";
 
-import { hashPassword } from "../src/lib/password";
 import { DEMO_PASSWORD, seedAccounts, seedProducts, seedUsers } from "./seed-data";
 
 const db = new PrismaClient();
+
+// The seed runs in the migrate image, which ships only prisma/ and node_modules (no src/), so it
+// hashes with bcryptjs directly. Same library and cost as src/lib/password.ts.
+const BCRYPT_COST = 10;
 
 /** Subscriptions started on a fixed date so every run produces identical data. */
 const SUBSCRIPTION_START = new Date("2025-01-01T00:00:00Z");
@@ -30,7 +34,7 @@ async function main() {
   }
   if (reset) await wipe();
 
-  const password = await hashPassword(DEMO_PASSWORD);
+  const password = await bcrypt.hash(DEMO_PASSWORD, BCRYPT_COST);
   const users = new Map<string, string>();
   for (const user of seedUsers()) {
     const saved = await db.user.upsert({
