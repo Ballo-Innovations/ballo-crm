@@ -1,4 +1,4 @@
-import { Role } from "@prisma/client";
+import type { Role } from "@prisma/client";
 import { describe, expect, it } from "vitest";
 
 import { DEMO_PASSWORD, seedAccounts, seedProducts, seedUsers } from "./seed-data";
