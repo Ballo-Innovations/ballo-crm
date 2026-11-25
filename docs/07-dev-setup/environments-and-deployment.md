@@ -206,7 +206,7 @@ ballocrm-admin init-env prod hackerthon-crm.balloinnovations.com
 
 `init-env` creates `/var/apps/ballocrm-<env>/deploy/.env` (mode 600) with freshly generated
 secrets, different in every environment. Edit it only to add `ANTHROPIC_API_KEY` or integration
-keys. Then add the nightly backup to root's crontab, once per environment (not yet added on the
+keys (`BALLOADS_API_URL`, `BALLOADS_API_KEY`, `BALLOADS_WEBHOOK_SECRET`). Then add the nightly backup to root's crontab, once per environment (not yet added on the
 VM):
 
 ```

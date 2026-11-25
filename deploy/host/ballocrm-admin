@@ -46,8 +46,9 @@ INTEGRATION_MODE=mock
 INTEGRATIONS_URL=http://mock-integrations:4100
 EMAIL_WEBHOOK_SECRET=$(openssl rand -hex 24)
 
-AT_USERNAME=sandbox
-AT_API_KEY=
+BALLOADS_API_URL=
+BALLOADS_API_KEY=
+BALLOADS_WEBHOOK_SECRET=
 ENV
       chmod 600 "$dir/.env"
       echo "created $dir/.env with generated secrets"

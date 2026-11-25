@@ -57,7 +57,7 @@ Goals, outcomes and metrics: [00-goals-and-success-metrics.md](00-goals-and-succ
 | Audit logging                            | Every mutation logged with actor, before/after               | CIMS         | E8   |
 | Data protection compliance               | Consent flag, data retention policy, export/delete           | CIMS         | E8   |
 | Email integration                        | Inbound webhook → timeline; outbound via SMTP                | Integrations | E9   |
-| SMS                                      | Adapter (Africa's Talking) — mock                            | Integrations | E9   |
+| SMS                                      | Adapter (BalloAds) - mock locally, BalloAds live                            | Integrations | E9   |
 | Telephone systems                        | Click-to-call adapter + call log — mock                      | Integrations | E9   |
 | ERP systems                              | Adapter: push won deal → ERP order (mock)                    | Integrations | E9   |
 | eSPF integration                         | Adapter contract + mock server                               | Integrations | E9   |
