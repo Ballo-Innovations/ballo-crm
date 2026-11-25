@@ -21,7 +21,7 @@ Enforced server-side in `requireRole()` and row filters in `queries.ts`. UI hide
 - Exports and erasures are audited as `EXPORT` / `ERASE`.
 - Audit page: filter by entity/actor/date; row expands to JSON diff.
 
-## Data protection (Zambia Data Protection Act 2021 alignment — say "aligned", not "compliant")
+## Data protection (Zambia Data Protection Act 2021 alignment: say "aligned", not "compliant")
 
 - Consent flag on Account/Contact for marketing.
 - Export: JSON bundle of an account's personal data.

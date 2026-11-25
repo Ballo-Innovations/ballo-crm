@@ -15,6 +15,12 @@ description: Start work on a BalloCRM ticket from docs/04-delivery/03-tickets.cs
    `docs/03-design`) before writing code.
 4. Branch from an up-to-date `dev`: `git switch dev && git pull && git switch -c feat/<ticket-id>-<slug>`
    (`fix/`, `chore/`, `docs/` for other kinds of work).
-5. Stay inside the ticket's module. A change to `prisma/schema.prisma`, `src/lib/`, CI or
+5. Plan the tests before any code (`docs/05-qa/01-test-strategy.md`). Show the developer a
+   table: each acceptance criterion, and the test that will prove it - unit (`service.test.ts`),
+   integration (`*.int.test.ts`) or end-to-end (`e2e/<module>.spec.ts`). A ticket with a screen
+   gets a Playwright spec. Write those tests from the ticket and the spec, run them, and confirm
+   they fail for the right reason. Only then write the code. For a bug, the first test
+   reproduces the bug.
+6. Stay inside the ticket's module. A change to `prisma/schema.prisma`, `src/lib/`, CI or
    `deploy/` that the ticket does not name needs the developer's go-ahead first.
-6. When done, run the `pre-pr` skill.
+7. When done, run the `pre-pr` skill.

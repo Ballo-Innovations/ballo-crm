@@ -1,6 +1,6 @@
 # System Architecture (CTO / Senior Architect)
 
-## Stack (locked — see ADR-001)
+## Stack (locked: see ADR-001)
 
 - **App:** Next.js 15 (App Router) + TypeScript, server actions + REST route handlers
 - **UI:** Tailwind + shadcn/ui + Recharts + TanStack Table

@@ -1,4 +1,4 @@
-# Sprint Plan — 3 weeks (compress proportionally if the hackathon window is shorter)
+# Sprint Plan: 3 weeks (compress proportionally if the hackathon window is shorter)
 
 **Submission deadline: 29 November 2026.** Work started on 21 November, so the three "weeks"
 below are compressed into nine days:
@@ -15,26 +15,26 @@ below are compressed into nine days:
 With this little time, P0 tickets come first across every epic. Start a P1 ticket only when your
 P0 tickets are merged, and check the fallbacks in `01-product/00-goals-and-success-metrics.md`.
 
-## Week 0 (prep, 2–3 days) — "Foundations"
+## Week 0 (prep, 2–3 days): "Foundations"
 
 - Repo, CI, docker-compose, Prisma schema, migrations, auth, RBAC, audit middleware, design system, app shell with nav, seed v0 (small).
 - Exit: login works; empty screens exist for every module; one PR per dev merged.
 
-## Week 1 — "Core CRM + Engine"
+## Week 1: "Core CRM + Engine"
 
 - Dev A: Leads, Accounts list + 360 (profile, contacts, subscriptions, timeline), Opportunities CRUD, Kanban.
 - Dev B: Scoring engine + tests, grade badges, explanation drawer, recompute triggers, Focus list v1, seed v1 (realistic).
 - Dev C: Engagement events + log form, ABM committee map, mock-integrations service, inbound email webhook.
 - Exit (demo beat 1–3 work): convert lead → kanban → explain score → log tour → grade changes.
 
-## Week 2 — "Intelligence + Workflows"
+## Week 2: "Intelligence + Workflows"
 
 - Dev A: CIMS admin (users, roles, audit page, API keys, data export/erase), OpenAPI.
 - Dev B: Recommender rules + LLM narratives + cache, Insights generator, Executive dashboard, VSI + drilldown, whitespace matrix, sales dashboard.
 - Dev C: Contracts: templates, merge, PDF, MinIO, send, /sign page, renewals; adapters wired to mock; integrations admin tab; ERP push on WON.
 - Exit (beats 4–7 work): full demo script runnable end-to-end.
 
-## Week 3 — "Polish, QA, Pitch"
+## Week 3: "Polish, QA, Pitch"
 
 - Day 1–2: QA pass against `05-qa/02-test-cases.md`, bug bash, performance on seed, mobile check.
 - Day 3: Freeze features. Seed data review. Deck + demo script rehearsal #1.

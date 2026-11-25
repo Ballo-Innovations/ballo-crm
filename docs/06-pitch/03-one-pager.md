@@ -1,4 +1,4 @@
-# Compass — one-pager for judges
+# Compass: one-pager for judges
 
 **What:** A B2B commercial operations platform for Infratel: CRM + pipeline, account-based marketing, Vertical Sales Index, opportunity maturity grading (Bronze→Platinum), explainable cross-sell recommendations, contract generation with e-signature, and a centralised customer information system with RBAC and audit.
 

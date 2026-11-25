@@ -8,3 +8,5 @@ pnpm-lock.yaml
 src/components/ui
 docs/_archive
 CHANGELOG.md
+playwright-report
+test-results

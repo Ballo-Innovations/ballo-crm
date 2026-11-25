@@ -1,4 +1,4 @@
-# API Spec (REST, `/api/v1`) — OpenAPI generated from zod via `zod-to-openapi`
+# API Spec (REST, `/api/v1`): OpenAPI generated from zod via `zod-to-openapi`
 
 Auth: session cookie (UI) or `Authorization: Bearer <apiKey>` (integrations). All responses `{ data, meta? }` or `{ error: { code, message } }`. All lists accept `?page&pageSize&q&sort`.
 

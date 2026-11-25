@@ -37,8 +37,8 @@ Worked example: Negotiate (75) × committee 0.7 → 0.88 × engagement 60 → 0.
 | ----------------------------------------------------- | ----- | ------------------------------------------- |
 | Platinum                                              | ≥ 75  | Economic buyer engaged AND budget confirmed |
 | Gold                                                  | 55–74 | Champion identified                         |
-| Silver                                                | 35–54 | —                                           |
-| Bronze                                                | < 35  | —                                           |
+| Silver                                                | 35–54 | -                                           |
+| Bronze                                                | < 35  | -                                           |
 | Grades downgrade one level if no activity in 30 days. |
 
 ## Explanation payload (API)

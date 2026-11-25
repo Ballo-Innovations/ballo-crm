@@ -9,6 +9,12 @@ under `[Unreleased]` in the relevant section (Added / Changed / Fixed / Removed)
 
 ### Added
 
+- Testing standards for AI-assisted work (`docs/05-qa/01-test-strategy.md`): tests are written
+  first from each ticket's acceptance criteria, every criterion maps to a named test in the PR,
+  bug fixes start with a failing test. Playwright is set up (`e2e/`, `pnpm test:e2e`) and runs
+  on every pull request instead of nightly; each UI ticket adds its own spec. CI gained a
+  Postgres service for integration tests (`pnpm test:int`) and a coverage floor on
+  `src/modules/**/service.ts` (`pnpm test:coverage`).
 - E0-10: seed v0 - the 8 demo users from the seed spec (password `Compass!2026`, demo only), the
   product catalogue and 5 fictional accounts with subscriptions. `pnpm db:seed` and
   `pnpm db:seed --reset` give the same result however often they run.

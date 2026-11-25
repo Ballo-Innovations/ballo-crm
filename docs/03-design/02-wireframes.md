@@ -1,4 +1,4 @@
-# Wireframes (text) — build these, nothing else
+# Wireframes (text): build these, nothing else
 
 Routes follow the nav in `01-design-system.md`: Dashboard · Pipeline · Accounts · Leads ·
 Forecast · Engagement · Contracts · Intelligence · Settings. The challenge's terms stay visible
@@ -26,7 +26,7 @@ inside them: ABM is a tab in Accounts, VSI a section of Forecast, CIMS the admin
 [Filters: owner, grade, sector]  [Focus List ▸]            [+ Opportunity]
 QUALIFY (12 · K1.2m · w K120k) | DISCOVER | PROPOSE | NEGOTIATE | WON | LOST
 +----------------------------+
-| Nyali — DRaaS    [GOLD] 62 |
+| Nyali - DRaaS    [GOLD] 62 |
 | K350,000 · close 12 Dec    |
 | ●●●○ committee · 3d ago    |
 +----------------------------+

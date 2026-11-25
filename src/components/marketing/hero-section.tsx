@@ -26,7 +26,7 @@ export function HeroSection() {
 
           <p className="text-muted-foreground max-w-xl text-lg text-pretty">
             BalloCRM unifies accounts, pipelines, contracts, and customer communications into a
-            single, AI-driven system of record — so B2B teams stop reconciling spreadsheets and
+            single, AI-driven system of record, so B2B teams stop reconciling spreadsheets and
             start acting on account health, qualification, and cross-sell signals.
           </p>
 
@@ -60,7 +60,7 @@ export function HeroSection() {
   );
 }
 
-/** Floating brand mark on a spotlit pedestal — a product-agnostic hero visual. */
+/** Floating brand mark on a spotlit pedestal, a product-agnostic hero visual. */
 function HeroVisual() {
   return (
     <div className="relative mx-auto flex aspect-square w-full max-w-md items-center justify-center">

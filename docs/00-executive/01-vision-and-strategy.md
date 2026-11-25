@@ -6,15 +6,15 @@ A single commercial operating system for Infratel's enterprise sales team: every
 
 ## Product name (working)
 
-**Compass** — Commercial Operations, Management, Pipeline, Analytics & Sales Signals. Pick a name on day 0 and never change it.
+**Compass**: Commercial Operations, Management, Pipeline, Analytics & Sales Signals. Pick a name on day 0 and never change it.
 
 ## Why we win
 
 Most teams will build a generic CRM. The challenge is explicit that Infratel's pain is _fragmentation_ and _missing intelligence_. We differentiate on three things judges can see in 60 seconds:
 
 1. **Opportunity Maturity Grading (Bronze→Platinum)** computed live from real signals, with the inputs shown.
-2. **Vertical Sales Index** — revenue ranked by sector with growth trend, on the executive dashboard.
-3. **Explainable cross-sell recommendations** — "Zanaco uses Fibre + Colocation, attended a DC tour, hasn't bought DRaaS → 74% adoption probability."
+2. **Vertical Sales Index**: revenue ranked by sector with growth trend, on the executive dashboard.
+3. **Explainable cross-sell recommendations**: "Zanaco uses Fibre + Colocation, attended a DC tour, hasn't bought DRaaS → 74% adoption probability."
 
 ## Strategic bets
 

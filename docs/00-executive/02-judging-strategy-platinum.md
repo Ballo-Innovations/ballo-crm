@@ -1,4 +1,4 @@
-# Judging Strategy — how to score Platinum
+# Judging Strategy: how to score Platinum
 
 Hackathon rubrics almost always weight: problem fit, completeness, innovation, technical quality, UX, presentation, viability. We assume the rubric below and optimise for it explicitly.
 
