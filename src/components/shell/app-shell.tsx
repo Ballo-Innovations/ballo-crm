@@ -11,7 +11,8 @@ import { ThemeToggle } from "@/components/shared/theme-toggle";
 import { CommandPalette } from "@/components/shell/command-palette";
 import { NAV_ICONS } from "@/components/shell/nav-icons";
 import type { Role } from "@/lib/auth-session";
-import { primaryNav, siteConfig } from "@/lib/site";
+import { navFor } from "@/lib/rbac";
+import { siteConfig } from "@/lib/site";
 import { initials } from "@/lib/text";
 import { cn } from "@/lib/utils";
 
@@ -35,6 +36,7 @@ export type ShellUser = { name: string; role: Role };
  * On phones the sidebar becomes a slide-in drawer with a scrim.
  */
 export function AppShell({ user, children }: { user: ShellUser; children: React.ReactNode }) {
+  const nav = navFor(user.role);
   const pathname = usePathname();
   const [collapsed, setCollapsed] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -144,7 +146,7 @@ export function AppShell({ user, children }: { user: ShellUser; children: React.
         </div>
 
         <nav className="flex flex-col gap-1">
-          {primaryNav.map((item) => {
+          {nav.map((item) => {
             const Icon = NAV_ICONS[item.href] ?? LayoutDashboard;
             const active = pathname === item.href || pathname.startsWith(item.href + "/");
             return (
@@ -260,7 +262,7 @@ export function AppShell({ user, children }: { user: ShellUser; children: React.
           </main>
         </div>
       </div>
-      <CommandPalette open={searchOpen} onOpenChange={setSearchOpen} />
+      <CommandPalette open={searchOpen} onOpenChange={setSearchOpen} nav={nav} />
     </div>
   );
 }

@@ -39,7 +39,7 @@ async function main() {
   for (const user of seedUsers()) {
     const saved = await db.user.upsert({
       where: { email: user.email },
-      update: { name: user.name, role: user.role, password },
+      update: { name: user.name, role: user.role, teamId: user.teamId, password },
       create: { ...user, password },
     });
     users.set(user.email, saved.id);

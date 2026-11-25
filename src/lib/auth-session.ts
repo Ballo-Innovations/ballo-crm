@@ -10,7 +10,14 @@ import { z } from "zod";
 export const ROLES = ["ADMIN", "MANAGER", "REP", "MARKETING", "LEGAL", "READONLY"] as const;
 export type Role = (typeof ROLES)[number];
 
-export type SessionUser = { id: string; email: string; name: string; role: Role };
+/** `teamId` drives the rep "team only" row filter (src/lib/rbac.ts); null = no team. */
+export type SessionUser = {
+  id: string;
+  email: string;
+  name: string;
+  role: Role;
+  teamId: string | null;
+};
 
 export const credentialsSchema = z.object({
   email: z.string().trim().toLowerCase().pipe(z.email()),
@@ -36,18 +43,18 @@ export async function authorizeCredentials(
   if (!user) return null;
   if (!(await deps.verifyPassword(parsed.data.password, user.password))) return null;
 
-  return { id: user.id, email: user.email, name: user.name, role: user.role };
+  return { id: user.id, email: user.email, name: user.name, role: user.role, teamId: user.teamId };
 }
 
 type Claims = Record<string, unknown>;
 
-/** Auth.js `jwt` callback: copy id and role onto the token at sign-in (`user` is set only then). */
+/** Auth.js `jwt` callback: copy id, role and team onto the token at sign-in (`user` is set only then). */
 export function withUserClaims<T extends Claims>(
   token: T,
-  user: { id?: string; role?: Role } | undefined,
+  user: { id?: string; role?: Role; teamId?: string | null } | undefined,
 ): T {
   if (!user) return token;
-  return { ...token, uid: user.id, role: user.role };
+  return { ...token, uid: user.id, role: user.role, teamId: user.teamId ?? null };
 }
 
 function isRole(value: unknown): value is Role {
@@ -62,5 +69,6 @@ export function sessionUserFromToken(token: Claims | null | undefined): SessionU
     email: typeof token.email === "string" ? token.email : "",
     name: typeof token.name === "string" ? token.name : "",
     role: token.role,
+    teamId: typeof token.teamId === "string" ? token.teamId : null,
   };
 }
