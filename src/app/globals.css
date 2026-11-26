@@ -176,6 +176,18 @@
   [data-numeric] {
     font-variant-numeric: tabular-nums;
   }
+  /* Landing page gradient waves (components/marketing/wave-background.tsx). One drift
+     moves exactly one wave period, so the loop is seamless. */
+  @keyframes wave-drift {
+    to {
+      transform: translateX(-1440px);
+    }
+  }
+  @keyframes wave-bob {
+    to {
+      transform: translateY(18px);
+    }
+  }
   @media (prefers-reduced-motion: reduce) {
     *,
     *::before,

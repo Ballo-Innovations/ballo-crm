@@ -1,29 +1,39 @@
-import Link from "next/link";
-
 import { HeroLink } from "./hero-link";
+import { BrandMark } from "./brand-logo";
+import { WaveBackground } from "./wave-background";
 
-/** The page's one strong black element, per the design system. */
+/**
+ * The closing island: always dark in both themes, like the login page's sign-in panel. It
+ * re-points the colour tokens inside it so text, the button and the waves stay readable.
+ */
+const ISLAND_TOKENS = {
+  "--ink": "#ffffff",
+  "--shell": "#0d0d0d",
+  "--card": "#1a1a1a",
+  "--soft": "#222222",
+  "--line": "#3a3a3a",
+  "--mute": "#c4c4c4",
+} as React.CSSProperties;
+
 export function CtaSection() {
   return (
-    <section className="bg-ink text-shell md:rounded-panel rounded-3xl px-6 py-14 text-center md:px-16 md:py-20">
-      <div className="mx-auto flex max-w-2xl flex-col items-center gap-5">
-        <h2 className="text-[30px] leading-tight font-bold tracking-tight text-balance md:text-[44px]">
-          Retire the spreadsheets. Run revenue from one place.
-        </h2>
-        <p className="text-[17px] text-pretty opacity-70">
-          Accounts, pipeline, engagement and contracts together, so every role sees the same
-          trustworthy picture.
-        </p>
-        <div className="mt-2 flex flex-col items-center gap-3 sm:flex-row">
-          <HeroLink href="/dashboard" inverted className="h-[52px] text-[15px]">
-            Open the app
-          </HeroLink>
-          <Link
-            href="/login"
-            className="border-shell/40 hover:bg-shell/10 flex h-[52px] items-center rounded-full border-[1.5px] px-[26px] text-[15px] font-semibold transition-colors"
-          >
+    <section id="sign-in" className="mx-auto w-full max-w-[1180px] scroll-mt-24 px-2 md:px-4">
+      <div
+        style={ISLAND_TOKENS}
+        className="text-ink md:rounded-panel relative isolate overflow-hidden rounded-[28px] bg-[#0d0d0d] px-6 py-14 text-center md:px-14 md:py-[72px] dark:bg-[#050505] dark:ring-1 dark:ring-[#2a2a2a]"
+      >
+        <WaveBackground strength={0.8} flip />
+        <div className="mx-auto flex max-w-xl flex-col items-center gap-5">
+          <BrandMark />
+          <h2 className="text-[34px] leading-[1.02] font-bold tracking-[-0.035em] text-balance md:text-[52px]">
+            Your pipeline is waiting.
+          </h2>
+          <p className="text-mute text-[17px] md:text-lg">
+            Invite-only workspace. Your admin manages access.
+          </p>
+          <HeroLink href="/login" className="mt-2 h-[52px] text-[15px]">
             Sign in
-          </Link>
+          </HeroLink>
         </div>
       </div>
     </section>

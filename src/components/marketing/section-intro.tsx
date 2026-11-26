@@ -26,26 +26,3 @@ export function SectionIntro({
     </div>
   );
 }
-
-/** One grey rounded panel per section, like the app's content panel. */
-export function Panel({
-  id,
-  className,
-  children,
-}: {
-  id?: string;
-  className?: string;
-  children: React.ReactNode;
-}) {
-  return (
-    <section
-      id={id}
-      className={cn(
-        "bg-main md:rounded-panel scroll-mt-24 rounded-3xl px-4 py-8 md:px-10 md:py-14",
-        className,
-      )}
-    >
-      {children}
-    </section>
-  );
-}

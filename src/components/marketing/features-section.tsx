@@ -1,84 +1,87 @@
 import {
-  BarChart3,
+  CalendarDays,
   Database,
-  FileSignature,
   Gauge,
-  Lightbulb,
+  LineChart,
   ShieldCheck,
+  Sparkles,
   type LucideIcon,
 } from "lucide-react";
 
-import { cn } from "@/lib/utils";
+import { SectionIntro } from "./section-intro";
 
-import { Panel, SectionIntro } from "./section-intro";
-
-const features: { icon: LucideIcon; title: string; description: string; highlight?: boolean }[] = [
+const features: { icon: LucideIcon; title: string; description: string }[] = [
   {
     icon: Database,
-    title: "One customer view",
+    title: "One record per customer",
     description:
-      "Accounts, contacts, services, contracts and every touchpoint on one timeline. Everyone works from the same numbers.",
+      "Accounts, contacts, deals, contracts and engagement in one place. No more reconciling five spreadsheets before a meeting.",
   },
   {
     icon: Gauge,
-    title: "Explainable deal grades",
+    title: "Grades you can explain",
     description:
-      "Every opportunity gets a 0-100 score and a Bronze to Platinum grade, with the factors behind it one click away.",
-    highlight: true,
+      "Every deal is scored on stage, buying committee and engagement, and graded Bronze to Platinum. Open the score to see why.",
   },
   {
-    icon: BarChart3,
-    title: "Vertical Sales Index",
+    icon: LineChart,
+    title: "A forecast you can defend",
     description:
-      "Revenue ranked by sector with growth trends, so leadership sees where the business is really moving.",
+      "Weighted pipeline by vertical and rep, with the Vertical Sales Index showing where growth really comes from.",
   },
   {
-    icon: Lightbulb,
-    title: "Cross-sell recommendations",
+    icon: Sparkles,
+    title: "Brutus, grounded in your data",
     description:
-      "Rules read what each account already buys and how it engages, then suggest the next service with the reason spelled out.",
+      "Next best actions and cross-sell picks come from rules first. Brutus only words them, and never invents a number.",
   },
   {
-    icon: FileSignature,
-    title: "Contracts that close",
+    icon: CalendarDays,
+    title: "Engagement that logs itself",
     description:
-      "Generate a contract from a won deal, send it for e-signature and see renewals coming months ahead.",
+      "Touchpoints sent through BalloAds land on the account timeline, so health reflects what actually happened.",
   },
   {
     icon: ShieldCheck,
-    title: "Roles and a full audit trail",
+    title: "Audited by default",
     description:
-      "Each role sees what it needs, and every change is logged with who made it and when.",
+      "Roles decide who sees what. Every change to a deal, score or contract is recorded with who and when.",
   },
 ];
 
 export function FeaturesSection() {
   return (
-    <Panel id="platform">
-      <SectionIntro
-        eyebrow="The platform"
-        title="Everything a commercial team needs, in one system"
-        description="Built for B2B selling: long deals, buying committees, many services per account and contracts that renew."
-      />
-      <div className="mt-8 grid gap-3 sm:grid-cols-2 md:mt-12 md:gap-4 lg:grid-cols-3">
-        {features.map(({ icon: Icon, title, description, highlight }) => (
+    <section
+      id="features"
+      className="mx-auto w-full max-w-[1180px] scroll-mt-24 px-2 py-16 md:px-4 md:py-24"
+    >
+      <div className="flex flex-col justify-between gap-6 md:flex-row md:items-end">
+        <SectionIntro
+          eyebrow="The platform"
+          title={
+            <>
+              Built for B2B, <span className="text-mute block">not bent into it.</span>
+            </>
+          }
+        />
+        <p className="text-mute max-w-[460px] text-[17px] text-pretty md:text-lg">
+          Generic CRMs take months to fit an enterprise sales motion. BalloCRM starts there.
+        </p>
+      </div>
+      <div className="mt-10 grid gap-3 sm:grid-cols-2 md:mt-12 md:gap-4 lg:grid-cols-3">
+        {features.map(({ icon: Icon, title, description }) => (
           <div
             key={title}
-            className="bg-card rounded-card ease-ballo flex flex-col gap-3 p-[22px] transition-[transform,box-shadow] duration-200 hover:-translate-y-[3px] hover:shadow-[0_12px_24px_rgb(0_0_0/0.07)] md:p-[26px]"
+            className="bg-main rounded-card ease-ballo flex flex-col gap-3.5 p-[22px] transition-transform duration-200 hover:-translate-y-[3px] md:p-7"
           >
-            <span
-              className={cn(
-                "grid size-[46px] place-items-center rounded-full",
-                highlight ? "bg-ink text-shell" : "bg-soft",
-              )}
-            >
-              <Icon className="size-[18px]" />
+            <span className="bg-card grid size-10 place-items-center rounded-full">
+              <Icon className="size-[18px]" aria-hidden />
             </span>
             <h3 className="text-lg font-semibold">{title}</h3>
             <p className="text-mute text-[15px] text-pretty">{description}</p>
           </div>
         ))}
       </div>
-    </Panel>
+    </section>
   );
 }

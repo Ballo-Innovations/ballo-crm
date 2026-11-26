@@ -5,16 +5,15 @@ import { siteConfig } from "@/lib/site";
 import { BrandLogo } from "./brand-logo";
 
 const links = [
-  { label: "Platform", href: "#platform" },
-  { label: "Grading", href: "#grading" },
-  { label: "Modules", href: "#modules" },
-  { label: "Who it's for", href: "#personas" },
+  { label: "Product", href: "#product" },
+  { label: "Features", href: "#features" },
+  { label: "Who it's for", href: "#roles" },
   { label: "Sign in", href: "/login" },
 ];
 
 export function SiteFooter() {
   return (
-    <footer className="mx-auto w-full max-w-[1400px] px-4 pt-10 pb-8 md:px-6">
+    <footer className="mx-auto w-full max-w-[1180px] px-4 pt-10 pb-8">
       <div className="flex flex-col gap-6 md:flex-row md:items-center md:justify-between">
         <div className="flex flex-col gap-2">
           <BrandLogo />
@@ -33,7 +32,7 @@ export function SiteFooter() {
         </nav>
       </div>
       <p className="text-mute border-line mt-8 border-t pt-6 text-xs">
-        © 2026 {siteConfig.name}. Built for the iHub Hackathon 2026.
+        © 2026 {siteConfig.name}. Built for Infratel, iHub Hackathon 2026.
       </p>
     </footer>
   );
