@@ -57,6 +57,37 @@ test("the signed-in user and their role show in the sidebar, and sign out ends t
   await expect(page).toHaveURL(/\/login\?callbackUrl=%2Fdashboard/);
 });
 
+// Login screen design (docs/03-design/01-design-system.md "Login page"): greeting, logo, island form.
+test("the login page shows the BalloCRM logo, a time-of-day greeting and the sign-in form", async ({
+  page,
+}) => {
+  await page.goto("/login");
+  await expect(page.getByRole("img", { name: "BalloCRM" }).first()).toBeVisible();
+  await expect(page.getByText(/^Good (morning|afternoon|evening)\.$/)).toBeVisible();
+  await expect(page.getByRole("heading", { level: 1, name: "Sign in" })).toBeVisible();
+  await expect(page.getByLabel("Work email")).toBeVisible();
+  await expect(page.getByLabel("Password")).toBeVisible();
+});
+
+test("the password can be shown and hidden again", async ({ page }) => {
+  await page.goto("/login");
+  const field = page.getByLabel("Password");
+  await field.fill("Compass!2026");
+  await expect(field).toHaveAttribute("type", "password");
+
+  await page.getByRole("button", { name: "Show password" }).click();
+  await expect(field).toHaveAttribute("type", "text");
+
+  await page.getByRole("button", { name: "Hide password" }).click();
+  await expect(field).toHaveAttribute("type", "password");
+});
+
+test("forgot password tells the user who can reset it", async ({ page }) => {
+  await page.goto("/login");
+  await page.getByRole("button", { name: "Forgot password?" }).click();
+  await expect(page.getByText(/workspace admin can reset it/)).toBeVisible();
+});
+
 test("a signed-out API call gets 401, not a redirect", async ({ request }) => {
   const response = await request.get("/api/v1/accounts", { maxRedirects: 0 });
   expect(response.status()).toBe(401);

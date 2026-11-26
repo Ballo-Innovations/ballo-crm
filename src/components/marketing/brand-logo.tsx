@@ -1,17 +1,10 @@
-"use client";
-
-import { useEffect, useState } from "react";
-import Image from "next/image";
-import { useTheme } from "next-themes";
-
+import { CompassMark } from "@/components/shared/compass-mark";
 import { cn } from "@/lib/utils";
 import { siteConfig } from "@/lib/site";
 
 /**
- * BalloCRM brand lockup: the app-icon mark plus the wordmark. The mark is the
- * real logo asset, a self-contained rounded tile, so it reads correctly on
- * any background. Dark mode swaps to a dedicated asset (public/brand-icon-dark.png)
- * once mounted, to avoid a hydration mismatch on the theme-dependent src.
+ * BalloCRM brand lockup: the compass mark plus the wordmark. The mark is drawn in
+ * currentColor, so it follows the theme with no light/dark asset swap.
  */
 export function BrandLogo({
   className,
@@ -22,7 +15,7 @@ export function BrandLogo({
 }) {
   return (
     <span className={cn("inline-flex items-center gap-2", className)}>
-      <BrandMark className="size-8" />
+      <CompassMark className="size-7" label={showWordmark ? undefined : siteConfig.name} />
       {showWordmark && (
         <span className="text-lg font-semibold tracking-tight">{siteConfig.name}</span>
       )}
@@ -31,20 +24,5 @@ export function BrandLogo({
 }
 
 export function BrandMark({ className }: { className?: string }) {
-  const { resolvedTheme } = useTheme();
-  const [mounted, setMounted] = useState(false);
-
-  useEffect(() => setMounted(true), []);
-
-  const src = mounted && resolvedTheme === "dark" ? "/brand-icon-dark.png" : "/brand-icon.png";
-
-  return (
-    <Image
-      src={src}
-      alt="BalloCRM"
-      width={128}
-      height={128}
-      className={cn("size-8 object-contain", className)}
-    />
-  );
+  return <CompassMark label={siteConfig.name} className={cn("size-8", className)} />;
 }

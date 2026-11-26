@@ -1,0 +1,1694 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Login Options</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Urbanist:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --shell: #fff;
+        --main: #ececec;
+        --card: #fff;
+        --ink: #0d0d0d;
+        --inv: #fff;
+        --mute: #6b6b6b;
+        --soft: #f3f3f3;
+        --line: #e4e4e4;
+        --danger: #dc2626;
+        --navy: #02024f;
+        --cyan: #3ddbff;
+        --mist: #bdd5dd;
+      }
+      :root[data-theme="dark"] {
+        --shell: #111;
+        --main: #1b1b1b;
+        --card: #242424;
+        --ink: #f5f5f5;
+        --inv: #0d0d0d;
+        --mute: #9a9a9a;
+        --soft: #2e2e2e;
+        --line: #3a3a3a;
+        --danger: #f87171;
+      }
+      * {
+        box-sizing: border-box;
+        margin: 0;
+      }
+      body {
+        background: var(--shell);
+        color: var(--ink);
+        font-family: Urbanist, system-ui, sans-serif;
+        -webkit-font-smoothing: antialiased;
+        padding: 32px 32px 80px;
+      }
+      button,
+      input {
+        font: inherit;
+        color: inherit;
+      }
+      button {
+        cursor: pointer;
+      }
+      svg {
+        width: 18px;
+        height: 18px;
+        flex: none;
+      }
+      .wrap {
+        max-width: 1360px;
+        margin: auto;
+      }
+
+      /* ---------- page chrome ---------- */
+      .page-hd {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 16px;
+        align-items: end;
+        justify-content: space-between;
+        margin-bottom: 20px;
+      }
+      .page-hd h1 {
+        font-size: 30px;
+        font-weight: 700;
+        letter-spacing: -0.02em;
+      }
+      .page-hd p {
+        color: var(--mute);
+        margin-top: 4px;
+        font-size: 15px;
+      }
+      .tools {
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+      }
+      .seg {
+        display: inline-flex;
+        background: var(--soft);
+        border-radius: 999px;
+        padding: 4px;
+        gap: 2px;
+      }
+      .seg button {
+        border: 0;
+        background: none;
+        padding: 8px 14px;
+        border-radius: 999px;
+        font-size: 14px;
+        font-weight: 600;
+        color: var(--mute);
+      }
+      .seg button[aria-pressed="true"] {
+        background: var(--ink);
+        color: var(--inv);
+      }
+      .tabs {
+        display: flex;
+        gap: 8px;
+        flex-wrap: wrap;
+        margin-bottom: 18px;
+      }
+      .tab {
+        border: 1px solid var(--line);
+        background: var(--card);
+        border-radius: 999px;
+        padding: 10px 16px 10px 10px;
+        display: inline-flex;
+        gap: 10px;
+        align-items: center;
+        font-weight: 600;
+        font-size: 15px;
+      }
+      .tab b {
+        display: grid;
+        place-items: center;
+        width: 26px;
+        height: 26px;
+        border-radius: 999px;
+        background: var(--soft);
+        font-size: 13px;
+      }
+      .tab[aria-selected="true"] {
+        background: var(--ink);
+        color: var(--inv);
+        border-color: var(--ink);
+      }
+      .tab[aria-selected="true"] b {
+        background: var(--inv);
+        color: var(--ink);
+      }
+
+      .stage {
+        background: var(--main);
+        border-radius: 28px;
+        padding: 18px;
+        display: flex;
+        justify-content: center;
+      }
+      .frame {
+        container-type: inline-size;
+        width: 100%;
+        height: 820px;
+        border-radius: 18px;
+        overflow: hidden;
+        position: relative;
+        background: var(--main);
+        box-shadow: 0 0 0 1px var(--line);
+        transition: width 0.3s ease;
+      }
+      .frame.m {
+        width: 390px;
+        height: 800px;
+      }
+      .notes {
+        display: grid;
+        grid-template-columns: 1.3fr 1fr 1fr;
+        gap: 14px;
+        margin-top: 18px;
+      }
+      .note {
+        background: var(--card);
+        border: 1px solid var(--line);
+        border-radius: 22px;
+        padding: 20px 22px;
+      }
+      .note h3 {
+        font-size: 13px;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        color: var(--mute);
+        margin-bottom: 8px;
+        font-weight: 700;
+      }
+      .note p,
+      .note li {
+        font-size: 15px;
+        line-height: 1.55;
+      }
+      .note ul {
+        padding-left: 18px;
+      }
+      .hint {
+        color: var(--mute);
+        font-size: 13px;
+        margin-top: 12px;
+      }
+      .hint code {
+        background: var(--soft);
+        padding: 1px 6px;
+        border-radius: 6px;
+      }
+
+      /* ---------- shared form ---------- */
+      .lf {
+        display: grid;
+        gap: 12px;
+      }
+      .fld {
+        position: relative;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        height: 56px;
+        padding: 0 20px;
+        border-radius: 999px;
+        background: var(--soft);
+        border: 1.5px solid transparent;
+        transition:
+          border-color 0.15s,
+          background 0.15s;
+      }
+      .fld:focus-within {
+        border-color: var(--ink);
+        background: var(--card);
+      }
+      .fld.bad {
+        border-color: var(--danger);
+      }
+      .fld .ico {
+        color: var(--mute);
+        display: grid;
+      }
+      .fld input {
+        flex: 1;
+        min-width: 0;
+        border: 0;
+        background: none;
+        outline: none;
+        font-size: 16px;
+        height: 100%;
+      }
+      .fld input::placeholder {
+        color: var(--mute);
+      }
+      .eye {
+        border: 0;
+        background: none;
+        color: var(--mute);
+        display: grid;
+        padding: 6px;
+        margin-right: -8px;
+        border-radius: 999px;
+      }
+      .eye:hover {
+        color: var(--ink);
+        background: var(--line);
+      }
+      .err {
+        color: var(--danger);
+        font-size: 13px;
+        font-weight: 600;
+        padding-left: 20px;
+        margin-top: -4px;
+      }
+      .err:empty {
+        display: none;
+      }
+      .caps {
+        font-size: 13px;
+        color: var(--mute);
+        padding-left: 20px;
+        margin-top: -4px;
+        display: flex;
+        gap: 6px;
+        align-items: center;
+      }
+      .caps svg {
+        width: 14px;
+        height: 14px;
+      }
+      .row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-size: 14px;
+        padding: 2px 6px 4px;
+        gap: 10px;
+      }
+      .chk {
+        display: inline-flex;
+        gap: 8px;
+        align-items: center;
+        color: var(--mute);
+        cursor: pointer;
+        user-select: none;
+      }
+      .chk input {
+        appearance: none;
+        width: 18px;
+        height: 18px;
+        border-radius: 6px;
+        border: 1.5px solid var(--line);
+        background: var(--card);
+        display: grid;
+        place-items: center;
+        margin: 0;
+        cursor: pointer;
+      }
+      .chk input:checked {
+        background: var(--ink);
+        border-color: var(--ink);
+      }
+      .chk input:checked::after {
+        content: "";
+        width: 9px;
+        height: 5px;
+        border: 2px solid var(--inv);
+        border-top: 0;
+        border-right: 0;
+        transform: rotate(-45deg) translate(1px, -1px);
+      }
+      .lnk {
+        color: var(--ink);
+        font-weight: 600;
+        text-decoration: none;
+        border-bottom: 1.5px solid var(--line);
+      }
+      .lnk:hover {
+        border-color: var(--ink);
+      }
+      .alert {
+        display: flex;
+        gap: 10px;
+        align-items: flex-start;
+        background: color-mix(in srgb, var(--danger) 9%, var(--card));
+        color: var(--ink);
+        border-radius: 18px;
+        padding: 12px 16px;
+        font-size: 14px;
+        line-height: 1.45;
+      }
+      .alert svg {
+        color: var(--danger);
+        margin-top: 1px;
+      }
+      .alert.info svg {
+        color: var(--ink);
+      }
+      .alert.info {
+        background: var(--soft);
+      }
+      .btn {
+        height: 56px;
+        border: 0;
+        border-radius: 999px;
+        background: var(--ink);
+        color: var(--inv);
+        font-weight: 600;
+        font-size: 16px;
+        display: flex;
+        gap: 10px;
+        align-items: center;
+        justify-content: center;
+        transition:
+          transform 0.12s,
+          opacity 0.15s;
+      }
+      .btn:active {
+        transform: scale(0.98);
+      }
+      .btn[disabled] {
+        opacity: 0.75;
+        cursor: default;
+      }
+      .btn .arr {
+        transition: transform 0.2s;
+      }
+      .btn:hover .arr {
+        transform: translateX(3px);
+      }
+      .spin {
+        width: 18px;
+        height: 18px;
+        border-radius: 999px;
+        border: 2px solid color-mix(in srgb, var(--inv) 30%, transparent);
+        border-top-color: var(--inv);
+        animation: sp 0.7s linear infinite;
+      }
+      @keyframes sp {
+        to {
+          transform: rotate(360deg);
+        }
+      }
+      .sso {
+        height: 56px;
+        border-radius: 999px;
+        border: 1.5px solid var(--line);
+        background: var(--card);
+        font-weight: 600;
+        display: flex;
+        gap: 10px;
+        align-items: center;
+        justify-content: center;
+        font-size: 15px;
+      }
+      .sso:hover {
+        border-color: var(--ink);
+      }
+      .div {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        color: var(--mute);
+        font-size: 13px;
+      }
+      .div::before,
+      .div::after {
+        content: "";
+        flex: 1;
+        height: 1px;
+        background: var(--line);
+      }
+      /* "line" variant: labels above, underlined fields */
+      .lf.line .fld {
+        height: 52px;
+        border-radius: 0;
+        background: none;
+        border: 0;
+        border-bottom: 1.5px solid var(--line);
+        padding: 0;
+      }
+      .lf.line .fld:focus-within {
+        border-color: var(--ink);
+        background: none;
+      }
+      .lf.line .fld.bad {
+        border-color: var(--danger);
+      }
+      .lf.line .lab {
+        font-size: 13px;
+        font-weight: 700;
+        letter-spacing: 0.02em;
+        color: var(--mute);
+        margin-bottom: -10px;
+      }
+      .lf.line .err,
+      .lf.line .caps {
+        padding-left: 0;
+      }
+      .lf.line .row {
+        padding-left: 0;
+        padding-right: 0;
+      }
+      .lf .lab {
+        display: none;
+      }
+      .lf.line .lab {
+        display: block;
+      }
+      .brand {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        font-weight: 700;
+        font-size: 22px;
+        letter-spacing: -0.01em;
+      }
+      .brand .compass,
+      .brandrow .compass {
+        width: 30px;
+        height: 30px;
+      }
+      .E .bigmark {
+        color: var(--cyan);
+        filter: drop-shadow(0 0 40px rgb(61 219 255 / 0.35));
+      }
+      .pill {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 6px 12px;
+        border-radius: 999px;
+        background: var(--soft);
+        font-size: 12px;
+        font-weight: 700;
+        color: var(--mute);
+      }
+      .dot {
+        width: 7px;
+        height: 7px;
+        border-radius: 99px;
+        background: #22c55e;
+      }
+
+      /* ---------- A: refined card ---------- */
+      .A {
+        height: 100%;
+        display: grid;
+        place-items: center;
+        padding: 24px 16px;
+        background:
+          radial-gradient(
+              circle at 1px 1px,
+              color-mix(in srgb, var(--ink) 9%, transparent) 1px,
+              transparent 0
+            )
+            0 0 / 22px 22px,
+          var(--main);
+        overflow: auto;
+      }
+      .A .cardA {
+        width: 100%;
+        max-width: 440px;
+        background: var(--card);
+        border-radius: 32px;
+        padding: 40px;
+        box-shadow:
+          0 1px 0 var(--line),
+          0 30px 60px -30px rgb(0 0 0 / 0.18);
+      }
+      .A h2 {
+        font-size: 30px;
+        font-weight: 700;
+        letter-spacing: -0.02em;
+        margin-top: 32px;
+      }
+      .A .sub {
+        color: var(--mute);
+        margin: 6px 0 26px;
+        font-size: 15px;
+      }
+      .A .foot {
+        margin-top: 24px;
+        padding-top: 20px;
+        border-top: 1px solid var(--line);
+        display: flex;
+        justify-content: center;
+        gap: 8px;
+        align-items: center;
+        color: var(--mute);
+        font-size: 13px;
+      }
+      .A .foot svg {
+        width: 15px;
+        height: 15px;
+      }
+      .A .below {
+        text-align: center;
+        color: var(--mute);
+        font-size: 13px;
+        margin-top: 18px;
+      }
+      @container (max-width: 520px) {
+        .A .cardA {
+          padding: 28px 22px;
+          border-radius: 28px;
+        }
+        .A {
+          align-items: start;
+          padding-top: 40px;
+        }
+      }
+
+      /* ---------- B: split with product proof ---------- */
+      .B {
+        height: 100%;
+        display: grid;
+        grid-template-columns: 1.05fr 1fr;
+        background: var(--shell);
+      }
+      .B .art {
+        margin: 14px;
+        border-radius: 28px;
+        background: #0d0d0d;
+        color: #f5f5f5;
+        position: relative;
+        overflow: hidden;
+        padding: 36px;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+      }
+      .B .art::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background:
+          radial-gradient(600px 400px at 85% 10%, rgb(255 255 255 / 0.09), transparent 60%),
+          radial-gradient(500px 360px at 0% 100%, rgb(255 255 255 / 0.06), transparent 60%);
+      }
+      .B .art > * {
+        position: relative;
+      }
+      .B .art .brand {
+        color: #fff;
+      }
+      .B .stack {
+        display: grid;
+        gap: 12px;
+        max-width: 440px;
+        margin: 0 auto;
+        width: 100%;
+      }
+      .B .deal {
+        background: #1d1d1d;
+        border: 1px solid #2c2c2c;
+        border-radius: 22px;
+        padding: 16px 18px;
+        display: flex;
+        gap: 14px;
+        align-items: center;
+      }
+      .B .deal:nth-child(1) {
+        transform: translateX(-18px);
+      }
+      .B .deal:nth-child(2) {
+        transform: translateX(22px);
+        background: #f5f5f5;
+        color: #0d0d0d;
+        border-color: #f5f5f5;
+        box-shadow: 0 30px 60px -20px rgb(0 0 0 / 0.6);
+      }
+      .B .deal:nth-child(3) {
+        transform: translateX(-6px);
+        opacity: 0.7;
+      }
+      .B .av {
+        width: 40px;
+        height: 40px;
+        border-radius: 999px;
+        background: #333;
+        display: grid;
+        place-items: center;
+        font-weight: 700;
+        font-size: 13px;
+        flex: none;
+      }
+      .B .deal:nth-child(2) .av {
+        background: #e4e4e4;
+      }
+      .B .deal .t {
+        flex: 1;
+        min-width: 0;
+      }
+      .B .deal .t b {
+        display: block;
+        font-size: 15px;
+      }
+      .B .deal .t span {
+        font-size: 13px;
+        opacity: 0.65;
+      }
+      .B .ring {
+        width: 46px;
+        height: 46px;
+        flex: none;
+        position: relative;
+        display: grid;
+        place-items: center;
+        font-weight: 800;
+        font-size: 14px;
+      }
+      .B .ring svg {
+        position: absolute;
+        inset: 0;
+        width: 46px;
+        height: 46px;
+        transform: rotate(-90deg);
+      }
+      .B .grade {
+        font-size: 11px;
+        font-weight: 800;
+        letter-spacing: 0.08em;
+        padding: 4px 8px;
+        border-radius: 999px;
+        background: #2c2c2c;
+      }
+      .B .deal:nth-child(2) .grade {
+        background: #0d0d0d;
+        color: #fff;
+      }
+      .B .quote {
+        font-size: 30px;
+        font-weight: 700;
+        letter-spacing: -0.02em;
+        line-height: 1.15;
+        max-width: 440px;
+      }
+      .B .quote span {
+        color: #8a8a8a;
+      }
+      .B .side {
+        display: grid;
+        place-items: center;
+        padding: 32px;
+        overflow: auto;
+      }
+      .B .inner {
+        width: 100%;
+        max-width: 400px;
+      }
+      .B h2 {
+        font-size: 34px;
+        font-weight: 700;
+        letter-spacing: -0.025em;
+      }
+      .B .sub {
+        color: var(--mute);
+        margin: 8px 0 28px;
+        font-size: 16px;
+      }
+      .B .legal {
+        color: var(--mute);
+        font-size: 13px;
+        margin-top: 22px;
+        text-align: center;
+      }
+      @container (max-width: 760px) {
+        .B {
+          grid-template-columns: 1fr;
+          grid-template-rows: auto 1fr;
+        }
+        .B .art {
+          margin: 10px;
+          padding: 22px;
+          border-radius: 24px;
+        }
+        .B .stack,
+        .B .quote {
+          display: none;
+        }
+        .B .art .mini {
+          display: block;
+        }
+        .B .side {
+          align-items: start;
+          padding: 26px 20px;
+        }
+      }
+      .B .mini {
+        display: none;
+        font-size: 20px;
+        font-weight: 700;
+        letter-spacing: -0.01em;
+        margin-top: 18px;
+        line-height: 1.2;
+      }
+      .B .mini span {
+        color: #8a8a8a;
+      }
+
+      /* ---------- C: editorial ---------- */
+      .C {
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        background: var(--shell);
+        padding: 28px 40px;
+        overflow: auto;
+      }
+      .C .top,
+      .C .bot {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 12px;
+        font-size: 14px;
+        color: var(--mute);
+      }
+      .C .top a {
+        color: var(--ink);
+        font-weight: 600;
+        text-decoration: none;
+      }
+      .C .mid {
+        flex: 1;
+        display: grid;
+        grid-template-columns: 1.2fr 1fr;
+        align-items: center;
+        gap: 60px;
+        padding: 30px 0;
+      }
+      .C .hello {
+        font-size: clamp(56px, 8.5cqw, 112px);
+        font-weight: 700;
+        letter-spacing: -0.045em;
+        line-height: 0.92;
+      }
+      .C .hello span {
+        color: var(--mute);
+        opacity: 0.55;
+      }
+      .C .lede {
+        margin-top: 24px;
+        font-size: 18px;
+        color: var(--mute);
+        max-width: 420px;
+        line-height: 1.5;
+      }
+      .C .formC {
+        max-width: 380px;
+        width: 100%;
+        justify-self: end;
+      }
+      .C .formC h2 {
+        font-size: 15px;
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+        font-weight: 800;
+        margin-bottom: 26px;
+      }
+      @container (max-width: 760px) {
+        .C {
+          padding: 20px;
+        }
+        .C .mid {
+          grid-template-columns: 1fr;
+          gap: 30px;
+          align-content: start;
+          padding-top: 36px;
+        }
+        .C .hello {
+          font-size: 54px;
+        }
+        .C .lede {
+          font-size: 16px;
+          margin-top: 14px;
+        }
+        .C .formC {
+          justify-self: stretch;
+          max-width: none;
+        }
+        .C .bot .hide {
+          display: none;
+        }
+      }
+
+      /* ---------- D: over the product ---------- */
+      .D {
+        height: 100%;
+        position: relative;
+        overflow: hidden;
+        background: var(--shell);
+      }
+      .D .ghost {
+        position: absolute;
+        inset: 0;
+        display: grid;
+        grid-template-columns: 220px 1fr;
+        gap: 14px;
+        padding: 14px;
+        filter: blur(7px) saturate(0.6);
+        transform: scale(1.04);
+        opacity: 0.85;
+      }
+      .D .g-side {
+        background: var(--shell);
+        border-radius: 22px;
+        padding: 16px;
+        display: grid;
+        align-content: start;
+        gap: 12px;
+      }
+      .D .g-side i {
+        display: block;
+        height: 34px;
+        border-radius: 999px;
+        background: var(--soft);
+      }
+      .D .g-side i:first-child {
+        background: var(--ink);
+      }
+      .D .g-main {
+        background: var(--main);
+        border-radius: 26px;
+        padding: 22px;
+        display: grid;
+        grid-template-rows: 46px 130px 1fr;
+        gap: 14px;
+      }
+      .D .g-row {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 14px;
+      }
+      .D .g-card {
+        background: var(--card);
+        border-radius: 22px;
+        padding: 18px;
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-end;
+        gap: 8px;
+      }
+      .D .g-card u {
+        height: 22px;
+        width: 60%;
+        background: var(--ink);
+        border-radius: 6px;
+        text-decoration: none;
+        display: block;
+      }
+      .D .g-card s {
+        height: 10px;
+        width: 40%;
+        background: var(--line);
+        border-radius: 6px;
+        display: block;
+      }
+      .D .g-chart {
+        background: var(--card);
+        border-radius: 22px;
+        padding: 22px;
+        display: flex;
+        align-items: flex-end;
+        gap: 12px;
+      }
+      .D .g-chart i {
+        flex: 1;
+        background: var(--line);
+        border-radius: 10px 10px 4px 4px;
+      }
+      .D .g-chart i:nth-child(3n) {
+        background: var(--ink);
+      }
+      .D .veil {
+        position: absolute;
+        inset: 0;
+        background: color-mix(in srgb, var(--main) 45%, transparent);
+      }
+      .D .center {
+        position: absolute;
+        inset: 0;
+        display: grid;
+        place-items: center;
+        padding: 20px;
+        overflow: auto;
+      }
+      .D .glass {
+        width: 100%;
+        max-width: 430px;
+        border-radius: 34px;
+        padding: 38px;
+        background: color-mix(in srgb, var(--card) 82%, transparent);
+        backdrop-filter: blur(24px) saturate(1.4);
+        -webkit-backdrop-filter: blur(24px) saturate(1.4);
+        border: 1px solid color-mix(in srgb, var(--ink) 8%, transparent);
+        box-shadow: 0 40px 80px -30px rgb(0 0 0 / 0.35);
+      }
+      .D .glass .brand {
+        font-size: 20px;
+      }
+      .D h2 {
+        font-size: 28px;
+        font-weight: 700;
+        letter-spacing: -0.02em;
+        margin: 28px 0 6px;
+      }
+      .D .sub {
+        color: var(--mute);
+        margin-bottom: 24px;
+      }
+      .D .glass .fld {
+        background: color-mix(in srgb, var(--soft) 85%, transparent);
+      }
+      @container (max-width: 520px) {
+        .D .ghost {
+          grid-template-columns: 1fr;
+        }
+        .D .g-side {
+          display: none;
+        }
+        .D .g-row {
+          grid-template-columns: 1fr 1fr;
+        }
+        .D .glass {
+          padding: 26px 22px;
+        }
+        .D .center {
+          align-items: start;
+          padding-top: 50px;
+        }
+      }
+
+      /* ---------- E: brand colour moment ---------- */
+      .E {
+        height: 100%;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        background: var(--shell);
+      }
+      .E .art {
+        background: var(--navy);
+        color: #fff;
+        position: relative;
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        padding: 40px;
+      }
+      .E .art::before {
+        content: "";
+        position: absolute;
+        width: 520px;
+        height: 520px;
+        border-radius: 999px;
+        right: -160px;
+        top: -160px;
+        background: radial-gradient(circle, rgb(61 219 255 / 0.35), transparent 65%);
+      }
+      .E .art::after {
+        content: "";
+        position: absolute;
+        width: 700px;
+        height: 700px;
+        border-radius: 999px;
+        left: -300px;
+        bottom: -380px;
+        border: 1px solid rgb(189 213 221 / 0.18);
+        box-shadow:
+          0 0 0 80px rgb(189 213 221 / 0.04),
+          0 0 0 160px rgb(189 213 221 / 0.03);
+      }
+      .E .art > * {
+        position: relative;
+        z-index: 1;
+      }
+      .E .bigmark {
+        width: 140px;
+        height: 140px;
+        filter: drop-shadow(0 30px 50px rgb(0 0 0 / 0.45));
+      }
+      .E .art h3 {
+        font-size: 44px;
+        font-weight: 700;
+        letter-spacing: -0.03em;
+        line-height: 1.02;
+        margin-top: 30px;
+        max-width: 460px;
+      }
+      .E .art h3 em {
+        font-style: normal;
+        color: var(--cyan);
+      }
+      .E .art p {
+        color: var(--mist);
+        margin-top: 16px;
+        font-size: 16px;
+        max-width: 400px;
+        line-height: 1.5;
+      }
+      .E .stats {
+        display: flex;
+        gap: 28px;
+        color: var(--mist);
+        font-size: 13px;
+      }
+      .E .stats b {
+        display: block;
+        color: #fff;
+        font-size: 22px;
+        letter-spacing: -0.01em;
+      }
+      .E .side {
+        display: grid;
+        place-items: center;
+        padding: 32px;
+        overflow: auto;
+      }
+      .E .inner {
+        width: 100%;
+        max-width: 380px;
+      }
+      .E h2 {
+        font-size: 32px;
+        font-weight: 700;
+        letter-spacing: -0.02em;
+      }
+      .E .sub {
+        color: var(--mute);
+        margin: 8px 0 28px;
+      }
+      .E .btn {
+        background: var(--navy);
+        color: #fff;
+      }
+      :root[data-theme="dark"] .E .btn {
+        background: var(--cyan);
+        color: var(--navy);
+      }
+      .E .fld:focus-within {
+        border-color: var(--navy);
+      }
+      :root[data-theme="dark"] .E .fld:focus-within {
+        border-color: var(--cyan);
+      }
+      .E .chk input:checked {
+        background: var(--navy);
+        border-color: var(--navy);
+      }
+      .E .brandrow {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        font-weight: 700;
+        font-size: 20px;
+      }
+      .E .brandrow img {
+        width: 36px;
+        height: 36px;
+      }
+      @container (max-width: 760px) {
+        .E {
+          grid-template-columns: 1fr;
+          grid-template-rows: auto 1fr;
+        }
+        .E .art {
+          padding: 22px;
+          min-height: 230px;
+        }
+        .E .bigmark {
+          width: 64px;
+          height: 64px;
+        }
+        .E .art h3 {
+          font-size: 28px;
+          margin-top: 18px;
+        }
+        .E .art p,
+        .E .stats {
+          display: none;
+        }
+        .E .side {
+          align-items: start;
+          padding: 26px 20px;
+        }
+      }
+
+      /* ---------- F: editorial + dark island ---------- */
+      .F {
+        height: 100%;
+        display: grid;
+        grid-template-columns: 1.15fr 1fr;
+        background: var(--shell);
+        overflow: auto;
+      }
+      .F .left {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        padding: 32px 24px 28px 40px;
+        min-width: 0;
+      }
+      .F .left .top {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+      }
+      .F .hello {
+        font-size: clamp(56px, 8cqw, 108px);
+        font-weight: 700;
+        letter-spacing: -0.045em;
+        line-height: 0.92;
+      }
+      .F .hello span {
+        color: var(--mute);
+        opacity: 0.55;
+      }
+      .F .lede {
+        margin-top: 24px;
+        font-size: 18px;
+        color: var(--mute);
+        max-width: 420px;
+        line-height: 1.5;
+      }
+      .F .bot {
+        display: flex;
+        gap: 16px;
+        align-items: center;
+        font-size: 14px;
+        color: var(--mute);
+        flex-wrap: wrap;
+      }
+      .F .island {
+        --ink: #ffffff;
+        --inv: #0d0d0d;
+        --mute: #c4c4c4;
+        --soft: #222;
+        --line: #5a5a5a;
+        --card: #1a1a1a;
+        --danger: #fca5a5;
+        margin: 14px;
+        border-radius: 28px;
+        background: #0d0d0d;
+        color: var(--ink);
+        position: relative;
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        padding: 32px 40px;
+      }
+      :root[data-theme="dark"] .F .island {
+        background: #050505;
+        box-shadow: inset 0 0 0 1px #2a2a2a;
+      }
+      .F .island::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+        background:
+          radial-gradient(520px 360px at 90% 0%, rgb(255 255 255 / 0.08), transparent 60%),
+          radial-gradient(420px 320px at 0% 100%, rgb(255 255 255 / 0.05), transparent 60%);
+      }
+      .F .island > * {
+        position: relative;
+      }
+      .F .island .itop {
+        display: flex;
+        justify-content: flex-end;
+        font-size: 14px;
+        color: var(--mute);
+      }
+      .F .island .itop a {
+        color: var(--ink);
+        font-weight: 600;
+        text-decoration: none;
+        margin-left: 4px;
+      }
+      .F .formF {
+        width: 100%;
+        max-width: 380px;
+        margin: 0 auto;
+      }
+      .F .island .lf.line .lab {
+        color: #e8e8e8;
+        font-size: 14px;
+      }
+      .F .island .fld input {
+        color: #fff;
+      }
+      .F .island .fld input::placeholder {
+        color: #9e9e9e;
+      }
+      .F .island .chk,
+      .F .island .eye {
+        color: #d6d6d6;
+      }
+      .F .island .lnk {
+        border-color: #6a6a6a;
+      }
+      .F .formF h2 {
+        font-size: 15px;
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+        font-weight: 800;
+        margin-bottom: 26px;
+      }
+      .F .ifoot {
+        font-size: 13px;
+        color: var(--mute);
+        display: flex;
+        gap: 8px;
+        align-items: center;
+        justify-content: center;
+      }
+      .F .ifoot svg {
+        width: 15px;
+        height: 15px;
+      }
+      @container (max-width: 760px) {
+        .F {
+          grid-template-columns: 1fr;
+          grid-template-rows: auto 1fr;
+        }
+        .F .left {
+          padding: 20px 20px 8px;
+          gap: 30px;
+        }
+        .F .hello {
+          font-size: 48px;
+        }
+        .F .lede {
+          font-size: 15px;
+          margin-top: 12px;
+        }
+        .F .left .bot {
+          display: none;
+        }
+        .F .island {
+          margin: 10px;
+          padding: 26px 22px;
+          border-radius: 24px;
+          gap: 26px;
+        }
+        .F .island .itop {
+          display: none;
+        }
+      }
+
+      @media (max-width: 900px) {
+        body {
+          padding: 20px 16px 60px;
+        }
+        .notes {
+          grid-template-columns: 1fr;
+        }
+        .frame.m {
+          width: 100%;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <div class="page-hd">
+        <div>
+          <h1>Login page options</h1>
+          <p>
+            Six directions for the BalloCRM sign-in screen. Every option is live: type, toggle the
+            password, submit.
+          </p>
+        </div>
+        <div class="tools">
+          <div class="seg" id="vp">
+            <button aria-pressed="true" data-v="d">Desktop</button>
+            <button aria-pressed="false" data-v="m">390px</button>
+          </div>
+          <div class="seg" id="th">
+            <button aria-pressed="true" data-t="light">Light</button>
+            <button aria-pressed="false" data-t="dark">Dark</button>
+          </div>
+        </div>
+      </div>
+      <div class="tabs" id="tabs" role="tablist"></div>
+      <div class="stage"><div class="frame" id="frame"></div></div>
+      <div class="notes" id="notes"></div>
+      <p class="hint">
+        Try it: submit empty to see validation, use password <code>wrong</code> to see the failed
+        sign-in state, any other password to see success. Caps Lock shows a warning.
+      </p>
+    </div>
+
+    <script>
+      const I = {
+        mail: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="3"/><path d="m4 7 8 6 8-6"/></svg>',
+        lock: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="10" width="16" height="11" rx="3"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg>',
+        eye: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12Z"/><circle cx="12" cy="12" r="3"/></svg>',
+        eyeOff:
+          '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M10.7 5.1A10 10 0 0 1 12 5c6.5 0 10 7 10 7a17 17 0 0 1-2.2 3.2M6.6 6.6A17 17 0 0 0 2 12s3.5 7 10 7a9.7 9.7 0 0 0 5.4-1.6M3 3l18 18M9.9 9.9a3 3 0 0 0 4.2 4.2"/></svg>',
+        arrow:
+          '<svg class="arr" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>',
+        check:
+          '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12 5 5 9-10"/></svg>',
+        alert:
+          '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 8v5M12 16.5v.01"/></svg>',
+        info: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 7.5v.01"/></svg>',
+        shield:
+          '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 4.5 6v5.5c0 4.6 3.2 8.4 7.5 9.5 4.3-1.1 7.5-4.9 7.5-9.5V6L12 3Z"/><path d="m9 12 2 2 4-4"/></svg>',
+        up: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 12 6-6 6 6M9 12v7h6v-7"/></svg>',
+        key: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="15" r="4"/><path d="m11 12 9-9M17 6l3 3M15 8l2 2"/></svg>',
+      };
+      const theme = () => document.documentElement.dataset.theme || "light";
+      const compass = (cls = "") =>
+        `<svg class="compass ${cls}" viewBox="0 0 30 30" aria-hidden="true"><circle cx="15" cy="15" r="13" fill="none" stroke="currentColor" stroke-width="3"/><path d="M15 6l4 9-4 9-4-9z" fill="currentColor"/></svg>`;
+      const brand = () => `<span class="brand">${compass()}BalloCRM</span>`;
+
+      function form({ line = false, icons = true, sso = false, label = "Sign in" } = {}) {
+        return `
+        <form class="lf ${line ? "line" : ""}" novalidate>
+          <span class="lab">Work email</span>
+          <label class="fld">${icons ? `<span class="ico">${I.mail}</span>` : ""}
+            <input type="email" name="email" placeholder="${line ? "name@infratel.co.zm" : "Work email"}" autocomplete="username" aria-label="Work email" /></label>
+          <div class="err" data-for="email"></div>
+          <span class="lab">Password</span>
+          <label class="fld">${icons ? `<span class="ico">${I.lock}</span>` : ""}
+            <input type="password" name="pw" placeholder="${line ? "Your password" : "Password"}" autocomplete="current-password" aria-label="Password" />
+            <button type="button" class="eye" aria-label="Show password">${I.eye}</button></label>
+          <div class="err" data-for="pw"></div>
+          <div class="caps" hidden>${I.up} Caps Lock is on</div>
+          <div class="row">
+            <label class="chk"><input type="checkbox" checked /> Keep me signed in</label>
+            <a href="#" class="lnk forgot">Forgot password?</a>
+          </div>
+          <div class="msg"></div>
+          <button class="btn" type="submit"><span class="lbl">${label}</span>${I.arrow}</button>
+          ${sso ? `<div class="div">or</div><button type="button" class="sso">${I.key} Continue with company SSO</button>` : ""}
+        </form>`;
+      }
+
+      function greeting() {
+        const h = Number(
+          new Intl.DateTimeFormat("en-GB", {
+            hour: "numeric",
+            hour12: false,
+            timeZone: "Africa/Lusaka",
+          }).format(new Date()),
+        );
+        return h < 12 ? "Good morning" : h < 18 ? "Good afternoon" : "Good evening";
+      }
+      const ring = (v, light) =>
+        `<span class="ring"><svg viewBox="0 0 46 46"><circle cx="23" cy="23" r="20" fill="none" stroke="${light ? "#e4e4e4" : "#333"}" stroke-width="4"/><circle cx="23" cy="23" r="20" fill="none" stroke="${light ? "#0d0d0d" : "#f5f5f5"}" stroke-width="4" stroke-linecap="round" stroke-dasharray="${(v / 100) * 125.7} 200"/></svg>${v}</span>`;
+
+      const OPTIONS = [
+        {
+          id: "A",
+          name: "Refined card",
+          about:
+            "The current layout, finished properly. A single card on a quiet dot-grid, the real mark, a warmer heading, field icons, show password, remember me, forgot password and a trust line. Lowest risk and closest to the dashboard reference.",
+          pros: [
+            "Zero new patterns, ships in an hour",
+            "Matches the app shell exactly",
+            "Works identically at 390px",
+          ],
+          cons: ["Safe, not memorable", "Says nothing about the product"],
+          render: () => `<div class="A"><div>
+            <div class="cardA">${brand()}
+              <h2>Welcome back</h2>
+              <p class="sub">Sign in to your Infratel workspace.</p>
+              ${form()}
+              <div class="foot">${I.shield} Encrypted sign-in. Every session is audited.</div>
+            </div>
+            <p class="below">New to BalloCRM? Ask your admin for an invite.</p></div></div>`,
+        },
+        {
+          id: "B",
+          name: "Split, product proof",
+          about:
+            "Half the screen sells the product before anyone signs in: a stack of scored accounts lifted straight from the pipeline, with grade pills and score rings. The other half is a calm, generous form. The Linear / Attio playbook, kept in our monochrome.",
+          pros: [
+            "Feels premium and confident",
+            "Shows judges the scoring idea on the first screen",
+            "Collapses cleanly to a header band on mobile",
+          ],
+          cons: ["More to build and keep in sync with real UI", "Sample data must stay fictional"],
+          render: () => `<div class="B">
+            <div class="art">
+              ${brand()}
+              <div class="mini">Every account scored. <span>Every next step suggested.</span></div>
+              <div class="stack">
+                <div class="deal"><span class="av">LF</span><span class="t"><b>Lusaka Freight Co.</b><span>Proposal · K 640,000</span></span><span class="grade">SILVER</span>${ring(44)}</div>
+                <div class="deal"><span class="av">KM</span><span class="t"><b>Kafue Minerals Group</b><span>Negotiate · K 1.24m · next: send revised SLA</span></span><span class="grade">GOLD</span>${ring(58, true)}</div>
+                <div class="deal"><span class="av">ZA</span><span class="t"><b>Zambezi Agritech</b><span>Qualify · K 210,000</span></span><span class="grade">BRONZE</span>${ring(31)}</div>
+              </div>
+              <div class="quote">Every account scored.<br /><span>Every next step suggested.</span></div>
+            </div>
+            <div class="side"><div class="inner">
+              <h2>Sign in</h2>
+              <p class="sub">Use your work email and password.</p>
+              ${form({ sso: true })}
+              <p class="legal">Protected workspace. Activity is logged for audit.</p>
+            </div></div></div>`,
+        },
+        {
+          id: "C",
+          name: "Editorial",
+          about:
+            "Typography does all the work. A huge time-aware greeting (Lusaka time), labels above underlined fields, a thin top and bottom rule with workspace and environment. No card, no panel. Feels like a well-set magazine page.",
+          pros: [
+            "Most distinctive while staying monochrome",
+            "Very light to build",
+            "Greeting gives it a human feel",
+          ],
+          cons: [
+            "Underlined fields differ from our pill inputs",
+            "Relies on Urbanist looking great large (it does)",
+          ],
+          render: () => `<div class="C">
+            <div class="top">${brand()}<span>Need access? <a href="#">Contact your admin</a></span></div>
+            <div class="mid">
+              <div><div class="hello">${greeting()}.<br /><span>Let's close something.</span></div>
+              <p class="lede">Your pipeline, scores and next best actions are waiting where you left them.</p></div>
+              <div class="formC"><h2>Sign in</h2>${form({ line: true, icons: false, label: "Continue" })}</div>
+            </div>
+            <div class="bot"><span>© 2026 BalloCRM</span><span class="pill"><span class="dot"></span>All systems normal</span><span class="hide">Infratel workspace · v1.0</span></div></div>`,
+        },
+        {
+          id: "D",
+          name: "Over the product",
+          about:
+            "The sign-in sits as a frosted glass card over a blurred silhouette of the dashboard itself, so the app feels like it's right behind the door. Glass is used once, here, and nowhere else.",
+          pros: [
+            "Instantly says 'this is a real product'",
+            "Seamless feel when the blur lifts after sign-in",
+            "Single card, so mobile is trivial",
+          ],
+          cons: [
+            "Backdrop blur costs a little on low-end devices",
+            "Ghost dashboard must be a static drawing, not real data",
+          ],
+          render: () => `<div class="D">
+            <div class="ghost" aria-hidden="true">
+              <div class="g-side"><i></i><i></i><i></i><i></i><i></i><i></i></div>
+              <div class="g-main"><div style="display:flex;gap:12px"><i style="flex:1;background:var(--card);border-radius:999px"></i><i style="width:46px;background:var(--card);border-radius:999px"></i><i style="width:140px;background:var(--ink);border-radius:999px"></i></div>
+                <div class="g-row"><div class="g-card"><u></u><s></s></div><div class="g-card"><u></u><s></s></div><div class="g-card"><u></u><s></s></div><div class="g-card"><u></u><s></s></div></div>
+                <div class="g-chart">${[40, 62, 55, 78, 48, 70, 88, 60, 74, 92, 66, 80].map((h) => `<i style="height:${h}%"></i>`).join("")}</div></div>
+            </div>
+            <div class="veil"></div>
+            <div class="center"><div class="glass">${brand()}
+              <h2>Welcome back</h2><p class="sub">Your workspace is ready.</p>${form()}</div></div></div>`,
+        },
+        {
+          id: "E",
+          name: "Brand colour moment",
+          about:
+            "Takes the logo's navy and cyan and gives them one stage: the sign-in. A deep navy panel with a cyan glow and the full-colour mark, then a clean form. The app inside stays monochrome, so colour becomes the brand's front door.",
+          pros: [
+            "Makes the real logo look intentional",
+            "Strongest first impression",
+            "Gives marketing site and app a shared entrance",
+          ],
+          cons: [
+            "Introduces colour the design system otherwise avoids",
+            "Needs navy/cyan added as brand tokens",
+          ],
+          render: () => `<div class="E">
+            <div class="art">
+              <div>${compass("bigmark")}
+                <h3>Commercial intelligence for <em>Infratel</em>.</h3>
+                <p>Score every account, see the next best offer, and move deals from first call to signed contract.</p></div>
+              <div class="stats"><span><b>7 stages</b>one pipeline</span><span><b>Gold to Bronze</b>graded accounts</span><span><b>Audit</b>on every change</span></div>
+            </div>
+            <div class="side"><div class="inner">
+              <div class="brandrow" style="margin-bottom:34px">${compass()}BalloCRM</div>
+              <h2>Sign in</h2><p class="sub">Use your work email and password.</p>${form()}</div></div></div>`,
+        },
+        {
+          id: "F",
+          name: "Editorial, dark island",
+          about:
+            "Option C's typography on the left, with the form lifted into a black island on the right, the same rounded inset panel as B. The greeting stays on the open page; the island makes the sign-in feel like a distinct, secure place.",
+          pros: [
+            "Keeps C's big greeting and calm page",
+            "Strong contrast pulls the eye straight to the form",
+            "Shares the island pattern with B, so it reads as one family",
+          ],
+          cons: [
+            "Form fields need a dark-on-dark treatment in both themes",
+            "In dark mode the island relies on a hairline edge to separate",
+          ],
+          render: () => `<div class="F">
+            <div class="left">
+              <div class="top">${brand()}</div>
+              <div><div class="hello">${greeting()}.<br /><span>Let's close something.</span></div>
+              <p class="lede">Your pipeline, scores and next best actions are waiting where you left them.</p></div>
+              <div class="bot"><span>© 2026 BalloCRM</span><span class="pill"><span class="dot"></span>All systems normal</span></div>
+            </div>
+            <div class="island">
+              <div class="itop">Need access?<a href="#">Contact your admin</a></div>
+              <div class="formF"><h2>Sign in</h2>${form({ line: true, icons: false, label: "Continue" })}</div>
+              <div class="ifoot">${I.shield} Encrypted sign-in. Every session is audited.</div>
+            </div></div>`,
+        },
+      ];
+
+      let current = "A";
+      const $ = (s, r = document) => r.querySelector(s);
+
+      function renderTabs() {
+        $("#tabs").innerHTML = OPTIONS.map(
+          (o) =>
+            `<button class="tab" role="tab" aria-selected="${o.id === current}" data-id="${o.id}"><b>${o.id}</b>${o.name}</button>`,
+        ).join("");
+      }
+      function render() {
+        const o = OPTIONS.find((x) => x.id === current);
+        $("#frame").innerHTML = o.render();
+        $("#notes").innerHTML =
+          `<div class="note"><h3>Option ${o.id} · ${o.name}</h3><p>${o.about}</p></div>
+          <div class="note"><h3>Strengths</h3><ul>${o.pros.map((p) => `<li>${p}</li>`).join("")}</ul></div>
+          <div class="note"><h3>Trade-offs</h3><ul>${o.cons.map((p) => `<li>${p}</li>`).join("")}</ul></div>`;
+        wire($("#frame"));
+      }
+
+      function wire(root) {
+        const f = $("form", root);
+        if (!f) return;
+        const email = f.email,
+          pw = f.pw,
+          msg = $(".msg", f),
+          btn = $(".btn", f),
+          caps = $(".caps", f);
+        const setErr = (input, text) => {
+          $(`.err[data-for="${input.name}"]`, f).textContent = text;
+          input.closest(".fld").classList.toggle("bad", !!text);
+        };
+        [email, pw].forEach((i) =>
+          i.addEventListener("input", () => {
+            setErr(i, "");
+            msg.innerHTML = "";
+          }),
+        );
+        $(".eye", f).addEventListener("click", (e) => {
+          const show = pw.type === "password";
+          pw.type = show ? "text" : "password";
+          e.currentTarget.innerHTML = show ? I.eyeOff : I.eye;
+          e.currentTarget.setAttribute("aria-label", show ? "Hide password" : "Show password");
+          pw.focus();
+        });
+        const capsCheck = (e) => {
+          if (e.getModifierState) caps.hidden = !e.getModifierState("CapsLock");
+        };
+        pw.addEventListener("keyup", capsCheck);
+        pw.addEventListener("keydown", capsCheck);
+        pw.addEventListener("blur", () => (caps.hidden = true));
+        $(".forgot", f).addEventListener("click", (e) => {
+          e.preventDefault();
+          msg.innerHTML = `<div class="alert info">${I.info}<span>Passwords are reset by your workspace admin. Ask them to send you a reset link from Settings, Users.</span></div>`;
+        });
+        const sso = $(".sso", f);
+        if (sso)
+          sso.addEventListener("click", () => {
+            msg.innerHTML = `<div class="alert info">${I.info}<span>SSO is not set up for this workspace yet. Sign in with your password.</span></div>`;
+          });
+        f.addEventListener("submit", (e) => {
+          e.preventDefault();
+          msg.innerHTML = "";
+          let ok = true;
+          if (!/^\S+@\S+\.\S+$/.test(email.value.trim())) {
+            setErr(
+              email,
+              email.value ? "That doesn't look like an email address." : "Enter your work email.",
+            );
+            ok = false;
+          }
+          if (!pw.value) {
+            setErr(pw, "Enter your password.");
+            ok = false;
+          }
+          if (!ok) {
+            (email.value ? pw : email).focus();
+            return;
+          }
+          const label = $(".lbl", btn).textContent;
+          btn.disabled = true;
+          btn.innerHTML = `<span class="spin"></span><span class="lbl">Signing in</span>`;
+          setTimeout(() => {
+            if (pw.value === "wrong") {
+              btn.disabled = false;
+              btn.innerHTML = `<span class="lbl">${label}</span>${I.arrow}`;
+              msg.innerHTML = `<div class="alert">${I.alert}<span>That email and password don't match. Check them and try again.</span></div>`;
+              pw.select();
+            } else {
+              btn.innerHTML = `${I.check}<span class="lbl">Signed in</span>`;
+              setTimeout(() => {
+                btn.disabled = false;
+                btn.innerHTML = `<span class="lbl">${label}</span>${I.arrow}`;
+              }, 1600);
+            }
+          }, 900);
+        });
+      }
+
+      $("#tabs").addEventListener("click", (e) => {
+        const b = e.target.closest(".tab");
+        if (!b) return;
+        current = b.dataset.id;
+        renderTabs();
+        render();
+      });
+      $("#vp").addEventListener("click", (e) => {
+        const b = e.target.closest("button");
+        if (!b) return;
+        [...$("#vp").children].forEach((x) => x.setAttribute("aria-pressed", x === b));
+        $("#frame").classList.toggle("m", b.dataset.v === "m");
+      });
+      $("#th").addEventListener("click", (e) => {
+        const b = e.target.closest("button");
+        if (!b) return;
+        [...$("#th").children].forEach((x) => x.setAttribute("aria-pressed", x === b));
+        document.documentElement.dataset.theme = b.dataset.t;
+        render();
+      });
+      document.addEventListener("keydown", (e) => {
+        if (e.target.matches("input")) return;
+        const i = "ABCDEF".indexOf(e.key.toUpperCase());
+        if (i >= 0) {
+          current = "ABCDEF"[i];
+          renderTabs();
+          render();
+        }
+      });
+      renderTabs();
+      render();
+    </script>
+  </body>
+</html>
