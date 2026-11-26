@@ -1,4 +1,4 @@
-# Judging Strategy — how to score Platinum
+# Judging Strategy: how to score Platinum
 
 Hackathon rubrics almost always weight: problem fit, completeness, innovation, technical quality, UX, presentation, viability. We assume the rubric below and optimise for it explicitly.
 
@@ -18,5 +18,5 @@ Hackathon rubrics almost always weight: problem fit, completeness, innovation, t
 2. **Show the inputs behind every number.** Every score, grade and recommendation opens an explanation panel.
 3. **Let judges touch it.** Seeded demo URL + credentials on the last slide.
 4. **Pre-empt "it's just a CRM".** Open the pitch on the Insights feed, not the pipeline.
-5. **Answer the integration question first.** Adapter slide: Email (live inbound webhook), SMS (Africa's Talking, mocked), Telephony (mock), ERP (REST adapter, mocked), eSPF (documented contract, mock server).
+5. **Answer the integration question first.** Adapter slide: Email (live inbound webhook), SMS and email (BalloAds, mock fallback), Telephony (mock), ERP (REST adapter, mocked), eSPF (documented contract, mock server).
 6. **Dry-run judging.** 48h before: an outsider scores us on this table. Fix the lowest row.

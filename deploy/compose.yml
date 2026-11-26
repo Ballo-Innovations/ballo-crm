@@ -56,6 +56,9 @@ services:
       POSTGRES_DB: ballocrm
     volumes: [pgdata:/var/lib/postgresql/data]
     healthcheck: { test: ["CMD-SHELL", "pg_isready -U ballocrm"], interval: 5s, retries: 10 }
+    # Loopback only, never the internet. dev sets DB_PUBLISH=127.0.0.1:15432:5432 so teammates can
+    # reach it through their SSH tunnel; other environments get a random loopback port nobody may tunnel to.
+    ports: ["${DB_PUBLISH:-127.0.0.1::5432}"]
     mem_limit: 512m
     networks: [internal]
 
@@ -68,6 +71,8 @@ services:
       MINIO_ROOT_USER: ${MINIO_ROOT_USER:?set in .env}
       MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD:?set in .env}
     volumes: [minio:/data]
+    # Loopback only. dev sets S3_PUBLISH=127.0.0.1:19000:9000 for the SSH tunnel (see DB_PUBLISH).
+    ports: ["${S3_PUBLISH:-127.0.0.1::9000}"]
     mem_limit: 256m
     networks: [internal]
 

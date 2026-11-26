@@ -9,6 +9,26 @@ under `[Unreleased]` in the relevant section (Added / Changed / Fixed / Removed)
 
 ### Added
 
+- E0-05: role-based access. The security doc's permission matrix is one table in
+  `src/lib/rbac.ts` (`can`, `scopeFor`); `requireCan(capability)` and `requireRole` guard server
+  actions; `accountReadFilter` limits reps to their team's accounts and `canEditRecord` to their
+  own. The nav and command palette show only permitted modules; Settings is admin-only with a
+  real 403 page. The session now carries `teamId`; the seed puts the reps in two teams.
+- Testing standards for AI-assisted work (`docs/05-qa/01-test-strategy.md`): tests are written
+  first from each ticket's acceptance criteria, every criterion maps to a named test in the PR,
+  bug fixes start with a failing test. Playwright is set up (`e2e/`, `pnpm test:e2e`) and runs
+  on every pull request instead of nightly; each UI ticket adds its own spec. CI gained a
+  Postgres service for integration tests (`pnpm test:int`) and a coverage floor on
+  `src/modules/**/service.ts` (`pnpm test:coverage`).
+- E0-10: seed v0 - the 8 demo users from the seed spec (password `Compass!2026`, demo only), the
+  product catalogue and 5 fictional accounts with subscriptions. `pnpm db:seed` and
+  `pnpm db:seed --reset` give the same result however often they run.
+- E0-04: sign in with email and password (Auth.js credentials, bcrypt, JWT session in an
+  httpOnly cookie), the role in the session, sign out from the sidebar, and every route behind
+  login except the landing page, `/login`, health, `/sign/*`, `/openapi.json` and webhooks
+  (pages redirect to `/login`, the API answers 401). New shared `PillField` form field.
+- E0-03: initial Prisma migration (`prisma/migrations/20261125000000_init`) for schema v1, 20 tables
+  and 12 enums, plus a test that every model and enum has its migration.
 - `docs/01-product/00-goals-and-success-metrics.md`: the Challenge 2 problem statement, seven
   goals with metrics, a project scorecard and a capability-to-ticket coverage table. Tickets gained
   a `Goal` column; forecast definitions added to the dashboards spec.

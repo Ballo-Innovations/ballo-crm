@@ -1,4 +1,4 @@
-// Compass — Prisma schema (v1). Money in ngwee (ZMW*100). Dates UTC.
+// Compass - Prisma schema (v1). Money in ngwee (ZMW*100). Dates UTC.
 generator client { provider = "prisma-client-js" }
 datasource db { provider = "postgresql"; url = env("DATABASE_URL") }
 

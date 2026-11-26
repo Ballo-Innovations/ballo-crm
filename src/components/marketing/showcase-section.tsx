@@ -14,7 +14,7 @@ export function ShowcaseSection() {
               Your whole commercial operation, <GradientText>on one screen</GradientText>
             </>
           }
-          description="Accounts, pipeline, health, and communications — a single, elegant surface your whole revenue team works from."
+          description="Accounts, pipeline, health, and communications in a single, elegant surface your whole revenue team works from."
         />
         <DashboardPreview />
       </div>

@@ -29,9 +29,14 @@ Personal preferences go in `.claude/settings.local.json`, which is gitignored.
    opening the PR. "Claude wrote it" is not a review. Run `/code-review` before merging. A second
    developer's review is optional, except for schema, `src/lib/`, scoring, auth and `deploy/`
    changes. The developer merges; Claude does not.
-5. **Tests are not negotiable.** Scoring, grading and recommender logic is written test-first
-   against the spec's worked examples. Never accept a change that edits a test to make it pass
-   without checking the spec.
+5. **Tests are not negotiable, and they come first.** Claude writes both the code and the tests,
+   so a test written after the code only proves the code does what it does. For every ticket:
+   list the acceptance criteria and the test that will prove each one, write those tests from the
+   ticket and the spec, see them fail, then write the code. Scoring, grading and recommender
+   tests come from the spec's worked examples. A UI ticket adds a Playwright spec and is walked
+   through in the browser before the PR. A bug fix starts with a failing test. Never accept a
+   change that edits, skips or deletes a test, or lowers a threshold, to make it pass without
+   checking the spec. Full rules: `docs/05-qa/01-test-strategy.md`.
 6. **Claude never touches prod.** It does not merge PRs, push to `stage` or `main`, run the
    Deploy workflow against prod, or SSH to a host without being asked in that session. The shared
    settings enforce most of this; the rest is on the developer.
@@ -65,7 +70,7 @@ yourself.
 
 | Tool              | Status                         | Use                                                                             |
 | ----------------- | ------------------------------ | ------------------------------------------------------------------------------- |
-| Playwright MCP    | In `.mcp.json`                 | Drive the running app: check a screen at 390px, walk a demo step.               |
+| Playwright MCP    | In `.mcp.json`                 | Walk every UI ticket's main path at desktop and 390px before its PR.            |
 | GitHub (`gh` CLI) | Each developer logs in locally | Branches, PRs, CI status.                                                       |
 | Switchboard       | **Not decided**                | See below.                                                                      |
 | Database access   | Not configured                 | Use `pnpm db:studio` locally. No agent gets stage or prod database credentials. |
@@ -79,6 +84,7 @@ this is decided, the CSV is the source of truth and Claude updates nothing outsi
 ## Daily loop
 
 1. Stand-up: each developer names the ticket their session will work on.
-2. `/start-ticket <id>` -> build -> `/pre-pr` -> PR to `dev` -> review -> squash-merge.
+2. `/start-ticket <id>` -> tests from the acceptance criteria -> build -> `/pre-pr` -> PR to
+   `dev` -> review -> squash-merge.
 3. Merge deploys to dev automatically. Dev C promotes `dev` to `stage` at end of day and runs the
    QA checklist there.

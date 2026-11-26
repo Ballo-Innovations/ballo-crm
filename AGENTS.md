@@ -22,6 +22,7 @@ before any non-trivial change.
 | Requirements and coverage              | `docs/01-product/01-PRD.md` and the specs beside it |
 | Tickets (acceptance criteria and goal) | `docs/04-delivery/03-tickets.csv`                   |
 | Definition of done                     | `docs/04-delivery/04-definition-of-done.md`         |
+| Testing rules                          | `docs/05-qa/01-test-strategy.md`                    |
 | Branches, PRs, promotion               | `docs/04-delivery/05-git-workflow.md`               |
 | Team rules for AI-assisted work        | `docs/04-delivery/06-working-with-claude.md`        |
 | Environments, deploys, server access   | `docs/07-dev-setup/environments-and-deployment.md`  |
@@ -45,8 +46,8 @@ adding anything that is not on it.
 
 ## Commands
 
-`pnpm dev` · `pnpm db:migrate` · `pnpm db:seed --reset` · `pnpm test` · `pnpm lint` ·
-`pnpm typecheck` · `docker compose up`
+`pnpm dev` · `pnpm db:migrate` · `pnpm db:seed --reset` · `pnpm test` · `pnpm test:coverage` ·
+`pnpm test:int` · `pnpm test:e2e` · `pnpm lint` · `pnpm typecheck` · `docker compose up`
 
 ## Conventions
 
@@ -71,6 +72,26 @@ adding anything that is not on it.
 /contracts /intelligence /settings` (`src/lib/site.ts`).
 - Loading, empty, error states are mandatory on every list/page.
 - No `any`. No console.log in committed code.
+- Never use em dashes (the long dash) anywhere: code, comments, UI copy, docs, commit messages
+  or PR descriptions. Use a comma, colon, full stop or a spaced hyphen (" - ") instead.
+
+## Testing
+
+Full rules: `docs/05-qa/01-test-strategy.md`. In short:
+
+- Tests come first and come from the ticket's acceptance criteria and the spec, not from the
+  code. List each criterion with the test that will prove it, write the tests, see them fail,
+  then write the code.
+- Unit tests (`*.test.ts`) for `service.ts`; integration tests (`*.int.test.ts`) for server
+  actions and queries against a real database (never mock Prisma); a Playwright spec in `e2e/`
+  for every new or changed screen, in the same PR.
+- A bug fix starts with a test that reproduces the bug.
+- Never edit, skip or delete a test, loosen an assertion or lower a threshold to get to green.
+  If a test looks wrong, check the spec and tell the developer.
+- Walk a UI change in the running app at desktop and 390px before the PR.
+- AI text (Brutus): no live call in any test; every reply passes `acceptNarrative` (no number
+  or product that is not in the rule output) or falls back to the template. See "AI features" in
+  the test strategy.
 
 ## Environments & branches
 
@@ -83,7 +104,10 @@ adding anything that is not on it.
 - Deploys happen through `.github/workflows/deploy.yml` only. Do not SSH to a host, run the
   Deploy workflow or change `deploy/` unless the developer asks for exactly that in this session.
 - Deployed databases only get `prisma migrate deploy`. Never run `db:seed --reset` or
-  `prisma migrate dev` against anything but a local database.
+  `prisma migrate dev` against anything but a local database. A laptop may point at the shared
+  dev database through the SSH tunnel (runbook, "Using dev data from your laptop"); then it is
+  read and write for app use only: create migrations with `prisma migrate dev --create-only`
+  against a local database, ship them in a PR, and let the deploy apply them.
 - Never read, print or commit `.env` files or secrets. New variables go in `.env.example`,
   `deploy/.env.example` and `src/lib/env.ts` together.
 - `GET /api/v1/health` must stay public.
@@ -97,8 +121,9 @@ Implement exactly per spec. The worked example (Negotiate, committee 0.7, engage
 
 ## LLM
 
-Server-only via `src/lib/llm.ts`. Every call cached in `AiArtifact`. If `ANTHROPIC_API_KEY` is
-missing, return the template fallback - never throw.
+Server-only via `src/lib/llm.ts`, which calls Brutus, the Ballo AI hub (`BRUTUS_API_URL`,
+`BRUTUS_API_KEY`). Every call cached in `AiArtifact`. If `BRUTUS_API_KEY` is missing or Brutus
+fails or times out, return the template fallback - never throw.
 
 ## Reference repos (read-only inspiration)
 
@@ -115,4 +140,4 @@ See `docs/04-delivery/04-definition-of-done.md`. Ask before adding dependencies.
 Work ticket by ticket from `docs/04-delivery/03-tickets.csv`, one ticket per session and branch
 (`/start-ticket <id>`). Before starting one, restate its acceptance criteria and the goal it serves. Stay inside the
 ticket's module; ask before changing `prisma/schema.prisma`, `src/lib/`, CI or `deploy/`. After
-finishing, run `pnpm typecheck && pnpm test` and summarise what changed.
+finishing, run `pnpm typecheck && pnpm test:coverage` and summarise what changed.

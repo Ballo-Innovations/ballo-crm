@@ -46,7 +46,7 @@ export function PersonasSection() {
               Built for everyone who owns <GradientText>commercial relationships</GradientText>
             </>
           }
-          description="From the rep logging today's call to the VP reporting to the board — one platform, each role served by the same connected data."
+          description="From the rep logging today's call to the VP reporting to the board: one platform, each role served by the same connected data."
         />
 
         <div className="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">

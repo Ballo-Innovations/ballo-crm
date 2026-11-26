@@ -11,12 +11,16 @@ const envSchema = z.object({
   S3_ACCESS_KEY: z.string().min(1),
   S3_SECRET_KEY: z.string().min(1),
   S3_BUCKET: z.string().min(1),
-  ANTHROPIC_API_KEY: z.preprocess(blankToUndefined, z.string().optional()),
+  // Brutus AI hub: narratives only. Blank key = template fallback.
+  BRUTUS_API_URL: z.preprocess(blankToUndefined, z.string().url().optional()),
+  BRUTUS_API_KEY: z.preprocess(blankToUndefined, z.string().optional()),
   INTEGRATION_MODE: z.enum(["mock", "live"]).default("mock"),
   INTEGRATIONS_URL: z.string().url(),
   EMAIL_WEBHOOK_SECRET: z.string().min(1),
-  AT_USERNAME: z.preprocess(blankToUndefined, z.string().optional()),
-  AT_API_KEY: z.preprocess(blankToUndefined, z.string().optional()),
+  // BalloAds comms API (SMS, email): used only when INTEGRATION_MODE=live
+  BALLOADS_API_URL: z.preprocess(blankToUndefined, z.string().url().optional()),
+  BALLOADS_API_KEY: z.preprocess(blankToUndefined, z.string().optional()),
+  BALLOADS_WEBHOOK_SECRET: z.preprocess(blankToUndefined, z.string().optional()),
 });
 
 export type Env = z.infer<typeof envSchema>;

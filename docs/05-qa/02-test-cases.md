@@ -16,7 +16,7 @@
 
 ## Scoring & grading
 
-- [ ] TC-20 Spec worked example seeded as "Zanaco — DRaaS" shows 58 / GOLD
+- [ ] TC-20 Spec worked example seeded as "Zanaco - DRaaS" shows 58 / GOLD
 - [ ] TC-21 Add Technical buyer → score rises; drawer factor updates
 - [ ] TC-22 Set budgetConfirmed + economic buyer engaged on ≥75 score → PLATINUM
 - [ ] TC-23 Opportunity with no activity >30d shows downgraded grade after nightly job (or manual run)
@@ -33,7 +33,7 @@
 - [ ] TC-40 Account with COLO and no DRAAS shows DRAAS recommendation with reasons
 - [ ] TC-41 Demo of DRAAS logged → probability +0.20
 - [ ] TC-42 Create opportunity from recommendation → prefilled product/amount
-- [ ] TC-43 With ANTHROPIC_API_KEY unset, narratives show template fallback (no error)
+- [ ] TC-43 With BRUTUS_API_KEY unset, narratives show template fallback (no error)
 - [ ] TC-44 Insights feed has ≥6 types; dismiss hides and persists
 
 ## Dashboards & VSI

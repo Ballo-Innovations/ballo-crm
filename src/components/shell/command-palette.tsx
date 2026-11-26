@@ -8,7 +8,7 @@ import { useTheme } from "next-themes";
 
 import { notify } from "@/components/feedback/notify";
 import { NAV_ICONS } from "@/components/shell/nav-icons";
-import { primaryNav } from "@/lib/site";
+import { primaryNav, type NavItem } from "@/lib/site";
 import { splitMatch } from "@/lib/text";
 
 /**
@@ -39,9 +39,12 @@ type PaletteAction = {
 export function CommandPalette({
   open,
   onOpenChange,
+  nav = primaryNav,
 }: {
   open: boolean;
   onOpenChange: (open: boolean) => void;
+  /** The modules this user may open (`navFor(role)`); defaults to all. */
+  nav?: NavItem[];
 }) {
   const router = useRouter();
   const { resolvedTheme, setTheme } = useTheme();
@@ -73,7 +76,7 @@ export function CommandPalette({
       run: () => setTheme(resolvedTheme === "dark" ? "light" : "dark"),
     },
   ];
-  const goTo: PaletteAction[] = primaryNav.map((item) => ({
+  const goTo: PaletteAction[] = nav.map((item) => ({
     id: "go-" + item.href,
     title: "Go to " + item.title,
     icon: NAV_ICONS[item.href] ?? Search,

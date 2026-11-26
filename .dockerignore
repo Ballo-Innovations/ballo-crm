@@ -13,3 +13,6 @@ deploy
 !.env.example
 *.log
 *.tsbuildinfo
+e2e
+playwright-report
+test-results

@@ -38,7 +38,8 @@ commit a migration you generate locally. After E0-03, use `pnpm db:migrate` inst
 Then: branch from `dev`, pick your ticket and open pull requests against `dev`. The full list is
 in [docs/07-dev-setup/day-0-checklist.md](docs/07-dev-setup/day-0-checklist.md).
 
-Other commands: `pnpm lint` · `pnpm typecheck` · `pnpm test` · `pnpm build` · `pnpm db:studio`.
+Other commands: `pnpm lint` · `pnpm typecheck` · `pnpm test` · `pnpm test:int` · `pnpm test:e2e` ·
+`pnpm build` · `pnpm db:studio`. Testing rules: `docs/05-qa/01-test-strategy.md`.
 
 ## Environments
 
