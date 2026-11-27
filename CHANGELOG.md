@@ -17,6 +17,11 @@ under `[Unreleased]` in the relevant section (Added / Changed / Fixed / Removed)
 
 ### Added
 
+- E0-06: audit trail. `withAudit` runs a mutating action and then writes one `AuditLog` row
+  with the actor, entity, id, action and a before/after diff (only changed fields on an update;
+  passwords, key hashes and tokens redacted). The id and after snapshot can come from the
+  action's result, and a failed action writes nothing. The diff is a pure function in
+  `src/lib/audit-diff.ts`. Integration tests can now import `server-only` modules.
 - E0-05: role-based access. The security doc's permission matrix is one table in
   `src/lib/rbac.ts` (`can`, `scopeFor`); `requireCan(capability)` and `requireRole` guard server
   actions; `accountReadFilter` limits reps to their team's accounts and `canEditRecord` to their
