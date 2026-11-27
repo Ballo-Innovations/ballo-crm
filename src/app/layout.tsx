@@ -1,20 +1,25 @@
 import type { Metadata } from "next";
-import { Geist_Mono, Urbanist } from "next/font/google";
+import localFont from "next/font/local";
 
 import { AppProviders } from "@/components/providers";
 import { siteConfig } from "@/lib/site";
 
 import "./globals.css";
 
-const urbanist = Urbanist({
+// Self-hosted (variable, latin subset) so builds never download fonts: the Google
+// Fonts fetch in next/font/google failed CI and Vercel builds intermittently.
+const urbanist = localFont({
+  src: "./fonts/urbanist-latin.woff2",
   variable: "--font-sans",
-  subsets: ["latin"],
-  weight: ["400", "500", "600", "700", "800"],
+  weight: "400 800",
+  display: "swap",
 });
 
-const geistMono = Geist_Mono({
+const geistMono = localFont({
+  src: "./fonts/geist-mono-latin.woff2",
   variable: "--font-mono",
-  subsets: ["latin"],
+  weight: "100 900",
+  display: "swap",
 });
 
 export const metadata: Metadata = {
