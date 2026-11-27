@@ -13,6 +13,7 @@ import {
   SECTORS,
   TIERS,
   type AccountListParams,
+  type AccountOverview,
   type AccountRow,
   type AccountSortKey,
   type SortDir,
@@ -154,4 +155,34 @@ export function paginate<T>(rows: T[], page: number, pageSize: number) {
     pageCount,
     total: rows.length,
   };
+}
+
+export type RawAccountOverview = Omit<RawAccount, "opportunities"> & {
+  healthScore: number;
+  opportunities: { amount: number; weightedValue: number; stage: Stage }[];
+};
+
+/** Header fields and Overview numbers (E2-02); open deals are those not won or lost. */
+export function toAccountOverview(a: RawAccountOverview): AccountOverview {
+  const open = a.opportunities.filter((o) => !CLOSED.has(o.stage));
+  return {
+    id: a.id,
+    name: a.name,
+    city: a.city,
+    sector: a.sector,
+    tier: a.tier,
+    lifecycle: a.lifecycle,
+    owner: a.owner.name,
+    arr: a.subscriptions.reduce((sum, s) => (s.active ? sum + s.annualValue : sum), 0),
+    pipeline: open.reduce((sum, o) => sum + o.amount, 0),
+    weightedPipeline: open.reduce((sum, o) => sum + o.weightedValue, 0),
+    openDeals: open.length,
+    engagementScore: a.engagementScore,
+    healthScore: a.healthScore,
+  };
+}
+
+/** Health is stored 0 to 1 and shown with one decimal, as in the wireframe ("Health 0.9"). */
+export function formatHealth(h: number): string {
+  return h.toFixed(1);
 }

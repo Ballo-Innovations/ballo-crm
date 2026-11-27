@@ -86,3 +86,25 @@ export type AccountListResult = {
   page: number;
   pageCount: number;
 };
+
+/** Account 360 header and Overview tab (E2-02). Money is integer ngwee. */
+export type AccountOverview = {
+  id: string;
+  name: string;
+  city: string | null;
+  sector: Sector;
+  tier: Tier;
+  lifecycle: Lifecycle;
+  owner: string;
+  /** Sum of active subscriptions. */
+  arr: number;
+  /** Amount of every deal not yet won or lost. */
+  pipeline: number;
+  /** Weighted value of the same open deals (scoring spec). */
+  weightedPipeline: number;
+  openDeals: number;
+  /** 0 to 100 (scoring spec, "Account engagement score"). */
+  engagementScore: number;
+  /** 0 to 1. */
+  healthScore: number;
+};

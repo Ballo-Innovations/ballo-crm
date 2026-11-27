@@ -10,8 +10,8 @@ import type { Prisma } from "@prisma/client";
 import { db } from "@/lib/db";
 import { accountReadFilter, type RbacUser } from "@/lib/rbac";
 
-import { paginate, sortRows, toAccountRow } from "./service";
-import type { AccountListParams, AccountListResult } from "./types";
+import { paginate, sortRows, toAccountOverview, toAccountRow } from "./service";
+import type { AccountListParams, AccountListResult, AccountOverview } from "./types";
 
 /** Every word must appear in the name, the city or a contact's first or last name. */
 function searchFilter(q: string): Prisma.AccountWhereInput[] {
@@ -71,4 +71,31 @@ export async function listAccounts(
 
   const sorted = sortRows(accounts.map(toAccountRow), params.sort, params.dir);
   return { ...paginate(sorted, params.page, params.pageSize), grandTotal };
+}
+
+/**
+ * Account 360 header and Overview (E2-02). Null when the account does not exist or the user
+ * may not see it (TC-03), so the page shows the same "not available" either way.
+ */
+export async function getAccountOverview(
+  user: RbacUser,
+  id: string,
+): Promise<AccountOverview | null> {
+  const account = await db.account.findFirst({
+    where: { AND: [accountReadFilter(user), { id }] },
+    select: {
+      id: true,
+      name: true,
+      city: true,
+      sector: true,
+      tier: true,
+      lifecycle: true,
+      engagementScore: true,
+      healthScore: true,
+      owner: { select: { name: true } },
+      subscriptions: { select: { annualValue: true, active: true } },
+      opportunities: { select: { amount: true, weightedValue: true, stage: true } },
+    },
+  });
+  return account ? toAccountOverview(account) : null;
 }

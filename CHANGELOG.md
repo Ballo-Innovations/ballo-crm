@@ -17,6 +17,10 @@ under `[Unreleased]` in the relevant section (Added / Changed / Fixed / Removed)
 
 ### Added
 
+- E2-02: Account 360 in the docked drawer (`/accounts?open=<id>`): header with name, sector,
+  tier, lifecycle and owner, and an Overview tab with ARR, open pipeline (value and weighted),
+  engagement and health scores. Unknown or other-team accounts show "Account not available".
+
 - E2-01: accounts list at `/accounts` with search (name, city, contact), Sector / Tier /
   Lifecycle filters, sortable columns (ARR highest first by default) and pages, all in the URL.
   Reps see their team's accounts only (TC-03). New shared `FilterBar`, `Pagination` and

@@ -2,10 +2,12 @@ import { describe, expect, it } from "vitest";
 
 import {
   DEFAULT_PAGE_SIZE,
+  formatHealth,
   listParamsToQuery,
   paginate,
   parseListParams,
   sortRows,
+  toAccountOverview,
   toAccountRow,
   toggleSort,
   type AccountRow,
@@ -258,5 +260,69 @@ describe("paginate", () => {
 
   it("reports one empty page when there is nothing to show", () => {
     expect(paginate([], 1, 25)).toEqual({ rows: [], page: 1, pageCount: 1, total: 0 });
+  });
+});
+
+// E2-02: Account 360 header and Overview tab.
+describe("toAccountOverview", () => {
+  const raw = {
+    id: "a1",
+    name: "Zambezi Commercial Bank",
+    city: "Lusaka",
+    sector: "BANKING" as const,
+    tier: "TIER1" as const,
+    lifecycle: "ACTIVE" as const,
+    engagementScore: 72,
+    healthScore: 0.9,
+    owner: { name: "Mutale Banda" },
+    subscriptions: [
+      { annualValue: 30_000_000, active: true },
+      { annualValue: 27_000_000, active: true },
+      { annualValue: 99_000_000, active: false },
+    ],
+    opportunities: [
+      { amount: 10_000_000, weightedValue: 4_000_000, stage: "PROPOSE" as const },
+      { amount: 5_000_000, weightedValue: 500_000, stage: "QUALIFY" as const },
+      { amount: 70_000_000, weightedValue: 70_000_000, stage: "CLOSED_WON" as const },
+      { amount: 80_000_000, weightedValue: 0, stage: "CLOSED_LOST" as const },
+    ],
+  };
+
+  it("gives the header fields and the overview numbers (ngwee)", () => {
+    expect(toAccountOverview(raw)).toEqual({
+      id: "a1",
+      name: "Zambezi Commercial Bank",
+      city: "Lusaka",
+      sector: "BANKING",
+      tier: "TIER1",
+      lifecycle: "ACTIVE",
+      owner: "Mutale Banda",
+      arr: 57_000_000,
+      pipeline: 15_000_000,
+      weightedPipeline: 4_500_000,
+      openDeals: 2,
+      engagementScore: 72,
+      healthScore: 0.9,
+    });
+  });
+
+  it("is all zeros for an account with no services or deals", () => {
+    expect(toAccountOverview({ ...raw, subscriptions: [], opportunities: [] })).toMatchObject({
+      arr: 0,
+      pipeline: 0,
+      weightedPipeline: 0,
+      openDeals: 0,
+    });
+  });
+});
+
+describe("formatHealth", () => {
+  it.each([
+    [0.9, "0.9"],
+    [1, "1.0"],
+    [0.456, "0.5"],
+    [0, "0.0"],
+  ])("%s -> %s", (h, out) => {
+    expect(formatHealth(h)).toBe(out);
   });
 });
