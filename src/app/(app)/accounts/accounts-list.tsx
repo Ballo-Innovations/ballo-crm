@@ -22,11 +22,13 @@ import {
   type AccountListParams,
   type AccountListResult,
   type AccountRow,
+  type AccountSection as Section,
   type AccountSortKey,
 } from "@/modules/accounts/types";
 
-import { AccountDrawer, type OverviewState, type Section } from "./account-drawer";
+import { AccountDrawer, type OverviewState } from "./account-drawer";
 import type { ContactsState } from "./contacts-tab";
+import type { ServicesState } from "./services-tab";
 
 const GROUPS: FilterGroup[] = [
   {
@@ -119,6 +121,7 @@ export function AccountsList({
   overview,
   section,
   contacts,
+  services,
   canEdit,
 }: {
   params: AccountListParams;
@@ -127,6 +130,7 @@ export function AccountsList({
   overview: OverviewState;
   section: Section;
   contacts: ContactsState | null;
+  services: ServicesState | null;
   canEdit: boolean;
 }) {
   const router = useRouter();
@@ -264,6 +268,7 @@ export function AccountsList({
         onSectionChange={setSection}
         sectionLoading={sectionPending && sectionView !== section}
         contacts={contacts}
+        services={services}
         canEdit={canEdit}
       />
     </DockedSplit>

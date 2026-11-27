@@ -10,8 +10,14 @@ import type { Prisma } from "@prisma/client";
 import { db } from "@/lib/db";
 import { accountReadFilter, can, canEditRecord, type RbacUser } from "@/lib/rbac";
 
-import { paginate, sortRows, toAccountOverview, toAccountRow } from "./service";
-import type { AccountListParams, AccountListResult, AccountOverview, ContactRow } from "./types";
+import { paginate, sortRows, toAccountOverview, toAccountRow, toServices } from "./service";
+import type {
+  AccountListParams,
+  AccountListResult,
+  AccountOverview,
+  ContactRow,
+  ServicesView,
+} from "./types";
 
 /** Every word must appear in the name, the city or a contact's first or last name. */
 function searchFilter(q: string): Prisma.AccountWhereInput[] {
@@ -136,4 +142,31 @@ export async function canEditAccount(user: RbacUser, accountId: string): Promise
     select: { ownerId: true },
   });
   return !!account && canEditRecord(user, account);
+}
+
+/** The Services tab (E2-04). Null when the account is not visible. */
+export async function listServices(
+  user: RbacUser,
+  accountId: string,
+): Promise<ServicesView | null> {
+  const [account, catalogue] = await Promise.all([
+    db.account.findFirst({
+      where: { AND: [accountReadFilter(user), { id: accountId }] },
+      select: {
+        subscriptions: {
+          select: {
+            id: true,
+            productCode: true,
+            annualValue: true,
+            usagePct: true,
+            active: true,
+            startDate: true,
+            endDate: true,
+          },
+        },
+      },
+    }),
+    db.product.findMany({ select: { code: true, name: true, category: true, listPrice: true } }),
+  ]);
+  return account ? toServices(account.subscriptions, catalogue) : null;
 }
