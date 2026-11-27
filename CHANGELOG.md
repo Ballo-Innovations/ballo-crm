@@ -17,6 +17,11 @@ under `[Unreleased]` in the relevant section (Added / Changed / Fixed / Removed)
 
 ### Added
 
+- E2-03: Contacts tab in Account 360 (`&section=contacts`): add, edit and delete contacts with
+  title, email, phone (stored E.164, shown +260 97 123 4567), influence 1-5 and stance (badge with
+  a coloured dot). Inline field errors; delete asks first (new shared `ConfirmDialog`). Owners and
+  managers can change contacts; teammates see them read-only; every change is audited.
+
 - E2-02: Account 360 in the docked drawer (`/accounts?open=<id>`): header with name, sector,
   tier, lifecycle and owner, and an Overview tab with ARR, open pipeline (value and weighted),
   engagement and health scores. Unknown or other-team accounts show "Account not available".

@@ -1,5 +1,6 @@
 "use client";
 
+import { cn } from "@/lib/utils";
 import { DockedDrawer } from "@/components/shared/docked-drawer";
 import { EntityAvatar } from "@/components/shared/entity-avatar";
 import { EmptyState, ErrorState, GhostRows } from "@/components/shared/page-states";
@@ -13,12 +14,21 @@ import {
   type AccountOverview,
 } from "@/modules/accounts/types";
 
+import { ContactsTab, type ContactsState } from "./contacts-tab";
+
 /** What the page loaded for `?open=`: the account, null (missing or not visible), or an error. */
 export type OverviewState = AccountOverview | null | "error";
 
+export const SECTIONS = [
+  { key: "overview", label: "Overview" },
+  { key: "contacts", label: "Contacts" },
+] as const;
+export type Section = (typeof SECTIONS)[number]["key"];
+
 /**
  * Account 360 in the docked drawer (E2-02): header (name, sector, tier, lifecycle, owner) and
- * the Overview tab. The other tabs arrive with their tickets (E2-03 to E2-05 and on).
+ * the Overview tab, and the Contacts tab (E2-03). The selected tab is in the URL
+ * (`section`). The other tabs arrive with their tickets (E2-04, E2-05 and on).
  */
 export function AccountDrawer({
   open,
@@ -26,6 +36,11 @@ export function AccountDrawer({
   overview,
   onClose,
   onRetry,
+  section,
+  onSectionChange,
+  sectionLoading,
+  contacts,
+  canEdit,
 }: {
   open: boolean;
   /** Another account was picked and is on its way. */
@@ -33,6 +48,12 @@ export function AccountDrawer({
   overview: OverviewState;
   onClose: () => void;
   onRetry: () => void;
+  section: Section;
+  onSectionChange: (section: Section) => void;
+  /** Another tab was picked and its data is on its way. */
+  sectionLoading: boolean;
+  contacts: ContactsState | null;
+  canEdit: boolean;
 }) {
   const account = overview && overview !== "error" && !loading ? overview : null;
 
@@ -47,15 +68,22 @@ export function AccountDrawer({
       avatar={account && <EntityAvatar name={account.name} />}
       tabs={
         account && (
-          <div role="tablist" aria-label="Account sections" className="flex gap-1.5">
-            <button
-              type="button"
-              role="tab"
-              aria-selected="true"
-              className="bg-ink text-shell h-9 rounded-full px-4 text-sm font-semibold"
-            >
-              Overview
-            </button>
+          <div role="tablist" aria-label="Account sections" className="flex flex-wrap gap-1.5">
+            {SECTIONS.map((t) => (
+              <button
+                key={t.key}
+                type="button"
+                role="tab"
+                aria-selected={section === t.key}
+                onClick={() => onSectionChange(t.key)}
+                className={cn(
+                  "h-9 rounded-full px-4 text-sm font-semibold transition-colors",
+                  section === t.key ? "bg-ink text-shell" : "bg-soft hover:bg-line",
+                )}
+              >
+                {t.label}
+              </button>
+            ))}
           </div>
         )
       }
@@ -74,6 +102,16 @@ export function AccountDrawer({
           text="It may have been removed, or it belongs to another team."
           actions={null}
         />
+      ) : section === "contacts" ? (
+        <div role="tabpanel" aria-label="Contacts">
+          <ContactsTab
+            accountId={account.id}
+            contacts={contacts ?? []}
+            canEdit={canEdit}
+            loading={sectionLoading || contacts === null}
+            onRetry={onRetry}
+          />
+        </div>
       ) : (
         <div role="tabpanel" aria-label="Overview" className="flex flex-col gap-4">
           <div className="flex flex-wrap items-center gap-2 text-sm">

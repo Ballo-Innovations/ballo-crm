@@ -25,7 +25,8 @@ import {
   type AccountSortKey,
 } from "@/modules/accounts/types";
 
-import { AccountDrawer, type OverviewState } from "./account-drawer";
+import { AccountDrawer, type OverviewState, type Section } from "./account-drawer";
+import type { ContactsState } from "./contacts-tab";
 
 const GROUPS: FilterGroup[] = [
   {
@@ -116,11 +117,17 @@ export function AccountsList({
   result,
   openId,
   overview,
+  section,
+  contacts,
+  canEdit,
 }: {
   params: AccountListParams;
   result: AccountListResult;
   openId: string | null;
   overview: OverviewState;
+  section: Section;
+  contacts: ContactsState | null;
+  canEdit: boolean;
 }) {
   const router = useRouter();
   const pathname = usePathname();
@@ -130,10 +137,13 @@ export function AccountsList({
   // instead of on the URL from before the first one landed.
   const [view, setView] = useOptimistic(params);
   const [openView, setOpenView] = useOptimistic(openId);
+  const [sectionView, setSectionView] = useOptimistic(section);
+  const [sectionPending, startSection] = useTransition();
 
-  function href(list: AccountListParams, open: string | null) {
+  function href(list: AccountListParams, open: string | null, tab: Section = sectionView) {
     const query = listParamsToQuery(list);
     if (open) query.open = open;
+    if (open && tab !== "overview") query.section = tab;
     const qs = new URLSearchParams(query).toString();
     return qs ? `${pathname}?${qs}` : pathname;
   }
@@ -150,6 +160,13 @@ export function AccountsList({
     startDrawer(() => {
       setOpenView(id);
       router.replace(href(view, id), { scroll: false });
+    });
+  }
+
+  function setSection(tab: Section) {
+    startSection(() => {
+      setSectionView(tab);
+      router.replace(href(view, openView, tab), { scroll: false });
     });
   }
 
@@ -243,6 +260,11 @@ export function AccountsList({
         overview={overview}
         onClose={() => setOpen(null)}
         onRetry={() => router.refresh()}
+        section={sectionView}
+        onSectionChange={setSection}
+        sectionLoading={sectionPending && sectionView !== section}
+        contacts={contacts}
+        canEdit={canEdit}
       />
     </DockedSplit>
   );
