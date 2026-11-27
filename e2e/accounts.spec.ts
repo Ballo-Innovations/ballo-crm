@@ -206,3 +206,63 @@ test("a rep cannot open another team's account by URL (TC-03)", async ({ page })
   await expect(page.getByRole("heading", { name: "Account not available" })).toBeVisible();
   await expect(page.getByText("K510,000")).toHaveCount(0);
 });
+
+// E2-03: Contacts tab - add, edit, delete; inline errors; stance badge; owner-only edits.
+test("adds, edits and deletes a contact from the Contacts tab", async ({ page }, info) => {
+  test.slow(); // a full add / validate / edit / delete round trip
+  // Runs share the database (and a failed run leaves its contact): each uses its own name.
+  const last = `Tembo ${info.project.name.replace(/\W/g, "")}${info.repeatEachIndex}${Date.now().toString(36)}`;
+  const full = `Lombe ${last}`;
+  await signIn(page);
+  await page.goto("/accounts");
+  const drawer = await openAccount(page, "SolarZed");
+  await drawer.getByRole("tab", { name: "Contacts" }).click();
+  await expect(page).toHaveURL(/section=contacts/);
+
+  await drawer.getByRole("button", { name: "Add contact" }).click();
+  await drawer.getByRole("button", { name: "Save contact" }).click();
+  await expect(drawer.getByText("Enter a first name.")).toBeVisible();
+  await expect(drawer.getByText("Enter a last name.")).toBeVisible();
+
+  await drawer.getByLabel("First name").fill("Lombe");
+  await drawer.getByLabel("Last name").fill(last);
+  await drawer.getByLabel("Job title (optional)").fill("Head of IT");
+  await drawer.getByLabel("Phone (optional)").fill("97 123 4567");
+  await drawer.getByRole("radio", { name: "Influence 4" }).click();
+  await drawer.getByRole("radio", { name: "Supporter" }).click();
+  await drawer.getByRole("button", { name: "Save contact" }).click();
+
+  const row = drawer.getByRole("listitem").filter({ hasText: full });
+  await expect(row).toBeVisible();
+  await expect(row.getByText("Head of IT")).toBeVisible();
+  await expect(row.getByText("Supporter")).toBeVisible();
+  await expect(row.getByText("+260 97 123 4567")).toBeVisible();
+
+  await row.getByRole("button", { name: `Edit ${full}` }).click();
+  await drawer.getByRole("radio", { name: "Skeptic" }).click();
+  await drawer.getByRole("button", { name: "Save contact" }).click();
+  await expect(row.getByText("Skeptic")).toBeVisible();
+
+  await row.getByRole("button", { name: `Delete ${full}` }).click();
+  const dialog = page.getByRole("alertdialog");
+  await expect(dialog.getByRole("heading", { name: `Delete ${full}?` })).toBeVisible();
+  await dialog.getByRole("button", { name: "Delete" }).click();
+  await expect(row).toHaveCount(0);
+});
+
+test("a teammate sees contacts but only the owner can change them", async ({ page }) => {
+  // Zambezi Commercial Bank belongs to Mutale (Lusaka); Bwalya is on the same team.
+  await signInAs(page, "bwalya@compass.zm");
+  await page.goto("/accounts");
+  const drawer = await openAccount(page, "Zambezi Commercial Bank");
+  await drawer.getByRole("tab", { name: "Contacts" }).click();
+  await expect(drawer.getByRole("heading", { name: "No contacts yet" })).toBeVisible();
+  await expect(drawer.getByRole("button", { name: "Add contact" })).toHaveCount(0);
+
+  await page.context().clearCookies();
+  await signInAs(page, "mutale@compass.zm");
+  await page.goto("/accounts");
+  const own = await openAccount(page, "Zambezi Commercial Bank");
+  await own.getByRole("tab", { name: "Contacts" }).click();
+  await expect(own.getByRole("button", { name: "Add contact" })).toBeVisible();
+});

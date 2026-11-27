@@ -186,3 +186,5 @@ export function toAccountOverview(a: RawAccountOverview): AccountOverview {
 export function formatHealth(h: number): string {
   return h.toFixed(1);
 }
+
+export { formatPhone, normalizePhone } from "./phone";

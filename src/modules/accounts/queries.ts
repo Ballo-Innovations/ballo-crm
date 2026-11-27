@@ -8,10 +8,10 @@ import "server-only";
 import type { Prisma } from "@prisma/client";
 
 import { db } from "@/lib/db";
-import { accountReadFilter, type RbacUser } from "@/lib/rbac";
+import { accountReadFilter, can, canEditRecord, type RbacUser } from "@/lib/rbac";
 
 import { paginate, sortRows, toAccountOverview, toAccountRow } from "./service";
-import type { AccountListParams, AccountListResult, AccountOverview } from "./types";
+import type { AccountListParams, AccountListResult, AccountOverview, ContactRow } from "./types";
 
 /** Every word must appear in the name, the city or a contact's first or last name. */
 function searchFilter(q: string): Prisma.AccountWhereInput[] {
@@ -98,4 +98,42 @@ export async function getAccountOverview(
     },
   });
   return account ? toAccountOverview(account) : null;
+}
+
+const CONTACT_FIELDS = {
+  id: true,
+  firstName: true,
+  lastName: true,
+  title: true,
+  email: true,
+  phone: true,
+  influence: true,
+  stance: true,
+} as const;
+
+/** The Contacts tab (E2-03): most influential first. Null when the account is not visible. */
+export async function listContacts(
+  user: RbacUser,
+  accountId: string,
+): Promise<ContactRow[] | null> {
+  const account = await db.account.findFirst({
+    where: { AND: [accountReadFilter(user), { id: accountId }] },
+    select: {
+      contacts: {
+        select: CONTACT_FIELDS,
+        orderBy: [{ influence: "desc" }, { lastName: "asc" }, { firstName: "asc" }],
+      },
+    },
+  });
+  return account ? account.contacts : null;
+}
+
+/** Whether the user may change this account's records (REP: own accounts only). */
+export async function canEditAccount(user: RbacUser, accountId: string): Promise<boolean> {
+  if (!can(user, "records.edit")) return false;
+  const account = await db.account.findFirst({
+    where: { AND: [accountReadFilter(user), { id: accountId }] },
+    select: { ownerId: true },
+  });
+  return !!account && canEditRecord(user, account);
 }
