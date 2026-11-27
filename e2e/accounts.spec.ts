@@ -138,3 +138,71 @@ test("a sales rep sees only their team's accounts (TC-03)", async ({ page }) => 
     "Zambezi Commercial Bank",
   ]);
 });
+
+// E2-02: Account 360 header + Overview tab, in the docked drawer (?open=<id>).
+async function openAccount(page: Page, name: string) {
+  await page.locator("[data-account-name]:visible", { hasText: name }).click();
+  await expect(page).toHaveURL(/open=/);
+  const drawer = page.getByRole("complementary", { name });
+  await expect(drawer.getByRole("heading", { name })).toBeVisible();
+  return drawer;
+}
+
+test("opening an account shows its header and Overview numbers", async ({ page }) => {
+  await signIn(page);
+  await page.goto("/accounts");
+  const drawer = await openAccount(page, "Zambezi Commercial Bank");
+
+  await expect(page).toHaveURL(/open=/);
+  await expect(drawer.getByRole("heading", { name: "Zambezi Commercial Bank" })).toBeVisible();
+  await expect(drawer.getByText("Banking · Tier 1")).toBeVisible();
+  await expect(drawer.getByText("Active", { exact: true })).toBeVisible();
+  await expect(drawer.getByText("Mutale Banda")).toBeVisible();
+
+  await expect(drawer.getByRole("tab", { name: "Overview" })).toHaveAttribute(
+    "aria-selected",
+    "true",
+  );
+  // Seed v0: two active subscriptions, K570,000 a year; no deals yet.
+  await expect(drawer.getByTestId("overview-arr")).toHaveText("K570,000");
+  await expect(drawer.getByTestId("overview-pipeline")).toHaveText("K0");
+  await expect(drawer.getByTestId("overview-weighted")).toHaveText("K0");
+  await expect(drawer.getByTestId("overview-engagement")).toHaveText("0 / 100");
+  await expect(drawer.getByTestId("overview-health")).toHaveText("1.0");
+});
+
+test("the drawer is a deep link and closes with Esc", async ({ page }) => {
+  await signIn(page);
+  await page.goto("/accounts");
+  await openAccount(page, "ZedMobile");
+  const url = page.url();
+
+  await page.goto(url);
+  const drawer = page.getByRole("complementary", { name: "ZedMobile" });
+  await expect(drawer.getByTestId("overview-arr")).toHaveText("K510,000");
+
+  // The drawer takes focus once the page is interactive; Esc before that has no listener.
+  await expect(drawer).toBeFocused();
+  await page.keyboard.press("Escape");
+  await expect(page).not.toHaveURL(/open=/);
+});
+
+test("an unknown account shows 'not available' instead of breaking the list", async ({ page }) => {
+  await signIn(page);
+  await page.goto("/accounts?open=does-not-exist");
+  await expect(page.getByRole("heading", { name: "Account not available" })).toBeVisible();
+  await expect(page.getByText("5 of 5")).toBeVisible();
+});
+
+test("a rep cannot open another team's account by URL (TC-03)", async ({ page }) => {
+  await signIn(page);
+  await page.goto("/accounts");
+  await openAccount(page, "ZedMobile");
+  const zedMobileUrl = new URL(page.url());
+
+  await page.context().clearCookies();
+  await signInAs(page, "mutale@compass.zm");
+  await page.goto(`/accounts${zedMobileUrl.search}`);
+  await expect(page.getByRole("heading", { name: "Account not available" })).toBeVisible();
+  await expect(page.getByText("K510,000")).toHaveCount(0);
+});

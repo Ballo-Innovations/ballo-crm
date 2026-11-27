@@ -4,6 +4,7 @@ import { useOptimistic, useTransition } from "react";
 import { usePathname, useRouter } from "next/navigation";
 
 import { DataTable, type Column } from "@/components/shared/data-table";
+import { DockedSplit } from "@/components/shared/docked-drawer";
 import { EntityAvatar } from "@/components/shared/entity-avatar";
 import { FilterBar, type FilterGroup } from "@/components/shared/filter-bar";
 import { EmptyState, LoadingVeil, NoResults } from "@/components/shared/page-states";
@@ -23,6 +24,8 @@ import {
   type AccountRow,
   type AccountSortKey,
 } from "@/modules/accounts/types";
+
+import { AccountDrawer, type OverviewState } from "./account-drawer";
 
 const GROUPS: FilterGroup[] = [
   {
@@ -104,105 +107,143 @@ const COLUMNS: Column<AccountRow>[] = [
   },
 ];
 
-/** The accounts list (E2-01). All state lives in the URL; the server filters, sorts and pages. */
+/**
+ * The accounts list (E2-01) with the account drawer (E2-02). All state lives in the URL;
+ * the server filters, sorts, pages and loads the open account.
+ */
 export function AccountsList({
   params,
   result,
+  openId,
+  overview,
 }: {
   params: AccountListParams;
   result: AccountListResult;
+  openId: string | null;
+  overview: OverviewState;
 }) {
   const router = useRouter();
   const pathname = usePathname();
   const [pending, startTransition] = useTransition();
+  const [drawerPending, startDrawer] = useTransition();
   // What the user just asked for, before the server answers: quick clicks build on each other
   // instead of on the URL from before the first one landed.
   const [view, setView] = useOptimistic(params);
+  const [openView, setOpenView] = useOptimistic(openId);
+
+  function href(list: AccountListParams, open: string | null) {
+    const query = listParamsToQuery(list);
+    if (open) query.open = open;
+    const qs = new URLSearchParams(query).toString();
+    return qs ? `${pathname}?${qs}` : pathname;
+  }
 
   function go(next: Partial<AccountListParams>, keepPage = false) {
     const merged = { ...view, ...next, page: keepPage ? (next.page ?? view.page) : 1 };
-    const qs = new URLSearchParams(listParamsToQuery(merged)).toString();
     startTransition(() => {
       setView(merged);
-      router.replace(qs ? `${pathname}?${qs}` : pathname, { scroll: false });
+      router.replace(href(merged, openView), { scroll: false });
+    });
+  }
+
+  function setOpen(id: string | null) {
+    startDrawer(() => {
+      setOpenView(id);
+      router.replace(href(view, id), { scroll: false });
     });
   }
 
   const clearAll = () => go({ q: "", sector: [], tier: [], lifecycle: [] });
 
-  if (result.grandTotal === 0) {
-    return (
-      <EmptyState
-        title="No accounts yet"
-        text="Accounts you or your team own will show here."
-        actions={null}
-      />
-    );
-  }
-
   return (
-    <div className="flex flex-col gap-4">
-      <FilterBar
-        searchLabel="Search accounts"
-        searchPlaceholder="Search accounts or contacts"
-        search={view.q}
-        onSearchChange={(q) => go({ q })}
-        groups={GROUPS}
-        selected={{ sector: view.sector, tier: view.tier, lifecycle: view.lifecycle }}
-        onSelectedChange={(key, values) => go({ [key]: values })}
-        shown={result.total}
-        total={result.grandTotal}
-        onClearAll={clearAll}
-      >
-        <label className="bg-soft flex h-10 items-center gap-1.5 rounded-full pr-2 pl-3.5 text-sm md:hidden">
-          <span className="text-mute">Sort</span>
-          <select
-            aria-label="Sort by"
-            value={`${view.dir === "desc" ? "-" : ""}${view.sort}`}
-            onChange={(e) => {
-              const v = e.target.value;
-              const desc = v.startsWith("-");
-              go({ sort: (desc ? v.slice(1) : v) as AccountSortKey, dir: desc ? "desc" : "asc" });
-            }}
-            className="max-w-[44vw] truncate bg-transparent font-semibold outline-none"
-          >
-            {PHONE_SORTS.map((s) => (
-              <option key={s.value} value={s.value}>
-                {s.label}
-              </option>
-            ))}
-          </select>
-        </label>
-      </FilterBar>
-
-      <LoadingVeil loading={pending} label="Loading accounts">
-        {result.total === 0 ? (
-          <NoResults
-            title="No accounts match"
-            text={
-              params.q
-                ? `Nothing matches "${params.q}" with these filters. Check the spelling or try a company or contact name.`
-                : "No account matches these filters."
-            }
-            onClear={clearAll}
+    <DockedSplit>
+      <section className="bg-card rounded-card min-w-0 flex-1 p-4 md:p-[26px]">
+        {result.grandTotal === 0 ? (
+          <EmptyState
+            title="No accounts yet"
+            text="Accounts you or your team own will show here."
+            actions={null}
           />
         ) : (
-          <DataTable
-            label="Accounts"
-            rows={result.rows}
-            columns={COLUMNS}
-            getRowId={(r) => r.id}
-            sort={{ key: view.sort, dir: view.dir }}
-            onSortChange={(key) => go(toggleSort(view, key as AccountSortKey))}
-          />
-        )}
-      </LoadingVeil>
+          <div className="flex flex-col gap-4">
+            <FilterBar
+              searchLabel="Search accounts"
+              searchPlaceholder="Search accounts or contacts"
+              search={view.q}
+              onSearchChange={(q) => go({ q })}
+              groups={GROUPS}
+              selected={{ sector: view.sector, tier: view.tier, lifecycle: view.lifecycle }}
+              onSelectedChange={(key, values) => go({ [key]: values })}
+              shown={result.total}
+              total={result.grandTotal}
+              onClearAll={clearAll}
+            >
+              <label className="bg-soft flex h-10 items-center gap-1.5 rounded-full pr-2 pl-3.5 text-sm md:hidden">
+                <span className="text-mute">Sort</span>
+                <select
+                  aria-label="Sort by"
+                  value={`${view.dir === "desc" ? "-" : ""}${view.sort}`}
+                  onChange={(e) => {
+                    const v = e.target.value;
+                    const desc = v.startsWith("-");
+                    go({
+                      sort: (desc ? v.slice(1) : v) as AccountSortKey,
+                      dir: desc ? "desc" : "asc",
+                    });
+                  }}
+                  className="max-w-[44vw] truncate bg-transparent font-semibold outline-none"
+                >
+                  {PHONE_SORTS.map((s) => (
+                    <option key={s.value} value={s.value}>
+                      {s.label}
+                    </option>
+                  ))}
+                </select>
+              </label>
+            </FilterBar>
 
-      <Pagination
-        page={result.page}
-        pageCount={result.pageCount}
-        onPageChange={(page) => go({ page }, true)}
+            <LoadingVeil loading={pending} label="Loading accounts">
+              {result.total === 0 ? (
+                <NoResults
+                  title="No accounts match"
+                  text={
+                    params.q
+                      ? `Nothing matches "${params.q}" with these filters. Check the spelling or try a company or contact name.`
+                      : "No account matches these filters."
+                  }
+                  onClear={clearAll}
+                />
+              ) : (
+                <DataTable
+                  label="Accounts"
+                  rows={result.rows}
+                  columns={COLUMNS}
+                  getRowId={(r) => r.id}
+                  openId={openView}
+                  onRowClick={(r) => setOpen(r.id)}
+                  compact={!!openView}
+                  sort={{ key: view.sort, dir: view.dir }}
+                  onSortChange={(key) => go(toggleSort(view, key as AccountSortKey))}
+                />
+              )}
+            </LoadingVeil>
+
+            <Pagination
+              page={result.page}
+              pageCount={result.pageCount}
+              onPageChange={(page) => go({ page }, true)}
+            />
+          </div>
+        )}
+      </section>
+
+      <AccountDrawer
+        open={!!openView}
+        loading={drawerPending && openView !== openId}
+        overview={overview}
+        onClose={() => setOpen(null)}
+        onRetry={() => router.refresh()}
       />
-    </div>
+    </DockedSplit>
   );
 }
