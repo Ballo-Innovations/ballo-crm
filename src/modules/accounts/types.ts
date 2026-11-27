@@ -175,3 +175,40 @@ export type ContactRow = {
   influence: number;
   stance: Stance;
 };
+
+// ---------- Services (E2-04) ----------
+
+export type ServiceRow = {
+  id: string;
+  code: string;
+  name: string;
+  category: string | null;
+  annualValue: number;
+  /** 0 to 100, or null when the account has no usage figure. */
+  usagePct: number | null;
+  startDate: Date;
+  endDate: Date | null;
+};
+
+export type WhitespaceProduct = { code: string; name: string; category: string; listPrice: number };
+
+/** The Services tab: what the account buys and the whitespace it leaves. Money is ngwee. */
+export type ServicesView = {
+  active: ServiceRow[];
+  ended: ServiceRow[];
+  arr: number;
+  /** Catalogue products the account does not buy, most valuable first. */
+  whitespace: WhitespaceProduct[];
+  /** Σ list price of the whitespace products. */
+  whitespaceValue: number;
+};
+
+// ---------- Account 360 drawer ----------
+
+/** The drawer's tabs, in order; the selected one is `?section=` in the URL. */
+export const ACCOUNT_SECTIONS = [
+  { key: "overview", label: "Overview" },
+  { key: "contacts", label: "Contacts" },
+  { key: "services", label: "Services" },
+] as const;
+export type AccountSection = (typeof ACCOUNT_SECTIONS)[number]["key"];

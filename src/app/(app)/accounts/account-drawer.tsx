@@ -15,19 +15,23 @@ import {
 } from "@/modules/accounts/types";
 
 import { ContactsTab, type ContactsState } from "./contacts-tab";
+import { ServicesTab, type ServicesState } from "./services-tab";
 
 /** What the page loaded for `?open=`: the account, null (missing or not visible), or an error. */
 export type OverviewState = AccountOverview | null | "error";
 
-export const SECTIONS = [
-  { key: "overview", label: "Overview" },
-  { key: "contacts", label: "Contacts" },
-] as const;
-export type Section = (typeof SECTIONS)[number]["key"];
+export {
+  ACCOUNT_SECTIONS as SECTIONS,
+  type AccountSection as Section,
+} from "@/modules/accounts/types";
+import {
+  ACCOUNT_SECTIONS as SECTIONS,
+  type AccountSection as Section,
+} from "@/modules/accounts/types";
 
 /**
  * Account 360 in the docked drawer (E2-02): header (name, sector, tier, lifecycle, owner) and
- * the Overview tab, and the Contacts tab (E2-03). The selected tab is in the URL
+ * the Overview tab, and the Contacts (E2-03) and Services (E2-04) tabs. The selected tab is in the URL
  * (`section`). The other tabs arrive with their tickets (E2-04, E2-05 and on).
  */
 export function AccountDrawer({
@@ -40,6 +44,7 @@ export function AccountDrawer({
   onSectionChange,
   sectionLoading,
   contacts,
+  services,
   canEdit,
 }: {
   open: boolean;
@@ -53,6 +58,7 @@ export function AccountDrawer({
   /** Another tab was picked and its data is on its way. */
   sectionLoading: boolean;
   contacts: ContactsState | null;
+  services: ServicesState | null;
   canEdit: boolean;
 }) {
   const account = overview && overview !== "error" && !loading ? overview : null;
@@ -102,6 +108,10 @@ export function AccountDrawer({
           text="It may have been removed, or it belongs to another team."
           actions={null}
         />
+      ) : section === "services" ? (
+        <div role="tabpanel" aria-label="Services">
+          <ServicesTab services={services} loading={sectionLoading} onRetry={onRetry} />
+        </div>
       ) : section === "contacts" ? (
         <div role="tabpanel" aria-label="Contacts">
           <ContactsTab

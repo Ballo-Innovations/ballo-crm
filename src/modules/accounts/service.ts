@@ -14,6 +14,9 @@ import {
   TIERS,
   type AccountListParams,
   type AccountOverview,
+  type ServiceRow,
+  type ServicesView,
+  type WhitespaceProduct,
   type AccountRow,
   type AccountSortKey,
   type SortDir,
@@ -188,3 +191,63 @@ export function formatHealth(h: number): string {
 }
 
 export { formatPhone, normalizePhone } from "./phone";
+
+export type RawSubscription = {
+  id: string;
+  productCode: string;
+  annualValue: number;
+  usagePct: number | null;
+  active: boolean;
+  startDate: Date;
+  endDate: Date | null;
+};
+
+/**
+ * Services tab (E2-04): active services biggest first, ended ones apart, and the whitespace -
+ * catalogue products with no active subscription, at list price. Subscriptions are the
+ * "service usage" that drives whitespace and the recommender (data model).
+ */
+export function toServices(subs: RawSubscription[], catalogue: WhitespaceProduct[]): ServicesView {
+  const byCode = new Map(catalogue.map((p) => [p.code, p]));
+  const row = (s: RawSubscription): ServiceRow => {
+    const p = byCode.get(s.productCode);
+    return {
+      id: s.id,
+      code: s.productCode,
+      name: p?.name ?? s.productCode,
+      category: p?.category ?? null,
+      annualValue: s.annualValue,
+      usagePct: s.usagePct,
+      startDate: s.startDate,
+      endDate: s.endDate,
+    };
+  };
+  const biggest = (a: ServiceRow, b: ServiceRow) =>
+    b.annualValue - a.annualValue || text(a.name, b.name);
+  const active = subs
+    .filter((s) => s.active)
+    .map(row)
+    .sort(biggest);
+  const owned = new Set(active.map((s) => s.code));
+  const whitespace = catalogue
+    .filter((p) => !owned.has(p.code))
+    .sort((a, b) => b.listPrice - a.listPrice || text(a.name, b.name));
+  return {
+    active,
+    ended: subs
+      .filter((s) => !s.active)
+      .map(row)
+      .sort(biggest),
+    arr: active.reduce((sum, s) => sum + s.annualValue, 0),
+    whitespace,
+    whitespaceValue: whitespace.reduce((sum, p) => sum + p.listPrice, 0),
+  };
+}
+
+/** Usage bands for the bar: high use is an upsell signal, low use a risk signal. */
+export function usageLevel(pct: number | null): "unknown" | "low" | "normal" | "high" {
+  if (pct === null) return "unknown";
+  if (pct >= 80) return "high";
+  if (pct >= 40) return "normal";
+  return "low";
+}

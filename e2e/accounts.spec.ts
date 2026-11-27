@@ -266,3 +266,29 @@ test("a teammate sees contacts but only the owner can change them", async ({ pag
   await own.getByRole("tab", { name: "Contacts" }).click();
   await expect(own.getByRole("button", { name: "Add contact" })).toBeVisible();
 });
+
+// E2-04: Services tab - what the account buys, with usage, and the whitespace left.
+test("the Services tab shows what the account buys and what it could buy next", async ({
+  page,
+}) => {
+  await signIn(page);
+  await page.goto("/accounts");
+  const drawer = await openAccount(page, "Zambezi Commercial Bank");
+  await drawer.getByRole("tab", { name: "Services" }).click();
+  await expect(page).toHaveURL(/section=services/);
+
+  // Seed v0: colocation, fibre and MPLS, K570,000 a year; no usage figures yet.
+  const owned = drawer.getByRole("list", { name: "Services bought" });
+  await expect(owned.getByRole("listitem")).toHaveCount(3);
+  await expect(owned.getByRole("listitem").first()).toContainText("MPLS / SD-WAN");
+  await expect(owned.getByText("No usage data").first()).toBeVisible();
+  await expect(drawer.getByTestId("services-arr")).toHaveText("K570,000");
+
+  // Whitespace: the five catalogue products it does not buy, at list price.
+  const whitespace = drawer.getByRole("list", { name: "Not bought yet" });
+  await expect(whitespace.getByRole("listitem")).toHaveCount(5);
+  await expect(whitespace.getByRole("listitem").first()).toContainText(
+    "Disaster Recovery as a Service",
+  );
+  await expect(drawer.getByTestId("services-whitespace")).toHaveText("K588,000");
+});

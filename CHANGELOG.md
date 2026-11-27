@@ -17,6 +17,10 @@ under `[Unreleased]` in the relevant section (Added / Changed / Fixed / Removed)
 
 ### Added
 
+- E2-04: Services tab in Account 360 (`&section=services`): active services biggest first with
+  annual value, start date and a usage bar (near capacity / low use / no data), ended services,
+  and the whitespace - catalogue products not bought, at list price, with their total.
+
 - E2-03: Contacts tab in Account 360 (`&section=contacts`): add, edit and delete contacts with
   title, email, phone (stored E.164, shown +260 97 123 4567), influence 1-5 and stance (badge with
   a coloured dot). Inline field errors; delete asks first (new shared `ConfirmDialog`). Owners and
