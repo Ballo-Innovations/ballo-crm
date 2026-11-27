@@ -1,8 +1,6 @@
 "use client";
 
-import { MoreHorizontal } from "lucide-react";
-import { Checkbox as CheckboxPrimitive } from "radix-ui";
-import { Check, Minus } from "lucide-react";
+import { ArrowDown, ArrowUp, ChevronsUpDown, MoreHorizontal } from "lucide-react";
 
 import {
   DropdownMenu,
@@ -12,6 +10,8 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { cn } from "@/lib/utils";
 
+import { KitCheckbox as Box } from "./kit-checkbox";
+
 export type Column<T> = {
   key: string;
   header: string;
@@ -20,8 +20,12 @@ export type Column<T> = {
   numeric?: boolean;
   /** Dropped first when the drawer is docked (`compact`). */
   lowPriority?: boolean;
+  /** Makes the header a sort button (with `sort` and `onSortChange` on the table). */
+  sortKey?: string;
   className?: string;
 };
+
+export type TableSort = { key: string; dir: "asc" | "desc" };
 
 export type RowAction<T> = {
   label: string;
@@ -46,6 +50,8 @@ export function DataTable<T>({
   onRowClick,
   rowActions,
   compact,
+  sort,
+  onSortChange,
 }: {
   /** Accessible name, e.g. "Leads". */
   label: string;
@@ -60,6 +66,9 @@ export function DataTable<T>({
   onRowClick?: (row: T) => void;
   rowActions?: RowAction<T>[];
   compact?: boolean;
+  /** The current sort; the page sorts the rows (usually on the server). */
+  sort?: TableSort;
+  onSortChange?: (key: string) => void;
 }) {
   const cols = columns.filter((c) => !(compact && c.lowPriority));
   const selectable = !!selected && !!onSelectedChange;
@@ -91,15 +100,38 @@ export function DataTable<T>({
                 />
               </th>
             )}
-            {cols.map((c) => (
-              <th
-                key={c.key}
-                scope="col"
-                className={cn("px-3.5 py-1 font-medium", c.numeric && "text-right", c.className)}
-              >
-                {c.header}
-              </th>
-            ))}
+            {cols.map((c) => {
+              const sortable = !!c.sortKey && !!onSortChange;
+              const active = sortable && sort?.key === c.sortKey;
+              const Arrow = !active ? ChevronsUpDown : sort!.dir === "asc" ? ArrowUp : ArrowDown;
+              return (
+                <th
+                  key={c.key}
+                  scope="col"
+                  aria-sort={
+                    active ? (sort!.dir === "asc" ? "ascending" : "descending") : undefined
+                  }
+                  className={cn("px-3.5 py-1 font-medium", c.numeric && "text-right", c.className)}
+                >
+                  {sortable ? (
+                    <button
+                      type="button"
+                      onClick={() => onSortChange!(c.sortKey!)}
+                      className={cn(
+                        "hover:text-ink -mx-1.5 inline-flex items-center gap-1 rounded-full px-1.5 py-0.5 transition-colors",
+                        c.numeric && "flex-row-reverse",
+                        active && "text-ink font-semibold",
+                      )}
+                    >
+                      {c.header}
+                      <Arrow aria-hidden className={cn("size-3.5", !active && "opacity-50")} />
+                    </button>
+                  ) : (
+                    c.header
+                  )}
+                </th>
+              );
+            })}
             {rowActions && (
               <th className="w-12">
                 <span className="sr-only">Actions</span>
@@ -212,33 +244,6 @@ export function DataTable<T>({
         })}
       </ul>
     </>
-  );
-}
-
-function Box({
-  checked,
-  onChange,
-  label,
-}: {
-  checked: boolean | "indeterminate";
-  onChange: () => void;
-  label: string;
-}) {
-  return (
-    <CheckboxPrimitive.Root
-      checked={checked}
-      onCheckedChange={onChange}
-      aria-label={label}
-      className="border-bar2 bg-card data-[state=checked]:bg-ink data-[state=checked]:border-ink data-[state=indeterminate]:bg-ink data-[state=indeterminate]:border-ink text-shell relative grid size-[18px] shrink-0 place-items-center rounded-[6px] border-2 after:absolute after:-inset-3"
-    >
-      <CheckboxPrimitive.Indicator>
-        {checked === "indeterminate" ? (
-          <Minus className="size-3" strokeWidth={3} />
-        ) : (
-          <Check className="size-3" strokeWidth={3} />
-        )}
-      </CheckboxPrimitive.Indicator>
-    </CheckboxPrimitive.Root>
   );
 }
 
