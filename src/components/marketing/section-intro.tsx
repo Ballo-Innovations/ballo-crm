@@ -1,42 +1,28 @@
 import { cn } from "@/lib/utils";
 
-import { BrandMark } from "./brand-logo";
-
-/**
- * Section header in the Resend idiom: an optional centered app-icon, a small
- * eyebrow, a large serif display heading (pass a <GradientText> segment for the
- * accent phrase), and a supporting line. Left- or center-aligned.
- */
+/** Section heading in the app's type scale: small pill eyebrow, bold title, muted line. */
 export function SectionIntro({
   eyebrow,
   title,
   description,
-  showMark = false,
-  align = "center",
   className,
 }: {
   eyebrow?: string;
   title: React.ReactNode;
   description?: React.ReactNode;
-  showMark?: boolean;
-  align?: "center" | "left";
   className?: string;
 }) {
-  const centered = align === "center";
   return (
-    <div
-      className={cn(
-        "flex flex-col gap-4",
-        centered ? "mx-auto max-w-2xl items-center text-center" : "max-w-2xl items-start text-left",
-        className,
-      )}
-    >
-      {showMark && <BrandMark className="mb-2 size-14 drop-shadow-lg" />}
+    <div className={cn("flex max-w-2xl flex-col items-start gap-3", className)}>
       {eyebrow && (
-        <span className="text-muted-foreground text-sm font-medium tracking-wide">{eyebrow}</span>
+        <span className="bg-card rounded-full px-3 py-[5px] text-xs font-semibold">{eyebrow}</span>
       )}
-      <h2 className="text-3xl font-semibold tracking-tight text-balance sm:text-4xl">{title}</h2>
-      {description && <p className="text-muted-foreground text-lg text-pretty">{description}</p>}
+      <h2 className="text-[28px] leading-tight font-bold tracking-tight text-balance md:text-[36px]">
+        {title}
+      </h2>
+      {description && (
+        <p className="text-mute text-[15px] text-pretty md:text-[17px]">{description}</p>
+      )}
     </div>
   );
 }

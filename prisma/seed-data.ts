@@ -12,18 +12,19 @@ import type { Lifecycle, Role, Sector, Tier } from "@prisma/client";
 /** Demo only, per the seed spec. Never used outside local, dev and stage. */
 export const DEMO_PASSWORD = "Compass!2026";
 
-export type SeedUser = { email: string; name: string; role: Role };
+/** Reps sit in two teams so the "team only" view (src/lib/rbac.ts) shows on dev; others have none. */
+export type SeedUser = { email: string; name: string; role: Role; teamId: string | null };
 
 export function seedUsers(): SeedUser[] {
   return [
-    { email: "admin@compass.zm", name: "Natasha Mwanza", role: "ADMIN" },
-    { email: "chanda@compass.zm", name: "Chanda Mwila", role: "MANAGER" },
-    { email: "mutale@compass.zm", name: "Mutale Banda", role: "REP" },
-    { email: "bwalya@compass.zm", name: "Bwalya Phiri", role: "REP" },
-    { email: "nkandu@compass.zm", name: "Nkandu Tembo", role: "REP" },
-    { email: "lombe@compass.zm", name: "Lombe Zulu", role: "REP" },
-    { email: "thandiwe@compass.zm", name: "Thandiwe Sakala", role: "MARKETING" },
-    { email: "legal@compass.zm", name: "Grace Chileshe", role: "LEGAL" },
+    { email: "admin@compass.zm", name: "Natasha Mwanza", role: "ADMIN", teamId: null },
+    { email: "chanda@compass.zm", name: "Chanda Mwila", role: "MANAGER", teamId: null },
+    { email: "mutale@compass.zm", name: "Mutale Banda", role: "REP", teamId: "lusaka" },
+    { email: "bwalya@compass.zm", name: "Bwalya Phiri", role: "REP", teamId: "lusaka" },
+    { email: "nkandu@compass.zm", name: "Nkandu Tembo", role: "REP", teamId: "copperbelt" },
+    { email: "lombe@compass.zm", name: "Lombe Zulu", role: "REP", teamId: "copperbelt" },
+    { email: "thandiwe@compass.zm", name: "Thandiwe Sakala", role: "MARKETING", teamId: null },
+    { email: "legal@compass.zm", name: "Grace Chileshe", role: "LEGAL", teamId: null },
   ];
 }
 

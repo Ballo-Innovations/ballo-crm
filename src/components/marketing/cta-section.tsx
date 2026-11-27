@@ -1,55 +1,39 @@
-import Link from "next/link";
-import { ArrowRight } from "lucide-react";
-
-import { Button } from "@/components/ui/button";
-
+import { HeroLink } from "./hero-link";
 import { BrandMark } from "./brand-logo";
+import { WaveBackground } from "./wave-background";
+
+/**
+ * The closing island: always dark in both themes, like the login page's sign-in panel. It
+ * re-points the colour tokens inside it so text, the button and the waves stay readable.
+ */
+const ISLAND_TOKENS = {
+  "--ink": "#ffffff",
+  "--shell": "#0d0d0d",
+  "--card": "#1a1a1a",
+  "--soft": "#222222",
+  "--line": "#3a3a3a",
+  "--mute": "#c4c4c4",
+} as React.CSSProperties;
 
 export function CtaSection() {
   return (
-    <section className="border-t">
-      <div className="mx-auto w-full max-w-6xl px-6 py-20 md:py-24">
-        <div className="relative overflow-hidden rounded-3xl bg-[linear-gradient(135deg,oklch(0.29_0.13_268),oklch(0.2_0.1_268)_55%,oklch(0.16_0.08_266))] px-8 py-16 text-center text-white md:px-16">
-          {/* cyan glow */}
-          <div
-            aria-hidden
-            className="pointer-events-none absolute -top-24 left-1/2 size-80 -translate-x-1/2 rounded-full bg-[radial-gradient(circle,var(--brand),transparent_65%)] opacity-30 blur-2xl"
-          />
-          {/* grid texture */}
-          <div
-            aria-hidden
-            className="pointer-events-none absolute inset-0 bg-[linear-gradient(to_right,white_1px,transparent_1px),linear-gradient(to_bottom,white_1px,transparent_1px)] bg-[size:44px_44px] opacity-[0.05]"
-          />
-          <div className="relative flex flex-col items-center gap-6">
-            <BrandMark className="size-16 drop-shadow-2xl" />
-            <h2 className="max-w-2xl text-3xl font-semibold tracking-tight text-balance sm:text-4xl">
-              Retire the spreadsheets. Run revenue from one source of truth.
-            </h2>
-            <p className="max-w-xl text-lg text-pretty text-white/75">
-              Bring accounts, pipeline, contracts, messaging, and AI intelligence together, and
-              give every revenue role the same trustworthy view.
-            </p>
-            <div className="mt-2 flex flex-col gap-3 sm:flex-row">
-              <Button
-                asChild
-                size="lg"
-                className="bg-brand text-brand-foreground hover:bg-brand/90"
-              >
-                <Link href="/dashboard">
-                  Get started
-                  <ArrowRight data-icon="inline-end" />
-                </Link>
-              </Button>
-              <Button
-                asChild
-                size="lg"
-                variant="outline"
-                className="border-white/25 bg-transparent text-white hover:bg-white/10 hover:text-white dark:bg-transparent"
-              >
-                <Link href="/login">Sign in</Link>
-              </Button>
-            </div>
-          </div>
+    <section id="sign-in" className="mx-auto w-full max-w-[1180px] scroll-mt-24 px-2 md:px-4">
+      <div
+        style={ISLAND_TOKENS}
+        className="text-ink md:rounded-panel relative isolate overflow-hidden rounded-[28px] bg-[#0d0d0d] px-6 py-14 text-center md:px-14 md:py-[72px] dark:bg-[#050505] dark:ring-1 dark:ring-[#2a2a2a]"
+      >
+        <WaveBackground strength={0.8} flip />
+        <div className="mx-auto flex max-w-xl flex-col items-center gap-5">
+          <BrandMark />
+          <h2 className="text-[34px] leading-[1.02] font-bold tracking-[-0.035em] text-balance md:text-[52px]">
+            Your pipeline is waiting.
+          </h2>
+          <p className="text-mute text-[17px] md:text-lg">
+            Invite-only workspace. Your admin manages access.
+          </p>
+          <HeroLink href="/login" className="mt-2 h-[52px] text-[15px]">
+            Sign in
+          </HeroLink>
         </div>
       </div>
     </section>

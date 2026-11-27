@@ -1,0 +1,3173 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Landing Options</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Urbanist:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --shell: #fff;
+        --main: #ececec;
+        --card: #fff;
+        --ink: #0d0d0d;
+        --inv: #fff;
+        --mute: #6b6b6b;
+        --soft: #f3f3f3;
+        --line: #e4e4e4;
+        --bar2: #d4d4d4;
+        --danger: #dc2626;
+        --chart-2: #7a7a7a;
+        --chart-3: #c8c8c8;
+      }
+      :root[data-theme="dark"] {
+        --shell: #111;
+        --main: #1b1b1b;
+        --card: #242424;
+        --ink: #f5f5f5;
+        --inv: #0d0d0d;
+        --mute: #9a9a9a;
+        --soft: #2e2e2e;
+        --line: #3a3a3a;
+        --bar2: #505050;
+        --danger: #f87171;
+        --chart-2: #9a9a9a;
+        --chart-3: #505050;
+      }
+      * {
+        box-sizing: border-box;
+        margin: 0;
+      }
+      body {
+        background: var(--shell);
+        color: var(--ink);
+        font-family: Urbanist, system-ui, sans-serif;
+        -webkit-font-smoothing: antialiased;
+        padding: 32px 32px 80px;
+      }
+      button,
+      input {
+        font: inherit;
+        color: inherit;
+      }
+      button {
+        cursor: pointer;
+      }
+      a {
+        color: inherit;
+        text-decoration: none;
+      }
+      svg {
+        width: 18px;
+        height: 18px;
+        flex: none;
+      }
+      .wrap {
+        max-width: 1440px;
+        margin: auto;
+      }
+
+      /* ---------- options chrome ---------- */
+      .page-hd {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 16px;
+        align-items: end;
+        justify-content: space-between;
+        margin-bottom: 20px;
+      }
+      .page-hd h1 {
+        font-size: 30px;
+        font-weight: 700;
+        letter-spacing: -0.02em;
+      }
+      .page-hd p {
+        color: var(--mute);
+        margin-top: 4px;
+        font-size: 15px;
+      }
+      .tools {
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+      }
+      .seg {
+        display: inline-flex;
+        background: var(--soft);
+        border-radius: 999px;
+        padding: 4px;
+        gap: 2px;
+      }
+      .seg button {
+        border: 0;
+        background: none;
+        padding: 8px 14px;
+        border-radius: 999px;
+        font-size: 14px;
+        font-weight: 600;
+        color: var(--mute);
+      }
+      .seg button[aria-pressed="true"] {
+        background: var(--ink);
+        color: var(--inv);
+      }
+      .tabs {
+        display: flex;
+        gap: 8px;
+        flex-wrap: wrap;
+        margin-bottom: 18px;
+      }
+      .tab {
+        border: 1px solid var(--line);
+        background: var(--card);
+        border-radius: 999px;
+        padding: 10px 16px 10px 10px;
+        display: inline-flex;
+        gap: 10px;
+        align-items: center;
+        font-weight: 600;
+        font-size: 15px;
+      }
+      .tab b {
+        display: grid;
+        place-items: center;
+        width: 26px;
+        height: 26px;
+        border-radius: 999px;
+        background: var(--soft);
+        font-size: 13px;
+      }
+      .tab[aria-selected="true"] {
+        background: var(--ink);
+        color: var(--inv);
+        border-color: var(--ink);
+      }
+      .tab[aria-selected="true"] b {
+        background: var(--inv);
+        color: var(--ink);
+      }
+      .stage {
+        background: var(--main);
+        border-radius: 28px;
+        padding: 18px;
+        display: flex;
+        justify-content: center;
+      }
+      .frame {
+        container-type: inline-size;
+        width: 100%;
+        height: 860px;
+        border-radius: 18px;
+        overflow-y: auto;
+        overflow-x: hidden;
+        position: relative;
+        background: var(--shell);
+        box-shadow: 0 0 0 1px var(--line);
+        transition: width 0.3s ease;
+        scroll-behavior: smooth;
+      }
+      .frame.m {
+        width: 390px;
+        height: 800px;
+      }
+      .notes {
+        display: grid;
+        grid-template-columns: 1.3fr 1fr 1fr;
+        gap: 14px;
+        margin-top: 18px;
+      }
+      .note {
+        background: var(--card);
+        border: 1px solid var(--line);
+        border-radius: 22px;
+        padding: 20px 22px;
+      }
+      .note h3 {
+        font-size: 13px;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        color: var(--mute);
+        margin-bottom: 8px;
+        font-weight: 700;
+      }
+      .note p,
+      .note li {
+        font-size: 15px;
+        line-height: 1.55;
+      }
+      .note ul {
+        padding-left: 18px;
+      }
+      .hint {
+        color: var(--mute);
+        font-size: 13px;
+        margin-top: 12px;
+      }
+      @media (max-width: 900px) {
+        body {
+          padding: 16px;
+        }
+        .notes {
+          grid-template-columns: 1fr;
+        }
+      }
+
+      /* =========================================================
+         Shared landing-page building blocks (inside .frame)
+         ========================================================= */
+      .lp {
+        min-height: 100%;
+        background: var(--shell);
+        color: var(--ink);
+      }
+      .in {
+        width: 100%;
+        max-width: 1180px;
+        margin: 0 auto;
+        padding: 0 32px;
+      }
+      .brand {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        font-weight: 700;
+        font-size: 22px;
+        letter-spacing: -0.01em;
+      }
+      .compass {
+        width: 28px;
+        height: 28px;
+      }
+      .nav {
+        position: sticky;
+        top: 0;
+        z-index: 20;
+        background: color-mix(in srgb, var(--shell) 86%, transparent);
+        backdrop-filter: blur(12px);
+      }
+      .nav .in {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        height: 76px;
+        gap: 20px;
+      }
+      .links {
+        display: flex;
+        gap: 4px;
+        background: var(--soft);
+        border-radius: 999px;
+        padding: 4px;
+      }
+      .links a {
+        padding: 9px 16px;
+        border-radius: 999px;
+        font-size: 14px;
+        font-weight: 600;
+        color: var(--mute);
+        cursor: pointer;
+      }
+      .links a:hover {
+        color: var(--ink);
+        background: var(--card);
+      }
+      .nav-r {
+        display: flex;
+        gap: 8px;
+        align-items: center;
+      }
+      .burger {
+        display: none;
+        width: 44px;
+        height: 44px;
+        border-radius: 999px;
+        border: 0;
+        background: var(--soft);
+        place-items: center;
+      }
+      .mnav {
+        display: none;
+      }
+      .btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        height: 44px;
+        padding: 0 20px;
+        border-radius: 999px;
+        border: 0;
+        font-weight: 600;
+        font-size: 15px;
+        background: var(--ink);
+        color: var(--inv);
+        transition:
+          transform 0.15s,
+          opacity 0.15s;
+        white-space: nowrap;
+      }
+      .btn:hover {
+        opacity: 0.88;
+      }
+      .btn:active {
+        transform: scale(0.98);
+      }
+      .btn.lg {
+        height: 52px;
+        padding: 0 26px;
+        font-size: 16px;
+      }
+      .btn.ghost {
+        background: var(--soft);
+        color: var(--ink);
+      }
+      .btn.line {
+        background: transparent;
+        color: var(--ink);
+        box-shadow: inset 0 0 0 1.5px var(--line);
+      }
+      .btn .arr {
+        transition: transform 0.2s;
+      }
+      .btn:hover .arr {
+        transform: translateX(3px);
+      }
+      .eyebrow {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 12px;
+        font-weight: 700;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        color: var(--mute);
+      }
+      .chip {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 6px 14px 6px 6px;
+        border-radius: 999px;
+        background: var(--soft);
+        font-size: 14px;
+        font-weight: 600;
+      }
+      .chip b {
+        background: var(--ink);
+        color: var(--inv);
+        border-radius: 999px;
+        padding: 3px 10px;
+        font-size: 12px;
+      }
+      .h-sec {
+        font-size: clamp(32px, 4.2cqi, 52px);
+        font-weight: 700;
+        letter-spacing: -0.035em;
+        line-height: 1.02;
+      }
+      .h-sec .m {
+        color: var(--mute);
+      }
+      .lead {
+        color: var(--mute);
+        font-size: 18px;
+        line-height: 1.55;
+        max-width: 560px;
+      }
+      .sec {
+        padding: 96px 0;
+      }
+      .foot {
+        padding: 40px 0 48px;
+        color: var(--mute);
+        font-size: 14px;
+      }
+      .foot .in {
+        display: flex;
+        justify-content: space-between;
+        gap: 16px;
+        flex-wrap: wrap;
+        align-items: center;
+      }
+      .foot nav {
+        display: flex;
+        gap: 22px;
+        flex-wrap: wrap;
+      }
+      .foot a:hover {
+        color: var(--ink);
+      }
+
+      /* ---------- app pieces (match the kit) ---------- */
+      .ic {
+        width: 40px;
+        height: 40px;
+        border-radius: 999px;
+        background: var(--soft);
+        display: grid;
+        place-items: center;
+        flex: none;
+      }
+      .ic.ink {
+        background: var(--ink);
+        color: var(--inv);
+      }
+      .kpi {
+        background: var(--card);
+        border-radius: 26px;
+        padding: 20px 22px;
+        display: flex;
+        flex-direction: column;
+        gap: 14px;
+        min-width: 0;
+      }
+      .kpi .t {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-size: 13px;
+        color: var(--mute);
+        font-weight: 600;
+      }
+      .kpi .v {
+        font-size: 26px;
+        font-weight: 700;
+        letter-spacing: -0.02em;
+      }
+      .kpi .d {
+        font-size: 13px;
+        color: var(--mute);
+        display: flex;
+        gap: 6px;
+        align-items: center;
+      }
+      .kpi.ink {
+        background: var(--ink);
+        color: var(--inv);
+      }
+      .kpi.ink .t,
+      .kpi.ink .d {
+        color: color-mix(in srgb, var(--inv) 66%, transparent);
+      }
+      .kpi.ink .ic {
+        background: color-mix(in srgb, var(--inv) 14%, transparent);
+      }
+      .pill {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        height: 26px;
+        padding: 0 10px;
+        border-radius: 999px;
+        background: var(--soft);
+        font-size: 12px;
+        font-weight: 700;
+        white-space: nowrap;
+      }
+      .pill.ink {
+        background: var(--ink);
+        color: var(--inv);
+      }
+      .pill.risk {
+        background: color-mix(in srgb, var(--danger) 12%, transparent);
+        color: var(--danger);
+      }
+      .grade {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        height: 26px;
+        padding: 0 10px 0 4px;
+        border-radius: 999px;
+        font-size: 11px;
+        font-weight: 800;
+        letter-spacing: 0.06em;
+        background: var(--soft);
+      }
+      .grade i {
+        width: 18px;
+        height: 18px;
+        border-radius: 999px;
+        display: block;
+        border: 2px solid var(--ink);
+      }
+      .grade.platinum i {
+        background: var(--ink);
+      }
+      .grade.gold i {
+        background: linear-gradient(90deg, var(--ink) 50%, transparent 50%);
+      }
+      .grade.silver i {
+        background: linear-gradient(90deg, var(--ink) 25%, transparent 25%);
+      }
+      .grade.bronze i {
+        background: transparent;
+      }
+      .av {
+        width: 34px;
+        height: 34px;
+        border-radius: 999px;
+        background: var(--soft);
+        display: grid;
+        place-items: center;
+        font-size: 12px;
+        font-weight: 800;
+        flex: none;
+      }
+      .av.ink {
+        background: var(--ink);
+        color: var(--inv);
+      }
+      .row {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 10px 12px;
+        border-radius: 16px;
+        transition: background 0.15s;
+      }
+      .row:hover {
+        background: var(--soft);
+      }
+      .row .nm {
+        font-weight: 700;
+        font-size: 14px;
+      }
+      .row .sb {
+        color: var(--mute);
+        font-size: 12px;
+      }
+      .row .g {
+        flex: 1;
+        min-width: 0;
+      }
+      .row .amt {
+        font-weight: 700;
+        font-size: 14px;
+      }
+      .card {
+        background: var(--card);
+        border-radius: 28px;
+        padding: 24px;
+        min-width: 0;
+      }
+      .card h4 {
+        font-size: 18px;
+        font-weight: 700;
+        letter-spacing: -0.01em;
+      }
+      .card .sub {
+        color: var(--mute);
+        font-size: 13px;
+        margin-top: 2px;
+      }
+      .card-hd {
+        display: flex;
+        justify-content: space-between;
+        align-items: start;
+        gap: 12px;
+        margin-bottom: 16px;
+      }
+      .bars {
+        display: flex;
+        align-items: end;
+        gap: 10px;
+        height: 150px;
+      }
+      .bars span {
+        flex: 1;
+        border-radius: 999px;
+        background: var(--bar2);
+        position: relative;
+        transition: height 0.5s cubic-bezier(0.2, 0.8, 0.2, 1);
+      }
+      .bars span.on {
+        background: var(--ink);
+      }
+      .bars span {
+        border-radius: 12px;
+        max-width: 44px;
+        margin: 0 auto;
+      }
+      .kpi.ink .bars span {
+        background: color-mix(in srgb, var(--inv) 22%, transparent);
+      }
+      .kpi.ink .bars span.on {
+        background: var(--inv);
+      }
+      .kpi.ink .bars span:hover::after {
+        background: var(--inv);
+        color: var(--ink);
+      }
+      .bars span:hover::after {
+        content: attr(data-v);
+        position: absolute;
+        bottom: calc(100% + 6px);
+        left: 50%;
+        transform: translateX(-50%);
+        background: var(--ink);
+        color: var(--inv);
+        font-size: 11px;
+        font-weight: 700;
+        padding: 3px 8px;
+        border-radius: 999px;
+        white-space: nowrap;
+      }
+      .xl {
+        display: flex;
+        gap: 10px;
+        margin-top: 8px;
+      }
+      .xl span {
+        flex: 1;
+        text-align: center;
+        font-size: 11px;
+        color: var(--mute);
+        font-weight: 600;
+      }
+      .insight {
+        display: flex;
+        gap: 12px;
+        align-items: start;
+        padding: 14px;
+        border-radius: 18px;
+        background: var(--soft);
+        font-size: 14px;
+        line-height: 1.45;
+      }
+      .insight b {
+        font-weight: 700;
+      }
+      .insight .ic {
+        width: 32px;
+        height: 32px;
+        background: var(--card);
+      }
+      .insight .ic svg {
+        width: 16px;
+        height: 16px;
+      }
+
+      /* mini app shell */
+      .app {
+        display: grid;
+        grid-template-columns: 196px 1fr;
+        background: var(--shell);
+        border-radius: 26px;
+        padding: 12px;
+        gap: 12px;
+        box-shadow:
+          0 0 0 1px var(--line),
+          0 40px 80px -40px rgb(0 0 0 / 0.35);
+        text-align: left;
+      }
+      .side {
+        display: flex;
+        flex-direction: column;
+        gap: 3px;
+        padding: 10px 6px;
+      }
+      .side .brand {
+        font-size: 17px;
+        margin: 0 8px 18px;
+      }
+      .side .brand .compass {
+        width: 22px;
+        height: 22px;
+      }
+      .side a {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 10px 12px;
+        border-radius: 999px;
+        font-size: 13px;
+        font-weight: 600;
+        color: var(--mute);
+        cursor: pointer;
+      }
+      .side a svg {
+        width: 16px;
+        height: 16px;
+      }
+      .side a.on {
+        background: var(--ink);
+        color: var(--inv);
+      }
+      .side a:not(.on):hover {
+        background: var(--soft);
+        color: var(--ink);
+      }
+      .panel {
+        background: var(--main);
+        border-radius: 22px;
+        padding: 20px;
+        min-width: 0;
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+      }
+      .panel-hd {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 12px;
+      }
+      .panel-hd h5 {
+        font-size: 22px;
+        font-weight: 700;
+        letter-spacing: -0.02em;
+      }
+      .panel-hd .sub {
+        color: var(--mute);
+        font-size: 13px;
+      }
+      .search {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        height: 38px;
+        padding: 0 14px;
+        border-radius: 999px;
+        background: var(--card);
+        color: var(--mute);
+        font-size: 13px;
+        min-width: 180px;
+      }
+      .search kbd {
+        margin-left: auto;
+        font: inherit;
+        font-size: 11px;
+        background: var(--soft);
+        padding: 2px 6px;
+        border-radius: 6px;
+      }
+      .kpis {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 12px;
+      }
+      .kpis .kpi {
+        padding: 16px 18px;
+        gap: 10px;
+        border-radius: 22px;
+      }
+      .kpis .kpi .v {
+        font-size: 22px;
+      }
+      .kpis .ic {
+        width: 32px;
+        height: 32px;
+      }
+      .kpis .ic svg {
+        width: 15px;
+        height: 15px;
+      }
+      .split {
+        display: grid;
+        grid-template-columns: 1.4fr 1fr;
+        gap: 12px;
+      }
+      .split .card {
+        padding: 18px;
+        border-radius: 22px;
+      }
+      .kan {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 10px;
+      }
+      .col {
+        background: var(--card);
+        border-radius: 20px;
+        padding: 10px;
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        min-width: 0;
+      }
+      .col-hd {
+        display: flex;
+        justify-content: space-between;
+        font-size: 12px;
+        font-weight: 700;
+        padding: 4px 6px;
+      }
+      .col-hd span {
+        color: var(--mute);
+      }
+      .deal {
+        background: var(--soft);
+        border-radius: 14px;
+        padding: 10px;
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        cursor: grab;
+        transition:
+          transform 0.15s,
+          box-shadow 0.15s;
+      }
+      .deal:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 20px -10px rgb(0 0 0 / 0.3);
+      }
+      .deal .nm {
+        font-size: 13px;
+        font-weight: 700;
+      }
+      .deal .ft {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-size: 12px;
+        font-weight: 700;
+      }
+      .deal .grade {
+        height: 22px;
+        font-size: 10px;
+      }
+      .deal .grade i {
+        width: 14px;
+        height: 14px;
+      }
+
+      /* score ring */
+      .ring {
+        position: relative;
+        width: 148px;
+        height: 148px;
+        flex: none;
+      }
+      .ring svg {
+        width: 100%;
+        height: 100%;
+        transform: rotate(-90deg);
+      }
+      .ring circle {
+        transition: stroke-dasharray 0.6s cubic-bezier(0.2, 0.8, 0.2, 1);
+      }
+      .ring .num {
+        position: absolute;
+        inset: 0;
+        display: grid;
+        place-items: center;
+        align-content: center;
+        text-align: center;
+      }
+      .ring .num b {
+        font-size: 40px;
+        font-weight: 800;
+        letter-spacing: -0.03em;
+        line-height: 1;
+      }
+      .ring .num span {
+        font-size: 11px;
+        font-weight: 700;
+        color: var(--mute);
+        letter-spacing: 0.08em;
+        margin-top: 4px;
+      }
+      .factor {
+        display: grid;
+        grid-template-columns: 110px 1fr 40px;
+        gap: 10px;
+        align-items: center;
+        font-size: 13px;
+      }
+      .factor .tr {
+        height: 8px;
+        background: var(--soft);
+        border-radius: 999px;
+        overflow: hidden;
+      }
+      .factor .tr i {
+        display: block;
+        height: 100%;
+        background: var(--ink);
+        border-radius: 999px;
+        transition: width 0.5s cubic-bezier(0.2, 0.8, 0.2, 1);
+      }
+      .factor b {
+        text-align: right;
+      }
+      .factor span {
+        color: var(--mute);
+        font-weight: 600;
+      }
+
+      /* reveal */
+      .rv {
+        opacity: 0;
+        transform: translateY(18px);
+        transition:
+          opacity 0.6s,
+          transform 0.6s cubic-bezier(0.2, 0.8, 0.2, 1);
+      }
+      .rv.on {
+        opacity: 1;
+        transform: none;
+      }
+
+      /* ---------- wave backgrounds ---------- */
+      .has-wave {
+        position: relative;
+        overflow: hidden;
+        isolation: isolate;
+      }
+      .has-wave > :not(.wave):not(.grid-bg):not(.nav) {
+        position: relative;
+        z-index: 1;
+      }
+      .has-wave > .wave {
+        position: absolute;
+      }
+      .wave {
+        position: absolute;
+        left: 0;
+        right: 0;
+        top: 0;
+        height: 100%;
+        max-height: 1000px;
+        z-index: 0;
+        pointer-events: none;
+        color: var(--ink);
+      }
+      .wave {
+        -webkit-mask-image: linear-gradient(to bottom, #000 55%, transparent 98%);
+        mask-image: linear-gradient(to bottom, #000 55%, transparent 98%);
+      }
+      .wave.bottom {
+        top: auto;
+        bottom: 0;
+        -webkit-mask-image: linear-gradient(to top, #000 55%, transparent 98%);
+        mask-image: linear-gradient(to top, #000 55%, transparent 98%);
+      }
+      .wave svg {
+        width: 100%;
+        height: 100%;
+        display: block;
+      }
+      .wave .drift {
+        animation: drift var(--dur, 40s) linear infinite;
+      }
+      .wave .drift.rev {
+        animation-direction: reverse;
+      }
+      .wave .bob {
+        animation: bob var(--dur, 14s) ease-in-out infinite alternate;
+      }
+      @keyframes drift {
+        to {
+          transform: translateX(-1440px);
+        }
+      }
+      @keyframes bob {
+        to {
+          transform: translateY(18px);
+        }
+      }
+      @media (prefers-reduced-motion: reduce) {
+        .wave .drift,
+        .wave .bob {
+          animation: none;
+        }
+      }
+
+      /* ==================== A: Product stage ==================== */
+      .A .hero {
+        text-align: center;
+        padding: 72px 0 0;
+      }
+      .A h1 {
+        font-size: clamp(44px, 6.6cqi, 88px);
+        font-weight: 700;
+        letter-spacing: -0.045em;
+        line-height: 0.96;
+        margin: 22px auto 0;
+        max-width: 960px;
+      }
+      .A h1 .m {
+        color: var(--mute);
+      }
+      .A .hero .lead {
+        margin: 22px auto 0;
+      }
+      .A .ctas {
+        display: flex;
+        gap: 10px;
+        justify-content: center;
+        margin-top: 30px;
+        flex-wrap: wrap;
+      }
+      .A .showcase {
+        margin-top: 64px;
+        background: var(--main);
+        border-radius: 36px 36px 0 0;
+        padding: 40px 40px 0;
+        overflow: hidden;
+      }
+      .A .showcase .app {
+        border-radius: 26px 26px 0 0;
+        padding-bottom: 0;
+      }
+      .A .showcase .panel {
+        border-radius: 22px 22px 0 0;
+      }
+      .A .tabsw {
+        display: flex;
+        justify-content: center;
+        gap: 6px;
+        margin-bottom: 26px;
+        flex-wrap: wrap;
+      }
+      .A .tabsw button {
+        border: 0;
+        background: var(--card);
+        border-radius: 999px;
+        height: 40px;
+        padding: 0 16px;
+        font-weight: 600;
+        font-size: 14px;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        color: var(--mute);
+      }
+      .A .tabsw button svg {
+        width: 16px;
+        height: 16px;
+      }
+      .A .tabsw button[aria-pressed="true"] {
+        background: var(--ink);
+        color: var(--inv);
+      }
+      .A .stats {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        border-top: 1px solid var(--line);
+        border-bottom: 1px solid var(--line);
+      }
+      .A .stats div {
+        padding: 34px 28px;
+        border-left: 1px solid var(--line);
+      }
+      .A .stats div:first-child {
+        border-left: 0;
+      }
+      .A .stats b {
+        display: block;
+        font-size: 44px;
+        letter-spacing: -0.04em;
+        font-weight: 700;
+      }
+      .A .stats span {
+        color: var(--mute);
+        font-size: 14px;
+      }
+      .A .feat {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 16px;
+        margin-top: 48px;
+      }
+      .A .feat .card {
+        background: var(--main);
+        padding: 28px;
+        display: flex;
+        flex-direction: column;
+        gap: 14px;
+        transition: transform 0.2s;
+      }
+      .A .feat .card:hover {
+        transform: translateY(-3px);
+      }
+      .A .feat .card .ic {
+        background: var(--card);
+      }
+      .A .feat p {
+        color: var(--mute);
+        font-size: 15px;
+        line-height: 1.55;
+      }
+      .A .sec-hd {
+        display: flex;
+        justify-content: space-between;
+        align-items: end;
+        gap: 24px;
+        flex-wrap: wrap;
+      }
+      .A .roles {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 16px;
+        margin-top: 40px;
+      }
+      .A .role {
+        border: 1px solid var(--line);
+        border-radius: 28px;
+        padding: 24px;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+      }
+      .A .role p {
+        color: var(--mute);
+        font-size: 15px;
+        line-height: 1.5;
+      }
+      .island {
+        background: #0d0d0d;
+        color: #fff;
+        border-radius: 36px;
+        padding: 72px 56px;
+        position: relative;
+        overflow: hidden;
+        --mute: #c4c4c4;
+        --line: #3a3a3a;
+        --soft: #222;
+        --card: #1a1a1a;
+        --ink: #fff;
+        --inv: #0d0d0d;
+        --bar2: #444;
+      }
+      :root[data-theme="dark"] .island {
+        background: #050505;
+        box-shadow: 0 0 0 1px #2a2a2a;
+      }
+      .island::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+        background:
+          radial-gradient(520px 360px at 90% 0%, rgb(255 255 255 / 0.09), transparent 60%),
+          radial-gradient(420px 320px at 0% 100%, rgb(255 255 255 / 0.05), transparent 60%);
+      }
+      .island > * {
+        position: relative;
+      }
+      .A .cta {
+        text-align: center;
+      }
+      .A .cta .lead {
+        margin: 18px auto 30px;
+      }
+
+      /* ==================== B: Editorial ==================== */
+      .B .nav .in {
+        max-width: none;
+        padding: 0 40px;
+      }
+      .B .hero {
+        display: grid;
+        grid-template-columns: 1.1fr 1fr;
+        gap: 14px;
+        min-height: 720px;
+        padding: 0 14px 14px;
+      }
+      .B .hero-l {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        padding: 40px 26px 40px 26px;
+        gap: 26px;
+      }
+      .B h1 {
+        font-size: clamp(52px, 6.8cqi, 108px);
+        font-weight: 700;
+        letter-spacing: -0.05em;
+        line-height: 0.9;
+      }
+      .B h1 .m {
+        color: color-mix(in srgb, var(--mute) 60%, transparent);
+        display: block;
+      }
+      .B .hero-r {
+        border-radius: 28px;
+        padding: 36px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        gap: 18px;
+      }
+      .B .focus-hd {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+      .B .focus-hd h6 {
+        font-size: 14px;
+        font-weight: 800;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+      }
+      .B .focus {
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+      }
+      .B .focus .row {
+        background: var(--card);
+        padding: 14px;
+        cursor: pointer;
+      }
+      .B .focus .row:hover {
+        background: #262626;
+      }
+      .B .focus .row .why {
+        display: none;
+        font-size: 13px;
+        color: var(--mute);
+        margin-top: 6px;
+        line-height: 1.45;
+      }
+      .B .focus .row.open .why {
+        display: block;
+      }
+      .B .focus .row.open {
+        align-items: start;
+      }
+      .B .marq {
+        border-top: 1px solid var(--line);
+        border-bottom: 1px solid var(--line);
+        overflow: hidden;
+        white-space: nowrap;
+        padding: 22px 0;
+      }
+      .B .marq div {
+        display: inline-flex;
+        gap: 48px;
+        animation: marq 40s linear infinite;
+        font-size: 26px;
+        font-weight: 700;
+        letter-spacing: -0.02em;
+      }
+      .B .marq span {
+        display: inline-flex;
+        align-items: center;
+        gap: 48px;
+      }
+      .B .marq span::after {
+        content: "";
+        width: 8px;
+        height: 8px;
+        border-radius: 999px;
+        background: var(--ink);
+      }
+      @keyframes marq {
+        to {
+          transform: translateX(-50%);
+        }
+      }
+      .B .goals {
+        margin-top: 48px;
+        border-top: 1px solid var(--line);
+      }
+      .B .goal {
+        display: grid;
+        grid-template-columns: 120px 1fr 1fr 40px;
+        gap: 24px;
+        align-items: center;
+        padding: 28px 0;
+        border-bottom: 1px solid var(--line);
+        cursor: pointer;
+      }
+      .B .goal .n {
+        font-size: 56px;
+        font-weight: 700;
+        letter-spacing: -0.05em;
+        color: var(--bar2);
+        transition: color 0.2s;
+        line-height: 1;
+      }
+      .B .goal:hover .n,
+      .B .goal.open .n {
+        color: var(--ink);
+      }
+      .B .goal h3 {
+        font-size: 26px;
+        font-weight: 700;
+        letter-spacing: -0.02em;
+      }
+      .B .goal p {
+        color: var(--mute);
+        font-size: 16px;
+        line-height: 1.5;
+      }
+      .B .goal .pl {
+        width: 40px;
+        height: 40px;
+        border-radius: 999px;
+        background: var(--soft);
+        display: grid;
+        place-items: center;
+        transition: transform 0.25s;
+      }
+      .B .goal.open .pl {
+        transform: rotate(45deg);
+        background: var(--ink);
+        color: var(--inv);
+      }
+      .B .goal .more {
+        grid-column: 2 / 4;
+        display: none;
+        gap: 10px;
+        flex-wrap: wrap;
+      }
+      .B .goal.open .more {
+        display: flex;
+      }
+      .B .quote {
+        font-size: clamp(30px, 4cqi, 52px);
+        font-weight: 700;
+        letter-spacing: -0.035em;
+        line-height: 1.08;
+        max-width: 1000px;
+      }
+      .B .quote .m {
+        color: var(--mute);
+      }
+
+      /* ==================== C: Bento (site inside the app panel) ==================== */
+      .C {
+        padding: 14px;
+      }
+      .C .shell {
+        background: var(--main);
+        border-radius: 32px;
+        overflow: hidden;
+      }
+      .C .nav {
+        background: transparent;
+        backdrop-filter: none;
+        position: static;
+      }
+      .C .links {
+        background: var(--card);
+      }
+      .C .hero {
+        padding: 48px 0 24px;
+        display: grid;
+        grid-template-columns: 1.2fr 1fr;
+        gap: 40px;
+        align-items: end;
+      }
+      .C h1 {
+        font-size: clamp(44px, 5.8cqi, 80px);
+        font-weight: 700;
+        letter-spacing: -0.045em;
+        line-height: 0.96;
+      }
+      .C .hero-r {
+        display: flex;
+        flex-direction: column;
+        gap: 22px;
+        align-items: start;
+      }
+      .C .bento {
+        display: grid;
+        grid-template-columns: repeat(12, 1fr);
+        gap: 16px;
+        padding-bottom: 32px;
+      }
+      .C .b4 {
+        grid-column: span 4;
+      }
+      .C .b5 {
+        grid-column: span 5;
+      }
+      .C .b7 {
+        grid-column: span 7;
+      }
+      .C .b8 {
+        grid-column: span 8;
+      }
+      .C .b6 {
+        grid-column: span 6;
+      }
+      .C .b3 {
+        grid-column: span 3;
+      }
+      .C .b12 {
+        grid-column: span 12;
+      }
+      .C .card h4 {
+        font-size: 22px;
+      }
+      .C .tag {
+        font-size: 12px;
+        font-weight: 700;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        color: var(--mute);
+        margin-bottom: 10px;
+        display: block;
+      }
+      .C .stagesw {
+        display: flex;
+        gap: 4px;
+        background: var(--soft);
+        border-radius: 999px;
+        padding: 4px;
+        margin: 16px 0 18px;
+        flex-wrap: wrap;
+      }
+      .C .stagesw button {
+        flex: 1;
+        border: 0;
+        background: none;
+        border-radius: 999px;
+        height: 34px;
+        font-size: 12px;
+        font-weight: 700;
+        color: var(--mute);
+        padding: 0 8px;
+      }
+      .C .stagesw button[aria-pressed="true"] {
+        background: var(--ink);
+        color: var(--inv);
+      }
+      .C .score {
+        display: flex;
+        gap: 26px;
+        align-items: center;
+      }
+      .C .factors {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        min-width: 0;
+      }
+      .C .vsi td,
+      .C .vsi th {
+        padding: 10px 8px;
+        text-align: left;
+        font-size: 13px;
+        border-bottom: 1px solid var(--line);
+      }
+      .C .vsi th {
+        color: var(--mute);
+        font-weight: 600;
+        font-size: 12px;
+      }
+      .C .vsi {
+        width: 100%;
+        border-collapse: collapse;
+      }
+      .C .vsi tr:last-child td {
+        border-bottom: 0;
+      }
+      .C .vsi .bar {
+        height: 6px;
+        background: var(--soft);
+        border-radius: 999px;
+        width: 100%;
+        min-width: 60px;
+      }
+      .C .vsi .bar i {
+        display: block;
+        height: 100%;
+        background: var(--ink);
+        border-radius: 999px;
+      }
+      .C .big {
+        font-size: 64px;
+        font-weight: 700;
+        letter-spacing: -0.05em;
+        line-height: 1;
+      }
+
+      /* ==================== D: Guided tour ==================== */
+      .D .hero {
+        padding: 80px 0 64px;
+        text-align: center;
+      }
+      .D h1 {
+        font-size: clamp(44px, 6cqi, 84px);
+        font-weight: 700;
+        letter-spacing: -0.045em;
+        line-height: 0.98;
+        max-width: 900px;
+        margin: 20px auto 0;
+      }
+      .D h1 .m {
+        color: var(--mute);
+      }
+      .D .cmd {
+        max-width: 620px;
+        margin: 36px auto 0;
+        background: var(--card);
+        border-radius: 26px;
+        box-shadow:
+          0 0 0 1px var(--line),
+          0 30px 60px -30px rgb(0 0 0 / 0.3);
+        text-align: left;
+        overflow: hidden;
+      }
+      .D .cmd-in {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        height: 60px;
+        padding: 0 20px;
+        border-bottom: 1px solid var(--line);
+      }
+      .D .cmd-in input {
+        flex: 1;
+        border: 0;
+        background: none;
+        outline: none;
+        font-size: 17px;
+        min-width: 0;
+      }
+      .D .cmd-in kbd {
+        font: inherit;
+        font-size: 12px;
+        background: var(--soft);
+        padding: 3px 8px;
+        border-radius: 8px;
+        color: var(--mute);
+      }
+      .D .cmd-list {
+        padding: 8px;
+        max-height: 260px;
+        overflow: auto;
+      }
+      .D .cmd-grp {
+        font-size: 11px;
+        font-weight: 700;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        color: var(--mute);
+        padding: 10px 12px 6px;
+      }
+      .D .cmd-list .row {
+        cursor: pointer;
+      }
+      .D .cmd-list .row.sel {
+        background: var(--soft);
+      }
+      .D .cmd-list .row .ic {
+        width: 32px;
+        height: 32px;
+      }
+      .D .cmd-list .row .ic svg {
+        width: 15px;
+        height: 15px;
+      }
+      .D .tour {
+        display: grid;
+        grid-template-columns: 300px 1fr;
+        gap: 32px;
+        align-items: start;
+      }
+      .D .tour-nav {
+        position: sticky;
+        top: 96px;
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+      }
+      .D .tour-nav button {
+        border: 0;
+        background: none;
+        text-align: left;
+        border-radius: 20px;
+        padding: 14px 16px;
+        display: grid;
+        grid-template-columns: 40px 1fr;
+        gap: 4px 12px;
+        align-items: center;
+      }
+      .D .tour-nav button .ic {
+        grid-row: span 2;
+      }
+      .D .tour-nav button b {
+        font-size: 16px;
+      }
+      .D .tour-nav button span {
+        font-size: 13px;
+        color: var(--mute);
+        display: none;
+        line-height: 1.4;
+      }
+      .D .tour-nav button[aria-pressed="true"] {
+        background: var(--main);
+      }
+      .D .tour-nav button[aria-pressed="true"] span {
+        display: block;
+      }
+      .D .tour-nav button[aria-pressed="true"] .ic {
+        background: var(--ink);
+        color: var(--inv);
+      }
+      .D .tour-view {
+        background: var(--main);
+        border-radius: 32px;
+        padding: 28px;
+        min-height: 520px;
+      }
+      .D .tour-view > div {
+        animation: fadeup 0.35s cubic-bezier(0.2, 0.8, 0.2, 1);
+      }
+      @keyframes fadeup {
+        from {
+          opacity: 0;
+          transform: translateY(10px);
+        }
+      }
+      .D .acc {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 12px;
+      }
+      .D .tl {
+        display: flex;
+        flex-direction: column;
+        gap: 0;
+      }
+      .D .tl div {
+        display: grid;
+        grid-template-columns: 14px 1fr auto;
+        gap: 12px;
+        padding: 10px 0;
+        font-size: 13px;
+        position: relative;
+      }
+      .D .tl i {
+        width: 10px;
+        height: 10px;
+        border-radius: 999px;
+        border: 2px solid var(--ink);
+        margin-top: 4px;
+        background: var(--card);
+      }
+      .D .tl div span {
+        color: var(--mute);
+      }
+
+      /* ==================== F: D hero + A ==================== */
+      .F .D h1 {
+        font-size: clamp(40px, 5.6cqi, 78px);
+        max-width: 1040px;
+      }
+      .chip b {
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+      }
+      .chip b svg {
+        width: 12px;
+        height: 12px;
+      }
+      .f-answer {
+        max-width: 620px;
+        margin: 14px auto 0;
+        background: var(--card);
+        border-radius: 26px;
+        padding: 18px;
+        text-align: left;
+        box-shadow:
+          0 0 0 1px var(--line),
+          0 30px 60px -30px rgb(0 0 0 / 0.3);
+        animation: fadeup 0.35s cubic-bezier(0.2, 0.8, 0.2, 1);
+      }
+      .f-answer[hidden],
+      .cmd-list[hidden] {
+        display: none;
+      }
+      .f-q {
+        font-weight: 700;
+        font-size: 15px;
+        margin: 0 4px 12px;
+      }
+      .f-answer .insight {
+        font-size: 15px;
+        line-height: 1.55;
+      }
+      .f-src {
+        color: var(--mute);
+        font-size: 12px;
+        margin: 10px 4px 0;
+      }
+
+      /* ==================== E: Night ==================== */
+      .E {
+        background: #0a0a0a;
+        color: #f5f5f5;
+        --shell: #0a0a0a;
+        --main: #161616;
+        --card: #1c1c1c;
+        --ink: #f5f5f5;
+        --inv: #0a0a0a;
+        --mute: #a3a3a3;
+        --soft: #262626;
+        --line: #2a2a2a;
+        --bar2: #3d3d3d;
+        --danger: #f87171;
+      }
+      .E .grid-bg {
+        position: absolute;
+        inset: 0;
+        background-image:
+          linear-gradient(var(--line) 1px, transparent 1px),
+          linear-gradient(90deg, var(--line) 1px, transparent 1px);
+        background-size: 72px 72px;
+        mask-image: radial-gradient(ellipse at 50% 0%, #000 20%, transparent 70%);
+        opacity: 0.6;
+        pointer-events: none;
+      }
+      .E .hero {
+        position: relative;
+        padding: 96px 0 0;
+        overflow: hidden;
+      }
+      .E .hero::after {
+        content: "";
+        position: absolute;
+        left: 50%;
+        top: -200px;
+        width: 900px;
+        height: 600px;
+        transform: translateX(-50%);
+        background: radial-gradient(closest-side, rgb(255 255 255 / 0.1), transparent);
+        pointer-events: none;
+      }
+      .E .hero .in {
+        position: relative;
+        z-index: 1;
+      }
+      .E h1 {
+        font-size: clamp(48px, 7.4cqi, 116px);
+        font-weight: 800;
+        letter-spacing: -0.055em;
+        line-height: 0.9;
+        text-align: center;
+      }
+      .E h1 .o {
+        -webkit-text-stroke: 1.5px var(--ink);
+        color: transparent;
+      }
+      .E .hero .lead {
+        text-align: center;
+        margin: 24px auto 0;
+      }
+      .E .ctas {
+        display: flex;
+        justify-content: center;
+        gap: 10px;
+        margin-top: 30px;
+        flex-wrap: wrap;
+      }
+      .E .light-app {
+        margin: 64px auto 0;
+        max-width: 1060px;
+        --shell: #fff;
+        --main: #ececec;
+        --card: #fff;
+        --ink: #0d0d0d;
+        --inv: #fff;
+        --mute: #6b6b6b;
+        --soft: #f3f3f3;
+        --line: #e4e4e4;
+        --bar2: #d4d4d4;
+        --danger: #dc2626;
+        color: var(--ink);
+        transform: perspective(1600px) rotateX(10deg);
+        transform-origin: top center;
+        transition: transform 0.6s cubic-bezier(0.2, 0.8, 0.2, 1);
+        margin-bottom: -60px;
+      }
+      .E .light-app:hover {
+        transform: none;
+      }
+      .E .light-app .app {
+        box-shadow: 0 60px 120px -40px rgb(255 255 255 / 0.12);
+      }
+      .E .nums {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 1px;
+        background: var(--line);
+        border-radius: 28px;
+        overflow: hidden;
+        margin-top: 48px;
+      }
+      .E .nums div {
+        background: var(--shell);
+        padding: 36px;
+      }
+      .E .nums b {
+        display: block;
+        font-size: 64px;
+        letter-spacing: -0.05em;
+        font-weight: 800;
+        line-height: 1;
+      }
+      .E .nums span {
+        color: var(--mute);
+        font-size: 15px;
+        display: block;
+        margin-top: 12px;
+        line-height: 1.5;
+      }
+      .E .mods {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 12px;
+        margin-top: 40px;
+      }
+      .E .mod {
+        border: 1px solid var(--line);
+        border-radius: 24px;
+        padding: 22px;
+        display: flex;
+        flex-direction: column;
+        gap: 40px;
+        transition:
+          background 0.2s,
+          border-color 0.2s;
+        cursor: default;
+      }
+      .E .mod:hover {
+        background: var(--ink);
+        color: var(--inv);
+        border-color: var(--ink);
+      }
+      .E .mod:hover .ic {
+        background: var(--inv);
+        color: var(--ink);
+      }
+      .E .mod:hover p {
+        color: color-mix(in srgb, var(--inv) 70%, transparent);
+      }
+      .E .mod h3 {
+        font-size: 20px;
+        font-weight: 700;
+      }
+      .E .mod p {
+        color: var(--mute);
+        font-size: 14px;
+        line-height: 1.5;
+        margin-top: 6px;
+      }
+      .E .faq {
+        margin-top: 32px;
+        border-top: 1px solid var(--line);
+      }
+      .E .faq details {
+        border-bottom: 1px solid var(--line);
+        padding: 22px 0;
+      }
+      .E .faq summary {
+        list-style: none;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-size: 20px;
+        font-weight: 700;
+        cursor: pointer;
+      }
+      .E .faq summary::-webkit-details-marker {
+        display: none;
+      }
+      .E .faq summary i {
+        width: 36px;
+        height: 36px;
+        border-radius: 999px;
+        background: var(--soft);
+        display: grid;
+        place-items: center;
+        font-style: normal;
+        transition: transform 0.2s;
+      }
+      .E .faq details[open] summary i {
+        transform: rotate(45deg);
+      }
+      .E .faq p {
+        color: var(--mute);
+        margin-top: 12px;
+        font-size: 16px;
+        line-height: 1.6;
+        max-width: 720px;
+      }
+
+      /* ==================== phone (390px) ==================== */
+      @container (max-width: 760px) {
+        .in {
+          padding: 0 18px;
+        }
+        .links,
+        .nav-r .btn.ghost,
+        .nav-r .btn.line {
+          display: none;
+        }
+        .burger {
+          display: grid;
+        }
+        .nav .in {
+          height: 64px;
+        }
+        .mnav.open {
+          display: flex;
+          flex-direction: column;
+          gap: 4px;
+          padding: 8px 18px 18px;
+        }
+        .mnav a {
+          padding: 14px 16px;
+          border-radius: 16px;
+          background: var(--soft);
+          font-weight: 600;
+        }
+        .sec {
+          padding: 64px 0;
+        }
+        .lead {
+          font-size: 16px;
+        }
+        .app {
+          grid-template-columns: 1fr;
+          padding: 8px;
+        }
+        .side {
+          display: none;
+        }
+        .panel {
+          padding: 14px;
+        }
+        .kpis {
+          grid-template-columns: 1fr 1fr;
+        }
+        .split,
+        .kan {
+          grid-template-columns: 1fr;
+        }
+        .kan .col:nth-child(n + 3) {
+          display: none;
+        }
+        .search {
+          display: none;
+        }
+        .island {
+          padding: 48px 22px;
+          border-radius: 28px;
+        }
+
+        .A .hero {
+          padding-top: 40px;
+        }
+        .A .showcase {
+          padding: 20px 10px 0;
+          border-radius: 28px 28px 0 0;
+          margin-top: 40px;
+        }
+        .A .stats {
+          grid-template-columns: 1fr 1fr;
+        }
+        .A .stats div {
+          padding: 22px 18px;
+        }
+        .A .stats div:nth-child(3) {
+          border-left: 0;
+          border-top: 1px solid var(--line);
+        }
+        .A .stats div:nth-child(4) {
+          border-top: 1px solid var(--line);
+        }
+        .A .stats b {
+          font-size: 34px;
+        }
+        .A .feat,
+        .A .roles {
+          grid-template-columns: 1fr;
+        }
+
+        .B .hero {
+          grid-template-columns: 1fr;
+          min-height: 0;
+          padding: 0 10px 10px;
+        }
+        .B .hero-l {
+          padding: 28px 10px 16px;
+        }
+        .B .hero-r {
+          padding: 22px;
+        }
+        .B .goal {
+          grid-template-columns: 56px 1fr 36px;
+          gap: 12px;
+        }
+        .B .goal p {
+          display: none;
+        }
+        .B .goal.open p {
+          display: block;
+          grid-column: 1 / -1;
+        }
+        .B .goal .more {
+          grid-column: 1 / -1;
+        }
+        .B .goal .n {
+          font-size: 36px;
+        }
+        .B .goal h3 {
+          font-size: 20px;
+        }
+
+        .C {
+          padding: 8px;
+        }
+        .C .shell {
+          border-radius: 24px;
+        }
+        .C .hero {
+          grid-template-columns: 1fr;
+          gap: 20px;
+          padding-top: 24px;
+        }
+        .C .bento > * {
+          grid-column: span 12;
+        }
+        .C .score {
+          flex-direction: column;
+          align-items: stretch;
+        }
+        .C .score .ring {
+          align-self: center;
+        }
+        .factor {
+          grid-template-columns: 90px 1fr 34px;
+        }
+
+        .D .hero {
+          padding: 40px 0;
+        }
+        .D .tour {
+          grid-template-columns: 1fr;
+        }
+        .D .tour-nav {
+          position: static;
+          flex-direction: row;
+          overflow-x: auto;
+          gap: 6px;
+        }
+        .D .tour-nav button {
+          grid-template-columns: 1fr;
+          padding: 10px 14px;
+          background: var(--soft);
+          border-radius: 999px;
+          white-space: nowrap;
+        }
+        .D .tour-nav button .ic,
+        .D .tour-nav button span,
+        .D .tour-nav button[aria-pressed="true"] span {
+          display: none;
+        }
+        .D .tour-nav button[aria-pressed="true"] {
+          background: var(--ink);
+          color: var(--inv);
+        }
+        .D .tour-nav button b {
+          font-size: 14px;
+        }
+        .D .tour-view {
+          padding: 14px;
+          border-radius: 24px;
+          min-height: 0;
+        }
+        .D .acc {
+          grid-template-columns: 1fr;
+        }
+
+        .E .hero {
+          padding-top: 56px;
+        }
+        .E .light-app {
+          transform: none;
+          margin-top: 40px;
+          margin-bottom: -30px;
+        }
+        .E .nums,
+        .E .mods {
+          grid-template-columns: 1fr;
+        }
+        .E .nums b {
+          font-size: 48px;
+        }
+        .E .nums div {
+          padding: 26px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <div class="page-hd">
+        <div>
+          <h1>Landing page options</h1>
+          <p>
+            Five directions for the public BalloCRM site, all built from the app's tokens and
+            components. Each one scrolls and is clickable.
+          </p>
+        </div>
+        <div class="tools">
+          <div class="seg" id="vp">
+            <button aria-pressed="true" data-v="d">Desktop</button>
+            <button aria-pressed="false" data-v="m">390px</button>
+          </div>
+          <div class="seg" id="bg">
+            <button aria-pressed="true" data-b="grad">Gradient waves</button>
+            <button aria-pressed="false" data-b="lines">Line waves</button>
+            <button aria-pressed="false" data-b="off">Off</button>
+          </div>
+          <div class="seg" id="th">
+            <button aria-pressed="true" data-t="light">Light</button>
+            <button aria-pressed="false" data-t="dark">Dark</button>
+          </div>
+        </div>
+      </div>
+      <div class="tabs" id="tabs" role="tablist"></div>
+      <div class="stage"><div class="frame" id="frame"></div></div>
+      <div class="notes" id="notes"></div>
+      <p class="hint">
+        Keys A to E switch options. Scroll inside the frame; nav links jump to sections. Sample
+        companies are fictional.
+      </p>
+    </div>
+
+    <script>
+      const $ = (s, r = document) => r.querySelector(s);
+      const $$ = (s, r = document) => [...r.querySelectorAll(s)];
+      const sv = (d, w = 1.8) =>
+        `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="${w}" stroke-linecap="round" stroke-linejoin="round">${d}</svg>`;
+      const I = {
+        arrow: `<svg class="arr" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>`,
+        dash: sv(
+          '<rect x="3" y="3" width="7" height="9" rx="2"/><rect x="14" y="3" width="7" height="5" rx="2"/><rect x="14" y="12" width="7" height="9" rx="2"/><rect x="3" y="16" width="7" height="5" rx="2"/>',
+        ),
+        pipe: sv(
+          '<rect x="3" y="4" width="5" height="16" rx="2"/><rect x="10" y="4" width="5" height="11" rx="2"/><rect x="17" y="4" width="4" height="7" rx="2"/>',
+        ),
+        acc: sv(
+          '<path d="M4 21V5a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v16"/><path d="M16 9h3a2 2 0 0 1 2 2v10M8 7h4M8 11h4M8 15h4M2 21h20"/>',
+        ),
+        lead: sv('<circle cx="9" cy="8" r="4"/><path d="M2 21a7 7 0 0 1 14 0M19 8v6M16 11h6"/>'),
+        fc: sv('<path d="M3 20h18"/><path d="m4 15 5-5 4 4 7-7"/><path d="M15 7h5v5"/>'),
+        eng: sv('<path d="M21 12a8 8 0 0 1-11.8 7L3 21l2-6.2A8 8 0 1 1 21 12Z"/>'),
+        con: sv(
+          '<path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5M9 13h6M9 17h4"/>',
+        ),
+        intel: sv(
+          '<path d="M12 3l1.9 5.1L19 10l-5.1 1.9L12 17l-1.9-5.1L5 10l5.1-1.9z"/><path d="M19 15l.9 2.1L22 18l-2.1.9L19 21l-.9-2.1L16 18l2.1-.9z"/>',
+        ),
+        set: sv(
+          '<circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.6 1.6 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.6 1.6 0 0 0-1.8-.3 1.6 1.6 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.6 1.6 0 0 0-1-1.5 1.6 1.6 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.6 1.6 0 0 0 .3-1.8 1.6 1.6 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.6 1.6 0 0 0 1.5-1 1.6 1.6 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.6 1.6 0 0 0 1.8.3H9a1.6 1.6 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.6 1.6 0 0 0 1 1.5 1.6 1.6 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.6 1.6 0 0 0-.3 1.8V9a1.6 1.6 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.6 1.6 0 0 0-1.5 1z"/>',
+        ),
+        search: sv('<circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/>'),
+        up: sv('<path d="M7 17 17 7M8 7h9v9"/>', 2),
+        down: sv('<path d="M7 7l10 10M17 8v9H8"/>', 2),
+        menu: sv('<path d="M4 7h16M4 12h16M4 17h16"/>'),
+        x: sv('<path d="M6 6l12 12M18 6 6 18"/>'),
+        plus: sv('<path d="M12 5v14M5 12h14"/>', 2),
+        wallet: sv('<rect x="3" y="6" width="18" height="14" rx="3"/><path d="M3 10h18M16 15h2"/>'),
+        target: sv(
+          '<circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1"/>',
+        ),
+        alert: sv('<path d="M12 3 2 20h20L12 3Z"/><path d="M12 10v4M12 17v.01"/>'),
+        layers: sv('<path d="m12 3 9 5-9 5-9-5 9-5Z"/><path d="m3 13 9 5 9-5"/>'),
+        shield: sv(
+          '<path d="M12 3 4.5 6v5.5c0 4.6 3.2 8.4 7.5 9.5 4.3-1.1 7.5-4.9 7.5-9.5V6L12 3Z"/><path d="m9 12 2 2 4-4"/>',
+        ),
+        users: sv(
+          '<circle cx="9" cy="8" r="4"/><path d="M2 21a7 7 0 0 1 14 0"/><path d="M16 4a4 4 0 0 1 0 8M22 21a7 7 0 0 0-4-6.3"/>',
+        ),
+        cal: sv(
+          '<rect x="3" y="5" width="18" height="16" rx="3"/><path d="M3 10h18M8 3v4M16 3v4"/>',
+        ),
+      };
+      const compass = (cls = "") =>
+        `<svg class="compass ${cls}" viewBox="0 0 30 30" aria-hidden="true"><circle cx="15" cy="15" r="13" fill="none" stroke="currentColor" stroke-width="3"/><path d="M15 6l4 9-4 9-4-9z" fill="currentColor"/></svg>`;
+      const brand = () => `<a class="brand" data-go="top">${compass()}BalloCRM</a>`;
+
+      /* ---------- data (fictional) ---------- */
+      const NAV = [
+        ["Dashboard", "dash"],
+        ["Pipeline", "pipe"],
+        ["Accounts", "acc"],
+        ["Leads", "lead"],
+        ["Forecast", "fc"],
+        ["Engagement", "eng"],
+        ["Contracts", "con"],
+        ["Intelligence", "intel"],
+        ["Settings", "set"],
+      ];
+      const DEALS = {
+        Qualify: [
+          ["Kalulu Retail", "Fleet tracking", "K 420K", "bronze"],
+          ["Mwezi Fibre", "Dark fibre lease", "K 1.1M", "silver"],
+        ],
+        Discover: [
+          ["Kafue Valley Foods", "SD-WAN, 14 sites", "K 860K", "silver"],
+          ["Lusaka Medical Trust", "Cloud backup", "K 310K", "bronze"],
+        ],
+        Propose: [
+          ["Zedcell Networks", "Tower co-location", "K 2.4M", "gold"],
+          ["Copperbelt Haulage", "IoT telematics", "K 690K", "silver"],
+        ],
+        Negotiate: [
+          ["Mutual Bank of Lusaka", "Managed security", "K 3.2M", "gold"],
+          ["Kariba Power Co.", "Grid comms backbone", "K 5.8M", "platinum"],
+        ],
+      };
+      const grade = (g) => `<span class="grade ${g}"><i></i>${g.toUpperCase()}</span>`;
+      const kpi = (t, v, d, ic, ink = false, dn = false) =>
+        `<div class="kpi ${ink ? "ink" : ""}"><div class="t">${t}<span class="ic">${I[ic]}</span></div><div class="v">${v}</div><div class="d">${dn ? I.down : I.up}${d}</div></div>`;
+      const bars = (vals, on = []) =>
+        `<div class="bars">${vals.map((v, i) => `<span class="${on.includes(i) ? "on" : ""}" style="height:${v}%" data-v="K ${(v / 10).toFixed(1)}M"></span>`).join("")}</div><div class="xl">${[
+          "Jun",
+          "Jul",
+          "Aug",
+          "Sep",
+          "Oct",
+          "Nov",
+          "Dec",
+        ]
+          .slice(0, vals.length)
+          .map((m) => `<span>${m}</span>`)
+          .join("")}</div>`;
+
+      function sideNav(active = "Dashboard", attr = "") {
+        return `<nav class="side">${brand()}${NAV.map(([n, ic]) => `<a class="${n === active ? "on" : ""}" ${attr} data-mod="${n}">${I[ic]}${n}</a>`).join("")}</nav>`;
+      }
+      function dashPanel() {
+        return `<div class="panel"><div class="panel-hd"><div><h5>Good afternoon, Chanda</h5><div class="sub">Infratel commercial overview, November</div></div><div class="search">${I.search}Search or ask Brutus<kbd>⌘K</kbd></div></div>
+          <div class="kpis">${kpi("Pipeline", "K 48.6M", "12% vs Oct", "wallet", true)}${kpi("Weighted", "K 21.3M", "8% vs Oct", "layers")}${kpi("Win rate", "34%", "3 pts", "target")}${kpi("At risk", "6", "2 accounts", "alert", false, true)}</div>
+          <div class="split"><div class="card"><div class="card-hd"><div><h4>Forecast</h4><div class="sub">Committed vs target, K millions</div></div><span class="pill">Q4</span></div>${bars([42, 55, 48, 66, 72, 88, 60], [5])}</div>
+          <div class="card"><div class="card-hd"><div><h4>Focus list</h4><div class="sub">Ranked by score</div></div></div>
+          ${[
+            ["KP", "Kariba Power Co.", "Negotiate", "platinum"],
+            ["MB", "Mutual Bank of Lusaka", "Negotiate", "gold"],
+            ["ZN", "Zedcell Networks", "Propose", "gold"],
+          ]
+            .map(
+              ([a, n, s, g], i) =>
+                `<div class="row"><span class="av ${i ? "" : "ink"}">${a}</span><div class="g"><div class="nm">${n}</div><div class="sb">${s}</div></div>${grade(g)}</div>`,
+            )
+            .join("")}</div></div></div>`;
+      }
+      function pipePanel(hd = true) {
+        return `<div class="panel">${hd ? `<div class="panel-hd"><div><h5>Pipeline</h5><div class="sub">K 48.6M open · 8 deals shown</div></div><div class="search">${I.search}Filter deals<kbd>/</kbd></div></div>` : ""}
+          <div class="kan">${Object.entries(DEALS)
+            .map(
+              ([st, ds]) =>
+                `<div class="col"><div class="col-hd">${st}<span>${ds.length}</span></div>${ds.map(([n, p, a, g]) => `<div class="deal"><div><div class="nm">${n}</div><div class="sb" style="font-size:12px;color:var(--mute)">${p}</div></div><div class="ft">${a}${grade(g)}</div></div>`).join("")}</div>`,
+            )
+            .join("")}</div></div>`;
+      }
+      function accPanel() {
+        return `<div class="panel"><div class="panel-hd"><div><h5>Mutual Bank of Lusaka</h5><div class="sub">Banking · Key account · Owner: Chanda B.</div></div><span class="pill ink">Health 82</span></div>
+          <div class="kpis">${kpi("Contract value", "K 7.4M", "renews Mar 2027", "con", true)}${kpi("Open deals", "3", "K 4.1M", "pipe")}${kpi("Products", "4 of 9", "2 cross-sell", "layers")}${kpi("Last touch", "2d", "meeting", "cal")}</div>
+          <div class="split"><div class="card"><div class="card-hd"><div><h4>Buying committee</h4><div class="sub">Coverage 0.7</div></div></div>
+          ${[
+            ["NM", "Natasha Mwale", "Economic buyer"],
+            ["JP", "Joseph Phiri", "Champion"],
+            ["LT", "Lombe Tembo", "Technical"],
+          ]
+            .map(
+              ([a, n, r], i) =>
+                `<div class="row"><span class="av ${i === 1 ? "ink" : ""}">${a}</span><div class="g"><div class="nm">${n}</div><div class="sb">${r}</div></div></div>`,
+            )
+            .join("")}</div>
+          <div class="card"><div class="card-hd"><div><h4>Brutus says</h4><div class="sub">From the rules, explained</div></div></div><div class="insight"><span class="ic">${I.intel}</span><span><b>Cross-sell: SD-WAN.</b> 3 of 4 banks this size bought it within a year of managed security.</span></div></div></div></div>`;
+      }
+      const appWin = (active, panel) => `<div class="app">${sideNav(active)}${panel}</div>`;
+      const PANELS = { Dashboard: dashPanel, Pipeline: pipePanel, Accounts: accPanel };
+
+      function topNav(links, cta = "Sign in", extra = "") {
+        return `<header class="nav"><div class="in">${brand()}<nav class="links">${links.map(([l, t]) => `<a data-go="${t}">${l}</a>`).join("")}</nav><div class="nav-r">${extra}<a class="btn" href="#" data-signin>${cta}${I.arrow}</a><button class="burger" aria-label="Menu">${I.menu}</button></div></div><nav class="mnav">${links.map(([l, t]) => `<a data-go="${t}">${l}</a>`).join("")}</nav></header>`;
+      }
+      const footer = () =>
+        `<footer class="foot"><div class="in">${brand()}<nav><a data-go="top">Product</a><a href="#" data-signin>Sign in</a><a href="#">Security</a><a href="#">Contact</a></nav><span>© 2026 BalloCRM · Built for Infratel</span></div></footer>`;
+
+      const FEATURES = [
+        [
+          "layers",
+          "One record per customer",
+          "Accounts, contacts, deals, contracts and engagement in one place. No more reconciling five spreadsheets before a meeting.",
+        ],
+        [
+          "target",
+          "Grades you can explain",
+          "Every deal is scored on stage, buying committee and engagement, and graded Bronze to Platinum. Open the score to see why.",
+        ],
+        [
+          "fc",
+          "A forecast you can defend",
+          "Weighted pipeline by vertical and rep, with the Vertical Sales Index showing where growth really comes from.",
+        ],
+        [
+          "intel",
+          "Brutus, grounded in your data",
+          "Next best actions and cross-sell picks come from rules first. Brutus only words them, and never invents a number.",
+        ],
+        [
+          "eng",
+          "Engagement that logs itself",
+          "Touchpoints sent through BalloAds land on the account timeline, so health reflects what actually happened.",
+        ],
+        [
+          "shield",
+          "Audited by default",
+          "Roles decide who sees what. Every change to a deal, score or contract is recorded with who and when.",
+        ],
+      ];
+      const ROLES = [
+        ["Account managers", "See health, renewals and the buying committee before every call."],
+        ["Sales leaders", "One pipeline number the board can trust, by vertical and by rep."],
+        ["Reps", "A focus list each morning: the deals that matter and what to do next."],
+      ];
+      const GOALS = [
+        [
+          "Sales visibility",
+          "One live view of every enterprise deal, stage and owner.",
+          ["Pipeline board", "Dashboard KPIs"],
+        ],
+        [
+          "Strategic accounts",
+          "Health, committee coverage and renewals on every key account.",
+          ["Account 360", "Health score"],
+        ],
+        [
+          "Pipeline forecasting",
+          "Weighted, stage-gated forecasts instead of a guess the night before.",
+          ["Forecast", "Win rate"],
+        ],
+        [
+          "Cross-selling",
+          "Rule-based product picks for each account, with the reason shown.",
+          ["Recommender", "Brutus"],
+        ],
+        [
+          "Customer intelligence",
+          "Summaries and signals from activity, contracts and engagement.",
+          ["Insights feed", "Timeline"],
+        ],
+        [
+          "One customer record",
+          "Imports, duplicates merged, one owner for every account.",
+          ["Import", "Dedupe"],
+        ],
+        [
+          "Revenue growth",
+          "The Vertical Sales Index shows which industries to invest in.",
+          ["VSI", "Targets"],
+        ],
+      ];
+
+      /* ---------- options ---------- */
+      const OPTIONS = [
+        {
+          id: "A",
+          name: "Product stage",
+          about:
+            "A centred headline, then the real app shell on a grey stage with tabs to switch Dashboard, Pipeline and Accounts. The product sells itself; copy stays short. Closest to Linear or Attio, built from our kit.",
+          pros: [
+            "Shows the product in the first screen",
+            "Every block is an existing kit component",
+            "Easy to keep in sync with the app",
+          ],
+          cons: ["Familiar SaaS layout", "Mock app needs updating as screens change"],
+          render: () => `<div class="lp A" id="top">${topNav([
+            ["Product", "a-prod"],
+            ["Features", "a-feat"],
+            ["Who it's for", "a-roles"],
+          ])}
+            <section class="hero"><div class="in">
+              <span class="chip"><b>New</b>Brutus now explains every grade</span>
+              <h1>The commercial picture,<br/><span class="m">in one place.</span></h1>
+              <p class="lead">Accounts, pipeline, contracts and engagement in one CRM, with grades you can explain and a forecast you can defend.</p>
+              <div class="ctas"><a class="btn lg" href="#" data-signin>Sign in to Infratel${I.arrow}</a><a class="btn lg ghost" data-go="a-feat">See how it works</a></div>
+            </div>
+            <div class="in" id="a-prod"><div class="showcase rv">
+              <div class="tabsw">${["Dashboard", "Pipeline", "Accounts"].map((t, i) => `<button aria-pressed="${!i}" data-panel="${t}">${I[NAV.find((n) => n[0] === t)[1]]}${t}</button>`).join("")}</div>
+              <div class="appslot">${appWin("Dashboard", dashPanel())}</div>
+            </div></div></section>
+            <section><div class="in"><div class="stats rv">
+              <div><b>1</b><span>record per customer</span></div><div><b>4</b><span>grades, Bronze to Platinum</span></div><div><b>9</b><span>modules, one login</span></div><div><b>0</b><span>spreadsheets to reconcile</span></div>
+            </div></div></section>
+            <section class="sec" id="a-feat"><div class="in">
+              <div class="sec-hd"><div><span class="eyebrow">The platform</span><h2 class="h-sec" style="margin-top:12px">Built for B2B,<br/><span class="m">not bent into it.</span></h2></div><p class="lead">Generic CRMs take months to fit an enterprise sales motion. BalloCRM starts there.</p></div>
+              <div class="feat">${FEATURES.map(([ic, t, d]) => `<div class="card rv"><span class="ic">${I[ic]}</span><h4>${t}</h4><p>${d}</p></div>`).join("")}</div>
+            </div></section>
+            <section class="sec" id="a-roles" style="padding-top:0"><div class="in">
+              <span class="eyebrow">Who it's for</span><h2 class="h-sec" style="margin-top:12px">From the rep to the board.</h2>
+              <div class="roles">${ROLES.map(([t, d], i) => `<div class="role rv"><span class="ic ${i === 0 ? "ink" : ""}">${I[["acc", "fc", "pipe"][i]]}</span><h4 style="font-size:20px">${t}</h4><p>${d}</p></div>`).join("")}</div>
+            </div></section>
+            <section style="padding-bottom:24px"><div class="in"><div class="island cta rv">
+              ${compass()}<h2 class="h-sec" style="margin-top:18px">Your pipeline is waiting.</h2><p class="lead">Invite-only workspace. Your admin manages access.</p><a class="btn lg" href="#" data-signin>Sign in${I.arrow}</a>
+            </div></div></section>${footer()}</div>`,
+        },
+        {
+          id: "B",
+          name: "Editorial",
+          about:
+            "Carries the login page into the site: huge tight type on the left, the always-dark island on the right with a live Focus list (click a deal to see why it ranks). Below, the seven goals as a numbered editorial list.",
+          pros: [
+            "Same voice as the login, feels like one product",
+            "Distinctive, confident type",
+            "Goals list mirrors how judges score us",
+          ],
+          cons: ["Less product on screen than A", "Big type needs careful copy"],
+          render: () => `<div class="lp B" id="top">${topNav([
+            ["Goals", "b-goals"],
+            ["How it works", "b-how"],
+            ["Sign in", "b-cta"],
+          ])}
+            <section class="hero">
+              <div class="hero-l">
+                <span class="eyebrow">${compass()} Commercial CRM for Infratel</span>
+                <h1>Every deal.<span class="m">Graded. Explained.</span></h1>
+                <p class="lead">BalloCRM puts accounts, pipeline, contracts and engagement in one record, then tells each rep which deals to work today, and why.</p>
+                <div style="display:flex;gap:10px;flex-wrap:wrap"><a class="btn lg" href="#" data-signin>Sign in${I.arrow}</a><a class="btn lg line" data-go="b-goals">What it solves</a></div>
+              </div>
+              <div class="hero-r island">
+                <div class="focus-hd"><h6>Today's focus</h6><span class="pill">Thu 26 Nov</span></div>
+                <div class="focus">${[
+                  [
+                    "KP",
+                    "Kariba Power Co.",
+                    "Negotiate · K 5.8M",
+                    "platinum",
+                    "Committee fully mapped, engagement 84. Legal review booked Thursday: send the redline today.",
+                  ],
+                  [
+                    "MB",
+                    "Mutual Bank of Lusaka",
+                    "Negotiate · K 3.2M",
+                    "gold",
+                    "Score 58: Negotiate stage, committee 0.7, engagement 60. Meet the economic buyer to lift it.",
+                  ],
+                  [
+                    "ZN",
+                    "Zedcell Networks",
+                    "Propose · K 2.4M",
+                    "gold",
+                    "Proposal opened 6 times this week. Follow up while interest is high.",
+                  ],
+                  [
+                    "MF",
+                    "Mwezi Fibre",
+                    "Qualify · K 1.1M",
+                    "silver",
+                    "No champion yet. Brutus suggests the CTO from last quarter's event.",
+                  ],
+                ]
+                  .map(
+                    ([a, n, s, g, w], i) =>
+                      `<div class="row ${i === 1 ? "open" : ""}"><span class="av ${i ? "" : "ink"}">${a}</span><div class="g"><div class="nm">${n}</div><div class="sb">${s}</div><div class="why">${w}</div></div>${grade(g)}</div>`,
+                  )
+                  .join("")}</div>
+                <div class="insight"><span class="ic">${I.intel}</span><span><b>Brutus:</b> 2 of your 4 focus deals close this month. Total weighted K 6.1M.</span></div>
+              </div>
+            </section>
+            <div class="marq"><div>${[0, 1].map(() => `<span>Accounts</span><span>Pipeline</span><span>Forecast</span><span>Contracts</span><span>Engagement</span><span>Intelligence</span><span>Vertical Sales Index</span>`).join("")}</div></div>
+            <section class="sec" id="b-goals"><div class="in">
+              <span class="eyebrow">Seven problems, one system</span>
+              <h2 class="h-sec" style="margin-top:12px">What changes<br/><span class="m">when the data lives together.</span></h2>
+              <div class="goals">${GOALS.map(([t, d, tags], i) => `<div class="goal rv ${i === 0 ? "open" : ""}"><span class="n">0${i + 1}</span><h3>${t}</h3><p>${d}</p><span class="pl">${I.plus}</span><div class="more">${tags.map((x) => `<span class="pill">${x}</span>`).join("")}</div></div>`).join("")}</div>
+            </div></section>
+            <section class="sec" id="b-how" style="padding-top:0"><div class="in">
+              <p class="quote rv">Rules decide the score. <span class="m">Brutus explains it in plain words, and never adds a number that is not in the rules.</span></p>
+            </div></section>
+            <section style="padding:0 14px 14px" id="b-cta"><div class="island" style="display:grid;grid-template-columns:1fr auto;gap:24px;align-items:end">
+              <h2 class="h-sec">Good afternoon.<br/><span style="color:#888">Let's close something.</span></h2><a class="btn lg" href="#" data-signin>Sign in${I.arrow}</a>
+            </div></section>${footer()}</div>`,
+        },
+        {
+          id: "C",
+          name: "Bento in the app",
+          about:
+            "The whole site sits inside the app's rounded grey panel, as if you were already in BalloCRM. Features are real components in a bento grid: a live score card (switch stage to see the grade change), forecast, VSI table, pipeline and Brutus.",
+          pros: [
+            "Strongest 'same product' feeling",
+            "Interactive score demo explains grading in seconds",
+            "Bento scales: add a tile per feature",
+          ],
+          cons: ["Dense; less room for story", "Tiles need care on 390px"],
+          render: () => `<div class="lp C" id="top"><div class="shell">${topNav(
+            [
+              ["Product", "c-bento"],
+              ["Scoring", "c-score"],
+              ["Modules", "c-mods"],
+            ],
+            "Sign in",
+            '<a class="btn ghost" href="#">Book a demo</a>',
+          )}
+            <div class="in"><section class="hero">
+              <h1>Know which deal<br/>to work next.</h1>
+              <div class="hero-r"><p class="lead">One CRM for accounts, pipeline, contracts and engagement, with explainable grades and a forecast by vertical. Built for Infratel's enterprise teams.</p><div style="display:flex;gap:10px;flex-wrap:wrap"><a class="btn lg" href="#" data-signin>Sign in${I.arrow}</a><a class="btn lg ghost" data-go="c-score">Try the score</a></div></div>
+            </section>
+            <section class="bento" id="c-bento">
+              <div class="card b7 rv" id="c-score"><span class="tag">Explainable grading</span><h4>Mutual Bank of Lusaka · Managed security</h4><div class="sub">Pick a stage to see the score move. Committee 0.7, engagement 60.</div>
+                <div class="stagesw">${["Qualify", "Discover", "Propose", "Negotiate"].map((s) => `<button aria-pressed="${s === "Negotiate"}" data-stage="${s}">${s}</button>`).join("")}</div>
+                <div class="score"><div class="ring"><svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="44" fill="none" stroke="var(--soft)" stroke-width="9"/><circle class="rg" cx="50" cy="50" r="44" fill="none" stroke="var(--ink)" stroke-width="9" stroke-linecap="round" stroke-dasharray="160 400"/></svg><div class="num"><b class="sc">58</b><span class="gr">GOLD</span></div></div>
+                <div class="factors"><div class="factor"><span>Stage</span><div class="tr"><i class="fs" style="width:80%"></i></div><b class="fsv">80</b></div><div class="factor"><span>Committee</span><div class="tr"><i style="width:70%"></i></div><b>0.7</b></div><div class="factor"><span>Engagement</span><div class="tr"><i style="width:60%"></i></div><b>60</b></div>
+                <div class="insight" style="margin-top:6px"><span class="ic">${I.intel}</span><span class="why">Meet the economic buyer to lift committee coverage and move this deal toward Platinum.</span></div></div></div>
+              </div>
+              <div class="kpi ink b5 rv" style="justify-content:space-between;border-radius:28px;padding:26px"><div class="t">Weighted pipeline<span class="ic">${I.wallet}</span></div><div><div class="big">K 21.3M</div><div class="d" style="margin-top:10px">${I.up}8% vs October, across 46 open deals</div></div>${bars([42, 55, 48, 66, 72, 88], [5])}</div>
+              <div class="card b4 rv"><span class="tag">Brutus</span><h4>Cross-sell, with reasons</h4><div style="display:flex;flex-direction:column;gap:8px;margin-top:14px">
+                <div class="insight"><span class="ic">${I.intel}</span><span><b>Kafue Valley Foods:</b> add Cloud backup. Similar food producers bought it after SD-WAN.</span></div>
+                <div class="insight"><span class="ic">${I.intel}</span><span><b>Zedcell Networks:</b> renewal in 90 days. Book the QBR now.</span></div></div></div>
+              <div class="card b8 rv"><div class="card-hd"><div><span class="tag">Vertical Sales Index</span><h4>Where growth comes from</h4></div><span class="pill">Q4 2026</span></div>
+                <table class="vsi"><thead><tr><th>Vertical</th><th>Pipeline</th><th>Win rate</th><th style="width:34%">Index</th></tr></thead><tbody>
+                ${[
+                  ["Energy", "K 14.2M", "41%", 92],
+                  ["Banking", "K 11.8M", "38%", 81],
+                  ["Telecoms", "K 9.6M", "29%", 64],
+                  ["Agriculture", "K 6.1M", "33%", 52],
+                  ["Retail", "K 3.4M", "22%", 31],
+                ]
+                  .map(
+                    ([v, p, w, x]) =>
+                      `<tr><td><b>${v}</b></td><td>${p}</td><td>${w}</td><td><div style="display:flex;gap:10px;align-items:center"><div class="bar"><i style="width:${x}%"></i></div><b>${x}</b></div></td></tr>`,
+                  )
+                  .join("")}</tbody></table></div>
+              <div class="card b12 rv" id="c-mods" style="background:var(--shell)"><div class="card-hd"><div><span class="tag">Pipeline</span><h4>Drag a deal, the forecast follows</h4></div><a class="btn ghost" href="#" data-signin>Open pipeline${I.arrow}</a></div>${pipePanel(false).replace('class="panel"', 'class="panel" style="padding:12px"')}</div>
+              <div class="card b3 rv"><span class="ic ink">${I.shield}</span><h4 style="margin-top:14px">Audited</h4><div class="sub">Every change, who and when.</div></div>
+              <div class="card b3 rv"><span class="ic">${I.eng}</span><h4 style="margin-top:14px">BalloAds</h4><div class="sub">Touchpoints log themselves.</div></div>
+              <div class="card b3 rv"><span class="ic">${I.con}</span><h4 style="margin-top:14px">Contracts</h4><div class="sub">Renewals never sneak up.</div></div>
+              <div class="card b3 rv"><span class="ic">${I.users}</span><h4 style="margin-top:14px">Roles</h4><div class="sub">Rep, manager, admin.</div></div>
+            </section></div>${footer()}</div></div>`,
+        },
+        {
+          id: "D",
+          name: "Guided tour",
+          about:
+            "Opens with a working command palette (type to filter, like ⌘K in the app). Then a sticky tour: pick a module on the left and the right side shows that screen. Explains the product step by step without a video.",
+          pros: [
+            "Teaches the app before first login",
+            "Command palette shows off a real interaction",
+            "One section covers all modules",
+          ],
+          cons: ["More JavaScript to maintain", "Tour content must track the real screens"],
+          render: () => `<div class="lp D" id="top">${topNav([
+            ["Tour", "d-tour"],
+            ["Why BalloCRM", "d-why"],
+          ])}
+            <section class="hero"><div class="in">
+              <span class="eyebrow">${compass()} BalloCRM for Infratel</span>
+              <h1>Ask for any account.<br/><span class="m">Get the whole story.</span></h1>
+              <div class="cmd"><div class="cmd-in">${I.search}<input placeholder="Try 'kariba', 'forecast' or 'renewals'" aria-label="Search" /><kbd>⌘K</kbd></div><div class="cmd-list"></div></div>
+              <p class="hint" style="text-align:center;margin-top:18px">This is the real search pattern from the app. Use the arrow keys.</p>
+            </div></section>
+            <section class="sec" id="d-tour" style="padding-top:24px"><div class="in">
+              <div style="margin-bottom:32px"><span class="eyebrow">Take the tour</span><h2 class="h-sec" style="margin-top:12px">Four screens run the business.</h2></div>
+              <div class="tour"><div class="tour-nav">${[
+                [
+                  "dash",
+                  "Dashboard",
+                  "Pipeline, weighted forecast, win rate and the accounts at risk, on one screen.",
+                ],
+                [
+                  "pipe",
+                  "Pipeline",
+                  "Drag deals between stages. Grades update and the forecast follows.",
+                ],
+                [
+                  "acc",
+                  "Accounts",
+                  "Health, buying committee, contracts and cross-sell for each customer.",
+                ],
+                [
+                  "intel",
+                  "Intelligence",
+                  "Brutus turns rule output into plain next steps, never inventing numbers.",
+                ],
+              ]
+                .map(
+                  ([ic, t, d], i) =>
+                    `<button aria-pressed="${!i}" data-tour="${t}"><span class="ic">${I[ic]}</span><b>${t}</b><span>${d}</span></button>`,
+                )
+                .join("")}</div><div class="tour-view"></div></div>
+            </div></section>
+            <section class="sec" id="d-why" style="padding-top:0"><div class="in"><div class="island" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:28px">
+              ${FEATURES.slice(0, 3)
+                .map(
+                  ([ic, t, d]) =>
+                    `<div><span class="ic">${I[ic]}</span><h4 style="font-size:20px;margin:16px 0 8px">${t}</h4><p style="color:var(--mute);line-height:1.55">${d}</p></div>`,
+                )
+                .join("")}
+              <div style="grid-column:1/-1;display:flex;justify-content:space-between;gap:16px;align-items:center;flex-wrap:wrap;border-top:1px solid var(--line);padding-top:28px"><b style="font-size:22px">Ready when you are.</b><a class="btn lg" href="#" data-signin>Sign in${I.arrow}</a></div>
+            </div></div></section>${footer()}</div>`,
+        },
+        {
+          id: "E",
+          name: "Night",
+          about:
+            "Always dark, like the login island stretched to a whole page. Outlined display type, a faint grid and a tilted light app window that straightens on hover. Big numbers, module tiles that invert on hover, and an FAQ.",
+          pros: [
+            "Most dramatic for a hackathon demo",
+            "Light app pops against the dark",
+            "FAQ answers judge questions up front",
+          ],
+          cons: ["Ignores the light theme choice", "Further from the app's everyday feel"],
+          render: () => `<div class="lp E" id="top">${topNav([
+            ["Product", "e-prod"],
+            ["Modules", "e-mods"],
+            ["FAQ", "e-faq"],
+          ])}
+            <section class="hero"><div class="grid-bg"></div><div class="in">
+              <div style="text-align:center;margin-bottom:24px"><span class="chip"><b>2026</b>Commercial intelligence for Infratel</span></div>
+              <h1>One truth.<br/><span class="o">Every deal.</span></h1>
+              <p class="lead">Accounts, pipeline, contracts and engagement in one CRM. Explainable grades, a defensible forecast and cross-sell picks you can act on.</p>
+              <div class="ctas"><a class="btn lg" href="#" data-signin>Sign in${I.arrow}</a><a class="btn lg ghost" data-go="e-mods">Explore modules</a></div>
+              <div class="light-app" id="e-prod">${appWin("Dashboard", dashPanel())}</div>
+            </div></section>
+            <section class="sec" style="padding-top:120px"><div class="in">
+              <span class="eyebrow">Why it matters</span><h2 class="h-sec" style="margin-top:12px">Less reconciling. <span style="color:var(--mute)">More selling.</span></h2>
+              <div class="nums rv"><div><b>1</b><span>Customer record, shared by sales, account management and leadership.</span></div><div><b>58</b><span>A real Gold score: Negotiate, committee 0.7, engagement 60. Every point explained.</span></div><div><b>9</b><span>Modules on one login, from leads to contracts to the Vertical Sales Index.</span></div></div>
+            </div></section>
+            <section class="sec" id="e-mods" style="padding-top:0"><div class="in">
+              <span class="eyebrow">Modules</span><h2 class="h-sec" style="margin-top:12px">Everything, connected.</h2>
+              <div class="mods">${[
+                ["dash", "Dashboard", "KPIs, forecast and the insights feed."],
+                ["pipe", "Pipeline", "Kanban with grades and a focus list."],
+                ["acc", "Accounts", "Account 360, health and committee."],
+                ["lead", "Leads", "Capture, dedupe, convert."],
+                ["fc", "Forecast", "Weighted, by vertical and rep."],
+                ["eng", "Engagement", "BalloAds touchpoints on the timeline."],
+                ["con", "Contracts", "Terms, values and renewals."],
+                ["intel", "Intelligence", "Brutus next steps and cross-sell."],
+              ]
+                .map(
+                  ([ic, t, d]) =>
+                    `<div class="mod rv"><span class="ic">${I[ic]}</span><div><h3>${t}</h3><p>${d}</p></div></div>`,
+                )
+                .join("")}</div>
+            </div></section>
+            <section class="sec" id="e-faq" style="padding-top:0"><div class="in">
+              <span class="eyebrow">FAQ</span><h2 class="h-sec" style="margin-top:12px">Questions, answered.</h2>
+              <div class="faq">${[
+                [
+                  "How is a deal graded?",
+                  "A score from 0 to 100 built from stage, buying committee coverage and engagement, using fixed tables. 0 to 39 is Bronze, then Silver, Gold and Platinum. The drawer shows each factor.",
+                ],
+                [
+                  "Does the AI make things up?",
+                  "No. Rules produce the numbers and the products. Brutus only writes them as a sentence, and any reply that mentions a number or product not in the rule output is replaced by a template.",
+                ],
+                [
+                  "Where does engagement data come from?",
+                  "Touchpoints sent through BalloAds are logged on the account timeline automatically, alongside meetings and calls your team records.",
+                ],
+                [
+                  "Who can sign in?",
+                  "It is an invite-only workspace for Infratel. Admins create users and assign the rep, manager or admin role.",
+                ],
+              ]
+                .map(
+                  ([q, a], i) =>
+                    `<details ${i ? "" : "open"}><summary>${q}<i>${I.plus}</i></summary><p>${a}</p></details>`,
+                )
+                .join("")}</div>
+            </div></section>${footer()}</div>`,
+        },
+        {
+          id: "F",
+          name: "D hero + A",
+          about:
+            "D's hero, rewritten around Brutus: ask it a question and it answers inline (which deal to work next, the whole story on an account, what is at risk). Picking an account or page opens that screen in A's app preview below. Then the stats, features, roles and the dark sign-in panel from A.",
+          pros: [
+            "Hero invites you to try the app straight away",
+            "Search leads straight into the product preview",
+            "Keeps A's simple, low-maintenance body",
+          ],
+          cons: [
+            "Two big interactive blocks near the top",
+            "Search results must stay in step with the preview screens",
+          ],
+          render: () => {
+            const dHero = `<div class="D"><section class="hero"><div class="in">
+              <span class="chip"><b>${I.intel}Brutus AI</b>Built into every account and deal</span>
+              <h1>Ask for the whole story.<br/><span class="m">Know which deal to work next.</span></h1>
+              <p class="lead" style="margin:22px auto 0">BalloCRM's AI reads every account, deal, contract and touchpoint, then tells you what is happening and what to do about it. Every answer comes from your own data.</p>
+              <div class="cmd"><div class="cmd-in">${I.intel}<input placeholder="Ask Brutus, or search an account" aria-label="Ask Brutus or search" /><kbd>⌘K</kbd></div><div class="cmd-list"></div></div>
+              <div class="f-answer" hidden aria-live="polite"></div>
+              <div class="ctas" style="display:flex;gap:10px;justify-content:center;margin-top:28px;flex-wrap:wrap"><a class="btn lg" href="#" data-signin>Sign in to Infratel${I.arrow}</a><a class="btn lg ghost" data-go="a-feat">See how it works</a></div>
+            </div></section></div>`;
+            return OPTIONS.find((o) => o.id === "A")
+              .render()
+              .replace('class="lp A"', 'class="lp A F"')
+              .replace(
+                /<section class="hero"><div class="in">[\s\S]*?<\/div>\s*<div class="in" id="a-prod">/,
+                `${dHero}<section><div class="in" id="a-prod">`,
+              )
+              .replace(
+                '<div class="showcase rv">',
+                '<div class="showcase rv" style="margin-top:0">',
+              );
+          },
+        },
+      ];
+
+      /* ---------- wave backgrounds ---------- */
+      let bgKind = "grad";
+      let waveId = 0;
+      // A wave line that repeats every 1440 units, so a -1440 translate loops seamlessly.
+      function wavePath(y, amp, k1, k2, ph, close) {
+        let d = "";
+        for (let x = 0; x <= 2880; x += 12) {
+          const t = (x / 1440) * Math.PI * 2;
+          const v =
+            y +
+            amp * Math.sin(k1 * t + ph) +
+            amp * 0.3 * Math.sin(k2 * t + ph * 1.7) +
+            amp * 0.08 * Math.sin((k1 + k2) * t + ph * 0.6);
+          d += (x ? "L" : "M") + x + " " + v.toFixed(1);
+        }
+        return close ? d + "L2880 900L0 900Z" : d;
+      }
+      function waveSvg(kind, strength = 1, flip = false) {
+        const id = "w" + waveId++;
+        const tf = flip ? ' transform="scale(1,-1) translate(0,-900)"' : "";
+        if (kind === "grad") {
+          // [baseline, amplitude, crests, second crests, phase, opacity, drift seconds]
+          const layers = [
+            [360, 58, 2, 3, 0.4, 0.055, 52],
+            [430, 52, 3, 2, 2.1, 0.045, 72],
+            [500, 46, 2, 1, 4.0, 0.04, 44],
+            [570, 40, 3, 1, 1.2, 0.035, 60],
+          ];
+          return `<svg viewBox="0 0 1440 900" preserveAspectRatio="xMidYMid slice" aria-hidden="true"><defs>
+            ${layers.map((l, i) => `<linearGradient id="${id}g${i}" x1="0" y1="0" x2="0" y2="1"><stop offset="0.45" stop-color="currentColor" stop-opacity="${(l[5] * strength).toFixed(3)}"/><stop offset="1" stop-color="currentColor" stop-opacity="0"/></linearGradient>`).join("")}
+            <filter id="${id}f" x="-10%" y="-10%" width="120%" height="130%"><feGaussianBlur stdDeviation="8"/></filter></defs>
+            <g${tf}><g filter="url(#${id}f)">${layers
+              .map(
+                (l, i) =>
+                  `<g class="bob" style="--dur:${12 + i * 5}s"><path class="drift ${i % 2 ? "rev" : ""}" style="--dur:${l[6]}s" d="${wavePath(l[0], l[1], l[2], l[3], l[4], true)}" fill="url(#${id}g${i})"/></g>`,
+              )
+              .join("")}</g>
+            ${[0, 2]
+              .map(
+                (i) =>
+                  `<g class="bob" style="--dur:${12 + i * 5}s"><path class="drift ${i % 2 ? "rev" : ""}" style="--dur:${layers[i][6]}s" d="${wavePath(...layers[i].slice(0, 5))}" fill="none" stroke="currentColor" stroke-opacity="${(0.08 * strength).toFixed(3)}" stroke-width="1"/></g>`,
+              )
+              .join("")}</g></svg>`;
+        }
+        // lines: a field of thin lines that drift in and out of each other
+        const lines = [];
+        for (let i = 0; i < 26; i++) {
+          const y = 200 + i * 20;
+          const amp = 30 + 30 * Math.sin((i / 25) * Math.PI);
+          const op = (0.025 + 0.06 * Math.sin((i / 25) * Math.PI)) * strength;
+          lines.push(
+            `<path class="drift" style="--dur:${60 + (i % 5) * 6}s" d="${wavePath(y, amp, 2, 3, i * 0.16)}" fill="none" stroke="currentColor" stroke-opacity="${op.toFixed(3)}" stroke-width="1"/>`,
+          );
+        }
+        return `<svg viewBox="0 0 1440 900" preserveAspectRatio="xMidYMid slice" aria-hidden="true"><g${tf}><g class="bob" style="--dur:16s">${lines.join("")}</g></g></svg>`;
+      }
+      // Where the waves go in each option: [selector, strength, flip, anchor to bottom]
+      const WAVE_TARGETS = {
+        A: [
+          [".A .hero", 1, false],
+          [".A .island", 1.6, true],
+        ],
+        B: [
+          [".B .hero", 0.9, false],
+          [".B .island", 1.6, false],
+          ["#b-how", 0.7, true, true],
+        ],
+        C: [
+          [".C .shell", 1, false],
+          [".C .kpi.ink", 1.4, true],
+        ],
+        D: [
+          [".D .hero", 1, false],
+          [".D .island", 1.6, true],
+        ],
+        E: [
+          [".E .hero", 1.5, false],
+          ["#e-faq", 1, true, true],
+        ],
+        F: [
+          [".F .D .hero", 1, false],
+          [".F .island", 1.6, true],
+        ],
+      };
+      function addWaves(f, id) {
+        if (bgKind === "off") return;
+        for (const [sel, str, flip, bottom] of WAVE_TARGETS[id]) {
+          $$(sel, f).forEach((el) => {
+            el.classList.add("has-wave");
+            const w = document.createElement("div");
+            w.className = "wave" + (bottom ? " bottom" : "");
+            w.innerHTML = waveSvg(bgKind, str, flip);
+            el.prepend(w);
+          });
+        }
+      }
+
+      /* ---------- behaviour ---------- */
+      let current = "A";
+      function renderTabs() {
+        $("#tabs").innerHTML = OPTIONS.map(
+          (o) =>
+            `<button class="tab" role="tab" aria-selected="${o.id === current}" data-id="${o.id}"><b>${o.id}</b>${o.name}</button>`,
+        ).join("");
+      }
+      function render() {
+        const o = OPTIONS.find((x) => x.id === current);
+        const f = $("#frame");
+        f.innerHTML = o.render();
+        addWaves(f, o.id);
+        f.scrollTop = 0;
+        $("#notes").innerHTML =
+          `<div class="note"><h3>Option ${o.id} · ${o.name}</h3><p>${o.about}</p></div><div class="note"><h3>For</h3><ul>${o.pros.map((p) => `<li>${p}</li>`).join("")}</ul></div><div class="note"><h3>Against</h3><ul>${o.cons.map((p) => `<li>${p}</li>`).join("")}</ul></div>`;
+        wire(f, o.id);
+      }
+      let io;
+      function wire(f, id) {
+        // reveal on scroll inside the frame
+        io && io.disconnect();
+        io = new IntersectionObserver(
+          (es) => es.forEach((e) => e.isIntersecting && e.target.classList.add("on")),
+          { root: f, threshold: 0.12 },
+        );
+        $$(".rv", f).forEach((el) => io.observe(el));
+        // in-frame anchors
+        f.addEventListener("click", onFrameClick);
+        // mobile menu
+        const bg = $(".burger", f);
+        bg &&
+          bg.addEventListener("click", () => {
+            const m = $(".mnav", f);
+            m.classList.toggle("open");
+            bg.innerHTML = m.classList.contains("open") ? I.x : I.menu;
+          });
+        if (id === "A") wireA(f);
+        if (id === "B") wireB(f);
+        if (id === "C") wireC(f);
+        if (id === "D") wireD(f);
+        if (id === "F") wireF(f);
+      }
+      function onFrameClick(e) {
+        const f = e.currentTarget;
+        const go = e.target.closest("[data-go]");
+        if (go) {
+          e.preventDefault();
+          const t = go.dataset.go === "top" ? f.firstElementChild : $("#" + go.dataset.go, f);
+          if (t)
+            f.scrollTo({
+              top: t === f.firstElementChild ? 0 : t.offsetTop - 70,
+              behavior: "smooth",
+            });
+          const m = $(".mnav.open", f);
+          if (m) {
+            m.classList.remove("open");
+            $(".burger", f).innerHTML = I.menu;
+          }
+        }
+        if (e.target.closest("[data-signin]") || e.target.closest('a[href="#"]'))
+          e.preventDefault();
+      }
+      function wireA(f) {
+        $(".tabsw", f).addEventListener("click", (e) => {
+          const b = e.target.closest("button");
+          if (!b) return;
+          $$(".tabsw button", f).forEach((x) => x.setAttribute("aria-pressed", x === b));
+          $(".appslot", f).innerHTML = appWin(b.dataset.panel, PANELS[b.dataset.panel]());
+        });
+        $(".appslot", f).addEventListener("click", (e) => {
+          const a = e.target.closest(".side a[data-mod]");
+          if (!a || !PANELS[a.dataset.mod]) return;
+          $$(".tabsw button", f).forEach((x) =>
+            x.setAttribute("aria-pressed", x.dataset.panel === a.dataset.mod),
+          );
+          $(".appslot", f).innerHTML = appWin(a.dataset.mod, PANELS[a.dataset.mod]());
+        });
+      }
+      function wireB(f) {
+        $(".focus", f).addEventListener("click", (e) => {
+          const r = e.target.closest(".row");
+          if (!r) return;
+          $$(".focus .row", f).forEach((x) =>
+            x.classList.toggle("open", x === r && !x.classList.contains("open")),
+          );
+        });
+        $(".goals", f).addEventListener("click", (e) => {
+          const g = e.target.closest(".goal");
+          g && g.classList.toggle("open");
+        });
+      }
+      function wireC(f) {
+        // Illustrative stage points; Negotiate matches the worked example (58 / GOLD).
+        const S = {
+          Qualify: [
+            20,
+            31,
+            "BRONZE",
+            "Early stage. Confirm budget and find a champion before investing more time.",
+          ],
+          Discover: [45, 41, "SILVER", "Map the buying committee: only 0.7 coverage so far."],
+          Propose: [
+            65,
+            50,
+            "SILVER",
+            "Proposal out. Raise engagement with a site visit to cross into Gold.",
+          ],
+          Negotiate: [
+            80,
+            58,
+            "GOLD",
+            "Meet the economic buyer to lift committee coverage and move this deal toward Platinum.",
+          ],
+        };
+        const C = 2 * Math.PI * 44;
+        const set = (st) => {
+          const [sp, sc, gr, why] = S[st];
+          $(".fs", f).style.width = sp + "%";
+          $(".fsv", f).textContent = sp;
+          $(".sc", f).textContent = sc;
+          $(".gr", f).textContent = gr;
+          $(".why", f).textContent = why;
+          $(".rg", f).setAttribute("stroke-dasharray", `${(sc / 100) * C} ${C}`);
+        };
+        set("Negotiate");
+        $(".stagesw", f).addEventListener("click", (e) => {
+          const b = e.target.closest("button");
+          if (!b) return;
+          $$(".stagesw button", f).forEach((x) => x.setAttribute("aria-pressed", x === b));
+          set(b.dataset.stage);
+        });
+      }
+      // The ⌘K palette (D and F). jumpTo gets the module to show: Accounts, Pipeline, Intelligence or Dashboard.
+      function wirePalette(f, jumpTo, items) {
+        const ITEMS = items || [
+          ["Accounts", "Kariba Power Co.", "Energy · Platinum deal", "acc"],
+          ["Accounts", "Mutual Bank of Lusaka", "Banking · renews Mar 2027", "acc"],
+          ["Accounts", "Zedcell Networks", "Telecoms · renewal in 90 days", "acc"],
+          ["Accounts", "Kafue Valley Foods", "Agriculture · cross-sell ready", "acc"],
+          ["Pages", "Forecast", "Weighted pipeline by vertical", "fc"],
+          ["Pages", "Pipeline", "Kanban of open deals", "pipe"],
+          ["Pages", "Contracts: renewals", "Due in the next 90 days", "con"],
+          ["Ask Brutus", "Which deals need attention this week?", "Uses your focus list", "intel"],
+        ];
+        const inp = $(".cmd input", f);
+        const list = $(".cmd-list", f);
+        let sel = 0,
+          shown = ITEMS;
+        const draw = () => {
+          const q = inp.value.trim().toLowerCase();
+          shown = ITEMS.filter((x) => !q || (x[1] + x[2] + x[0]).toLowerCase().includes(q));
+          if (!shown.length) shown = ITEMS.filter((x) => x[3] === "intel").slice(0, 1);
+          sel = Math.min(sel, shown.length - 1);
+          let g = "";
+          list.innerHTML = shown
+            .map((x, i) => {
+              const h = x[0] !== g ? `<div class="cmd-grp">${x[0]}</div>` : "";
+              g = x[0];
+              return `${h}<div class="row ${i === sel ? "sel" : ""}" data-i="${i}"><span class="ic">${I[x[3]]}</span><div class="g"><div class="nm">${x[1]}</div><div class="sb">${x[2]}</div></div><span class="sb">↵</span></div>`;
+            })
+            .join("");
+        };
+        inp.addEventListener("input", () => {
+          sel = 0;
+          draw();
+        });
+        inp.addEventListener("keydown", (e) => {
+          if (e.key === "ArrowDown") ((sel = (sel + 1) % shown.length), draw(), e.preventDefault());
+          if (e.key === "ArrowUp")
+            ((sel = (sel - 1 + shown.length) % shown.length), draw(), e.preventDefault());
+          if (e.key === "Enter") jump(shown[sel]);
+        });
+        list.addEventListener("mousemove", (e) => {
+          const r = e.target.closest(".row");
+          if (r && +r.dataset.i !== sel) ((sel = +r.dataset.i), draw());
+        });
+        list.addEventListener("click", (e) => {
+          const r = e.target.closest(".row");
+          r && jump(shown[+r.dataset.i]);
+        });
+        const jump = (x) =>
+          jumpTo(
+            x[3] === "acc"
+              ? "Accounts"
+              : x[3] === "pipe"
+                ? "Pipeline"
+                : x[3] === "intel"
+                  ? "Intelligence"
+                  : "Dashboard",
+            x,
+          );
+        draw();
+      }
+      function wireF(f) {
+        wireA(f);
+        const ANSWERS = {
+          next: "Work <b>Kariba Power Co.</b> first: Platinum, K 5.8M in Negotiate, and legal review is booked for Thursday, so send the redline today. Then <b>Mutual Bank of Lusaka</b>: it scores 58 (Gold), and meeting the economic buyer is the fastest way to lift it.",
+          story:
+            "<b>Mutual Bank of Lusaka</b> is a key banking account with K 7.4M under contract, renewing in March 2027. It has 3 open deals worth K 4.1M; the largest is in Negotiate at 58 (Gold). Committee coverage is 0.7, with no meeting yet with the economic buyer. Best cross-sell: SD-WAN.",
+          risk: "<b>Zedcell Networks</b> renews in 90 days and engagement has dropped. Book the quarterly review this week. <b>Mwezi Fibre</b> has no champion yet: invite the CTO to the fibre briefing.",
+        };
+        const askItems = [
+          [
+            "Ask Brutus",
+            "Which deal should I work next?",
+            "Ranked from your focus list",
+            "intel",
+            "next",
+          ],
+          [
+            "Ask Brutus",
+            "Give me the whole story on Mutual Bank of Lusaka",
+            "Contracts, deals, committee and cross-sell",
+            "intel",
+            "story",
+          ],
+          [
+            "Ask Brutus",
+            "Which accounts are at risk this month?",
+            "Health, renewals and engagement",
+            "intel",
+            "risk",
+          ],
+          ["Accounts", "Kariba Power Co.", "Energy · Platinum deal", "acc"],
+          ["Accounts", "Mutual Bank of Lusaka", "Banking · renews Mar 2027", "acc"],
+          ["Accounts", "Zedcell Networks", "Telecoms · renewal in 90 days", "acc"],
+          ["Pages", "Pipeline", "Kanban of open deals", "pipe"],
+          ["Pages", "Forecast", "Weighted pipeline by vertical", "fc"],
+        ];
+        const ans = $(".f-answer", f);
+        const answer = (item) => {
+          const q = $(".cmd input", f);
+          ans.innerHTML = `<div class="f-q">${item[1]}</div><div class="insight"><span class="ic">${I.intel}</span><span class="f-typed"></span></div><div class="f-src">Built from the rules and your data. Brutus adds no numbers of its own.</div>`;
+          ans.hidden = false;
+          $(".cmd-list", f).hidden = true;
+          $(".cmd-in input", f).value = "";
+          // type the answer out, word by word
+          const words = ANSWERS[item[4]].split(" ");
+          const out = $(".f-typed", ans);
+          let n = 0;
+          clearInterval(ans._t);
+          ans._t = setInterval(() => {
+            n++;
+            out.innerHTML = words.slice(0, n).join(" ");
+            if (n >= words.length) clearInterval(ans._t);
+          }, 35);
+          q.blur();
+        };
+        // Typing or focusing the box brings the suggestions back.
+        const reopen = () => ($(".cmd-list", f).hidden = false);
+        $(".cmd-in input", f).addEventListener("focus", reopen);
+        $(".cmd-in input", f).addEventListener("input", reopen);
+        wirePalette(
+          f,
+          (t, item) => {
+            if (t === "Intelligence") return answer(item);
+            const p = PANELS[t] ? t : "Dashboard";
+            $$(".tabsw button", f).forEach((x) =>
+              x.setAttribute("aria-pressed", x.dataset.panel === p),
+            );
+            let html = appWin(p, PANELS[p]());
+            // Show the account that was picked, not always the sample one.
+            if (p === "Accounts")
+              html = html.replace(
+                '<h5>Mutual Bank of Lusaka</h5><div class="sub">Banking · Key account',
+                `<h5>${item[1]}</h5><div class="sub">${item[2]}`,
+              );
+            $(".appslot", f).innerHTML = html;
+            f.scrollTo({ top: $("#a-prod", f).offsetTop - 70, behavior: "smooth" });
+          },
+          askItems,
+        );
+      }
+      function wireD(f) {
+        wirePalette(f, (t) => {
+          showTour(t);
+          f.scrollTo({ top: $("#d-tour", f).offsetTop - 70, behavior: "smooth" });
+        });
+        const VIEWS = {
+          Dashboard: () =>
+            dashPanel().replace('class="panel"', 'class="panel" style="padding:0;background:none"'),
+          Pipeline: () =>
+            pipePanel().replace('class="panel"', 'class="panel" style="padding:0;background:none"'),
+          Accounts: () =>
+            accPanel().replace('class="panel"', 'class="panel" style="padding:0;background:none"'),
+          Intelligence:
+            () => `<div class="panel" style="padding:0;background:none"><div class="panel-hd"><div><h5>Intelligence</h5><div class="sub">Rules decide, Brutus explains</div></div><span class="pill ink">${I.intel}Brutus</span></div>
+            <div class="acc"><div class="card"><div class="card-hd"><div><h4>Next best actions</h4><div class="sub">This week</div></div></div>
+            ${[
+              ["Kariba Power Co.", "Send the legal redline before Thursday."],
+              ["Mutual Bank of Lusaka", "Meet the economic buyer, Natasha Mwale."],
+              ["Mwezi Fibre", "Find a champion: invite the CTO to the fibre briefing."],
+            ]
+              .map(
+                ([n, a]) =>
+                  `<div class="row"><span class="ic">${I.target}</span><div class="g"><div class="nm">${n}</div><div class="sb">${a}</div></div></div>`,
+              )
+              .join("")}</div>
+            <div class="card"><div class="card-hd"><div><h4>Cross-sell</h4><div class="sub">From the recommender</div></div></div><div style="display:flex;flex-direction:column;gap:8px">
+            <div class="insight"><span class="ic">${I.intel}</span><span><b>SD-WAN for Mutual Bank of Lusaka.</b> Bought by 3 of 4 similar banks after managed security.</span></div>
+            <div class="insight"><span class="ic">${I.intel}</span><span><b>Cloud backup for Kafue Valley Foods.</b> Fits their 14-site rollout.</span></div></div></div></div></div>`,
+        };
+        const showTour = (t) => {
+          $$(".tour-nav button", f).forEach((x) =>
+            x.setAttribute("aria-pressed", x.dataset.tour === t),
+          );
+          $(".tour-view", f).innerHTML = `<div>${VIEWS[t]()}</div>`;
+        };
+        $(".tour-nav", f).addEventListener("click", (e) => {
+          const b = e.target.closest("button");
+          b && showTour(b.dataset.tour);
+        });
+        showTour("Dashboard");
+      }
+
+      $("#tabs").addEventListener("click", (e) => {
+        const b = e.target.closest(".tab");
+        if (!b) return;
+        current = b.dataset.id;
+        renderTabs();
+        render();
+      });
+      $("#vp").addEventListener("click", (e) => {
+        const b = e.target.closest("button");
+        if (!b) return;
+        [...$("#vp").children].forEach((x) => x.setAttribute("aria-pressed", x === b));
+        $("#frame").classList.toggle("m", b.dataset.v === "m");
+      });
+      $("#bg").addEventListener("click", (e) => {
+        const b = e.target.closest("button");
+        if (!b) return;
+        [...$("#bg").children].forEach((x) => x.setAttribute("aria-pressed", x === b));
+        bgKind = b.dataset.b;
+        const top = $("#frame").scrollTop;
+        render();
+        $("#frame").scrollTop = top;
+      });
+      $("#th").addEventListener("click", (e) => {
+        const b = e.target.closest("button");
+        if (!b) return;
+        [...$("#th").children].forEach((x) => x.setAttribute("aria-pressed", x === b));
+        document.documentElement.dataset.theme = b.dataset.t;
+      });
+      document.addEventListener("keydown", (e) => {
+        if (e.target.matches("input")) return;
+        const i = "ABCDEF".indexOf(e.key.toUpperCase());
+        if (i >= 0 && !e.metaKey && !e.ctrlKey) {
+          current = "ABCDEF"[i];
+          renderTabs();
+          render();
+        }
+      });
+      renderTabs();
+      render();
+    </script>
+  </body>
+</html>

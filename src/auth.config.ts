@@ -23,7 +23,10 @@ export const authConfig = {
   },
   callbacks: {
     jwt({ token, user }) {
-      return withUserClaims(token, user as { id?: string; role?: Role } | undefined);
+      return withUserClaims(
+        token,
+        user as { id?: string; role?: Role; teamId?: string | null } | undefined,
+      );
     },
     session({ session, token }) {
       const user = sessionUserFromToken(token);

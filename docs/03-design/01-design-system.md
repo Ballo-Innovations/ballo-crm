@@ -13,7 +13,8 @@ app's shadcn variables (`README.md`). Coding agents build from the kit.
 Monochrome, soft and calm. Black, white and greys do the work; colour is rare and always means
 something. Big rounded shapes, generous spacing, one strong black element per area to draw the
 eye (the active nav pill, the highlighted KPI, the primary button). No gradients, no drop
-shadows except a faint lift on hover.
+shadows except a faint lift on hover. The one exception is the marketing site's subtle gradient
+waves (see "Landing page").
 
 ## Tokens (Tailwind / CSS variables)
 
@@ -487,6 +488,36 @@ kit.
 - **Stacks:** overlap by 6px with a 2px `--card` ring; at most 3, then a black "+N" circle.
 - Every avatar has the full name as its accessible label and tooltip. Inside a row on `--soft`,
   circles switch to `--card` so they stay visible.
+
+## Landing page (decided: product stage, gradient waves)
+
+Reference: option A with "Gradient waves" in `docs/03-design/reference/landing-options.html`.
+Built in `src/app/page.tsx` and `src/components/marketing/`.
+
+- **Order:** sticky header, hero, product preview, numbers strip, features, who it's for, dark
+  closing island, footer. Content is 1180px wide on `--shell` (white), not grey panels.
+- **Header:** logo left; the section links (Product, Features, Who it's for) in one `--soft` pill
+  group; theme toggle and a "Sign in" hero button right. Below `lg` the links move into the menu.
+- **Hero:** centred. A `--soft` chip with a black "New" tag, then the headline in Urbanist 700 with
+  tight tracking: "The commercial picture," in `--ink`, "in one place." in `--mute` on the next
+  line. One intro line, then "Sign in to Infratel" (hero button) and "See how it works" (`--soft`
+  pill).
+- **Product preview:** a `--main` stage with rounded top corners holding a slice of the app (the
+  real sidebar, `KpiCard`, `GradeBadge`, `EntityAvatar`). Pill tabs switch Dashboard, Pipeline and
+  Accounts (`role="tablist"`). Sample data uses fictional companies only.
+- **Numbers strip:** four big numbers between hairlines (1 record, 4 grades, 9 modules, 0
+  spreadsheets).
+- **Features:** six `--main` cards (icon in a `--card` circle, title, one line). **Who it's for:**
+  three outlined cards, the first with the black icon circle.
+- **Closing island:** the login page's always-dark panel (`#0D0D0D`, `#050505` with a `#2A2A2A`
+  ring in dark mode), re-pointing the tokens inside it; "Your pipeline is waiting." and one Sign in
+  button.
+- **Gradient waves (marketing site only):** soft layered swells behind the hero and the closing
+  island (`WaveBackground`). Drawn in `currentColor` from `--ink` at 3.5 to 5.5% opacity, blurred,
+  fading out towards the bottom, so they stay monochrome in both themes and turn white inside the
+  island. Each wave has 2 or 3 rounded crests per width, never peaks. They drift slowly (40 to 70
+  seconds per loop) and stop under reduced motion. Decorative only (`aria-hidden`). Together with
+  the login island's glow these are the only gradients allowed; never use them inside the app.
 
 ## Accessibility (rules)
 
