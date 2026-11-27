@@ -22,6 +22,10 @@ under `[Unreleased]` in the relevant section (Added / Changed / Fixed / Removed)
   passwords, key hashes and tokens redacted). The id and after snapshot can come from the
   action's result, and a failed action writes nothing. The diff is a pure function in
   `src/lib/audit-diff.ts`. Integration tests can now import `server-only` modules.
+- Date helpers in `src/lib/dates.ts` (`formatDate`, `formatWeekday`, `formatTime`,
+  `formatDateTime`, `formatRelative`, `formatDateRange`, `toISODate`) that show UTC dates in
+  Lusaka time per the design system, and zod error mapping in `src/lib/validation.ts`
+  (`parseInput`, `fieldErrors`, `errorResponse`) for server actions and the API (E0-12).
 - E0-05: role-based access. The security doc's permission matrix is one table in
   `src/lib/rbac.ts` (`can`, `scopeFor`); `requireCan(capability)` and `requireRole` guard server
   actions; `accountReadFilter` limits reps to their team's accounts and `canEditRecord` to their
