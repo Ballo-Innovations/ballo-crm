@@ -74,7 +74,7 @@ test("filters by sector from the Filters panel, shown as a removable chip", asyn
 test("filters from a shared URL, tier and lifecycle together", async ({ page }) => {
   await signIn(page);
   await page.goto("/accounts?tier=TIER2&lifecycle=AT_RISK");
-  expect(await accountNames(page)).toEqual(["MegaMart Zambia"]);
+  await expect.poll(() => accountNames(page)).toEqual(["MegaMart Zambia"]);
   await expect(page.getByRole("button", { name: /^Filters/ })).toContainText("2");
 });
 
