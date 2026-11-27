@@ -17,6 +17,11 @@ under `[Unreleased]` in the relevant section (Added / Changed / Fixed / Removed)
 
 ### Added
 
+- E2-01: accounts list at `/accounts` with search (name, city, contact), Sector / Tier /
+  Lifecycle filters, sortable columns (ARR highest first by default) and pages, all in the URL.
+  Reps see their team's accounts only (TC-03). New shared `FilterBar`, `Pagination` and
+  `KitCheckbox`; `DataTable` gains optional sortable headers.
+
 - E0-06: audit trail. `withAudit` runs a mutating action and then writes one `AuditLog` row
   with the actor, entity, id, action and a before/after diff (only changed fields on an update;
   passwords, key hashes and tokens redacted). The id and after snapshot can come from the
