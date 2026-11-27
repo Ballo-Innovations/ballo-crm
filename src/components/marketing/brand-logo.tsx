@@ -1,28 +1,28 @@
-import { siteConfig } from "@/lib/site";
+import { CompassMark } from "@/components/shared/compass-mark";
 import { cn } from "@/lib/utils";
+import { siteConfig } from "@/lib/site";
 
-/** The same black "b" mark and wordmark the app sidebar and login page use. */
-export function BrandLogo({ className }: { className?: string }) {
+/**
+ * BalloCRM brand lockup: the compass mark plus the wordmark. The mark is drawn in
+ * currentColor, so it follows the theme with no light/dark asset swap.
+ */
+export function BrandLogo({
+  className,
+  showWordmark = true,
+}: {
+  className?: string;
+  showWordmark?: boolean;
+}) {
   return (
-    <span
-      className={cn("inline-flex items-center gap-2.5 text-xl font-bold md:text-2xl", className)}
-    >
-      <BrandMark />
-      {siteConfig.name}
+    <span className={cn("inline-flex items-center gap-2", className)}>
+      <CompassMark className="size-7" label={showWordmark ? undefined : siteConfig.name} />
+      {showWordmark && (
+        <span className="text-lg font-semibold tracking-tight">{siteConfig.name}</span>
+      )}
     </span>
   );
 }
 
 export function BrandMark({ className }: { className?: string }) {
-  return (
-    <span
-      aria-hidden
-      className={cn(
-        "bg-ink text-shell grid size-9 shrink-0 place-items-center rounded-full text-base font-bold",
-        className,
-      )}
-    >
-      b
-    </span>
-  );
+  return <CompassMark label={siteConfig.name} className={cn("size-8", className)} />;
 }

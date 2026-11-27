@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 30 30">
+  <style>
+    .m { color: #0d0d0d; }
+    @media (prefers-color-scheme: dark) { .m { color: #f5f5f5; } }
+  </style>
+  <g class="m">
+    <circle cx="15" cy="15" r="13" fill="none" stroke="currentColor" stroke-width="3" />
+    <path d="M15 6l4 9-4 9-4-9z" fill="currentColor" />
+  </g>
+</svg>
