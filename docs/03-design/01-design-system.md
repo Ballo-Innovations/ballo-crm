@@ -72,6 +72,38 @@ KPI numbers 24px/700, body 15px, secondary 13px, labels 12px. Money right-aligne
   top bar is menu · logo · round icon buttons, with search on its own full-width row; KPIs in a
   2-column grid; tables turn into stacked cards; no horizontal page scroll.
 
+## Logo (decided: compass)
+
+- **The mark is the compass** from the reference build: a 3px ring with a four-point needle,
+  drawn in `currentColor` so it is `--ink` on light and white on dark. Code:
+  `src/components/shared/compass-mark.tsx`; browser tab icon: `src/app/icon.svg`.
+- Used everywhere: app sidebar, login page, marketing site, favicon. The earlier full-colour
+  "b" app icon (`public/brand-icon*.png`) is retired.
+- Sizes: 30px beside the wordmark (24px/700 "BalloCRM"); larger only on the marketing site.
+- Beside the wordmark the mark is decorative (`aria-hidden`); on its own it carries the label
+  "BalloCRM".
+
+## Login page (decided: editorial, dark island)
+
+Reference: option F in `docs/03-design/reference/login-options.html`.
+
+- **Two columns on desktop** (1.15fr / 1fr) on `--shell`. Left: logo and wordmark at the top; a
+  large greeting set in Urbanist 700 with tight tracking ("Good afternoon." in `--ink`, then
+  "Let's close something." in `--mute` at 60%), by the clock in Africa/Lusaka; a one-line intro
+  below; a small footer line.
+- **Right: the sign-in island.** A rounded (28px) near-black panel inset 14px from the window
+  edges, always dark in both themes (`#0D0D0D`; `#050505` with a 1px `#2A2A2A` ring in dark
+  mode). It re-points the tokens inside it (`--ink` white, `--mute` `#C4C4C4`, `--line`
+  `#5A5A5A`, `--danger` `#FCA5A5`) so text stays clearly readable. A faint radial glow is the one
+  allowed gradient in the app.
+- **Form inside the island:** "SIGN IN" as a small uppercase heading; labels above, underlined
+  fields (52px, 1.5px `--line` underline, `--ink` on focus, `--danger` on error). This is the only
+  place that does not use pill fields. Password has a show/hide button and a Caps Lock warning.
+  "Forgot password?" explains that the workspace admin resets passwords. White pill submit
+  button ("Sign in", busy label "Signing in…"). A shield line at the bottom: invite-only access.
+- **Phone (≤1024px):** stacks: logo and a smaller greeting on top, the island fills the rest
+  with a 10px inset and 24px radius.
+
 ## Drawer (decided: docked side panel)
 
 Reference: option B in `docs/03-design/reference/drawer-options.html` (click a row to open it).
