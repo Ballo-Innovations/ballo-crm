@@ -1,80 +1,86 @@
-import { Activity, Database, MessageSquareShare, Sparkles, Target, TrendingUp } from "lucide-react";
+import {
+  CalendarDays,
+  Database,
+  Gauge,
+  LineChart,
+  ShieldCheck,
+  Sparkles,
+  type LucideIcon,
+} from "lucide-react";
 
-import { Card, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-
-import { GradientText } from "./gradient-text";
 import { SectionIntro } from "./section-intro";
 
-const features = [
+const features: { icon: LucideIcon; title: string; description: string }[] = [
   {
     icon: Database,
-    title: "Single source of truth",
+    title: "One record per customer",
     description:
-      "Accounts, contacts, pipelines, and contracts live in one system instead of a dozen spreadsheets that never agree. Everyone works from the same numbers.",
+      "Accounts, contacts, deals, contracts and engagement in one place. No more reconciling five spreadsheets before a meeting.",
   },
   {
-    icon: Activity,
-    title: "Account health signals",
+    icon: Gauge,
+    title: "Grades you can explain",
     description:
-      "Delivery status, payment reliability, and activity recency flow from BalloAds into every account view - churn risk surfaces on a dashboard, not in a hallway conversation.",
+      "Every deal is scored on stage, buying committee and engagement, and graded Bronze to Platinum. Open the score to see why.",
   },
   {
-    icon: Target,
-    title: "Structured qualification",
+    icon: LineChart,
+    title: "A forecast you can defend",
     description:
-      "Promote deals through the pipeline on BANT/MEDDIC-style criteria, not gut feel. Forecasts become defensible instead of a spreadsheet built the night before the board meeting.",
-  },
-  {
-    icon: MessageSquareShare,
-    title: "Native BalloAds messaging",
-    description:
-      "Trigger onboarding sequences and renewal nudges without leaving the CRM. Every touchpoint calls BalloAds directly and logs back as a CRM activity - no second tool to operate.",
+      "Weighted pipeline by vertical and rep, with the Vertical Sales Index showing where growth really comes from.",
   },
   {
     icon: Sparkles,
-    title: "Brutus AI intelligence",
+    title: "Brutus, grounded in your data",
     description:
-      "Qualification scoring, next-best-action, summarization, and cross-sell/upsell detection run as background AI jobs - structured recommendations where you already work.",
+      "Next best actions and cross-sell picks come from rules first. Brutus only words them, and never invents a number.",
   },
   {
-    icon: TrendingUp,
-    title: "Commercial analytics",
+    icon: CalendarDays,
+    title: "Engagement that logs itself",
     description:
-      "Pipeline velocity, win rate, forecast, and account-health distribution by vertical - roll-up reporting without waiting on a manually assembled export.",
+      "Touchpoints sent through BalloAds land on the account timeline, so health reflects what actually happened.",
+  },
+  {
+    icon: ShieldCheck,
+    title: "Audited by default",
+    description:
+      "Roles decide who sees what. Every change to a deal, score or contract is recorded with who and when.",
   },
 ];
 
 export function FeaturesSection() {
   return (
-    <section id="platform" className="border-t">
-      <div className="mx-auto w-full max-w-6xl px-6 py-20 md:py-24">
+    <section
+      id="features"
+      className="mx-auto w-full max-w-[1180px] scroll-mt-24 px-2 py-16 md:px-4 md:py-24"
+    >
+      <div className="flex flex-col justify-between gap-6 md:flex-row md:items-end">
         <SectionIntro
-          align="left"
           eyebrow="The platform"
           title={
             <>
-              Everything commercial teams need, <GradientText>in one system</GradientText>
+              Built for B2B, <span className="text-mute block">not bent into it.</span>
             </>
           }
-          description="Generic CRMs take months to configure for a B2B commercial workflow, and none of them talk natively to your messaging platform. BalloCRM is built for it from the ground up."
         />
-
-        <div className="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {features.map(({ icon: Icon, title, description }) => (
-            <Card
-              key={title}
-              className="hover:border-brand/40 hover:shadow-brand/5 transition-all hover:shadow-lg"
-            >
-              <CardHeader>
-                <div className="from-brand/15 to-primary/10 text-primary ring-brand/20 mb-3 flex size-10 items-center justify-center rounded-xl bg-gradient-to-br ring-1">
-                  <Icon className="size-5" />
-                </div>
-                <CardTitle className="text-base">{title}</CardTitle>
-                <CardDescription className="text-pretty">{description}</CardDescription>
-              </CardHeader>
-            </Card>
-          ))}
-        </div>
+        <p className="text-mute max-w-[460px] text-[17px] text-pretty md:text-lg">
+          Generic CRMs take months to fit an enterprise sales motion. BalloCRM starts there.
+        </p>
+      </div>
+      <div className="mt-10 grid gap-3 sm:grid-cols-2 md:mt-12 md:gap-4 lg:grid-cols-3">
+        {features.map(({ icon: Icon, title, description }) => (
+          <div
+            key={title}
+            className="bg-main rounded-card ease-ballo flex flex-col gap-3.5 p-[22px] transition-transform duration-200 hover:-translate-y-[3px] md:p-7"
+          >
+            <span className="bg-card grid size-10 place-items-center rounded-full">
+              <Icon className="size-[18px]" aria-hidden />
+            </span>
+            <h3 className="text-lg font-semibold">{title}</h3>
+            <p className="text-mute text-[15px] text-pretty">{description}</p>
+          </div>
+        ))}
       </div>
     </section>
   );
